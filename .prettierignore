@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+design-prototype
+private-assets
+local-db
+scraped-cache
+reports
+pnpm-lock.yaml
+packages/db/migrations

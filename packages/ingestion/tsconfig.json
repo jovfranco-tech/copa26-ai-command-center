@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "paths": {
+      "@worldcup/shared": ["../shared/src/index.ts"],
+      "@worldcup/shared/*": ["../shared/src/*"],
+      "@worldcup/db": ["../db/src/index.ts"]
+    }
+  },
+  "include": ["src", "../../ingestion_config.example.ts"]
+}

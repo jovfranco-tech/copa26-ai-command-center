@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": true,
+    "types": ["node"],
+    "paths": {
+      "@worldcup/shared": ["../../packages/shared/src/index.ts"],
+      "@worldcup/shared/*": ["../../packages/shared/src/*"],
+      "@worldcup/db": ["../../packages/db/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

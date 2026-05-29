@@ -1,0 +1,56 @@
+{
+  "name": "fifa-private-world-cup-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Private, local-only World Cup intelligence dashboard. Not for public distribution.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "pnpm --filter @worldcup/db generate",
+    "db:migrate": "pnpm --filter @worldcup/db migrate",
+    "db:seed": "pnpm --filter @worldcup/db seed",
+    "db:studio": "pnpm --filter @worldcup/db studio",
+    "ingest:fixtures": "pnpm --filter @worldcup/ingestion ingest:fixtures",
+    "ingest:teams": "pnpm --filter @worldcup/ingestion ingest:teams",
+    "ingest:players": "pnpm --filter @worldcup/ingestion ingest:players",
+    "ingest:player-profiles": "pnpm --filter @worldcup/ingestion ingest:player-profiles",
+    "ingest:match-stats": "pnpm --filter @worldcup/ingestion ingest:match-stats",
+    "ingest:venues": "pnpm --filter @worldcup/ingestion ingest:venues",
+    "ingest:assets": "pnpm --filter @worldcup/ingestion ingest:assets",
+    "ingest:all": "pnpm --filter @worldcup/ingestion ingest:all",
+    "validate:data": "pnpm --filter @worldcup/ingestion validate:data",
+    "report:data": "pnpm --filter @worldcup/ingestion report:data",
+    "check:local-only": "pnpm --filter @worldcup/ingestion check:gitignore"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@libsql/client",
+      "libsql",
+      "better-sqlite3"
+    ]
+  }
+}

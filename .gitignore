@@ -1,0 +1,51 @@
+# ============================================================
+#  FIFA Private World Cup Dashboard — LOCAL ONLY
+#  Nothing in this repo should ever contain official FIFA assets
+#  or scraped datasets. The entries below are MANDATORY.
+# ============================================================
+
+# --- MANDATORY local-only / private exclusions ---
+private-assets/
+local-db/
+scraped-cache/
+.env.local
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.db
+reports/*.json
+
+# --- Environment ---
+.env
+.env.*
+!.env.example
+
+# --- Dependencies ---
+node_modules/
+.pnpm-store/
+
+# --- Build output ---
+dist/
+build/
+*.tsbuildinfo
+.vite/
+
+# --- Logs / caches ---
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.eslintcache
+coverage/
+
+# --- Editor / OS ---
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.local
+
+# --- Playwright (browsers download outside repo, but ignore any local output) ---
+test-results/
+playwright-report/
+.playwright/

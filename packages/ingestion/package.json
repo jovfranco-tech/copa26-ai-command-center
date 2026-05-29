@@ -1,0 +1,34 @@
+{
+  "name": "@worldcup/ingestion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "ingest:fixtures": "tsx src/scrapers/scrape-fixtures.ts",
+    "ingest:teams": "tsx src/scrapers/scrape-teams.ts",
+    "ingest:players": "tsx src/scrapers/scrape-players.ts",
+    "ingest:player-profiles": "tsx src/scrapers/scrape-player-profiles.ts",
+    "ingest:match-stats": "tsx src/scrapers/scrape-match-stats.ts",
+    "ingest:venues": "tsx src/scrapers/scrape-venues.ts",
+    "ingest:assets": "tsx src/assets/download-all.ts",
+    "ingest:all": "tsx src/ingest-all.ts",
+    "validate:data": "tsx src/validate-ingested-data.ts",
+    "report:data": "tsx src/generate-data-quality-report.ts",
+    "check:gitignore": "tsx src/check-gitignore.ts"
+  },
+  "dependencies": {
+    "@worldcup/db": "workspace:*",
+    "@worldcup/shared": "workspace:*",
+    "drizzle-orm": "^0.38.3",
+    "playwright": "^1.49.1",
+    "robots-parser": "^3.0.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
