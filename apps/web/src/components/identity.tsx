@@ -14,7 +14,9 @@ export function TeamCrest({ code, size = 40 }: { code: string; size?: number }) 
 export function TeamFlag({ code, size = 18 }: { code: string; size?: number }) {
   const teams = useTeamsMap();
   const t = teams[code];
-  const src = useAsset(t?.flagAssetId);
+  const assetSrc = useAsset(t?.flagAssetId);
+  // Prefer a real country flag (flagcdn, free) when we know the ISO code.
+  const src = t?.iso2 ? `https://flagcdn.com/${t.iso2}.svg` : assetSrc;
   return <Flag code={code} colorA={t?.colorA} colorB={t?.colorB} size={size} src={src} />;
 }
 

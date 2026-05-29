@@ -53,7 +53,8 @@ export const LOCAL_ONLY = {
   allowedHosts: ['127.0.0.1', 'localhost', '::1'],
 } as const;
 
-export const FOOTER_NOTICE = 'Private local dashboard. Not for public distribution.';
-export const ANALYST_DISCLAIMER = 'Answers based on local cached data.';
+export const FOOTER_NOTICE =
+  'Unofficial · not affiliated with FIFA · schedule data from openfootball (CC0).';
+export const ANALYST_DISCLAIMER = 'Answers based on the loaded World Cup dataset.';
 export const MOCK_BANNER =
-  'Using mock data. Run ingestion scripts to load local FIFA data.';
+  'Real WC2026 schedule (openfootball, CC0). Squads, results and stats appear once matches are played (Jun 11).';

@@ -287,13 +287,13 @@ function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) 
         <span className={isMock ? 'dot-warn' : 'dot-ok'} />
         <h3>Local cache</h3>
         <span className="spacer" />
-        <span className="badge gold">{meta?.cacheStatus ?? 'Mock'}</span>
+        <span className="badge gold">{meta?.cacheStatus ?? 'Open data'}</span>
       </div>
       <div className="card-pad" style={{ paddingTop: 4 }}>
         <div className="sync-row">
           <span className="k">Source</span>
           <span className="num" style={{ fontSize: 12 }}>
-            {sync?.source ?? 'mock'}
+            {sync?.source === 'sqlite' ? 'Local SQLite' : 'Open data (CC0)'}
           </span>
         </div>
         <div className="sync-row">

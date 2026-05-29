@@ -14,6 +14,7 @@
     "ingest:venues": "tsx src/scrapers/scrape-venues.ts",
     "ingest:assets": "tsx src/assets/download-all.ts",
     "ingest:all": "tsx src/ingest-all.ts",
+    "import:openfootball": "tsx src/import-openfootball.ts",
     "validate:data": "tsx src/validate-ingested-data.ts",
     "report:data": "tsx src/generate-data-quality-report.ts",
     "check:gitignore": "tsx src/check-gitignore.ts"

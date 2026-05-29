@@ -1,0 +1,11 @@
+# Keep local-only / heavy / private dirs out of Vercel builds.
+node_modules
+.git
+private-assets
+local-db
+scraped-cache
+reports
+design-prototype
+**/dist
+.env
+.env.*

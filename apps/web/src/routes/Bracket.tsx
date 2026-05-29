@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Icon } from '@worldcup/ui';
+import { Icon, Empty } from '@worldcup/ui';
 import { mock } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
@@ -41,6 +41,21 @@ export function Bracket() {
     const rb = teams[b]?.ranking ?? 999;
     return ra <= rb ? a : b;
   })();
+
+  const hasBracket = mock.BRACKET.r32.length > 0;
+
+  if (!hasBracket) {
+    return (
+      <div className="page-fade">
+        <MockBanner />
+        <Empty
+          icon="bracket"
+          title="Knockout bracket — to be determined"
+          text="The Round of 32 is set after the group stage (from Jun 28, 2026). It will appear here once results are in."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="page-fade">

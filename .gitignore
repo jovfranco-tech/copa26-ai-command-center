@@ -49,3 +49,7 @@ coverage/
 test-results/
 playwright-report/
 .playwright/
+
+# --- Vercel (project link metadata; deploys are local-only-aware) ---
+.vercel/
+.vercel

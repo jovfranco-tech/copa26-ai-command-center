@@ -36,6 +36,8 @@ export const TeamSchema = z.object({
   // the normalizer fills neutral defaults when FIFA pages do not expose them.
   colorA: hexColor.default('#2a3550'),
   colorB: hexColor.default('#566080'),
+  // ISO 3166-1 alpha-2 (or gb-eng/gb-sct) for rendering a real country flag.
+  iso2: z.string().optional(),
   flagAssetId: z.string().nullable().default(null),
   crestAssetId: z.string().nullable().default(null),
 });
