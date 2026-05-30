@@ -15,6 +15,8 @@ import {
   loadBundle,
 } from './data-source.js';
 import { assertLocalOnly, env } from './env.js';
+import { getDb, schema } from '@worldcup/db';
+import { and, eq } from 'drizzle-orm';
 
 const app = new Hono();
 
@@ -97,6 +99,155 @@ app.get('/api/standings', async (c) => c.json(await getStandings()));
 app.get('/api/stats', async (c) => c.json(await getStats()));
 
 app.get('/api/sync/status', async (c) => c.json(await getSyncStatus()));
+
+app.post('/api/pool/sync', async (c) => {
+  let body: {
+    playerName?: string;
+    picks?: Record<string, { homeGoals?: number; awayGoals?: number; outcome?: string }>;
+  };
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ ok: false, error: 'bad-request' }, 400);
+  }
+
+  const { playerName, picks } = body;
+  if (!playerName || !picks) {
+    return c.json({ ok: false, error: 'missing-fields' }, 400);
+  }
+
+  const db = getDb();
+
+  for (const [matchId, p] of Object.entries(picks)) {
+    const existing = await db
+      .select()
+      .from(schema.poolPicks)
+      .where(and(eq(schema.poolPicks.playerName, playerName), eq(schema.poolPicks.matchId, matchId)));
+
+    const values = {
+      playerName,
+      matchId,
+      homeGoals: p.homeGoals !== undefined ? p.homeGoals : null,
+      awayGoals: p.awayGoals !== undefined ? p.awayGoals : null,
+      outcome: p.outcome ?? null,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (existing.length) {
+      await db
+        .update(schema.poolPicks)
+        .set(values)
+        .where(eq(schema.poolPicks.id, existing[0]!.id));
+    } else {
+      await db.insert(schema.poolPicks).values(values);
+    }
+  }
+
+  return c.json({ ok: true });
+});
+
+app.get('/api/pool/picks', async (c) => {
+  const { playerName } = c.req.query();
+  if (!playerName) {
+    return c.json({ ok: false, error: 'missing-playerName' }, 400);
+  }
+
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(schema.poolPicks)
+    .where(eq(schema.poolPicks.playerName, playerName));
+
+  const picks: Record<string, { homeGoals?: number; awayGoals?: number; outcome?: string }> = {};
+  for (const r of rows) {
+    picks[r.matchId] = {
+      homeGoals: r.homeGoals !== null ? r.homeGoals : undefined,
+      awayGoals: r.awayGoals !== null ? r.awayGoals : undefined,
+      outcome: r.outcome !== null ? r.outcome : undefined,
+    };
+  }
+
+  return c.json({ ok: true, picks });
+});
+
+app.get('/api/pool/leaderboard', async (c) => {
+  const db = getDb();
+
+  const matchRows = await db
+    .select()
+    .from(schema.matches)
+    .where(eq(schema.matches.status, 'FT'));
+
+  const pickRows = await db.select().from(schema.poolPicks);
+
+  const playerPicks = new Map<string, typeof pickRows>();
+  for (const r of pickRows) {
+    const list = playerPicks.get(r.playerName) ?? [];
+    list.push(r);
+    playerPicks.set(r.playerName, list);
+  }
+
+  const board: Array<{
+    playerName: string;
+    points: number;
+    exactScores: number;
+    outcomeHits: number;
+    efficiency: number;
+    predictedCount: number;
+  }> = [];
+
+  for (const [name, picks] of playerPicks.entries()) {
+    let points = 0;
+    let exactScores = 0;
+    let outcomeHits = 0;
+    let predictedPlayedCount = 0;
+
+    for (const m of matchRows) {
+      const pick = picks.find((p) => p.matchId === m.fifaId || p.matchId === String(m.id));
+      if (!pick || !pick.outcome) continue;
+
+      predictedPlayedCount++;
+      const realHome = m.homeScore ?? 0;
+      const realAway = m.awayScore ?? 0;
+
+      let realOutcome: 'home' | 'draw' | 'away' = 'draw';
+      if (realHome > realAway) realOutcome = 'home';
+      else if (realHome < realAway) realOutcome = 'away';
+
+      const isExact = pick.homeGoals === realHome && pick.awayGoals === realAway;
+      const isOutcomeCorrect = pick.outcome === realOutcome;
+
+      if (isExact) {
+        points += 3;
+        exactScores++;
+      } else if (isOutcomeCorrect) {
+        points += 1;
+        outcomeHits++;
+      }
+    }
+
+    const efficiency = predictedPlayedCount > 0
+      ? Math.round(((exactScores + outcomeHits) / predictedPlayedCount) * 100)
+      : 0;
+
+    board.push({
+      playerName: name,
+      points,
+      exactScores,
+      outcomeHits,
+      efficiency,
+      predictedCount: picks.length,
+    });
+  }
+
+  board.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.exactScores !== a.exactScores) return b.exactScores - a.exactScores;
+    return b.efficiency - a.efficiency;
+  });
+
+  return c.json({ ok: true, leaderboard: board });
+});
 
 /** Serve a locally-downloaded asset by its registry id. Local files only. */
 app.get('/api/assets/:assetId', async (c) => {

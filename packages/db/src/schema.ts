@@ -160,6 +160,16 @@ export const syncRuns = sqliteTable('sync_runs', {
   errorsCount: integer('errors_count').default(0),
 });
 
+export const poolPicks = sqliteTable('pool_picks', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  playerName: text('player_name').notNull(),
+  matchId: text('match_id').notNull(),
+  homeGoals: integer('home_goals'),
+  awayGoals: integer('away_goals'),
+  outcome: text('outcome'),
+  updatedAt: text('updated_at').default(sql`(current_timestamp)`),
+});
+
 export type TeamRow = typeof teams.$inferSelect;
 export type PlayerRow = typeof players.$inferSelect;
 export type VenueRow = typeof venues.$inferSelect;
@@ -168,3 +178,4 @@ export type StandingRowDb = typeof standings.$inferSelect;
 export type MatchEventRow = typeof matchEvents.$inferSelect;
 export type AssetRow = typeof assetRegistry.$inferSelect;
 export type SyncRunRow = typeof syncRuns.$inferSelect;
+export type PoolPickRow = typeof poolPicks.$inferSelect;

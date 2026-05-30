@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
 import { fmtDay, type Match } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
@@ -6,6 +6,8 @@ import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap } from '@/hooks';
 import { usePool, type PoolOutcome } from '@/store/pool';
 import { askPoolAgent } from '@/lib/aiClient';
+import { fetchLeaderboard, fetchPoolPicks, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
+
 
 
 const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
@@ -69,6 +71,70 @@ export function Pool() {
       setLoadingAgent(false);
     }
   };
+
+  const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | null>(null);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+
+  // Load existing picks from DB when the participant name changes
+  useEffect(() => {
+    if (!pool.playerName.trim()) return;
+
+    const loadPicks = async () => {
+      try {
+        const res = await fetchPoolPicks(pool.playerName);
+        if (res.ok && res.picks && Object.keys(res.picks).length > 0) {
+          pool.importPicks(res.picks);
+          setSyncStatus('synced');
+        }
+      } catch (e) {
+        console.error('Failed to load picks from SQLite', e);
+      }
+    };
+    loadPicks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.playerName]);
+
+  // Sync picks to local database (debounced to avoid spamming the connection)
+  useEffect(() => {
+    if (!pool.playerName.trim()) return;
+
+    setSyncStatus('syncing');
+    const timer = setTimeout(async () => {
+      try {
+        const ok = await syncPoolPicks(pool.playerName, pool.picks);
+        if (ok) {
+          setSyncStatus('synced');
+        } else {
+          setSyncStatus('error');
+        }
+      } catch {
+        setSyncStatus('error');
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [pool.playerName, pool.picks]);
+
+  // Load Leaderboard when results tab is open
+  useEffect(() => {
+    if (activeTab === 'results') {
+      const loadLeaderboard = async () => {
+        setLoadingLeaderboard(true);
+        try {
+          const res = await fetchLeaderboard();
+          if (res.ok && res.leaderboard) {
+            setLeaderboard(res.leaderboard);
+          }
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setLoadingLeaderboard(false);
+        }
+      };
+      loadLeaderboard();
+    }
+  }, [activeTab, pool.picks]);
 
   // Statistics calculations for played matches
   const stats = useMemo(() => {
@@ -145,8 +211,24 @@ export function Pool() {
           </p>
         </div>
         <div className="pool-profile">
-          <label className="mono-label" htmlFor="pool-name">
-            Participante
+          <label className="mono-label" htmlFor="pool-name" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>Participante</span>
+            {syncStatus && (
+              <span
+                style={{
+                  fontSize: 10,
+                  textTransform: 'none',
+                  letterSpacing: 'normal',
+                  color: syncStatus === 'synced' ? 'var(--gold)' : syncStatus === 'syncing' ? 'var(--tx-3)' : '#ef4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 3,
+                }}
+              >
+                <Icon name={syncStatus === 'synced' ? 'check' : syncStatus === 'syncing' ? 'sparkSmall' : 'close'} size={11} />
+                {syncStatus === 'synced' ? 'Guardado en DB' : syncStatus === 'syncing' ? 'Sincronizando…' : 'Sin conexión'}
+              </span>
+            )}
           </label>
           <input
             id="pool-name"
@@ -300,6 +382,74 @@ export function Pool() {
                 </span>
                 <p className="copilot-brief-text">{agentBrief}</p>
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'results' && (
+        <div className="copilot-section" style={{ marginBottom: 24 }}>
+          <div className="row gap-8" style={{ alignItems: 'center' }}>
+            <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Ranking Familiar (Leaderboard)</h3>
+            <span className="badge gold">Compartido</span>
+          </div>
+          <p className="muted" style={{ margin: '0 0 12px 0', fontSize: 12 }}>
+            Puntuaciones en tiempo real de todos los participantes basándose en los resultados de la base de datos local SQLite.
+          </p>
+
+          {loadingLeaderboard ? (
+            <p className="muted" style={{ fontSize: 13 }}>Cargando tabla de posiciones…</p>
+          ) : !leaderboard.length ? (
+            <div className="card card-pad muted" style={{ fontSize: 13, textAlign: 'center' }}>
+              No hay predicciones sincronizadas en la base de datos local todavía. ¡Escribe tu nombre y guarda algunos marcadores!
+            </div>
+          ) : (
+            <div className="card" style={{ overflowX: 'auto', border: '1px solid var(--gold-line)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: 'var(--bg-2)', borderBottom: '1px solid var(--line)' }}>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700 }}>Pos</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700 }}>Participante</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Puntos</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Plenos (+3)</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Aciertos (+1)</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Efectividad</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Picks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaderboard.map((row, index) => {
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}º`;
+                    const isCurrentUser = row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
+
+                    return (
+                      <tr
+                        key={row.playerName}
+                        style={{
+                          borderBottom: '1px solid var(--line)',
+                          background: isCurrentUser ? 'var(--gold-soft)' : 'transparent',
+                          fontWeight: isCurrentUser ? '700' : 'normal',
+                          color: isCurrentUser ? 'var(--gold-2)' : 'var(--tx)',
+                        }}
+                      >
+                        <td style={{ padding: '12px 14px', fontWeight: 'bold' }}>{medal}</td>
+                        <td style={{ padding: '12px 14px' }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            {row.playerName}
+                            {isCurrentUser && <span className="badge gold" style={{ fontSize: 9 }}>Tú</span>}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 'bold', fontSize: 14 }}>{row.points}</td>
+                        <td style={{ padding: '12px 14px', textAlign: 'center' }}>{row.exactScores}</td>
+                        <td style={{ padding: '12px 14px', textAlign: 'center' }}>{row.outcomeHits}</td>
+                        <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 'bold' }}>{row.efficiency}%</td>
+                        <td style={{ padding: '12px 14px', textAlign: 'center', color: 'var(--tx-3)' }}>{row.predictedCount}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           )}
         </div>

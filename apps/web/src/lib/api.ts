@@ -19,6 +19,8 @@ import {
   type Team,
   type Venue,
 } from '@worldcup/shared';
+import type { PoolPick } from '@/store/pool';
+
 
 const BASE = '/api';
 
@@ -167,6 +169,43 @@ export const fetchDataSyncCheck = () =>
     cron: 'Diario 12:00 UTC en Vercel',
     results: 'Pendientes hasta el 11 de junio de 2026',
   }));
+
+export interface LeaderboardEntry {
+  playerName: string;
+  points: number;
+  exactScores: number;
+  outcomeHits: number;
+  efficiency: number;
+  predictedCount: number;
+}
+
+export const fetchLeaderboard = () =>
+  safeGet<{ ok: boolean; leaderboard: LeaderboardEntry[] }>('/pool/leaderboard', () => ({
+    ok: true,
+    leaderboard: [],
+  }));
+
+export const fetchPoolPicks = (playerName: string) =>
+  safeGet<{ ok: boolean; picks: Record<string, PoolPick> }>(
+    `/pool/picks?playerName=${encodeURIComponent(playerName)}`,
+    () => ({
+      ok: true,
+      picks: {},
+    }),
+  );
+
+export async function syncPoolPicks(playerName: string, picks: Record<string, PoolPick>): Promise<boolean> {
+  try {
+    const res = await fetch(`${BASE}/pool/sync`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerName, picks }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 /** Build a same-origin URL to a locally-stored asset (served only by the API). */
 export const assetUrl = (assetId: string | null | undefined): string | null =>
