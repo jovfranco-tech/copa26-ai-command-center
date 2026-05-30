@@ -23,19 +23,19 @@ export function Teams() {
       <MockBanner />
       <div className="row gap-8 wrap" style={{ marginBottom: 16 }}>
         <Pill on={!group} onClick={() => setGroup('')}>
-          All
+          Todas
         </Pill>
         {GROUP_LETTERS.map((g) => (
           <Pill key={g} on={group === g} onClick={() => setGroup(g)}>
-            Group {g}
+            Grupo {g}
           </Pill>
         ))}
       </div>
 
       {isLoading ? (
-        <p className="muted">Loading teams…</p>
+        <p className="muted">Cargando selecciones…</p>
       ) : teams.length === 0 ? (
-        <Empty icon="teams" title="No teams" text="No teams in the local dataset." />
+        <Empty icon="teams" title="Sin selecciones" text="No hay selecciones en el dataset." />
       ) : (
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))' }}>
           {teams.map((t) => (

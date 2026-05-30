@@ -29,28 +29,28 @@ interface NavItem {
 
 const NAV: Array<{ group: string; items: NavItem[] }> = [
   {
-    group: 'Command',
+    group: 'Centro de mando',
     items: [
-      { key: 'home', label: 'Dashboard', icon: 'home', to: '/' },
-      { key: 'matches', label: 'Match Center', icon: 'calendar', to: '/matches', live: true },
-      { key: 'bracket', label: 'Bracket', icon: 'bracket', to: '/bracket' },
+      { key: 'home', label: 'Panel', icon: 'home', to: '/' },
+      { key: 'matches', label: 'Partidos', icon: 'calendar', to: '/matches', live: true },
+      { key: 'bracket', label: 'Eliminatorias', icon: 'bracket', to: '/bracket' },
     ],
   },
   {
-    group: 'Explore',
+    group: 'Explorar',
     items: [
-      { key: 'teams', label: 'Teams', icon: 'teams', to: '/teams' },
-      { key: 'players', label: 'Players', icon: 'players', to: '/players' },
-      { key: 'standings', label: 'Groups & Standings', icon: 'standings', to: '/standings' },
-      { key: 'stats', label: 'Stats', icon: 'stats', to: '/stats' },
-      { key: 'venues', label: 'Venues', icon: 'venues', to: '/venues' },
+      { key: 'teams', label: 'Selecciones', icon: 'teams', to: '/teams' },
+      { key: 'players', label: 'Jugadores', icon: 'players', to: '/players' },
+      { key: 'standings', label: 'Grupos y tabla', icon: 'standings', to: '/standings' },
+      { key: 'stats', label: 'Estadísticas', icon: 'stats', to: '/stats' },
+      { key: 'venues', label: 'Sedes', icon: 'venues', to: '/venues' },
     ],
   },
   {
     group: 'Personal',
     items: [
-      { key: 'favorites', label: 'Favorites', icon: 'star', to: '/favorites' },
-      { key: 'analyst', label: 'Match Analyst', icon: 'ai', to: '/analyst' },
+      { key: 'favorites', label: 'Favoritos', icon: 'star', to: '/favorites' },
+      { key: 'analyst', label: 'Analista IA', icon: 'ai', to: '/analyst' },
     ],
   },
 ];
@@ -59,16 +59,16 @@ const MOBILE_KEYS = ['home', 'matches', 'standings', 'stats', 'analyst'];
 const ALL_ITEMS = NAV.flatMap((g) => g.items);
 
 const TITLES: Record<string, string> = {
-  home: 'Dashboard',
-  matches: 'Match Center',
-  bracket: 'Knockout Bracket',
-  teams: 'Teams',
-  players: 'Players',
-  standings: 'Groups & Standings',
-  stats: 'Statistics',
-  venues: 'Venues',
-  favorites: 'Favorites',
-  analyst: 'AI Match Analyst',
+  home: 'Panel',
+  matches: 'Centro de partidos',
+  bracket: 'Eliminatorias',
+  teams: 'Selecciones',
+  players: 'Jugadores',
+  standings: 'Grupos y clasificación',
+  stats: 'Estadísticas',
+  venues: 'Sedes',
+  favorites: 'Favoritos',
+  analyst: 'Analista de partidos IA',
 };
 
 function activeKeyFromPath(pathname: string): string {
@@ -105,8 +105,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Icon name="trophy" size={20} />
       </span>
       <div>
-        <div className="brand-name">World Cup</div>
-        <div className="brand-sub">Command Center</div>
+        <div className="brand-name">Mundial 2026</div>
+        <div className="brand-sub">Centro de mando</div>
       </div>
     </div>
   );
@@ -125,7 +125,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Icon name={it.icon} size={18} />
               <span>{it.label}</span>
-              {it.live && liveCount > 0 && <span className="nav-badge">{liveCount} LIVE</span>}
+              {it.live && liveCount > 0 && <span className="nav-badge">{liveCount} EN VIVO</span>}
             </Link>
           ))}
         </div>
@@ -142,19 +142,19 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavList />
           </nav>
           <div className="sidebar-foot">
-            Private local dashboard.
+            Mundial 2026 · datos abiertos.
             <br />
-            Not for public distribution.
+            No oficial · sin afiliación FIFA.
           </div>
         </aside>
 
         <div className="main">
           <header className="topbar">
-            <button type="button" className="icon-btn menu-btn" onClick={() => setDrawer(true)} aria-label="Menu">
+            <button type="button" className="icon-btn menu-btn" onClick={() => setDrawer(true)} aria-label="Menú">
               <Icon name="menu" size={18} />
             </button>
             <div>
-              <h1>{TITLES[activeKey] ?? 'Dashboard'}</h1>
+              <h1>{TITLES[activeKey] ?? 'Panel'}</h1>
             </div>
             <form
               className="searchbox"
@@ -165,17 +165,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Icon name="search" size={15} />
               <input
-                aria-label="Search players and clubs"
-                placeholder="Search players, clubs…"
+                aria-label="Buscar jugadores y clubes"
+                placeholder="Buscar jugadores, clubes…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </form>
-            <span className="badge" style={{ alignSelf: 'center' }} title="Local cache">
+            <span className="badge" style={{ alignSelf: 'center' }} title="Datos locales">
               <span className="dot-ok" />
-              <span className="sb-text">Local cache</span>
+              <span className="sb-text">Datos</span>
             </span>
-            <Link to="/analyst" className="icon-btn" title="Match Analyst">
+            <Link to="/analyst" className="icon-btn" title="Analista IA">
               <Icon name="ai" size={18} />
             </Link>
           </header>
@@ -194,7 +194,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               }}
             >
               <span className="mono-label">{FOOTER_NOTICE}</span>
-              <span className="mono-label">Data shown is plausible/sample · no official affiliation</span>
+              <span className="mono-label">Datos del calendario · openfootball (CC0)</span>
             </footer>
           </div>
         </div>

@@ -10,10 +10,10 @@ export function Venues() {
   const { data: matchData } = useMatches();
   const [open, setOpen] = useState<string | null>(null);
 
-  if (isLoading) return <p className="muted">Loading venues…</p>;
+  if (isLoading) return <p className="muted">Cargando sedes…</p>;
   const venues = data?.items ?? [];
   const matches = matchData?.items ?? [];
-  if (!venues.length) return <Empty icon="venues" title="No venues" text="Venue data appears once ingested." />;
+  if (!venues.length) return <Empty icon="venues" title="Sin sedes" text="No hay sedes en el dataset." />;
 
   return (
     <div className="page-fade">
@@ -36,9 +36,9 @@ export function Venues() {
                   </div>
                 </div>
                 <div className="row" style={{ marginTop: 12, justifyContent: 'space-between' }}>
-                  <Meta label="Capacity" value={fmtInt(v.capacity)} />
-                  <Meta label="Surface" value={v.surface} />
-                  <Meta label="Matches" value={fixtures.length} />
+                  <Meta label="Aforo" value={fmtInt(v.capacity)} />
+                  <Meta label="Superficie" value={v.surface} />
+                  <Meta label="Partidos" value={fixtures.length} />
                 </div>
                 <button
                   type="button"
@@ -46,7 +46,7 @@ export function Venues() {
                   style={{ width: '100%', justifyContent: 'center', marginTop: 12 }}
                   onClick={() => setOpen(isOpen ? null : v.id)}
                 >
-                  {isOpen ? 'Hide fixtures' : 'Show fixtures'} <Icon name={isOpen ? 'chevD' : 'chevR'} size={13} />
+                  {isOpen ? 'Ocultar partidos' : 'Ver partidos'} <Icon name={isOpen ? 'chevD' : 'chevR'} size={13} />
                 </button>
                 {isOpen && (
                   <div style={{ marginTop: 8 }}>
@@ -69,7 +69,7 @@ export function Venues() {
                       ))
                     ) : (
                       <p className="muted" style={{ fontSize: 12.5 }}>
-                        No fixtures assigned.
+                        Sin partidos asignados.
                       </p>
                     )}
                   </div>

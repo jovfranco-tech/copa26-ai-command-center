@@ -1,6 +1,6 @@
 /** Data-bound cards + rows, ported from the approved prototype. */
 import { useNavigate } from '@tanstack/react-router';
-import { Icon, StatusBadge, Form, cn } from '@worldcup/ui';
+import { Icon, StatusBadge, Form, Jersey, cn } from '@worldcup/ui';
 import { fmtDay, fmtGD, nextMatchFor, type Match, type Player, type StandingRow } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, FavStar, PlayerAvatar } from './identity';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
@@ -59,7 +59,7 @@ export function MatchCard({ m }: { m: Match }) {
           <div>
             <div className="row" style={{ justifyContent: 'space-between', fontSize: 10.5 }}>
               <span className="mono-label" style={{ margin: 0 }}>
-                Poss
+                Posesión
               </span>
               <span className="num">{pH}%</span>
             </div>
@@ -73,7 +73,7 @@ export function MatchCard({ m }: { m: Match }) {
           </span>
           <div style={{ textAlign: 'right' }}>
             <div className="mono-label" style={{ margin: 0 }}>
-              Shots
+              Tiros
             </div>
             <div className="num" style={{ fontWeight: 700, fontSize: 13 }}>
               {m.shotsH}
@@ -86,10 +86,10 @@ export function MatchCard({ m }: { m: Match }) {
 
       <div className="mc-foot">
         <span className="mono-label" style={{ margin: 0 }}>
-          {live ? `LIVE · ${m.minute}'` : played ? 'Full time' : `${fmtDay(m.date)} · ${m.time}`}
+          {live ? `EN VIVO · ${m.minute}'` : played ? 'Final' : `${fmtDay(m.date)} · ${m.time}`}
         </span>
         <span className="mc-cta">
-          Match detail <Icon name="chevR" size={12} />
+          Ver partido <Icon name="chevR" size={12} />
         </span>
       </div>
     </div>
@@ -196,6 +196,7 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
       <div className="card-pad">
         <div className="row gap-12">
           <TeamCrest code={code} size={46} />
+          <Jersey colorA={t.colorA} colorB={t.colorB} size={36} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className="row gap-8">
               <TeamFlag code={code} size={14} />
@@ -203,24 +204,22 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
                 {t.name}
               </span>
             </div>
-            <div className="mono-label">
-              Group {t.group} · FIFA #{t.ranking ?? '—'}
-            </div>
+            <div className="mono-label">Grupo {t.group}</div>
           </div>
           <FavStar kind="teams" id={code} />
         </div>
         {standing && (
           <div className="row" style={{ marginTop: 13, justifyContent: 'space-between' }}>
             <Stat label="Pts" value={standing.Pts} />
-            <Stat label="W-D-L" value={`${standing.W}-${standing.D}-${standing.L}`} />
+            <Stat label="G-E-P" value={`${standing.W}-${standing.D}-${standing.L}`} />
             <Stat label="GF" value={standing.GF} />
             <Stat
-              label="GD"
+              label="DG"
               value={fmtGD(standing.GD)}
               className={standing.GD > 0 ? 'gd-pos' : standing.GD < 0 ? 'gd-neg' : ''}
             />
             <div>
-              <div className="mono-label">Form</div>
+              <div className="mono-label">Forma</div>
               <div style={{ marginTop: 3 }}>
                 <Form list={standing.form} />
               </div>
@@ -230,7 +229,7 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
         {next && oppCode && (
           <div className="tc-next" style={{ marginTop: 13 }}>
             <span className="mono-label" style={{ margin: 0 }}>
-              Next
+              Próximo
             </span>
             <TeamCrest code={oppCode} size={20} />
             <span style={{ fontSize: 12.5, fontWeight: 600 }}>{teams[oppCode]?.name ?? oppCode}</span>
@@ -300,8 +299,8 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
             ['G', p.goals],
             ['A', p.assists],
             ['Min', p.minutes],
-            ['YC', p.yellow],
-            ['Age', p.age ?? '—'],
+            ['TA', p.yellow],
+            ['Edad', p.age ?? '—'],
           ] as Array<[string, string | number]>
         ).map(([k, val]) => (
           <div key={k} style={{ textAlign: 'center' }}>
@@ -366,16 +365,16 @@ export function StandingsTable({ rows, highlight }: { rows: StandingRow[]; highl
         <thead>
           <tr>
             <th style={{ width: 30 }}>#</th>
-            <th>Team</th>
+            <th>Equipo</th>
+            <th className="center">PJ</th>
+            <th className="center">G</th>
+            <th className="center">E</th>
             <th className="center">P</th>
-            <th className="center">W</th>
-            <th className="center">D</th>
-            <th className="center">L</th>
             <th className="center">GF</th>
-            <th className="center">GA</th>
-            <th className="center">GD</th>
+            <th className="center">GC</th>
+            <th className="center">DG</th>
             <th className="center">Pts</th>
-            <th>Form</th>
+            <th>Forma</th>
           </tr>
         </thead>
         <tbody>

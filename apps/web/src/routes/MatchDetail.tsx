@@ -13,9 +13,9 @@ export function MatchDetail({ id }: { id: string }) {
   const teams = useTeamsMap();
   const [tab, setTab] = useState<Tab>('events');
 
-  if (isLoading) return <p className="muted">Loading match…</p>;
+  if (isLoading) return <p className="muted">Cargando partido…</p>;
   const m = data?.item;
-  if (!m) return <Empty icon="calendar" title="Match not found" text="This fixture is not in the local dataset." />;
+  if (!m) return <Empty icon="calendar" title="Partido no encontrado" text="Este partido no está en el dataset." />;
 
   const homeName = teams[m.home]?.name ?? m.home;
   const awayName = teams[m.away]?.name ?? m.away;
@@ -71,7 +71,7 @@ export function MatchDetail({ id }: { id: string }) {
               <Icon name="pin" size={13} /> {data?.venue?.stadium ?? '—'}, {data?.venue?.city ?? '—'}
             </span>
             <span className="row gap-6">
-              <Icon name="standings" size={13} /> Group {m.group}
+              <Icon name="standings" size={13} /> Grupo {m.group}
             </span>
           </div>
 
@@ -81,7 +81,7 @@ export function MatchDetail({ id }: { id: string }) {
             style={{ width: '100%', justifyContent: 'center', marginTop: 16 }}
             onClick={() => navigate({ to: '/analyst', search: { ctx: 'match', id: m.id } })}
           >
-            <Icon name="ai" size={15} /> Ask Analyst about this match
+            <Icon name="ai" size={15} /> Preguntar al analista sobre este partido
           </button>
         </div>
       </div>
@@ -89,7 +89,7 @@ export function MatchDetail({ id }: { id: string }) {
       <div className="row gap-6" style={{ marginBottom: 14 }}>
         {(['events', 'lineups', 'stats'] as Tab[]).map((t) => (
           <button key={t} type="button" className={cn('pill', tab === t && 'on')} onClick={() => setTab(t)}>
-            {t === 'events' ? 'Events' : t === 'lineups' ? 'Lineups' : 'Statistics'}
+            {t === 'events' ? 'Eventos' : t === 'lineups' ? 'Alineaciones' : 'Estadísticas'}
           </button>
         ))}
       </div>
@@ -102,7 +102,7 @@ export function MatchDetail({ id }: { id: string }) {
 }
 
 function EventsTimeline({ events, homeCode }: { events: MatchEvent[]; homeCode: string }) {
-  if (!events.length) return <Empty icon="whistle" title="No events" text="No events recorded for this match yet." />;
+  if (!events.length) return <Empty icon="whistle" title="Sin eventos" text="Aún no hay eventos para este partido." />;
   return (
     <div className="card card-pad">
       <div className="tl">
@@ -170,7 +170,7 @@ function SquadList({ code, players }: { code: string; players: Player[] }) {
           ))
         ) : (
           <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-            Squad not available in the local dataset.
+            Plantilla no disponible (aún no se publican las convocatorias).
           </p>
         )}
       </div>
@@ -180,11 +180,11 @@ function SquadList({ code, players }: { code: string; players: Player[] }) {
 
 function MatchStats({ m, pH }: { m: { shotsH: number | null; shotsA: number | null; shotsTH: number | null; shotsTA: number | null }; pH: number }) {
   if (m.shotsH == null)
-    return <Empty icon="stats" title="No statistics" text="Match statistics appear once a fixture is played." />;
+    return <Empty icon="stats" title="Sin estadísticas" text="Las estadísticas aparecen cuando se juega el partido." />;
   const rows: Array<[string, number, number]> = [
-    ['Possession %', pH, 100 - pH],
-    ['Shots', m.shotsH ?? 0, m.shotsA ?? 0],
-    ['Shots on target', m.shotsTH ?? 0, m.shotsTA ?? 0],
+    ['Posesión %', pH, 100 - pH],
+    ['Tiros', m.shotsH ?? 0, m.shotsA ?? 0],
+    ['Tiros a puerta', m.shotsTH ?? 0, m.shotsTA ?? 0],
   ];
   return (
     <div className="card card-pad" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

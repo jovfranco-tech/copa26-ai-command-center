@@ -33,16 +33,16 @@ export function Favorites() {
       <MockBanner />
       <div className="row gap-6 wrap" style={{ marginBottom: 16 }}>
         <Pill on={tab === 'teams'} onClick={() => setTab('teams')}>
-          Teams {favTeams.length}
+          Selecciones {favTeams.length}
         </Pill>
         <Pill on={tab === 'players'} onClick={() => setTab('players')}>
-          Players {favPlayers.length}
+          Jugadores {favPlayers.length}
         </Pill>
         <Pill on={tab === 'matches'} onClick={() => setTab('matches')}>
-          Matches {favMatches.length}
+          Partidos {favMatches.length}
         </Pill>
         <Pill on={tab === 'notes'} onClick={() => setTab('notes')}>
-          Notes
+          Notas
         </Pill>
       </div>
 
@@ -54,7 +54,7 @@ export function Favorites() {
             ))}
           </div>
         ) : (
-          <Empty icon="star" title="No favorite teams" text="Star a team from any team card." />
+          <Empty icon="star" title="Sin selecciones favoritas" text="Marca una selección con la estrella en cualquier tarjeta." />
         ))}
 
       {tab === 'players' &&
@@ -65,7 +65,7 @@ export function Favorites() {
             ))}
           </div>
         ) : (
-          <Empty icon="star" title="No favorite players" text="Star a player from any player card." />
+          <Empty icon="star" title="Sin jugadores favoritos" text="Marca un jugador con la estrella en cualquier tarjeta." />
         ))}
 
       {tab === 'matches' &&
@@ -76,18 +76,18 @@ export function Favorites() {
             ))}
           </div>
         ) : (
-          <Empty icon="star" title="No saved matches" text="Save a match from any fixture's detail page." />
+          <Empty icon="star" title="Sin partidos guardados" text="Guarda un partido desde su página de detalle." />
         ))}
 
       {tab === 'notes' && (
         <div className="card card-pad">
           <div className="mono-label" style={{ marginBottom: 8 }}>
-            Personal notes · stored locally only
+            Notas personales · solo en este dispositivo
           </div>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Scout notes, predictions, things to watch…"
+            placeholder="Apuntes, predicciones, cosas a seguir…"
             rows={12}
             style={{
               width: '100%',

@@ -22,6 +22,31 @@ export function cn(...parts: Array<string | false | null | undefined>): string {
 
 type Status = 'UPCOMING' | 'LIVE' | 'FT';
 
+/* ---------- Jersey (team kit colors) ---------- */
+export function Jersey({
+  colorA = '#2a3550',
+  colorB = '#566080',
+  size = 28,
+}: {
+  colorA?: string;
+  colorB?: string;
+  size?: number;
+}) {
+  return (
+    <svg width={size} height={(size * 44) / 48} viewBox="0 0 48 44" aria-hidden style={{ flex: 'none' }}>
+      <path
+        d="M16 4 L24 8 L32 4 L44 11 L39 21 L33 18 V42 H15 V18 L9 21 L4 11 Z"
+        fill={colorA}
+        stroke="rgba(0,0,0,.28)"
+        strokeWidth="1"
+        strokeLinejoin="round"
+      />
+      <path d="M16 4 L24 8 L32 4 L34 10 L24 14 L14 10 Z" fill={colorB} />
+      <rect x="22.5" y="14" width="3" height="28" fill={colorB} opacity="0.9" />
+    </svg>
+  );
+}
+
 /* ---------- Crest (generated escudo + optional local asset) ---------- */
 export interface CrestProps {
   code: string;
@@ -161,8 +186,8 @@ export function StatusBadge({ status, minute, time }: { status: Status; minute?:
         {minute ?? 0}&apos;
       </span>
     );
-  if (status === 'FT') return <span className="badge ft">Full Time</span>;
-  return <span className="badge up">{time ?? 'TBD'}</span>;
+  if (status === 'FT') return <span className="badge ft">Final</span>;
+  return <span className="badge up">{time ?? 'Por jugar'}</span>;
 }
 
 /* ---------- Form dots ---------- */

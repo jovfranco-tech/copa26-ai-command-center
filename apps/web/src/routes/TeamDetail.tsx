@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Icon, Empty, Form, cn } from '@worldcup/ui';
+import { Icon, Empty, Form, Jersey, cn } from '@worldcup/ui';
 import { fmtGD } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, FavStar } from '@/components/identity';
 import { PlayerCard, MatchRow, StandingsTable } from '@/components/cards';
@@ -16,9 +16,9 @@ export function TeamDetail({ code }: { code: string }) {
   const { data: standings } = useStandings();
   const [tab, setTab] = useState<Tab>('squad');
 
-  if (isLoading) return <p className="muted">Loading team…</p>;
+  if (isLoading) return <p className="muted">Cargando selección…</p>;
   const t = teamData?.item;
-  if (!t) return <Empty icon="teams" title="Team not found" text="This team is not in the local dataset." />;
+  if (!t) return <Empty icon="teams" title="Selección no encontrada" text="Esta selección no está en el dataset." />;
 
   const groupRows = standings?.groups[t.group] ?? [];
   const row = groupRows.find((r) => r.team === code);
@@ -32,6 +32,7 @@ export function TeamDetail({ code }: { code: string }) {
         <div className="card-pad">
           <div className="row gap-16 wrap">
             <TeamCrest code={code} size={72} />
+            <Jersey colorA={t.colorA} colorB={t.colorB} size={52} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="row gap-10">
                 <TeamFlag code={code} size={20} />
@@ -39,16 +40,16 @@ export function TeamDetail({ code }: { code: string }) {
                 <FavStar kind="teams" id={code} size={22} />
               </div>
               <div className="mono-label" style={{ marginTop: 4 }}>
-                Group {t.group} · FIFA #{t.ranking ?? '—'} · {t.confederation ?? '—'}
+                Grupo {t.group} · {t.confederation ?? 'Mundial 2026'}
               </div>
             </div>
             {row && (
               <div className="row gap-16">
                 <Stat label="Pts" value={row.Pts} />
-                <Stat label="W-D-L" value={`${row.W}-${row.D}-${row.L}`} />
-                <Stat label="GD" value={fmtGD(row.GD)} />
+                <Stat label="G-E-P" value={`${row.W}-${row.D}-${row.L}`} />
+                <Stat label="DG" value={fmtGD(row.GD)} />
                 <div>
-                  <div className="mono-label">Form</div>
+                  <div className="mono-label">Forma</div>
                   <div style={{ marginTop: 4 }}>
                     <Form list={row.form} />
                   </div>
@@ -62,7 +63,7 @@ export function TeamDetail({ code }: { code: string }) {
       <div className="row gap-6" style={{ marginBottom: 14 }}>
         {(['squad', 'fixtures', 'group'] as Tab[]).map((tb) => (
           <button key={tb} type="button" className={cn('pill', tab === tb && 'on')} onClick={() => setTab(tb)}>
-            {tb === 'squad' ? 'Squad' : tb === 'fixtures' ? 'Fixtures' : 'Group'}
+            {tb === 'squad' ? 'Plantilla' : tb === 'fixtures' ? 'Partidos' : 'Grupo'}
           </button>
         ))}
       </div>
@@ -75,7 +76,7 @@ export function TeamDetail({ code }: { code: string }) {
             ))}
           </div>
         ) : (
-          <Empty icon="players" title="No squad data" text="Player data will appear once ingested." />
+          <Empty icon="players" title="Sin plantilla" text="Las convocatorias oficiales se publican días antes del torneo." />
         ))}
 
       {tab === 'fixtures' && (
@@ -84,7 +85,7 @@ export function TeamDetail({ code }: { code: string }) {
             fixtures.map((m) => <MatchRow key={m.id} m={m} />)
           ) : (
             <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-              No fixtures found.
+              Sin partidos.
             </p>
           )}
         </div>
@@ -94,10 +95,10 @@ export function TeamDetail({ code }: { code: string }) {
         <div className="card">
           <div className="card-hd">
             <Icon name="standings" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Group {t.group}</h3>
+            <h3>Grupo {t.group}</h3>
             <span className="spacer" />
             <button type="button" className="card-link" onClick={() => navigate({ to: '/standings' })}>
-              All groups
+              Todos los grupos
             </button>
           </div>
           <div className="card-pad">

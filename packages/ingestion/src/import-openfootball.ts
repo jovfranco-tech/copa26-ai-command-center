@@ -89,13 +89,68 @@ const VENUE_ID: Record<string, string> = {
   'New York/New Jersey (East Rutherford)': 'nyc',
 };
 
-const COUNTRY = { us: 'USA', ca: 'Canada', mx: 'Mexico' } as const;
+const COUNTRY = { us: 'Estados Unidos', ca: 'Canadá', mx: 'México' } as const;
 const MONTHS: Record<string, string> = { June: '06', July: '07' };
+
+// openfootball English name -> Spanish display name
+const ES_NAME: Record<string, string> = {
+  Mexico: 'México',
+  'South Africa': 'Sudáfrica',
+  'South Korea': 'Corea del Sur',
+  'Czech Republic': 'Chequia',
+  Canada: 'Canadá',
+  'Bosnia & Herzegovina': 'Bosnia y Herzegovina',
+  Qatar: 'Catar',
+  Switzerland: 'Suiza',
+  Brazil: 'Brasil',
+  Morocco: 'Marruecos',
+  Haiti: 'Haití',
+  Scotland: 'Escocia',
+  USA: 'Estados Unidos',
+  Paraguay: 'Paraguay',
+  Australia: 'Australia',
+  Turkey: 'Turquía',
+  Germany: 'Alemania',
+  'Curaçao': 'Curazao',
+  'Ivory Coast': 'Costa de Marfil',
+  Ecuador: 'Ecuador',
+  Netherlands: 'Países Bajos',
+  Japan: 'Japón',
+  Sweden: 'Suecia',
+  Tunisia: 'Túnez',
+  Belgium: 'Bélgica',
+  Egypt: 'Egipto',
+  Iran: 'Irán',
+  'New Zealand': 'Nueva Zelanda',
+  Spain: 'España',
+  'Cape Verde': 'Cabo Verde',
+  'Saudi Arabia': 'Arabia Saudita',
+  Uruguay: 'Uruguay',
+  France: 'Francia',
+  Senegal: 'Senegal',
+  Iraq: 'Irak',
+  Norway: 'Noruega',
+  Argentina: 'Argentina',
+  Algeria: 'Argelia',
+  Austria: 'Austria',
+  Jordan: 'Jordania',
+  Portugal: 'Portugal',
+  'DR Congo': 'RD Congo',
+  Uzbekistan: 'Uzbekistán',
+  Colombia: 'Colombia',
+  England: 'Inglaterra',
+  Croatia: 'Croacia',
+  Ghana: 'Ghana',
+  Panama: 'Panamá',
+};
 
 function meta(name: string) {
   const m = TEAM_META[name.trim()];
   if (!m) throw new Error(`No TEAM_META for "${name}". Update import-openfootball.ts.`);
   return m;
+}
+function esName(name: string): string {
+  return ES_NAME[name.trim()] ?? name.trim();
 }
 function cleanCity(c: string): string {
   return c.replace(/\s*\(.*\)$/, '').trim();
@@ -141,7 +196,7 @@ function main() {
       teams.push({
         id: mm.code,
         code: mm.code,
-        name: n,
+        name: esName(n),
         group: letter,
         ranking: null,
         confederation: undefined,

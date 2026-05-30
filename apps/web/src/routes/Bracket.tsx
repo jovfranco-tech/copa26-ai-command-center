@@ -6,7 +6,7 @@ import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useTeamsMap } from '@/hooks';
 
-const ROUND_NAMES = ['Round of 32', 'Round of 16', 'Quarter-finals', 'Semi-finals', 'Final'];
+const ROUND_NAMES = ['Dieciseisavos', 'Octavos', 'Cuartos', 'Semifinales', 'Final'];
 
 export function Bracket() {
   const navigate = useNavigate();
@@ -50,8 +50,8 @@ export function Bracket() {
         <MockBanner />
         <Empty
           icon="bracket"
-          title="Knockout bracket — to be determined"
-          text="The Round of 32 is set after the group stage (from Jun 28, 2026). It will appear here once results are in."
+          title="Eliminatorias — por definir"
+          text="Los dieciseisavos se definen tras la fase de grupos (desde el 28 de junio de 2026). Aparecerán aquí cuando haya resultados."
         />
       </div>
     );
@@ -61,7 +61,7 @@ export function Bracket() {
     <div className="page-fade">
       <MockBanner />
       <div className="card card-pad" style={{ marginBottom: 16 }}>
-        <span className="mono-label">Projected knockout · winners advance by FIFA ranking until results are ingested</span>
+        <span className="mono-label">Eliminatoria proyectada · los ganadores avanzan por ranking FIFA hasta que haya resultados</span>
       </div>
 
       <div className="scroll-x">
@@ -85,7 +85,7 @@ export function Bracket() {
           ))}
 
           <div className="bk-col" style={{ justifyContent: 'center' }}>
-            <div className="bk-round mono-label">Champion</div>
+            <div className="bk-round mono-label">Campeón</div>
             <div className="card bk-champ">
               <Icon name="trophy" size={28} style={{ color: 'var(--gold)' }} />
               {champion ? (

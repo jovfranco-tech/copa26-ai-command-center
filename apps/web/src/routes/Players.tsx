@@ -19,20 +19,20 @@ export function Players() {
         <div className="searchbox" style={{ marginLeft: 0, marginBottom: 10, maxWidth: 360 }}>
           <Icon name="search" size={15} />
           <input
-            aria-label="Search players"
-            placeholder="Search players or clubs…"
+            aria-label="Buscar jugadores"
+            placeholder="Buscar jugadores o clubes…"
             value={f.q}
             onChange={(e) => f.set({ q: e.target.value })}
           />
           {f.q && (
-            <button type="button" className="fav-btn" onClick={() => f.set({ q: '' })} aria-label="Clear">
+            <button type="button" className="fav-btn" onClick={() => f.set({ q: '' })} aria-label="Limpiar">
               <Icon name="close" size={14} />
             </button>
           )}
         </div>
         <div className="row gap-8 wrap" style={{ marginBottom: 8 }}>
           <Pill on={!f.pos} onClick={() => f.set({ pos: '' })}>
-            All positions
+            Todas las posiciones
           </Pill>
           {POSITIONS.map((p) => (
             <Pill key={p} on={f.pos === p} onClick={() => f.set({ pos: p })}>
@@ -42,7 +42,7 @@ export function Players() {
         </div>
         <div className="row gap-8 wrap">
           <Pill on={!f.team} onClick={() => f.set({ team: '' })}>
-            All teams
+            Todas las selecciones
           </Pill>
           {(teamsData?.items ?? []).map((t) => (
             <Pill key={t.code} on={f.team === t.code} onClick={() => f.set({ team: t.code })}>
@@ -53,18 +53,18 @@ export function Players() {
       </div>
 
       <div className="row" style={{ justifyContent: 'space-between', marginBottom: 12 }}>
-        <span className="mono-label">{players.length} players</span>
+        <span className="mono-label">{players.length} jugadores</span>
         {(f.q || f.team || f.pos) && (
           <button type="button" className="card-link" onClick={() => f.reset()}>
-            Reset filters
+            Limpiar filtros
           </button>
         )}
       </div>
 
       {isLoading ? (
-        <p className="muted">Loading players…</p>
+        <p className="muted">Cargando jugadores…</p>
       ) : players.length === 0 ? (
-        <Empty icon="players" title="No players" text="No players match the current filters." />
+        <Empty icon="players" title="Sin jugadores" text="Las plantillas oficiales aún no se publican (se anuncian días antes del torneo)." />
       ) : (
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))' }}>
           {players.map((p) => (

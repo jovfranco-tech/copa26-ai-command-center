@@ -9,10 +9,10 @@ export const POSITIONS = ['GK', 'DF', 'MF', 'FW'] as const;
 export type Position = (typeof POSITIONS)[number];
 
 export const POSITION_LONG: Record<Position, string> = {
-  GK: 'Goalkeeper',
-  DF: 'Defender',
-  MF: 'Midfielder',
-  FW: 'Forward',
+  GK: 'Portero',
+  DF: 'Defensa',
+  MF: 'Centrocampista',
+  FW: 'Delantero',
 };
 
 export const MATCH_STATUSES = ['UPCOMING', 'LIVE', 'FT'] as const;
@@ -54,7 +54,7 @@ export const LOCAL_ONLY = {
 } as const;
 
 export const FOOTER_NOTICE =
-  'Unofficial · not affiliated with FIFA · schedule data from openfootball (CC0).';
-export const ANALYST_DISCLAIMER = 'Answers based on the loaded World Cup dataset.';
+  'No oficial · sin afiliación con la FIFA · calendario de openfootball (CC0).';
+export const ANALYST_DISCLAIMER = 'Respuestas basadas en el dataset cargado del Mundial.';
 export const MOCK_BANNER =
-  'Real WC2026 schedule (openfootball, CC0). Squads, results and stats appear once matches are played (Jun 11).';
+  'Calendario real del Mundial 2026 (openfootball, CC0). Plantillas, resultados y estadísticas aparecen cuando se jueguen los partidos (11 jun).';

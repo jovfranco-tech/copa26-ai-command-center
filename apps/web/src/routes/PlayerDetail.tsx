@@ -26,8 +26,8 @@ export function PlayerDetail({ id }: { id: string }) {
     };
   }, [squad]);
 
-  if (isLoading) return <p className="muted">Loading player…</p>;
-  if (!p) return <Empty icon="players" title="Player not found" text="This player is not in the local dataset." />;
+  if (isLoading) return <p className="muted">Cargando jugador…</p>;
+  if (!p) return <Empty icon="players" title="Jugador no encontrado" text="Este jugador no está en el dataset." />;
 
   const t = teams[p.team];
   const compare = (allPlayers?.items ?? []).find((x) => x.id === compareId) ?? null;
@@ -60,17 +60,17 @@ export function PlayerDetail({ id }: { id: string }) {
                 <span>·</span>
                 <span>{p.club}</span>
                 <span>·</span>
-                <span>Age {p.age ?? '—'}</span>
+                <span>{p.age ?? '—'} años</span>
               </div>
             </div>
           </div>
 
           <div className="kpi-grid" style={{ marginTop: 16 }}>
-            <Metric label="Goals" value={p.goals} accent="var(--gold-2)" />
-            <Metric label="Assists" value={p.assists} />
-            <Metric label="Minutes" value={p.minutes} />
-            <Metric label="Yellow" value={p.yellow} />
-            <Metric label="Red" value={p.red} />
+            <Metric label="Goles" value={p.goals} accent="var(--gold-2)" />
+            <Metric label="Asistencias" value={p.assists} />
+            <Metric label="Minutos" value={p.minutes} />
+            <Metric label="Amarillas" value={p.yellow} />
+            <Metric label="Rojas" value={p.red} />
           </div>
         </div>
       </div>

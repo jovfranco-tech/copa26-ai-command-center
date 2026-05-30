@@ -9,7 +9,7 @@
     {
       "id": "MEX",
       "code": "MEX",
-      "name": "Mexico",
+      "name": "México",
       "group": "A",
       "ranking": null,
       "colorA": "#1c8a4d",
@@ -21,7 +21,7 @@
     {
       "id": "RSA",
       "code": "RSA",
-      "name": "South Africa",
+      "name": "Sudáfrica",
       "group": "A",
       "ranking": null,
       "colorA": "#007a4d",
@@ -33,7 +33,7 @@
     {
       "id": "KOR",
       "code": "KOR",
-      "name": "South Korea",
+      "name": "Corea del Sur",
       "group": "A",
       "ranking": null,
       "colorA": "#c8102e",
@@ -45,7 +45,7 @@
     {
       "id": "CZE",
       "code": "CZE",
-      "name": "Czech Republic",
+      "name": "Chequia",
       "group": "A",
       "ranking": null,
       "colorA": "#11457e",
@@ -57,7 +57,7 @@
     {
       "id": "CAN",
       "code": "CAN",
-      "name": "Canada",
+      "name": "Canadá",
       "group": "B",
       "ranking": null,
       "colorA": "#d52b1e",
@@ -69,7 +69,7 @@
     {
       "id": "BIH",
       "code": "BIH",
-      "name": "Bosnia & Herzegovina",
+      "name": "Bosnia y Herzegovina",
       "group": "B",
       "ranking": null,
       "colorA": "#002395",
@@ -81,7 +81,7 @@
     {
       "id": "QAT",
       "code": "QAT",
-      "name": "Qatar",
+      "name": "Catar",
       "group": "B",
       "ranking": null,
       "colorA": "#7a1336",
@@ -93,7 +93,7 @@
     {
       "id": "SUI",
       "code": "SUI",
-      "name": "Switzerland",
+      "name": "Suiza",
       "group": "B",
       "ranking": null,
       "colorA": "#d52b1e",
@@ -105,7 +105,7 @@
     {
       "id": "BRA",
       "code": "BRA",
-      "name": "Brazil",
+      "name": "Brasil",
       "group": "C",
       "ranking": null,
       "colorA": "#f7d417",
@@ -117,7 +117,7 @@
     {
       "id": "MAR",
       "code": "MAR",
-      "name": "Morocco",
+      "name": "Marruecos",
       "group": "C",
       "ranking": null,
       "colorA": "#c1272d",
@@ -129,7 +129,7 @@
     {
       "id": "HAI",
       "code": "HAI",
-      "name": "Haiti",
+      "name": "Haití",
       "group": "C",
       "ranking": null,
       "colorA": "#00209f",
@@ -141,7 +141,7 @@
     {
       "id": "SCO",
       "code": "SCO",
-      "name": "Scotland",
+      "name": "Escocia",
       "group": "C",
       "ranking": null,
       "colorA": "#0065bf",
@@ -153,7 +153,7 @@
     {
       "id": "USA",
       "code": "USA",
-      "name": "USA",
+      "name": "Estados Unidos",
       "group": "D",
       "ranking": null,
       "colorA": "#1b3c8f",
@@ -189,7 +189,7 @@
     {
       "id": "TUR",
       "code": "TUR",
-      "name": "Turkey",
+      "name": "Turquía",
       "group": "D",
       "ranking": null,
       "colorA": "#c8102e",
@@ -201,7 +201,7 @@
     {
       "id": "GER",
       "code": "GER",
-      "name": "Germany",
+      "name": "Alemania",
       "group": "E",
       "ranking": null,
       "colorA": "#3a3a3a",
@@ -213,7 +213,7 @@
     {
       "id": "CUW",
       "code": "CUW",
-      "name": "Curaçao",
+      "name": "Curazao",
       "group": "E",
       "ranking": null,
       "colorA": "#002b7f",
@@ -225,7 +225,7 @@
     {
       "id": "CIV",
       "code": "CIV",
-      "name": "Ivory Coast",
+      "name": "Costa de Marfil",
       "group": "E",
       "ranking": null,
       "colorA": "#ec5a13",
@@ -249,7 +249,7 @@
     {
       "id": "NED",
       "code": "NED",
-      "name": "Netherlands",
+      "name": "Países Bajos",
       "group": "F",
       "ranking": null,
       "colorA": "#ec5a13",
@@ -261,7 +261,7 @@
     {
       "id": "JPN",
       "code": "JPN",
-      "name": "Japan",
+      "name": "Japón",
       "group": "F",
       "ranking": null,
       "colorA": "#0a2a6b",
@@ -273,7 +273,7 @@
     {
       "id": "SWE",
       "code": "SWE",
-      "name": "Sweden",
+      "name": "Suecia",
       "group": "F",
       "ranking": null,
       "colorA": "#005baf",
@@ -285,7 +285,7 @@
     {
       "id": "TUN",
       "code": "TUN",
-      "name": "Tunisia",
+      "name": "Túnez",
       "group": "F",
       "ranking": null,
       "colorA": "#c8102e",
@@ -297,7 +297,7 @@
     {
       "id": "BEL",
       "code": "BEL",
-      "name": "Belgium",
+      "name": "Bélgica",
       "group": "G",
       "ranking": null,
       "colorA": "#e30613",
@@ -309,7 +309,7 @@
     {
       "id": "EGY",
       "code": "EGY",
-      "name": "Egypt",
+      "name": "Egipto",
       "group": "G",
       "ranking": null,
       "colorA": "#c8102e",
@@ -321,7 +321,7 @@
     {
       "id": "IRN",
       "code": "IRN",
-      "name": "Iran",
+      "name": "Irán",
       "group": "G",
       "ranking": null,
       "colorA": "#1c8a4d",
@@ -333,7 +333,7 @@
     {
       "id": "NZL",
       "code": "NZL",
-      "name": "New Zealand",
+      "name": "Nueva Zelanda",
       "group": "G",
       "ranking": null,
       "colorA": "#1b3c8f",
@@ -345,7 +345,7 @@
     {
       "id": "ESP",
       "code": "ESP",
-      "name": "Spain",
+      "name": "España",
       "group": "H",
       "ranking": null,
       "colorA": "#c8102e",
@@ -357,7 +357,7 @@
     {
       "id": "CPV",
       "code": "CPV",
-      "name": "Cape Verde",
+      "name": "Cabo Verde",
       "group": "H",
       "ranking": null,
       "colorA": "#003893",
@@ -369,7 +369,7 @@
     {
       "id": "KSA",
       "code": "KSA",
-      "name": "Saudi Arabia",
+      "name": "Arabia Saudita",
       "group": "H",
       "ranking": null,
       "colorA": "#1c6b3c",
@@ -393,7 +393,7 @@
     {
       "id": "FRA",
       "code": "FRA",
-      "name": "France",
+      "name": "Francia",
       "group": "I",
       "ranking": null,
       "colorA": "#1f3a93",
@@ -417,7 +417,7 @@
     {
       "id": "IRQ",
       "code": "IRQ",
-      "name": "Iraq",
+      "name": "Irak",
       "group": "I",
       "ranking": null,
       "colorA": "#007a3d",
@@ -429,7 +429,7 @@
     {
       "id": "NOR",
       "code": "NOR",
-      "name": "Norway",
+      "name": "Noruega",
       "group": "I",
       "ranking": null,
       "colorA": "#c60c30",
@@ -453,7 +453,7 @@
     {
       "id": "ALG",
       "code": "ALG",
-      "name": "Algeria",
+      "name": "Argelia",
       "group": "J",
       "ranking": null,
       "colorA": "#1c8a4d",
@@ -477,7 +477,7 @@
     {
       "id": "JOR",
       "code": "JOR",
-      "name": "Jordan",
+      "name": "Jordania",
       "group": "J",
       "ranking": null,
       "colorA": "#007a3d",
@@ -501,7 +501,7 @@
     {
       "id": "COD",
       "code": "COD",
-      "name": "DR Congo",
+      "name": "RD Congo",
       "group": "K",
       "ranking": null,
       "colorA": "#007fff",
@@ -513,7 +513,7 @@
     {
       "id": "UZB",
       "code": "UZB",
-      "name": "Uzbekistan",
+      "name": "Uzbekistán",
       "group": "K",
       "ranking": null,
       "colorA": "#1eb53a",
@@ -537,7 +537,7 @@
     {
       "id": "ENG",
       "code": "ENG",
-      "name": "England",
+      "name": "Inglaterra",
       "group": "L",
       "ranking": null,
       "colorA": "#dfe3ea",
@@ -549,7 +549,7 @@
     {
       "id": "CRO",
       "code": "CRO",
-      "name": "Croatia",
+      "name": "Croacia",
       "group": "L",
       "ranking": null,
       "colorA": "#c8102e",
@@ -573,7 +573,7 @@
     {
       "id": "PAN",
       "code": "PAN",
-      "name": "Panama",
+      "name": "Panamá",
       "group": "L",
       "ranking": null,
       "colorA": "#005293",
@@ -588,7 +588,7 @@
       "id": "van",
       "stadium": "BC Place",
       "city": "Vancouver",
-      "country": "Canada",
+      "country": "Canadá",
       "capacity": 54000,
       "surface": "Grass",
       "imageAssetId": null
@@ -597,7 +597,7 @@
       "id": "sea",
       "stadium": "Lumen Field",
       "city": "Seattle",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 69000,
       "surface": "Grass",
       "imageAssetId": null
@@ -606,7 +606,7 @@
       "id": "sf",
       "stadium": "Levi's Stadium",
       "city": "San Francisco Bay Area",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 71000,
       "surface": "Grass",
       "imageAssetId": null
@@ -615,7 +615,7 @@
       "id": "lax",
       "stadium": "SoFi Stadium",
       "city": "Los Angeles",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 70000,
       "surface": "Grass",
       "imageAssetId": null
@@ -624,7 +624,7 @@
       "id": "gdl",
       "stadium": "Estadio Akron",
       "city": "Guadalajara",
-      "country": "Mexico",
+      "country": "México",
       "capacity": 48000,
       "surface": "Grass",
       "imageAssetId": null
@@ -633,7 +633,7 @@
       "id": "mex",
       "stadium": "Estadio Azteca",
       "city": "Mexico City",
-      "country": "Mexico",
+      "country": "México",
       "capacity": 83000,
       "surface": "Grass",
       "imageAssetId": null
@@ -642,7 +642,7 @@
       "id": "mty",
       "stadium": "Estadio BBVA",
       "city": "Monterrey",
-      "country": "Mexico",
+      "country": "México",
       "capacity": 53500,
       "surface": "Grass",
       "imageAssetId": null
@@ -651,7 +651,7 @@
       "id": "hou",
       "stadium": "NRG Stadium",
       "city": "Houston",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 72000,
       "surface": "Grass",
       "imageAssetId": null
@@ -660,7 +660,7 @@
       "id": "dal",
       "stadium": "AT&T Stadium",
       "city": "Dallas",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 94000,
       "surface": "Grass",
       "imageAssetId": null
@@ -669,7 +669,7 @@
       "id": "kc",
       "stadium": "Arrowhead Stadium",
       "city": "Kansas City",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 73000,
       "surface": "Grass",
       "imageAssetId": null
@@ -678,7 +678,7 @@
       "id": "atl",
       "stadium": "Mercedes-Benz Stadium",
       "city": "Atlanta",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 75000,
       "surface": "Grass",
       "imageAssetId": null
@@ -687,7 +687,7 @@
       "id": "mia",
       "stadium": "Hard Rock Stadium",
       "city": "Miami",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 65000,
       "surface": "Grass",
       "imageAssetId": null
@@ -696,7 +696,7 @@
       "id": "tor",
       "stadium": "BMO Field",
       "city": "Toronto",
-      "country": "Canada",
+      "country": "Canadá",
       "capacity": 45000,
       "surface": "Grass",
       "imageAssetId": null
@@ -705,7 +705,7 @@
       "id": "bos",
       "stadium": "Gillette Stadium",
       "city": "Boston",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 65000,
       "surface": "Grass",
       "imageAssetId": null
@@ -714,7 +714,7 @@
       "id": "phi",
       "stadium": "Lincoln Financial Field",
       "city": "Philadelphia",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 69000,
       "surface": "Grass",
       "imageAssetId": null
@@ -723,7 +723,7 @@
       "id": "nyc",
       "stadium": "MetLife Stadium",
       "city": "New York/New Jersey",
-      "country": "USA",
+      "country": "Estados Unidos",
       "capacity": 82500,
       "surface": "Grass",
       "imageAssetId": null

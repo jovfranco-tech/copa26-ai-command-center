@@ -1,7 +1,7 @@
 /**
- * Local "Match Analyst" — produces a grounded answer from local cached data ONLY.
- * No network calls. It never invents facts: every sentence is built from the
- * numbers passed in, and it reports which local tables it used.
+ * Analista local — genera respuestas en español SÓLO a partir de los datos
+ * locales cargados. Sin llamadas a internet. No inventa: cada frase se arma con
+ * los números recibidos, y reporta qué tablas locales usó.
  */
 import { avg, fmtFull, type Match, type Player, type StandingRow, type Team } from '@worldcup/shared';
 
@@ -33,74 +33,89 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
 
   if (ctx === 'match' && id) {
     const m = matches.find((x) => x.id === id);
-    if (!m) return { text: 'That match is not in the local dataset.', sources: ['matches'] };
+    if (!m) return { text: 'Ese partido no está en el dataset.', sources: ['partidos'] };
     const h = teamName(teams, m.home);
     const a = teamName(teams, m.away);
     const lines: string[] = [];
     if (m.status === 'UPCOMING') {
-      lines.push(`${h} face ${a} on ${fmtFull(m.date)} at ${m.time} (${m.stage}).`);
+      lines.push(`${h} se enfrenta a ${a} el ${fmtFull(m.date)} a las ${m.time} (${m.stage}).`);
     } else {
-      lines.push(`${h} ${m.homeGoals}–${m.awayGoals} ${a} (${m.status === 'LIVE' ? `live, ${m.minute}'` : 'full time'}, ${m.stage}).`);
-      if (m.possH != null) lines.push(`Possession was ${m.possH}% / ${100 - m.possH}%, shots ${m.shotsH ?? 0}–${m.shotsA ?? 0}.`);
+      lines.push(
+        `${h} ${m.homeGoals}–${m.awayGoals} ${a} (${m.status === 'LIVE' ? `en vivo, ${m.minute}'` : 'final'}, ${m.stage}).`,
+      );
+      if (m.possH != null) lines.push(`La posesión fue ${m.possH}% / ${100 - m.possH}%, tiros ${m.shotsH ?? 0}–${m.shotsA ?? 0}.`);
     }
     const hs = standings[m.group]?.find((r) => r.team === m.home);
     const as = standings[m.group]?.find((r) => r.team === m.away);
-    if (hs && as) lines.push(`In Group ${m.group}, ${m.home} have ${hs.Pts} pts and ${m.away} ${as.Pts} pts.`);
-    return { text: lines.join(' '), sources: ['matches', 'standings'] };
+    if (hs && as) lines.push(`En el Grupo ${m.group}, ${m.home} tiene ${hs.Pts} pts y ${m.away} ${as.Pts} pts.`);
+    return { text: lines.join(' '), sources: ['partidos', 'clasificación'] };
   }
 
   if (ctx === 'team' && id) {
     const t = teams.find((x) => x.code === id);
-    if (!t) return { text: 'That team is not in the local dataset.', sources: ['teams'] };
+    if (!t) return { text: 'Esa selección no está en el dataset.', sources: ['selecciones'] };
     const row = standings[t.group]?.find((r) => r.team === t.code);
     const topTeamScorer = scorers.find((p) => p.team === t.code);
     const next = matches.find((m) => (m.home === t.code || m.away === t.code) && m.status !== 'FT');
     const lines: string[] = [];
     if (row)
       lines.push(
-        `${t.name} sit in Group ${t.group} with ${row.Pts} pts (${row.W}-${row.D}-${row.L}), GD ${row.GD >= 0 ? '+' : ''}${row.GD}.`,
+        `${t.name} está en el Grupo ${t.group} con ${row.Pts} pts (${row.W}-${row.D}-${row.L}), DG ${row.GD >= 0 ? '+' : ''}${row.GD}.`,
       );
+    else lines.push(`${t.name} está en el Grupo ${t.group}. El torneo aún no comienza, sin partidos jugados.`);
     if (topTeamScorer && topTeamScorer.goals > 0)
-      lines.push(`Their top scorer is ${topTeamScorer.name} with ${topTeamScorer.goals} goals.`);
-    if (q.includes('form') && row) lines.push(`Recent form: ${row.form.join('-') || 'none yet'}.`);
+      lines.push(`Su goleador es ${topTeamScorer.name} con ${topTeamScorer.goals} goles.`);
+    if (q.includes('forma') && row) lines.push(`Forma reciente: ${row.form.join('-') || 'aún sin partidos'}.`);
     if (next) {
       const opp = next.home === t.code ? next.away : next.home;
-      lines.push(`Next up: ${teamName(teams, opp)} on ${fmtFull(next.date)}.`);
+      lines.push(`Próximo: ${teamName(teams, opp)} el ${fmtFull(next.date)}.`);
     }
-    return { text: lines.join(' ') || `${t.name} has no recorded results yet.`, sources: ['teams', 'standings', 'players', 'matches'] };
+    return { text: lines.join(' '), sources: ['selecciones', 'clasificación', 'partidos'] };
   }
 
   if (ctx === 'player' && id) {
     const p = players.find((x) => x.id === id);
-    if (!p) return { text: 'That player is not in the local dataset.', sources: ['players'] };
+    if (!p) return { text: 'Ese jugador no está en el dataset.', sources: ['jugadores'] };
     const rank = scorers.findIndex((x) => x.id === p.id) + 1;
     const lines = [
-      `${p.name} (${teamName(teams, p.team)}, ${p.posLong ?? p.pos}, ${p.club}) has ${p.goals} goals and ${p.assists} assists in ${p.minutes} minutes.`,
+      `${p.name} (${teamName(teams, p.team)}, ${p.posLong ?? p.pos}, ${p.club}) lleva ${p.goals} goles y ${p.assists} asistencias en ${p.minutes} minutos.`,
     ];
-    if (p.goals > 0) lines.push(`That ranks #${rank} among local scorers.`);
-    if (p.yellow || p.red) lines.push(`Discipline: ${p.yellow} yellow, ${p.red} red.`);
-    return { text: lines.join(' '), sources: ['players'] };
+    if (p.goals > 0) lines.push(`Eso lo ubica #${rank} entre los goleadores locales.`);
+    if (p.yellow || p.red) lines.push(`Disciplina: ${p.yellow} amarillas, ${p.red} rojas.`);
+    return { text: lines.join(' '), sources: ['jugadores'] };
   }
 
-  // tournament default
+  // torneo (por defecto)
   const leaderA = standings.A?.[0];
   const top = scorers[0];
-  const lines = [
-    `Across ${played.length} completed matches, ${goals} goals have been scored (${avg(goals, played.length)} per game).`,
-  ];
-  if (top) lines.push(`${top.name} leads the scoring with ${top.goals} goals and ${top.assists} assists.`);
-  if (leaderA) lines.push(`Group A is led by ${teamName(teams, leaderA.team)} on ${leaderA.Pts} pts.`);
-  if (q.includes('live')) {
-    const live = matches.filter((m) => m.status === 'LIVE');
-    lines.push(live.length ? `${live.length} match(es) are live right now.` : 'No matches are live right now.');
+  const upcoming = matches.filter((m) => m.status === 'UPCOMING');
+  const lines: string[] = [];
+  if (played.length) {
+    lines.push(`En ${played.length} partidos jugados se han marcado ${goals} goles (${avg(goals, played.length)} por partido).`);
+  } else {
+    lines.push(
+      `El Mundial 2026 aún no comienza (arranca el 11 de junio). Hay ${upcoming.length} partidos programados en 16 sedes de Canadá, EE. UU. y México.`,
+    );
   }
-  return { text: lines.join(' '), sources: ['matches', 'players', 'standings'] };
+  if (top && top.goals > 0) lines.push(`${top.name} lidera el goleo con ${top.goals} goles y ${top.assists} asistencias.`);
+  if (leaderA) {
+    lines.push(
+      played.length
+        ? `El Grupo A lo lidera ${teamName(teams, leaderA.team)} con ${leaderA.Pts} pts.`
+        : `Por ejemplo, el Grupo A lo integran ${(standings.A ?? []).map((r) => teamName(teams, r.team)).join(', ')}.`,
+    );
+  }
+  if (q.includes('vivo')) {
+    const live = matches.filter((m) => m.status === 'LIVE');
+    lines.push(live.length ? `${live.length} partido(s) en vivo ahora.` : 'No hay partidos en vivo ahora.');
+  }
+  return { text: lines.join(' '), sources: ['partidos', 'jugadores', 'clasificación'] };
 }
 
 export const SUGGESTED_QUESTIONS = [
-  'Give me a tournament overview',
-  'Who is leading the scoring charts?',
-  'How is this team performing?',
-  'Summarise this match',
-  'What is the recent form?',
+  'Dame un panorama del torneo',
+  '¿Quién lidera el goleo?',
+  '¿Cómo le va a esta selección?',
+  'Resume este partido',
+  '¿Cuál es la forma reciente?',
 ];

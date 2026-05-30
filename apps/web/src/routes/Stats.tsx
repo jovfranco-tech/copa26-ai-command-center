@@ -14,8 +14,8 @@ export function Stats() {
   const teams = useTeamsMap();
   const [seg, setSeg] = useState<Segment>('players');
 
-  if (isLoading) return <p className="muted">Loading stats…</p>;
-  if (!data) return <Empty icon="stats" title="No stats" text="Statistics appear once data is available." />;
+  if (isLoading) return <p className="muted">Cargando estadísticas…</p>;
+  if (!data) return <Empty icon="stats" title="Sin estadísticas" text="Las estadísticas aparecen cuando se juegan los partidos." />;
 
   return (
     <div className="page-fade">
@@ -24,20 +24,20 @@ export function Stats() {
       <div className="row gap-6 wrap" style={{ marginBottom: 16 }}>
         {(['players', 'keepers', 'teams'] as Segment[]).map((s) => (
           <Pill key={s} on={seg === s} onClick={() => setSeg(s)}>
-            {s === 'players' ? 'Players' : s === 'keepers' ? 'Goalkeepers' : 'Teams'}
+            {s === 'players' ? 'Jugadores' : s === 'keepers' ? 'Porteros' : 'Selecciones'}
           </Pill>
         ))}
       </div>
 
       {seg === 'players' && (
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))' }}>
-          <Leaderboard title="Top scorers" icon="ball" players={data.topScorers} metric={(p) => `${p.goals}`} />
-          <Leaderboard title="Assists" icon="target" players={data.topAssists} metric={(p) => `${p.assists}`} />
+          <Leaderboard title="Goleadores" icon="ball" players={data.topScorers} metric={(p) => `${p.goals}`} />
+          <Leaderboard title="Asistencias" icon="target" players={data.topAssists} metric={(p) => `${p.assists}`} />
           <Leaderboard
-            title="Cards"
+            title="Tarjetas"
             icon="info"
             players={data.topCards}
-            metric={(p) => `${p.yellow}Y ${p.red}R`}
+            metric={(p) => `${p.yellow}A ${p.red}R`}
           />
         </div>
       )}
@@ -46,7 +46,7 @@ export function Stats() {
         <div className="card">
           <div className="card-hd">
             <Icon name="shield" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Goalkeeper saves</h3>
+            <h3>Atajadas de porteros</h3>
           </div>
           <div className="card-pad">
             {data.goalkeepers.length ? (
@@ -69,7 +69,7 @@ export function Stats() {
               ))
             ) : (
               <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                No goalkeeper data in the local dataset.
+                Sin datos de porteros todavía.
               </p>
             )}
           </div>
@@ -81,7 +81,7 @@ export function Stats() {
           <div className="card">
             <div className="card-hd">
               <Icon name="ball" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Goals by team</h3>
+              <h3>Goles por selección</h3>
             </div>
             <div className="card-pad" style={{ height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -102,8 +102,8 @@ export function Stats() {
             </div>
           </div>
 
-          <TeamLeader title="Possession %" rows={data.teamPossession.map((r) => [r.team, r.possession])} />
-          <TeamLeader title="Shots" rows={data.teamShots.map((r) => [r.team, r.shots])} />
+          <TeamLeader title="Posesión %" rows={data.teamPossession.map((r) => [r.team, r.possession])} />
+          <TeamLeader title="Tiros" rows={data.teamShots.map((r) => [r.team, r.shots])} />
         </div>
       )}
     </div>
@@ -128,9 +128,13 @@ function Leaderboard({
         <h3>{title}</h3>
       </div>
       <div className="card-pad" style={{ paddingTop: 6 }}>
-        {players.map((p, i) => (
-          <PlayerMini key={p.id} p={p} rank={i + 1} metric={metric} />
-        ))}
+        {players.length ? (
+          players.map((p, i) => <PlayerMini key={p.id} p={p} rank={i + 1} metric={metric} />)
+        ) : (
+          <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
+            Sin datos todavía (el torneo aún no empieza).
+          </p>
+        )}
       </div>
     </div>
   );

@@ -7,9 +7,9 @@ import { useMatches, useTeams, useVenues } from '@/hooks';
 import { useMatchFilters } from '@/store/filters';
 
 const STATUSES = [
-  { v: '', l: 'All' },
-  { v: 'LIVE', l: 'Live' },
-  { v: 'UPCOMING', l: 'Upcoming' },
+  { v: '', l: 'Todos' },
+  { v: 'LIVE', l: 'En vivo' },
+  { v: 'UPCOMING', l: 'Próximos' },
   { v: 'FT', l: 'Final' },
 ];
 
@@ -53,45 +53,45 @@ export function MatchCenter() {
           ))}
           {activeFilters > 0 && (
             <button type="button" className="pill" onClick={() => f.reset()}>
-              <Icon name="close" size={12} /> Clear ({activeFilters})
+              <Icon name="close" size={12} /> Limpiar ({activeFilters})
             </button>
           )}
         </div>
         <div className="row gap-8 wrap">
-          <Select value={f.group} onChange={(v) => f.set({ group: v })} label="Group">
-            <option value="">All groups</option>
+          <Select value={f.group} onChange={(v) => f.set({ group: v })} label="Grupo">
+            <option value="">Todos los grupos</option>
             {GROUP_LETTERS.map((g) => (
               <option key={g} value={g}>
-                Group {g}
+                Grupo {g}
               </option>
             ))}
           </Select>
-          <Select value={f.team} onChange={(v) => f.set({ team: v })} label="Team">
-            <option value="">All teams</option>
+          <Select value={f.team} onChange={(v) => f.set({ team: v })} label="Selección">
+            <option value="">Todas las selecciones</option>
             {(teamsData?.items ?? []).map((t) => (
               <option key={t.code} value={t.code}>
                 {t.name}
               </option>
             ))}
           </Select>
-          <Select value={f.stage} onChange={(v) => f.set({ stage: v })} label="Stage">
-            <option value="">All stages</option>
+          <Select value={f.stage} onChange={(v) => f.set({ stage: v })} label="Fase">
+            <option value="">Todas las fases</option>
             {stages.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
           </Select>
-          <Select value={f.venue} onChange={(v) => f.set({ venue: v })} label="Venue">
-            <option value="">All venues</option>
+          <Select value={f.venue} onChange={(v) => f.set({ venue: v })} label="Sede">
+            <option value="">Todas las sedes</option>
             {(venuesData?.items ?? []).map((v) => (
               <option key={v.id} value={v.id}>
                 {v.city}
               </option>
             ))}
           </Select>
-          <Select value={f.date} onChange={(v) => f.set({ date: v })} label="Date">
-            <option value="">All dates</option>
+          <Select value={f.date} onChange={(v) => f.set({ date: v })} label="Fecha">
+            <option value="">Todas las fechas</option>
             {dates.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -102,15 +102,15 @@ export function MatchCenter() {
       </div>
 
       {isLoading ? (
-        <p className="muted">Loading fixtures…</p>
+        <p className="muted">Cargando partidos…</p>
       ) : matches.length === 0 ? (
-        <Empty icon="calendar" title="No matches" text="No fixtures match the current filters." />
+        <Empty icon="calendar" title="Sin partidos" text="Ningún partido coincide con los filtros." />
       ) : (
         Object.entries(byDate).map(([date, list]) => (
           <div key={date} style={{ marginBottom: 22 }}>
             <div className="section-title">
               <span className="mono-label">{date}</span>
-              <h2 style={{ fontSize: 14 }}>{list.length} fixtures</h2>
+              <h2 style={{ fontSize: 14 }}>{list.length} partidos</h2>
             </div>
             <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
               {list.map((m) => (

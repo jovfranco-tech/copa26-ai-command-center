@@ -6,6 +6,13 @@ import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/l
 
 type Ctx = 'tournament' | 'match' | 'team' | 'player';
 
+const CTX_ES: Record<Ctx, string> = {
+  tournament: 'Torneo',
+  match: 'Partido',
+  team: 'Selección',
+  player: 'Jugador',
+};
+
 export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: string }) {
   const { data: teamsData } = useTeams();
   const { data: playersData } = usePlayers();
@@ -43,12 +50,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               >
                 <Icon name="ai" size={15} />
               </span>
-              <h3>Match Analyst</h3>
+              <h3>Analista de partidos</h3>
             </div>
             <div className="card-pad brief-body">
               <p style={{ marginTop: 0 }}>
-                Ask about the tournament, a match, a team or a player. Answers are composed from your local
-                cached data only — nothing leaves this machine.
+                Pregunta sobre el torneo, un partido, una selección o un jugador. Las respuestas se arman
+                solo con los datos locales cargados — nada sale de este equipo.
               </p>
 
               <div className="row gap-6 wrap" style={{ marginBottom: 10 }}>
@@ -61,7 +68,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                       setId('');
                     }}
                   >
-                    {c}
+                    {CTX_ES[c]}
                   </Pill>
                 ))}
               </div>
@@ -73,7 +80,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   className="pill"
                   style={{ color: 'var(--tx)', marginBottom: 10, maxWidth: 320 }}
                 >
-                  <option value="">Select a {ctx}…</option>
+                  <option value="">Elige {ctx === 'player' ? 'un jugador' : ctx === 'team' ? 'una selección' : 'un partido'}…</option>
                   {ctx === 'match' &&
                     (matchData?.items ?? []).map((m) => (
                       <option key={m.id} value={m.id}>
@@ -105,12 +112,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 <input
                   className="searchbox"
                   style={{ flex: 1, marginLeft: 0 }}
-                  placeholder="Ask a question…"
+                  placeholder="Escribe una pregunta…"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
                 <button type="submit" className="btn gold">
-                  <Icon name="send" size={14} /> Ask
+                  <Icon name="send" size={14} /> Preguntar
                 </button>
               </form>
             </div>
@@ -121,13 +128,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <div className="row gap-8" style={{ marginBottom: 8 }}>
                 <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
                 <span className="mono-label" style={{ margin: 0 }}>
-                  Analyst
+                  Analista
                 </span>
               </div>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{answer.text}</p>
               <div className="row gap-6 wrap" style={{ marginTop: 10 }}>
                 <span className="mono-label" style={{ margin: 0 }}>
-                  Sources:
+                  Fuentes:
                 </span>
                 {answer.sources.map((s) => (
                   <span key={s} className="cite">
@@ -145,7 +152,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         <div className="card">
           <div className="card-hd">
             <Icon name="sparkSmall" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Suggested</h3>
+            <h3>Sugeridas</h3>
           </div>
           <div className="card-pad" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {SUGGESTED_QUESTIONS.map((s) => (

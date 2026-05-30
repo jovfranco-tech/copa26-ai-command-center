@@ -56,39 +56,39 @@ export function Dashboard() {
       <MockBanner />
 
       <div className="stat-strip" style={{ marginBottom: 18 }}>
-        <StatTile icon="ball" label="Goals" value={goals} sub="Tournament" spark={[40, 55, 38, 70, 62, 90, 100]} />
-        <StatTile icon="whistle" label="Played" value={played} sub={`of ${matches.length}`} />
-        <StatTile icon="flame" label="Avg / match" value={avg(goals, played)} sub="Group stage" accent="var(--pos)" />
+        <StatTile icon="ball" label="Goles" value={goals} sub="Torneo" spark={[40, 55, 38, 70, 62, 90, 100]} />
+        <StatTile icon="whistle" label="Jugados" value={played} sub={`de ${matches.length}`} />
+        <StatTile icon="flame" label="Goles/partido" value={avg(goals, played)} sub="Fase de grupos" accent="var(--pos)" />
         <StatTile
           icon="target"
-          label="Live now"
+          label="En vivo"
           value={live.length}
-          sub={live.length ? 'In play' : 'None'}
+          sub={live.length ? 'En juego' : 'Ninguno'}
           accent={live.length ? 'var(--live)' : undefined}
         />
-        <StatTile icon="star" label="Watchlist" value={favTeams.length + favPlayers.length} sub="Teams + players" />
+        <StatTile icon="star" label="Seguimiento" value={favTeams.length + favPlayers.length} sub="Selecciones + jugadores" />
       </div>
 
       <div className="home-grid">
         <div className="grid">
           <AIBrief day={day} todayCount={today.length} liveCount={live.length} />
 
-          <Section title="Live & today" label="Ticker">
+          <Section title="En vivo y hoy" label="Marcador">
             {tickerItems.length ? (
               <Ticker items={tickerItems} />
             ) : (
               <p className="muted" style={{ fontSize: 12.5 }}>
-                No fixtures for the focus day.
+                Sin partidos para el día destacado.
               </p>
             )}
           </Section>
 
           <Section
-            title="Today's fixtures"
+            title="Partidos de hoy"
             label={day}
             action={
               <button type="button" className="card-link" onClick={() => navigate({ to: '/matches' })}>
-                Match Center <Icon name="chevR" size={13} />
+                Centro de partidos <Icon name="chevR" size={13} />
               </button>
             }
           >
@@ -102,16 +102,16 @@ export function Dashboard() {
           <div className="card">
             <div className="card-hd">
               <Icon name="target" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>My Watchlist</h3>
+              <h3>Mi seguimiento</h3>
               <span className="spacer" />
               <button type="button" className="card-link" onClick={() => navigate({ to: '/favorites' })}>
-                Manage
+                Gestionar
               </button>
             </div>
             <div className="card-pad" style={{ paddingTop: 8 }}>
               {favTeams.length + favPlayers.length + favMatches.length === 0 ? (
                 <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                  Star teams, players and matches to build your watchlist.
+                  Marca selecciones, jugadores y partidos para armar tu seguimiento.
                 </p>
               ) : (
                 <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))' }}>
@@ -133,13 +133,13 @@ export function Dashboard() {
             </div>
           </div>
 
-          <Section title="Latest results" label="Full time">
+          <Section title="Últimos resultados" label="Final">
             <div className="card card-pad">
               {results.length ? (
                 results.map((m) => <MatchRow key={m.id} m={m} />)
               ) : (
                 <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                  No completed matches yet.
+                  Aún no se ha jugado ningún partido.
                 </p>
               )}
             </div>
@@ -154,10 +154,10 @@ export function Dashboard() {
             <div className="card">
               <div className="card-hd">
                 <Icon name="standings" size={15} style={{ color: 'var(--gold)' }} />
-                <h3>Group snapshot</h3>
+                <h3>Resumen de grupo</h3>
                 <span className="spacer" />
                 <button type="button" className="card-link" onClick={() => navigate({ to: '/standings' })}>
-                  Full tables
+                  Tablas completas
                 </button>
               </div>
               <div className="card-pad" style={{ paddingTop: 4 }}>
@@ -188,26 +188,32 @@ export function Dashboard() {
           <div className="card">
             <div className="card-hd">
               <Icon name="ball" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Top scorers</h3>
+              <h3>Goleadores</h3>
               <span className="spacer" />
               <button type="button" className="card-link" onClick={() => navigate({ to: '/stats' })}>
-                All
+                Todos
               </button>
             </div>
             <div className="card-pad" style={{ paddingTop: 6 }}>
-              {scorers.map((p, i) => (
-                <PlayerMini key={p.id} p={p} rank={i + 1} metric={(x) => `${x.goals}G`} />
-              ))}
+              {scorers.length ? (
+                scorers.map((p, i) => (
+                  <PlayerMini key={p.id} p={p} rank={i + 1} metric={(x) => `${x.goals}G`} />
+                ))
+              ) : (
+                <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
+                  Sin goleadores todavía.
+                </p>
+              )}
             </div>
           </div>
 
           <div className="card">
             <div className="card-hd">
               <Icon name="clock" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Upcoming</h3>
+              <h3>Próximos</h3>
               <span className="spacer" />
               <button type="button" className="card-link" onClick={() => navigate({ to: '/matches' })}>
-                Schedule
+                Calendario
               </button>
             </div>
             <div className="card-pad" style={{ paddingTop: 4 }}>
@@ -242,36 +248,36 @@ function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: numb
         >
           <Icon name="ai" size={15} />
         </span>
-        <h3>AI Match Brief</h3>
+        <h3>Resumen IA del Mundial</h3>
         <span className="spacer" />
         <button type="button" className="btn ghost btn-sm" onClick={() => navigate({ to: '/analyst' })}>
-          <Icon name="sparkSmall" size={13} /> Open analyst
+          <Icon name="sparkSmall" size={13} /> Abrir analista
         </button>
       </div>
       <div className="card-pad brief-body">
         <div className="brief-pt">
           <span className="dot" />
           <span style={{ flex: 1 }}>
-            Focus day {day || '—'}: <span className="hl">{todayCount} fixtures</span>
+            Día destacado {day || '—'}: <span className="hl">{todayCount} partidos</span>
             {liveCount ? (
               <>
-                , <span className="hl">{liveCount} live</span> right now
+                , <span className="hl">{liveCount} en vivo</span> ahora
               </>
             ) : null}
             .
           </span>
         </div>
-        {top && (
+        {top && top.goals > 0 && (
           <div className="brief-pt">
             <span className="dot" />
             <span style={{ flex: 1 }}>
-              <span className="hl">{top.name}</span> leads the scoring charts with {top.goals} goals and{' '}
-              {top.assists} assists.
+              <span className="hl">{top.name}</span> lidera el goleo con {top.goals} goles y {top.assists}{' '}
+              asistencias.
             </span>
           </div>
         )}
         <div className="mono-label" style={{ marginTop: 10 }}>
-          Generated from local cached data · no external sources
+          Generado desde datos locales · pregunta al analista IA para más
         </div>
       </div>
     </div>
@@ -285,33 +291,33 @@ function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) 
     <div className="card">
       <div className="card-hd">
         <span className={isMock ? 'dot-warn' : 'dot-ok'} />
-        <h3>Local cache</h3>
+        <h3>Datos locales</h3>
         <span className="spacer" />
-        <span className="badge gold">{meta?.cacheStatus ?? 'Open data'}</span>
+        <span className="badge gold">{meta?.cacheStatus ?? 'Datos abiertos'}</span>
       </div>
       <div className="card-pad" style={{ paddingTop: 4 }}>
         <div className="sync-row">
-          <span className="k">Source</span>
+          <span className="k">Fuente</span>
           <span className="num" style={{ fontSize: 12 }}>
-            {sync?.source === 'sqlite' ? 'Local SQLite' : 'Open data (CC0)'}
+            {sync?.source === 'sqlite' ? 'SQLite local' : 'Datos abiertos (CC0)'}
           </span>
         </div>
         <div className="sync-row">
-          <span className="k">Last sync</span>
+          <span className="k">Actualizado</span>
           <span className="num" style={{ fontSize: 12 }}>
             {meta?.lastSync ?? '—'}
           </span>
         </div>
         <div className="sync-row">
-          <span className="k">Database</span>
+          <span className="k">Dataset</span>
           <span className="num" style={{ fontSize: 12 }}>
             {meta?.db ?? '—'}
           </span>
         </div>
         <div className="sync-row">
-          <span className="k">Assets loaded</span>
+          <span className="k">Banderas</span>
           <span className="num" style={{ fontSize: 12 }}>
-            {meta ? `${meta.assets.crests} crests · ${meta.assets.flags} flags` : '0'}
+            {meta ? `${meta.assets.flags} selecciones` : '0'}
           </span>
         </div>
       </div>
