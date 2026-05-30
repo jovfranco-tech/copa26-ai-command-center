@@ -1,3 +1,5 @@
+import { lazy, Suspense } from 'react';
+import { Skeleton } from '@worldcup/ui';
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 import { AppShell } from '@/components/AppShell';
 import { Dashboard } from '@/routes/Dashboard';
@@ -8,7 +10,6 @@ import { TeamDetail } from '@/routes/TeamDetail';
 import { Players } from '@/routes/Players';
 import { PlayerDetail } from '@/routes/PlayerDetail';
 import { Standings } from '@/routes/Standings';
-import { Stats } from '@/routes/Stats';
 import { Bracket } from '@/routes/Bracket';
 import { Venues } from '@/routes/Venues';
 import { Favorites } from '@/routes/Favorites';
@@ -77,7 +78,36 @@ const standingsRoute = createRoute({
   },
 });
 
-const statsRoute = createRoute({ getParentRoute: () => rootRoute, path: '/stats', component: Stats });
+const LazyStats = lazy(() => import('./routes/Stats').then((m) => ({ default: m.Stats })));
+
+// eslint-disable-next-line react-refresh/only-export-components
+function StatsSkeleton() {
+  return (
+    <div className="grid" style={{ gap: 16 }}>
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+        <Skeleton h={80} />
+        <Skeleton h={80} />
+        <Skeleton h={80} />
+      </div>
+      <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <Skeleton h={320} />
+        <Skeleton h={320} />
+      </div>
+    </div>
+  );
+}
+
+const statsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/stats',
+  component: function StatsRoute() {
+    return (
+      <Suspense fallback={<StatsSkeleton />}>
+        <LazyStats />
+      </Suspense>
+    );
+  },
+});
 const bracketRoute = createRoute({ getParentRoute: () => rootRoute, path: '/bracket', component: Bracket });
 const venuesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/venues', component: Venues });
 const favoritesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/favorites', component: Favorites });
@@ -123,6 +153,7 @@ export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
   scrollRestoration: true,
+  defaultViewTransition: true,
 });
 
 declare module '@tanstack/react-router' {
