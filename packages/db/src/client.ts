@@ -12,8 +12,16 @@ let _db: DB | null = null;
 
 export function getClient(): Client {
   if (_client) return _client;
-  mkdirSync(LOCAL_DB_DIR, { recursive: true });
-  _client = createClient({ url: resolveDbFileUrl() });
+  const url = process.env.DATABASE_URL;
+  if (url && (url.startsWith('libsql://') || url.startsWith('https://') || url.startsWith('wss://'))) {
+    _client = createClient({
+      url,
+      authToken: process.env.DATABASE_AUTH_TOKEN,
+    });
+  } else {
+    mkdirSync(LOCAL_DB_DIR, { recursive: true });
+    _client = createClient({ url: resolveDbFileUrl() });
+  }
   return _client;
 }
 

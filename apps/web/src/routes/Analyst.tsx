@@ -30,7 +30,6 @@ function parseAIAnswer(text: string): ParsedAnswer {
   return { text, chart: null };
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 function AnalystChart({ chart }: { chart: NonNullable<ParsedAnswer['chart']> }) {
   if (!chart || !chart.data || !chart.data.length || !chart.keys || !chart.keys.length) return null;
 

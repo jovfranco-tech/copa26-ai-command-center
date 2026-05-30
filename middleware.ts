@@ -207,11 +207,8 @@ function accessPage({
     <section class="card">
       <div class="stripe"></div>
       <div class="body">
-        <div class="mark">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <div class="mark" style="background: transparent; box-shadow: none; border-radius: 0; width: auto; height: 72px; display: flex; align-items: center; justify-content: flex-start; margin-bottom: 12px;">
+          <img src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" style="height: 72px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));" />
         </div>
         <h1>Mundial 2026</h1>
         <p>Dashboard privado para calendario, selecciones, jugadores, quiniela familiar y analista.</p>

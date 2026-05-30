@@ -116,25 +116,61 @@ export function Pool() {
     return () => clearTimeout(timer);
   }, [pool.playerName, pool.picks]);
 
-  // Load Leaderboard when results tab is open
+  // Load Leaderboard unconditionally when picks change
   useEffect(() => {
-    if (activeTab === 'results') {
-      const loadLeaderboard = async () => {
-        setLoadingLeaderboard(true);
-        try {
-          const res = await fetchLeaderboard();
-          if (res.ok && res.leaderboard) {
-            setLeaderboard(res.leaderboard);
-          }
-        } catch (e) {
-          console.error(e);
-        } finally {
-          setLoadingLeaderboard(false);
+    const loadLeaderboard = async () => {
+      setLoadingLeaderboard(true);
+      try {
+        const res = await fetchLeaderboard();
+        if (res.ok && res.leaderboard) {
+          setLeaderboard(res.leaderboard);
         }
-      };
-      loadLeaderboard();
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoadingLeaderboard(false);
+      }
+    };
+    loadLeaderboard();
+  }, [pool.picks]);
+
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('wc_theme') as 'dark' | 'light') ?? 'dark';
+  });
+
+  useEffect(() => {
+    const el = document.documentElement;
+    if (theme === 'light') {
+      el.classList.add('light-theme');
+    } else {
+      el.classList.remove('light-theme');
     }
-  }, [activeTab, pool.picks]);
+    localStorage.setItem('wc_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+
+  const exportCSV = () => {
+    let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
+    csvContent += 'Partido,Fecha,Prediccion Local,Prediccion Visita,Resultado Real,Estado\n';
+
+    const items = data?.items ?? [];
+    for (const m of items) {
+      const pick = pool.picks[m.id];
+      const homePredict = pick?.homeGoals ?? '';
+      const awayPredict = pick?.awayGoals ?? '';
+      const realScore = m.status === 'FT' ? `${m.homeGoals}-${m.awayGoals}` : '';
+      csvContent += `"${teams[m.home]?.name ?? m.home} vs ${teams[m.away]?.name ?? m.away}","${m.date}",${homePredict},${awayPredict},"${realScore}",${m.status}\n`;
+    }
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `quiniela_${pool.playerName || 'familiar'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Statistics calculations for played matches
   const stats = useMemo(() => {
@@ -179,6 +215,37 @@ export function Pool() {
       playedWithPrediction,
     };
   }, [playedMatches, pool.picks]);
+
+  // Compute live AI Trend Alerts based on the Leaderboard
+  const trendAlert = useMemo(() => {
+    if (!leaderboard || leaderboard.length === 0) {
+      return "🤖 Analista IA: 'Comienza a registrar y guardar tus pronósticos para comparar tu rendimiento en tiempo real con la familia y nuestros co-pilotos tácticos.'";
+    }
+
+    const leader = leaderboard[0];
+    const userRow = leaderboard.find(
+      (row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase()
+    );
+    const aiRows = leaderboard.filter(
+      (row) => row.playerName.includes('🤖')
+    );
+
+    const leaderName = leader.playerName;
+    const leaderPoints = leader.points ?? 0;
+    const leaderEfficiency = leader.efficiency ?? 0;
+
+    if (leaderName.includes('🤖')) {
+      return `🤖 Tendencia IA: ${leaderName} lidera el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. ¡La inteligencia artificial está dominando la quiniela familiar!`;
+    }
+
+    if (userRow && userRow.playerName === leaderName) {
+      const nextAi = aiRows[0];
+      const aiText = nextAi ? `, pero ${nextAi.playerName} te pisa los talones en la tabla` : '';
+      return `👑 ¡Vas liderando el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad! Excelente consistencia táctica${aiText}.`;
+    }
+
+    return `📈 Tendencia del Líder: ${leaderName} lidera la tabla con ${leaderPoints} pts. Te recomendamos invocar al Simulador Estadístico para afinar tu puntería defensiva.`;
+  }, [leaderboard, pool.playerName]);
 
   // Determine what is visible in the active tab
   const visible = useMemo(() => {
@@ -230,12 +297,38 @@ export function Pool() {
               </span>
             )}
           </label>
-          <input
-            id="pool-name"
-            value={pool.playerName}
-            onChange={(e) => pool.setPlayerName(e.target.value)}
-            placeholder="Tu nombre"
-          />
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%' }}>
+            <input
+              id="pool-name"
+              value={pool.playerName}
+              onChange={(e) => pool.setPlayerName(e.target.value)}
+              placeholder="Tu nombre"
+              style={{ flex: 1 }}
+            />
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="theme-toggle-btn btn ghost"
+              style={{
+                background: 'var(--bg-3)',
+                border: '1px solid var(--line)',
+                borderRadius: '10px',
+                width: '42px',
+                height: '42px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'var(--gold)',
+                transition: 'all 0.2s ease',
+                padding: 0,
+                flexShrink: 0
+              }}
+              title={theme === 'dark' ? 'Activar paleta crema oficial' : 'Activar paleta noche dorada'}
+            >
+              <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -260,12 +353,35 @@ export function Pool() {
         </button>
       </div>
 
+      {/* Dynamic AI Trend Alert Strip */}
+      <div
+        className="card card-pad trend-alert-strip"
+        style={{
+          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.02))',
+          border: '1px solid var(--gold-line)',
+          borderRadius: '10px',
+          padding: '12px 16px',
+          marginBottom: '18px',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'center',
+          animation: 'fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold-soft)', flexShrink: 0 }}>
+          <Icon name="ai" size={16} style={{ color: 'var(--gold)' }} />
+        </div>
+        <div style={{ flex: 1, fontSize: '13px', color: 'var(--tx-2)', fontWeight: 500, lineHeight: '1.4' }}>
+          {trendAlert}
+        </div>
+      </div>
+
       {activeTab === 'predict' ? (
         <div className="pool-summary">
           <SummaryTile icon="check" label="Partidos elegidos" value={`${pickedPending}/${upcomingMatches.length}`} />
           <SummaryTile icon="target" label="Marcadores" value={`${completeScoresPending}/${upcomingMatches.length}`} />
           <SummaryTile icon="calendar" label="Vista" value={view === 'next' ? 'Próximos 24' : 'Completa'} />
-          <div className="card card-pad pool-actions">
+          <div className="card card-pad pool-actions" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button type="button" className="btn gold" onClick={() => setView(view === 'next' ? 'all' : 'next')}>
               <Icon name={view === 'next' ? 'list' : 'calendar'} size={15} />
               {view === 'next' ? 'Ver todo' : 'Ver próximos'}
@@ -273,6 +389,14 @@ export function Pool() {
             <button type="button" className="btn ghost" onClick={() => pool.reset()}>
               <Icon name="close" size={15} />
               Reiniciar
+            </button>
+            <button type="button" className="btn ghost" onClick={exportCSV} title="Exportar predicciones a CSV">
+              <Icon name="download" size={15} />
+              Exportar CSV
+            </button>
+            <button type="button" className="btn ghost" onClick={() => window.print()} title="Imprimir reporte oficial de gala en PDF">
+              <Icon name="print" size={15} />
+              Imprimir PDF
             </button>
           </div>
         </div>

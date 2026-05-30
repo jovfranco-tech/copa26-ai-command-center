@@ -2195,3 +2195,127 @@ body {
   font-style: italic;
 }
 
+/* --- Tema Claro Adaptativo (crema/gala FIFA) --- */
+:root.light-theme {
+  --bg-1: #fcfbfa;      /* Arena marfil extremadamente claro */
+  --bg-2: #ffffff;      /* Blanco puro para tarjetas */
+  --bg-3: #f3f0e8;      /* Arena suave para inputs/burbujas */
+  --line: #e6dec9;      /* Borde de tono arena fino */
+  --gold-soft: #f7eed8; /* Oro suave claro */
+  --tx: #1c170d;        /* Marrón carbón oscuro para texto principal */
+  --tx-2: #524734;      /* Marrón medio para texto secundario */
+  --tx-3: #91846b;      /* Texto arena atenuado */
+}
+
+/* --- Micro-interacciones de Élite (Crests y Tarjetas) --- */
+.team-crest, .card, .copilot-card, .player-card {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Efecto de Escala 3D y drop shadow en hover */
+.team-crest:hover {
+  transform: scale(1.1) translateY(-1px);
+  filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.3)) !important;
+}
+
+.card:hover, .copilot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(212, 175, 55, 0.06);
+}
+
+/* Efecto de Brillo Metálico Reflectante */
+.team-crest::after, .copilot-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.13) 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.13) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+.team-crest:hover::after, .copilot-card:hover::after {
+  animation: shine 0.75s ease-out;
+}
+
+@keyframes shine {
+  100% {
+    left: 200%;
+  }
+}
+
+/* --- Skeletons Animados con Pulso Dorado --- */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-3) 25%, var(--gold-soft) 50%, var(--bg-3) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.6s infinite linear;
+  border-radius: 6px;
+  display: inline-block;
+  width: 100%;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* --- Hoja de Estilos de Impresión Táctica Oficial FIFA --- */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt !important;
+  }
+  .sidebar, .topbar, .mobile-nav, button, select, input, .pool-actions, .copilot-grid, .copilot-brief {
+    display: none !important;
+  }
+  .pool-hero {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin-bottom: 20pt !important;
+  }
+  .pool-summary {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10pt !important;
+    margin-bottom: 20pt !important;
+  }
+  .pool-stat {
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 8pt !important;
+  }
+  .pool-grid, .pool-match {
+    page-break-inside: avoid !important;
+  }
+  .card, table {
+    border: 1px solid #000000 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  th, td {
+    border: 1px solid #cccccc !important;
+    padding: 6pt !important;
+  }
+  h2, h3, h4 {
+    color: #000000 !important;
+  }
+}
+

@@ -13,7 +13,7 @@ export function MatchDetail({ id }: { id: string }) {
   const teams = useTeamsMap();
   const [tab, setTab] = useState<Tab>('events');
 
-  if (isLoading) return <p className="muted">Cargando partido…</p>;
+  if (isLoading) return <MatchDetailSkeleton />;
   const m = data?.item;
   if (!m) return <Empty icon="calendar" title="Partido no encontrado" text="Este partido no está en el dataset." />;
 
@@ -211,3 +211,42 @@ function MatchStats({ m, pH }: { m: { shotsH: number | null; shotsA: number | nu
     </div>
   );
 }
+
+function MatchDetailSkeleton() {
+  return (
+    <div className="page-fade">
+      <div className="card" style={{ overflow: 'hidden', marginBottom: 18, pointerEvents: 'none' }}>
+        <div style={{ height: 5, background: 'var(--gold-soft)' }} />
+        <div className="card-pad">
+          <div className="row gap-8" style={{ justifyContent: 'space-between', marginBottom: 14 }}>
+            <div className="skeleton" style={{ width: 120, height: 14 }} />
+            <div className="skeleton" style={{ width: 80, height: 18 }} />
+          </div>
+
+          <div className="match-row" style={{ alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div className="skeleton" style={{ width: 64, height: 64, borderRadius: '50%' }} />
+              <div className="skeleton" style={{ width: 80, height: 16 }} />
+              <div className="skeleton" style={{ width: 32, height: 16 }} />
+            </div>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div className="skeleton" style={{ width: 100, height: 44 }} />
+              <div className="skeleton" style={{ width: 140, height: 12 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div className="skeleton" style={{ width: 64, height: 64, borderRadius: '50%' }} />
+              <div className="skeleton" style={{ width: 80, height: 16 }} />
+              <div className="skeleton" style={{ width: 32, height: 16 }} />
+            </div>
+          </div>
+
+          <div className="row gap-12 wrap" style={{ justifyContent: 'center', marginTop: 14 }}>
+            <div className="skeleton" style={{ width: 180, height: 12 }} />
+            <div className="skeleton" style={{ width: 120, height: 12 }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

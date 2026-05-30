@@ -71,7 +71,7 @@ export function Players() {
       </div>
 
       {isLoading ? (
-        <p className="muted">Cargando jugadores…</p>
+        <PlayersSkeleton />
       ) : players.length === 0 ? (
         <Empty icon="players" title="Sin jugadores" text="Las plantillas oficiales aún no se publican (se anuncian días antes del torneo)." />
       ) : (
@@ -84,3 +84,25 @@ export function Players() {
     </div>
   );
 }
+
+function PlayersSkeleton() {
+  return (
+    <div className="grid player-grid">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <div key={i} className="card player-card" style={{ pointerEvents: 'none' }}>
+          <div className="row gap-12" style={{ alignItems: 'center' }}>
+            <span style={{ position: 'relative', flex: 'none' }}>
+              <div className="skeleton" style={{ width: 46, height: 46, borderRadius: '50%' }} />
+              <div className="skeleton" style={{ position: 'absolute', top: -6, left: -8, width: 24, height: 16, borderRadius: 6 }} />
+            </span>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div className="skeleton" style={{ width: '60%', height: 14 }} />
+              <div className="skeleton" style={{ width: '40%', height: 11 }} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
