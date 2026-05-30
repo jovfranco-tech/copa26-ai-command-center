@@ -27,19 +27,53 @@ export const usePool = create<PoolState>()(
       picks: {},
       setPlayerName: (playerName) => set({ playerName }),
       setOutcome: (matchId, outcome) =>
-        set((s) => ({
-          picks: {
-            ...s.picks,
-            [matchId]: { ...(s.picks[matchId] ?? {}), outcome },
-          },
-        })),
+        set((s) => {
+          const pick = s.picks[matchId] ?? {};
+          const nextPick = { ...pick, outcome };
+
+          // Clear goals if they conflict with the newly chosen outcome
+          if (nextPick.homeGoals != null && nextPick.awayGoals != null) {
+            const hasConflict =
+              (outcome === 'home' && nextPick.homeGoals <= nextPick.awayGoals) ||
+              (outcome === 'away' && nextPick.homeGoals >= nextPick.awayGoals) ||
+              (outcome === 'draw' && nextPick.homeGoals !== nextPick.awayGoals);
+
+            if (hasConflict) {
+              nextPick.homeGoals = undefined;
+              nextPick.awayGoals = undefined;
+            }
+          }
+
+          return {
+            picks: {
+              ...s.picks,
+              [matchId]: nextPick,
+            },
+          };
+        }),
       setScore: (matchId, side, value) =>
-        set((s) => ({
-          picks: {
-            ...s.picks,
-            [matchId]: { ...(s.picks[matchId] ?? {}), [side]: value },
-          },
-        })),
+        set((s) => {
+          const pick = s.picks[matchId] ?? {};
+          const nextPick = { ...pick, [side]: value };
+
+          // Automatically derive outcome if both scores are entered
+          if (nextPick.homeGoals != null && nextPick.awayGoals != null) {
+            if (nextPick.homeGoals > nextPick.awayGoals) {
+              nextPick.outcome = 'home';
+            } else if (nextPick.homeGoals < nextPick.awayGoals) {
+              nextPick.outcome = 'away';
+            } else {
+              nextPick.outcome = 'draw';
+            }
+          }
+
+          return {
+            picks: {
+              ...s.picks,
+              [matchId]: nextPick,
+            },
+          };
+        }),
       clearMatch: (matchId) =>
         set((s) => {
           const picks = { ...s.picks };
