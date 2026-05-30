@@ -92,3 +92,29 @@ export async function askAI(question: string, context: string): Promise<AIResult
     return { ok: false, reason: 'network' };
   }
 }
+
+export interface AIPoolAgentResult {
+  ok: boolean;
+  brief?: string;
+  predictions?: Record<string, { homeGoals: number; awayGoals: number; outcome: 'home' | 'draw' | 'away' }>;
+  reason?: string;
+}
+
+export async function askPoolAgent(
+  agent: 'optimista' | 'stats' | 'contrarian',
+  matches: Array<{ id: string; home: string; away: string; homeName: string; awayName: string }>,
+): Promise<AIPoolAgentResult> {
+  try {
+    const res = await fetch('/api/pool-agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agent, matches }),
+    });
+    const data = (await res.json().catch(() => ({}))) as AIPoolAgentResult;
+    if (!res.ok) return { ok: false, reason: data.reason ?? `http-${res.status}` };
+    return data;
+  } catch {
+    return { ok: false, reason: 'network' };
+  }
+}
+

@@ -18,6 +18,7 @@ interface PoolState {
   setScore: (matchId: string, side: 'homeGoals' | 'awayGoals', value: number | undefined) => void;
   clearMatch: (matchId: string) => void;
   reset: () => void;
+  importPicks: (picks: Record<string, PoolPick>) => void;
 }
 
 export const usePool = create<PoolState>()(
@@ -81,6 +82,13 @@ export const usePool = create<PoolState>()(
           return { picks };
         }),
       reset: () => set({ playerName: '', picks: {} }),
+      importPicks: (newPicks) =>
+        set((s) => ({
+          picks: {
+            ...s.picks,
+            ...newPicks,
+          },
+        })),
     }),
     { name: 'wc_family_pool' },
   ),

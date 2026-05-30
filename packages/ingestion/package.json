@@ -19,7 +19,8 @@
     "import:openfootball": "tsx src/import-openfootball.ts",
     "validate:data": "tsx src/validate-ingested-data.ts",
     "report:data": "tsx src/generate-data-quality-report.ts",
-    "check:gitignore": "tsx src/check-gitignore.ts"
+    "check:gitignore": "tsx src/check-gitignore.ts",
+    "ingest:ai-vision": "tsx src/ai-vision-scraper.ts"
   },
   "dependencies": {
     "@worldcup/db": "workspace:*",

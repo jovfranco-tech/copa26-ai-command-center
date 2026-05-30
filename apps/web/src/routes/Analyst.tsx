@@ -1,9 +1,77 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext } from '@/lib/aiClient';
+
+interface ParsedAnswer {
+  text: string;
+  chart?: {
+    type: 'bar' | 'line';
+    title: string;
+    keys: string[];
+    data: Array<{ name: string; [key: string]: number | string }>;
+  } | null;
+}
+
+function parseAIAnswer(text: string): ParsedAnswer {
+  const match = text.match(/```json\s*([\s\S]*?)\s*```/);
+  if (match && match[1]) {
+    try {
+      const parsed = JSON.parse(match[1].trim());
+      const cleanText = text.replace(/```json\s*([\s\S]*?)\s*```/, '').trim();
+      return { text: cleanText, chart: parsed.chart };
+    } catch (e) {
+      console.error('Failed to parse Generative UI chart JSON', e);
+    }
+  }
+  return { text, chart: null };
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function AnalystChart({ chart }: { chart: NonNullable<ParsedAnswer['chart']> }) {
+  if (!chart || !chart.data || !chart.data.length || !chart.keys || !chart.keys.length) return null;
+
+  const key = chart.keys[0]!;
+
+  return (
+    <div className="card" style={{ marginTop: 14, border: '1px solid var(--gold-line)', background: 'var(--bg-2)' }}>
+      <div className="card-hd" style={{ padding: '10px 14px', borderBottom: '1px solid var(--line)' }}>
+        <Icon name="stats" size={14} style={{ color: 'var(--gold)' }} />
+        <h4 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: 'var(--tx)' }}>{chart.title}</h4>
+      </div>
+      <div className="card-pad" style={{ height: 220, paddingTop: 14 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          {chart.type === 'line' ? (
+            <LineChart data={chart.data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--tx-3)' }} />
+              <YAxis tick={{ fontSize: 10, fill: 'var(--tx-3)' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-1)', border: '1px solid var(--line)', borderRadius: 8 }}
+                itemStyle={{ color: 'var(--gold-2)' }}
+              />
+              <CartesianGrid stroke="var(--line)" strokeDasharray="3 3" />
+              <Line type="monotone" dataKey={key} stroke="var(--gold)" strokeWidth={2.5} activeDot={{ r: 6 }} />
+            </LineChart>
+          ) : (
+            <BarChart data={chart.data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--tx-3)' }} />
+              <YAxis tick={{ fontSize: 10, fill: 'var(--tx-3)' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-1)', border: '1px solid var(--line)', borderRadius: 8 }}
+                itemStyle={{ color: 'var(--gold-2)' }}
+              />
+              <CartesianGrid stroke="var(--line)" strokeDasharray="3 3" />
+              <Bar dataKey={key} fill="var(--gold)" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          )}
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
 
 type Ctx = 'tournament' | 'match' | 'team' | 'player';
 
@@ -57,6 +125,11 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       setAnswer(local);
     }
   };
+
+  const parsed = useMemo(() => {
+    if (!answer) return null;
+    return parseAIAnswer(answer.text);
+  }, [answer]);
 
   return (
     <div className="page-fade">
@@ -137,7 +210,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             </div>
           </div>
 
-          {answer && (
+          {answer && parsed && (
             <div className="card card-pad">
               <div className="row gap-8" style={{ marginBottom: 8 }}>
                 <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
@@ -146,8 +219,11 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 </span>
                 {usedAI && <span className="badge gold">IA</span>}
               </div>
-              <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{answer.text}</p>
-              <div className="row gap-6 wrap" style={{ marginTop: 10 }}>
+              <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{parsed.text}</p>
+              
+              {parsed.chart && <AnalystChart chart={parsed.chart} />}
+              
+              <div className="row gap-6 wrap" style={{ marginTop: 14 }}>
                 <span className="mono-label" style={{ margin: 0 }}>
                   Fuentes:
                 </span>

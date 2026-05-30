@@ -5,6 +5,8 @@ import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap } from '@/hooks';
 import { usePool, type PoolOutcome } from '@/store/pool';
+import { askPoolAgent } from '@/lib/aiClient';
+
 
 const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
   { id: 'home', label: 'Local' },
@@ -29,6 +31,44 @@ export function Pool() {
       playedMatches: sorted.filter((m) => m.status === 'FT' || m.status === 'LIVE'),
     };
   }, [data]);
+
+  const [activeAgent, setActiveAgent] = useState<'optimista' | 'stats' | 'contrarian' | null>(null);
+  const [agentBrief, setAgentBrief] = useState<string | null>(null);
+  const [loadingAgent, setLoadingAgent] = useState(false);
+  const [agentError, setAgentError] = useState<string | null>(null);
+
+  const summonAgent = async (agentName: 'optimista' | 'stats' | 'contrarian') => {
+    if (loadingAgent) return;
+    setLoadingAgent(true);
+    setAgentError(null);
+
+    const matchesToPredict = upcomingMatches.map((m) => ({
+      id: m.id,
+      home: m.home,
+      away: m.away,
+      homeName: teams[m.home]?.name ?? m.home,
+      awayName: teams[m.away]?.name ?? m.away,
+    }));
+
+    try {
+      const res = await askPoolAgent(agentName, matchesToPredict);
+      if (res.ok && res.predictions) {
+        pool.importPicks(res.predictions);
+        setActiveAgent(agentName);
+        setAgentBrief(res.brief ?? null);
+      } else {
+        setAgentError(
+          res.reason === 'no-key'
+            ? 'No se ha configurado la API Key de OpenAI para habilitar co-pilotos.'
+            : 'Error al conectar con el co-piloto.',
+        );
+      }
+    } catch {
+      setAgentError('Error de red al invocar al co-piloto.');
+    } finally {
+      setLoadingAgent(false);
+    }
+  };
 
   // Statistics calculations for played matches
   const stats = useMemo(() => {
@@ -160,6 +200,108 @@ export function Pool() {
           <SummaryTile icon="activity" label="Efectividad" value={`${stats.efficiency}%`} />
           <SummaryTile icon="target" label="Predicciones jugadas" value={`${stats.playedWithPrediction}/${playedMatches.length}`} />
           <SummaryTile icon="check" label="Plenos exactos (+3)" value={`${stats.exactScores}`} />
+        </div>
+      )}
+
+      {activeTab === 'predict' && (
+        <div className="copilot-section">
+          <div className="row gap-8" style={{ alignItems: 'center' }}>
+            <Icon name="ai" size={16} style={{ color: 'var(--gold)' }} />
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Co-pilotos Tácticos IA</h3>
+            <span className="badge gold">Beta</span>
+          </div>
+          <p className="muted" style={{ margin: '0 0 4px 0', fontSize: 12 }}>
+            Invoca a un asistente de IA táctico para que rellene automáticamente tu quiniela con su filosofía de juego y te dé su justificación.
+          </p>
+
+          {agentError && (
+            <div
+              className="card card-pad"
+              style={{
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                background: 'rgba(239, 68, 68, 0.05)',
+                color: 'var(--tx-2)',
+                fontSize: 13,
+                display: 'flex',
+                gap: 8,
+                alignItems: 'center',
+              }}
+            >
+              <Icon name="close" size={14} style={{ color: 'rgb(239, 68, 68)' }} />
+              {agentError}
+            </div>
+          )}
+
+          <div className="copilot-grid">
+            <div className={`copilot-card${activeAgent === 'optimista' ? ' active' : ''}`}>
+              <div className="row gap-12" style={{ alignItems: 'center' }}>
+                <div className="copilot-avatar">⚡️</div>
+                <div className="copilot-meta">
+                  <h3>El Analista Optimista</h3>
+                  <p>"El fútbol se gana metiendo goles." Predice goleadas, partidos abiertos y confía en superpotencias.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className={`btn ${activeAgent === 'optimista' ? 'gold' : 'ghost'}`}
+                style={{ width: '100%', marginTop: 8 }}
+                onClick={() => summonAgent('optimista')}
+                disabled={loadingAgent}
+              >
+                {loadingAgent && activeAgent === 'optimista' ? 'Convocando…' : activeAgent === 'optimista' ? 'Activo' : 'Invocar Optimista'}
+              </button>
+            </div>
+
+            <div className={`copilot-card${activeAgent === 'stats' ? ' active' : ''}`}>
+              <div className="row gap-12" style={{ alignItems: 'center' }}>
+                <div className="copilot-avatar">📊</div>
+                <div className="copilot-meta">
+                  <h3>El Simulador Estadístico</h3>
+                  <p>"Las defensas ganan campeonatos." Predice marcadores cerrados y orden táctico estricto.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className={`btn ${activeAgent === 'stats' ? 'gold' : 'ghost'}`}
+                style={{ width: '100%', marginTop: 8 }}
+                onClick={() => summonAgent('stats')}
+                disabled={loadingAgent}
+              >
+                {loadingAgent && activeAgent === 'stats' ? 'Convocando…' : activeAgent === 'stats' ? 'Activo' : 'Invocar Estadístico'}
+              </button>
+            </div>
+
+            <div className={`copilot-card${activeAgent === 'contrarian' ? ' active' : ''}`}>
+              <div className="row gap-12" style={{ alignItems: 'center' }}>
+                <div className="copilot-avatar">🔥</div>
+                <div className="copilot-meta">
+                  <h3>El Agente Contrarian</h3>
+                  <p>"Épica de David contra Goliat." Predice sorpresas de selecciones débiles y resultados atrevidos.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className={`btn ${activeAgent === 'contrarian' ? 'gold' : 'ghost'}`}
+                style={{ width: '100%', marginTop: 8 }}
+                onClick={() => summonAgent('contrarian')}
+                disabled={loadingAgent}
+              >
+                {loadingAgent && activeAgent === 'contrarian' ? 'Convocando…' : activeAgent === 'contrarian' ? 'Activo' : 'Invocar Contrarian'}
+              </button>
+            </div>
+          </div>
+
+          {activeAgent && agentBrief && (
+            <div className="copilot-brief">
+              <span style={{ fontSize: 24 }}>💬</span>
+              <div>
+                <span className="mono-label" style={{ display: 'block', marginBottom: 4, color: 'var(--gold)' }}>
+                  Informe Táctico del Co-piloto ({activeAgent === 'optimista' ? 'Optimista' : activeAgent === 'stats' ? 'Estadístico' : 'Contrarian'})
+                </span>
+                <p className="copilot-brief-text">{agentBrief}</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
