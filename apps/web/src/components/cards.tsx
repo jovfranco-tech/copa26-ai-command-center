@@ -4,6 +4,7 @@ import { Icon, StatusBadge, Form, Jersey, cn } from '@worldcup/ui';
 import { fmtDay, fmtGD, nextMatchFor, type Match, type Player, type StandingRow } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, FavStar, PlayerAvatar } from './identity';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
+import { ATTR_LABELS, attrColor, playerRatings } from '@/lib/ratings';
 
 export function MatchCard({ m }: { m: Match }) {
   const navigate = useNavigate();
@@ -258,6 +259,7 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
   const navigate = useNavigate();
   const teams = useTeamsMap();
   const t = teams[p.team];
+  const r = playerRatings(p);
   return (
     <div
       className="card hoverable"
@@ -270,7 +272,26 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
             {rank}
           </span>
         )}
-        <PlayerAvatar player={p} size={46} />
+        <span style={{ position: 'relative', flex: 'none' }}>
+          <PlayerAvatar player={p} size={46} />
+          <span
+            className="num"
+            style={{
+              position: 'absolute',
+              top: -6,
+              left: -8,
+              background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
+              color: '#181203',
+              fontWeight: 800,
+              fontSize: 12,
+              padding: '0 6px',
+              borderRadius: 6,
+              boxShadow: 'var(--shadow)',
+            }}
+          >
+            {r.overall}
+          </span>
+        </span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="row gap-8">
             <span style={{ fontWeight: 700, fontSize: 14 }} className="nowrap">
@@ -294,24 +315,13 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
         className="row"
         style={{ marginTop: 11, paddingTop: 10, borderTop: '1px solid var(--line)', justifyContent: 'space-between' }}
       >
-        {(
-          [
-            ['G', p.goals],
-            ['A', p.assists],
-            ['Min', p.minutes],
-            ['TA', p.yellow],
-            ['Edad', p.age ?? '—'],
-          ] as Array<[string, string | number]>
-        ).map(([k, val]) => (
-          <div key={k} style={{ textAlign: 'center' }}>
-            <div
-              className="num"
-              style={{ fontWeight: 700, fontSize: 15, color: k === 'G' ? 'var(--gold-2)' : 'var(--tx)' }}
-            >
-              {val}
+        {ATTR_LABELS.map((a) => (
+          <div key={a.key} style={{ textAlign: 'center' }}>
+            <div className="num" style={{ fontWeight: 700, fontSize: 15, color: attrColor(r[a.key]) }}>
+              {r[a.key]}
             </div>
             <div className="mono-label" style={{ margin: 0 }}>
-              {k}
+              {a.short}
             </div>
           </div>
         ))}

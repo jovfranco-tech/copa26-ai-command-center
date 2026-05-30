@@ -10,6 +10,8 @@
  * matches are played (and, locally, once you ingest squads).
  */
 import dataset from '../data/worldcup2026.json';
+import { SQUADS } from '../data/squads.js';
+import { POSITION_LONG } from '../constants.js';
 import type {
   CacheMeta,
   Goalkeeper,
@@ -34,9 +36,30 @@ export const venueById: Record<string, Venue> = Object.fromEntries(
   VENUES.map((v) => [v.id, v]),
 );
 
-// Pre-tournament: no squads, results, events or knockout draw yet.
-export const PLAYERS: Player[] = [];
-export const playerById: Record<string, Player> = {};
+// Curated current internationals (facts; not the official squad). Tournament
+// stats are 0 — the World Cup has not been played yet.
+export const PLAYERS: Player[] = Object.entries(SQUADS).flatMap(([team, entries]) =>
+  entries.map(([name, pos, club, age, shirt], i) => ({
+    id: `${team}-${i + 1}`,
+    name,
+    team,
+    pos,
+    posLong: POSITION_LONG[pos],
+    club,
+    age,
+    number: shirt,
+    goals: 0,
+    assists: 0,
+    minutes: 0,
+    yellow: 0,
+    red: 0,
+    photoAssetId: null,
+    profileUrl: null,
+  })),
+);
+export const playerById: Record<string, Player> = Object.fromEntries(
+  PLAYERS.map((p) => [p.id, p]),
+);
 export const GOALKEEPERS: Goalkeeper[] = [];
 export const MATCH_EVENTS: MatchEvent[] = [];
 export const BRACKET = { r32: [] as Array<[string, string]> };

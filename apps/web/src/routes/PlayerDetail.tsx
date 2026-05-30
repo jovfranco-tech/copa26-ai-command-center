@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { Icon, Empty } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
 import { PlayerAvatar, TeamFlag, FavStar } from '@/components/identity';
+import { PlayerGameCard } from '@/components/PlayerGameCard';
 import { MatchRow } from '@/components/cards';
 import { useMatches, usePlayer, usePlayers, useTeamsMap } from '@/hooks';
 
@@ -65,14 +66,14 @@ export function PlayerDetail({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="kpi-grid" style={{ marginTop: 16 }}>
-            <Metric label="Goles" value={p.goals} accent="var(--gold-2)" />
-            <Metric label="Asistencias" value={p.assists} />
-            <Metric label="Minutos" value={p.minutes} />
-            <Metric label="Amarillas" value={p.yellow} />
-            <Metric label="Rojas" value={p.red} />
+          <div className="mono-label" style={{ marginTop: 12 }}>
+            Estadísticas del torneo en 0 — el Mundial aún no comienza (11 jun).
           </div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: 18 }}>
+        <PlayerGameCard p={p} />
       </div>
 
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
@@ -140,17 +141,6 @@ export function PlayerDetail({ id }: { id: string }) {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Metric({ label, value, accent }: { label: string; value: number; accent?: string }) {
-  return (
-    <div className="card stat-tile">
-      <span className="mono-label">{label}</span>
-      <span className="stat-v" style={accent ? { color: accent } : undefined}>
-        {value}
-      </span>
     </div>
   );
 }

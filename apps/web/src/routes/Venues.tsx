@@ -85,19 +85,36 @@ export function Venues() {
 
 function VenueImage({ assetId, city }: { assetId: string | null | undefined; city: string }) {
   const url = useAsset(assetId);
-  if (url) return <img src={url} alt={city} style={{ width: '100%', height: 120, objectFit: 'cover' }} />;
+  if (url) return <img src={url} alt={city} style={{ width: '100%', height: 132, objectFit: 'cover' }} />;
+  // Stylized stadium illustration (original artwork — real photos are not used on
+  // the public site for copyright reasons).
   return (
-    <div
-      style={{
-        height: 120,
-        background:
-          'repeating-linear-gradient(90deg, color-mix(in srgb, var(--pos) 7%, var(--bg-1)) 0 9.09%, color-mix(in srgb, var(--pos) 4%, var(--bg-1)) 9.09% 18.18%)',
-        display: 'grid',
-        placeItems: 'center',
-        color: 'var(--tx-3)',
-      }}
-    >
-      <Icon name="venues" size={28} />
+    <div style={{ height: 132, background: 'linear-gradient(180deg, #0e1626, #0a111d)', position: 'relative', overflow: 'hidden' }}>
+      <svg viewBox="0 0 320 132" width="100%" height="132" preserveAspectRatio="xMidYMid slice" aria-label={`Estadio en ${city}`}>
+        <defs>
+          <radialGradient id="vlight" cx="50%" cy="20%" r="80%">
+            <stop offset="0%" stopColor="rgba(201,162,75,0.18)" />
+            <stop offset="100%" stopColor="rgba(201,162,75,0)" />
+          </radialGradient>
+        </defs>
+        <rect width="320" height="132" fill="url(#vlight)" />
+        {/* floodlights */}
+        {[40, 280].map((x) => (
+          <g key={x}>
+            <rect x={x - 1.5} y="18" width="3" height="46" fill="#2a3550" />
+            <rect x={x - 14} y="10" width="28" height="10" rx="2" fill="#3a4a66" />
+          </g>
+        ))}
+        {/* stadium bowl */}
+        <ellipse cx="160" cy="98" rx="150" ry="40" fill="#161f33" stroke="var(--line-2)" strokeWidth="1" />
+        <ellipse cx="160" cy="98" rx="120" ry="30" fill="#0e1626" />
+        {/* pitch */}
+        <ellipse cx="160" cy="98" rx="96" ry="22" fill="#1c8a4d" opacity="0.85" />
+        <rect x="64" y="96" width="192" height="4" fill="rgba(255,255,255,0.18)" transform="rotate(0 160 98)" />
+        <circle cx="160" cy="98" r="10" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+        <line x1="160" y1="78" x2="160" y2="118" stroke="rgba(255,255,255,0.22)" strokeWidth="1" />
+      </svg>
+      <Icon name="venues" size={16} style={{ position: 'absolute', top: 8, right: 8, color: 'var(--gold)' }} />
     </div>
   );
 }

@@ -105,7 +105,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Icon name="trophy" size={20} />
       </span>
       <div>
-        <div className="brand-name">Mundial 2026</div>
+        <div className="brand-name row gap-6" style={{ alignItems: 'center' }}>
+          Mundial 2026
+          <Icon name="trophy" size={14} style={{ color: 'var(--gold)' }} />
+        </div>
         <div className="brand-sub">Centro de mando</div>
       </div>
     </div>
