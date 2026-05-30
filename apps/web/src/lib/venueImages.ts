@@ -15,6 +15,7 @@ const FILES: Record<string, string> = {
   mty: 'Mexico Guadalupe Monterrey Estadio BBVA Bancomer fifa world cup 2026 6.JPG',
   hou: 'Reliantstadium.jpg',
   dal: 'Cowboys Stadium 2.jpg',
+  kc: 'Arrowhead Stadium 2010.JPG',
   atl: 'Mercedes Benz Stadium time lapse capture 2017-08-13.jpg',
   mia: 'Hard Rock Stadium for Super Bowl LIV (49606707583).jpg',
   tor: 'BMO Field in 2016.png',

@@ -85,11 +85,32 @@ export async function loadConfig(): Promise<IngestionConfig> {
     }
     break;
   }
+  cfg = applyEnvOverrides(cfg);
   // Enforce the hard guardrails no matter what a config file says.
   cfg.maxConcurrency = 1;
   cfg.minDelayMs = Math.max(4000, cfg.minDelayMs);
   cfg.maxDelayMs = Math.max(cfg.minDelayMs, cfg.maxDelayMs);
   return cfg;
+}
+
+function applyEnvOverrides(cfg: IngestionConfig): IngestionConfig {
+  return {
+    ...cfg,
+    userAgent: process.env.INGEST_USER_AGENT ?? cfg.userAgent,
+    minDelayMs: readNumberEnv('INGEST_MIN_DELAY_MS', cfg.minDelayMs),
+    maxDelayMs: readNumberEnv('INGEST_MAX_DELAY_MS', cfg.maxDelayMs),
+    headless: process.env.INGEST_HEADLESS === undefined ? cfg.headless : process.env.INGEST_HEADLESS !== '0',
+    forceRefetch:
+      process.env.INGEST_FORCE_REFETCH === undefined ? cfg.forceRefetch : process.env.INGEST_FORCE_REFETCH === '1',
+    robotsBase: process.env.INGEST_ROBOTS_BASE ?? cfg.robotsBase,
+  };
+}
+
+function readNumberEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined) return fallback;
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : fallback;
 }
 
 function mergeConfig(base: IngestionConfig, over: Partial<IngestionConfig>): IngestionConfig {

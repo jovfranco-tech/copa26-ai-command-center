@@ -2,8 +2,8 @@
  * Curated CURRENT internationals per qualified team — names, club, position.
  * These are FACTS (not copyrightable). It is a selection of notable players,
  * NOT an official squad (those are announced ~10 days before the tournament).
- * Ages/numbers are approximate. No official photos or proprietary ratings here;
- * the videogame-style attributes shown in the UI are illustrative and generated.
+ * Ages/numbers are approximate. The web app can layer public FC 26 ratings over
+ * these names when a matching player exists; tournament stats remain 0.
  *
  * [name, position, club, approxAge, shirt]
  */

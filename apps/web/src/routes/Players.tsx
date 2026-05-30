@@ -2,6 +2,7 @@ import { Icon, Pill, Empty } from '@worldcup/ui';
 import { POSITIONS } from '@worldcup/shared';
 import { PlayerCard } from '@/components/cards';
 import { MockBanner } from '@/components/MockBanner';
+import { playerRatingMeta } from '@/generated/playerRatings';
 import { usePlayers, useTeams } from '@/hooks';
 import { usePlayerFilters } from '@/store/filters';
 
@@ -50,6 +51,14 @@ export function Players() {
             </Pill>
           ))}
         </div>
+        <div className="ratings-note">
+          <span className="rating-source fc26">FC 26</span>
+          <span>
+            {playerRatingMeta.resolved}/{playerRatingMeta.total} ratings reales cercanos desde base pública FC 26.
+          </span>
+          <span className="rating-source estimate">Estimado</span>
+          <span>{playerRatingMeta.total - playerRatingMeta.resolved} jugadores con modelo por club/selección.</span>
+        </div>
       </div>
 
       <div className="row" style={{ justifyContent: 'space-between', marginBottom: 12 }}>
@@ -66,7 +75,7 @@ export function Players() {
       ) : players.length === 0 ? (
         <Empty icon="players" title="Sin jugadores" text="Las plantillas oficiales aún no se publican (se anuncian días antes del torneo)." />
       ) : (
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))' }}>
+        <div className="grid player-grid">
           {players.map((p) => (
             <PlayerCard key={p.id} p={p} />
           ))}

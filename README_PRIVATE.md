@@ -1,10 +1,9 @@
 # FIFA Private World Cup Dashboard
 
-> ⚠️ **PRIVATE · LOCAL-ONLY · NOT FOR PUBLIC DISTRIBUTION.**
+> ⚠️ **PRIVATE · PERSONAL USE · NOT FOR PUBLIC DISTRIBUTION.**
 > Read [`LOCAL_ONLY_NOTICE.md`](./LOCAL_ONLY_NOTICE.md) and
 > [`scraper_policy.md`](./scraper_policy.md) before running anything. No official FIFA
-> affiliation. No public deploy. The folder happens to be named "FIFA Vercel" — there is
-> **no Vercel/cloud configuration** here and none should be added.
+> affiliation. Production is a password-protected private Vercel deploy.
 
 A personal "sports intelligence command center" for browsing World Cup matches, teams,
 players, standings, stats, the bracket and venues — running entirely on your machine.
@@ -28,7 +27,8 @@ packages/
   db/          Drizzle schema, libsql client, migrate + seed
   ingestion/   scrapers, asset downloader, normalizers, validators, reports
   ui/          shared presentational primitives + icon adapter
-private-assets/  downloaded assets (gitignored)
+private-assets/  raw downloaded assets (gitignored)
+apps/web/static/ optimized static derivatives for the private deploy
 local-db/        worldcup.sqlite (gitignored)
 scraped-cache/   raw html/json + downloaded asset cache (gitignored)
 reports/         generated markdown reports
@@ -70,6 +70,8 @@ pnpm ingest:teams
 pnpm ingest:fixtures
 pnpm ingest:players
 pnpm ingest:player-profiles
+pnpm ingest:player-photos              # configured public photo URLs in ingestion.config.ts
+pnpm ingest:player-photos:wikimedia    # resolve free Wikimedia photos from Wikidata P18
 pnpm ingest:match-stats
 pnpm ingest:venues
 pnpm ingest:assets        # flags / crests / player photos / venue images
@@ -77,6 +79,13 @@ pnpm ingest:all           # everything, then validate + quality report
 pnpm validate:data        # Zod-validate the active dataset
 pnpm report:data          # write reports/data-quality-report.md
 pnpm check:local-only     # verify private dirs are gitignored
+```
+
+If Wikimedia rate-limits image downloads, wait for its `Retry-After` window and resume
+in small batches, for example:
+
+```bash
+PLAYER_PHOTO_DOWNLOAD_LIMIT=8 pnpm ingest:player-photos:wikimedia
 ```
 
 ## All scripts
@@ -96,10 +105,11 @@ pnpm check:local-only     # verify private dirs are gitignored
 - ✅ Local API listens on `127.0.0.1` only and refuses public hosts.
 - ✅ `private-assets/`, `local-db/`, `scraped-cache/`, `*.sqlite`, `*.db`,
   `reports/*.json` are gitignored. `pnpm check:local-only` verifies this.
-- ✅ No official assets in `/src` or versioned `/public`; assets are served only by the
-  local API from `private-assets/`, with generated placeholders when missing.
+- ✅ Raw downloaded assets stay in `private-assets/`; optimized static derivatives in
+  `apps/web/static/` keep the private Vercel deploy reproducible and lightweight.
 - ✅ Scrapers: public pages only, robots.txt respected, 4–10s delay, concurrency 1,
   local cache, **stop on block**, no proxies/stealth/CAPTCHA bypass.
-- ✅ No cloud backend, no auth, no Vercel/Docker public config, no deploy scripts.
+- ✅ Private Vercel deploy is gated by the Edge middleware access screen; API routes stay
+  behind the same gate.
 
 See [`implementation_notes.md`](./implementation_notes.md) for what's built and what's next.

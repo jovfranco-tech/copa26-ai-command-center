@@ -87,7 +87,7 @@ export function Bracket() {
           <div className="bk-col" style={{ justifyContent: 'center' }}>
             <div className="bk-round mono-label">Campeón</div>
             <div className="card bk-champ">
-              <Icon name="trophy" size={28} style={{ color: 'var(--gold)' }} />
+              <img className="bk-cup" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26 trophy" loading="lazy" />
               {champion ? (
                 <>
                   <TeamCrest code={champion} size={48} />
@@ -96,7 +96,7 @@ export function Bracket() {
               ) : (
                 <span className="muted">TBD</span>
               )}
-              <span className="mono-label">Projected winner</span>
+              <span className="mono-label">Campeón proyectado</span>
             </div>
           </div>
         </div>

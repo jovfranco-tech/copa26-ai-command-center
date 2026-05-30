@@ -13,6 +13,8 @@
     "ingest:match-stats": "tsx src/scrapers/scrape-match-stats.ts",
     "ingest:venues": "tsx src/scrapers/scrape-venues.ts",
     "ingest:assets": "tsx src/assets/download-all.ts",
+    "ingest:player-photos": "tsx src/assets/download-player-photos.ts",
+    "ingest:player-photos:wikimedia": "tsx src/assets/download-wikimedia-player-photos.ts",
     "ingest:all": "tsx src/ingest-all.ts",
     "import:openfootball": "tsx src/import-openfootball.ts",
     "validate:data": "tsx src/validate-ingested-data.ts",

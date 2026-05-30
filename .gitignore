@@ -1,7 +1,7 @@
 # ============================================================
 #  FIFA Private World Cup Dashboard — LOCAL ONLY
-#  Nothing in this repo should ever contain official FIFA assets
-#  or scraped datasets. The entries below are MANDATORY.
+#  Raw downloads stay local-only. The app may include optimized static
+#  derivatives under apps/web/static for the private deployment.
 # ============================================================
 
 # --- MANDATORY local-only / private exclusions ---

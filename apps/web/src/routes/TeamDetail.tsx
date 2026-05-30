@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Icon, Empty, Form, Jersey, cn } from '@worldcup/ui';
+import { Icon, Empty, Form, cn } from '@worldcup/ui';
 import { fmtGD } from '@worldcup/shared';
-import { TeamCrest, TeamFlag, FavStar } from '@/components/identity';
+import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
 import { PlayerCard, MatchRow, StandingsTable } from '@/components/cards';
 import { useMatches, usePlayers, useStandings, useTeam } from '@/hooks';
 
@@ -32,7 +32,7 @@ export function TeamDetail({ code }: { code: string }) {
         <div className="card-pad">
           <div className="row gap-16 wrap">
             <TeamCrest code={code} size={72} />
-            <Jersey colorA={t.colorA} colorB={t.colorB} size={52} />
+            <TeamKit code={code} size={52} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="row gap-10">
                 <TeamFlag code={code} size={20} />

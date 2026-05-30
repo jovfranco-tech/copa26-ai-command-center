@@ -25,6 +25,8 @@
     "ingest:teams": "pnpm --filter @worldcup/ingestion ingest:teams",
     "ingest:players": "pnpm --filter @worldcup/ingestion ingest:players",
     "ingest:player-profiles": "pnpm --filter @worldcup/ingestion ingest:player-profiles",
+    "ingest:player-photos": "pnpm --filter @worldcup/ingestion ingest:player-photos",
+    "ingest:player-photos:wikimedia": "pnpm --filter @worldcup/ingestion ingest:player-photos:wikimedia",
     "ingest:match-stats": "pnpm --filter @worldcup/ingestion ingest:match-stats",
     "ingest:venues": "pnpm --filter @worldcup/ingestion ingest:venues",
     "ingest:assets": "pnpm --filter @worldcup/ingestion ingest:assets",

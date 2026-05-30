@@ -23,7 +23,7 @@ export interface PreferencesState {
 }
 
 const DEFAULTS = {
-  theme: 'dark' as Theme,
+  theme: 'light' as Theme,
   density: 'regular' as Density,
   accent: '#c9a24b',
   goldAmt: 30,
@@ -38,7 +38,11 @@ export const usePreferences = create<PreferencesState>()(
       set: (key, value) => set({ [key]: value } as Partial<PreferencesState>),
       reset: () => set({ ...DEFAULTS }),
     }),
-    { name: 'wc_prefs' },
+    {
+      name: 'wc_prefs',
+      version: 1,
+      migrate: (persisted) => ({ ...(persisted as Partial<PreferencesState>), theme: 'light' }),
+    },
   ),
 );
 

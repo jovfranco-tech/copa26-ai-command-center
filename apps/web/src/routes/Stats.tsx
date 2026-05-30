@@ -68,9 +68,7 @@ export function Stats() {
                 </div>
               ))
             ) : (
-              <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                Sin datos de porteros todavía.
-              </p>
+              <Empty icon="shield" title="Porteros en espera" text="Las atajadas y vallas invictas aparecerán cuando haya partidos jugados." />
             )}
           </div>
         </div>
@@ -131,9 +129,7 @@ function Leaderboard({
         {players.length ? (
           players.map((p, i) => <PlayerMini key={p.id} p={p} rank={i + 1} metric={metric} />)
         ) : (
-          <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-            Sin datos todavía (el torneo aún no empieza).
-          </p>
+          <Empty icon={icon} title={`${title} en espera`} text="El torneo aún no empieza; esta tabla se llenará con estadísticas reales." />
         )}
       </div>
     </div>
@@ -149,20 +145,24 @@ function TeamLeader({ title, rows }: { title: string; rows: Array<[string, numbe
         <h3>{title}</h3>
       </div>
       <div className="card-pad">
-        {rows.slice(0, 10).map(([team, val]) => (
-          <div key={team} style={{ marginBottom: 10 }}>
-            <div className="row gap-8" style={{ marginBottom: 4 }}>
-              <TeamCrest code={team} size={18} />
-              <span style={{ flex: 1, fontSize: 12.5, fontWeight: 600 }}>{team}</span>
-              <span className="num" style={{ fontWeight: 700 }}>
-                {val}
-              </span>
+        {rows.length ? (
+          rows.slice(0, 10).map(([team, val]) => (
+            <div key={team} style={{ marginBottom: 10 }}>
+              <div className="row gap-8" style={{ marginBottom: 4 }}>
+                <TeamCrest code={team} size={18} />
+                <span style={{ flex: 1, fontSize: 12.5, fontWeight: 600 }}>{team}</span>
+                <span className="num" style={{ fontWeight: 700 }}>
+                  {val}
+                </span>
+              </div>
+              <div className="bar-track">
+                <div className="bar-fill" style={{ width: `${(val / max) * 100}%` }} />
+              </div>
             </div>
-            <div className="bar-track">
-              <div className="bar-fill" style={{ width: `${(val / max) * 100}%` }} />
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <Empty icon="stats" title={`${title} en espera`} text="Se llenará automáticamente cuando haya partidos con estadísticas." />
+        )}
       </div>
     </div>
   );

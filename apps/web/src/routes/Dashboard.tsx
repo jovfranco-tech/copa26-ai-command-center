@@ -285,6 +285,7 @@ function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: numb
 }
 
 function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) {
+  const navigate = useNavigate();
   const meta = sync?.meta;
   const isMock = sync?.source === 'mock';
   return (
@@ -293,9 +294,15 @@ function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) 
         <span className={isMock ? 'dot-warn' : 'dot-ok'} />
         <h3>Datos locales</h3>
         <span className="spacer" />
-        <span className="badge gold">{meta?.cacheStatus ?? 'Datos abiertos'}</span>
+        <button type="button" className="card-link" onClick={() => navigate({ to: '/data' })}>
+          Revisar
+        </button>
       </div>
       <div className="card-pad" style={{ paddingTop: 4 }}>
+        <div className="sync-row">
+          <span className="k">Estado</span>
+          <span className="badge gold">{meta?.cacheStatus ?? 'Datos abiertos'}</span>
+        </div>
         <div className="sync-row">
           <span className="k">Fuente</span>
           <span className="num" style={{ fontSize: 12 }}>

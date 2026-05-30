@@ -1,10 +1,10 @@
 /** Data-bound cards + rows, ported from the approved prototype. */
 import { useNavigate } from '@tanstack/react-router';
-import { Icon, StatusBadge, Form, Jersey, cn } from '@worldcup/ui';
+import { Icon, StatusBadge, Form, cn } from '@worldcup/ui';
 import { fmtDay, fmtGD, nextMatchFor, type Match, type Player, type StandingRow } from '@worldcup/shared';
-import { TeamCrest, TeamFlag, FavStar, PlayerAvatar } from './identity';
+import { TeamCrest, TeamFlag, TeamKit, FavStar, PlayerAvatar } from './identity';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
-import { ATTR_LABELS, attrColor, playerRatings } from '@/lib/ratings';
+import { attrColor, attrLabelsFor, playerRatings, ratingSourceText } from '@/lib/ratings';
 
 export function MatchCard({ m }: { m: Match }) {
   const navigate = useNavigate();
@@ -189,15 +189,14 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
 
   return (
     <div
-      className="card hoverable"
-      style={{ overflow: 'hidden' }}
+      className="card hoverable team-card"
       onClick={() => navigate({ to: '/teams/$code', params: { code } })}
     >
-      <div style={{ height: 5, background: `linear-gradient(90deg, ${t.colorA}, ${t.colorB})` }} />
+      <div className="team-card-strip" style={{ background: `linear-gradient(90deg, ${t.colorA}, ${t.colorB})` }} />
       <div className="card-pad">
-        <div className="row gap-12">
+        <div className="row gap-12 team-card-main">
           <TeamCrest code={code} size={46} />
-          <Jersey colorA={t.colorA} colorB={t.colorB} size={36} />
+          <TeamKit code={code} size={36} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className="row gap-8">
               <TeamFlag code={code} size={14} />
@@ -210,7 +209,7 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
           <FavStar kind="teams" id={code} />
         </div>
         {standing && (
-          <div className="row" style={{ marginTop: 13, justifyContent: 'space-between' }}>
+          <div className="row team-card-stats">
             <Stat label="Pts" value={standing.Pts} />
             <Stat label="G-E-P" value={`${standing.W}-${standing.D}-${standing.L}`} />
             <Stat label="GF" value={standing.GF} />
@@ -246,7 +245,7 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
 
 function Stat({ label, value, className }: { label: string; value: string | number; className?: string }) {
   return (
-    <div>
+    <div className="mini-stat">
       <div className="mono-label">{label}</div>
       <div className={cn('num', className)} style={{ fontWeight: 700, fontSize: 17 }}>
         {value}
@@ -260,10 +259,10 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
   const teams = useTeamsMap();
   const t = teams[p.team];
   const r = playerRatings(p);
+  const labels = attrLabelsFor(p);
   return (
     <div
-      className="card hoverable"
-      style={{ padding: '13px 15px' }}
+      className="card hoverable player-card"
       onClick={() => navigate({ to: '/players/$playerId', params: { playerId: p.id } })}
     >
       <div className="row gap-12">
@@ -300,6 +299,9 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
             <span className="num muted" style={{ fontSize: 11 }}>
               #{p.number ?? '—'}
             </span>
+            <span className={`rating-source ${r.source}`} title={ratingSourceText(r)}>
+              {r.source === 'fc26' ? 'FC 26' : 'Estimado'}
+            </span>
           </div>
           <div className="row gap-6 muted" style={{ fontSize: 11.5, marginTop: 2 }}>
             <TeamFlag code={p.team} size={13} />
@@ -312,10 +314,9 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
         <FavStar kind="players" id={p.id} />
       </div>
       <div
-        className="row"
-        style={{ marginTop: 11, paddingTop: 10, borderTop: '1px solid var(--line)', justifyContent: 'space-between' }}
+        className="row player-attrs"
       >
-        {ATTR_LABELS.map((a) => (
+        {labels.map((a) => (
           <div key={a.key} style={{ textAlign: 'center' }}>
             <div className="num" style={{ fontWeight: 700, fontSize: 15, color: attrColor(r[a.key]) }}>
               {r[a.key]}

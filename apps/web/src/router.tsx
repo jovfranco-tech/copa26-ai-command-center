@@ -12,6 +12,8 @@ import { Stats } from '@/routes/Stats';
 import { Bracket } from '@/routes/Bracket';
 import { Venues } from '@/routes/Venues';
 import { Favorites } from '@/routes/Favorites';
+import { Pool } from '@/routes/Pool';
+import { DataCenter } from '@/routes/DataCenter';
 import { Analyst } from '@/routes/Analyst';
 
 type AnalystCtx = 'tournament' | 'match' | 'team' | 'player';
@@ -79,6 +81,8 @@ const statsRoute = createRoute({ getParentRoute: () => rootRoute, path: '/stats'
 const bracketRoute = createRoute({ getParentRoute: () => rootRoute, path: '/bracket', component: Bracket });
 const venuesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/venues', component: Venues });
 const favoritesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/favorites', component: Favorites });
+const poolRoute = createRoute({ getParentRoute: () => rootRoute, path: '/pool', component: Pool });
+const dataRoute = createRoute({ getParentRoute: () => rootRoute, path: '/data', component: DataCenter });
 
 const analystRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -110,6 +114,8 @@ const routeTree = rootRoute.addChildren([
   bracketRoute,
   venuesRoute,
   favoritesRoute,
+  poolRoute,
+  dataRoute,
   analystRoute,
 ]);
 

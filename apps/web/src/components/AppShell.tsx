@@ -17,6 +17,8 @@ type StaticPath =
   | '/stats'
   | '/venues'
   | '/favorites'
+  | '/pool'
+  | '/data'
   | '/analyst';
 
 interface NavItem {
@@ -49,13 +51,15 @@ const NAV: Array<{ group: string; items: NavItem[] }> = [
   {
     group: 'Personal',
     items: [
+      { key: 'pool', label: 'Quiniela', icon: 'trophy', to: '/pool' },
       { key: 'favorites', label: 'Favoritos', icon: 'star', to: '/favorites' },
+      { key: 'data', label: 'Datos', icon: 'cloud', to: '/data' },
       { key: 'analyst', label: 'Analista IA', icon: 'ai', to: '/analyst' },
     ],
   },
 ];
 
-const MOBILE_KEYS = ['home', 'matches', 'standings', 'stats', 'analyst'];
+const MOBILE_KEYS = ['home', 'matches', 'pool', 'standings', 'analyst'];
 const ALL_ITEMS = NAV.flatMap((g) => g.items);
 
 const TITLES: Record<string, string> = {
@@ -68,6 +72,8 @@ const TITLES: Record<string, string> = {
   stats: 'Estadísticas',
   venues: 'Sedes',
   favorites: 'Favoritos',
+  pool: 'Quiniela familiar',
+  data: 'Centro de datos',
   analyst: 'Analista de partidos IA',
 };
 
@@ -83,6 +89,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const activeKey = activeKeyFromPath(pathname);
   const [drawer, setDrawer] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const isLocalHost =
+    typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
 
   const prefs = usePreferences();
   useEffect(() => {
@@ -99,17 +107,23 @@ export function AppShell({ children }: { children: ReactNode }) {
     setDrawer(false);
   };
 
+  const logout = async () => {
+    try {
+      await fetch('/api/logout', { method: 'POST' });
+    } finally {
+      window.location.assign('/login');
+    }
+  };
+
   const Brand = () => (
     <div className="brand">
-      <span className="brand-mark">
-        <Icon name="trophy" size={20} />
-      </span>
-      <div>
-        <div className="brand-name row gap-6" style={{ alignItems: 'center' }}>
-          Mundial 2026
-          <Icon name="trophy" size={14} style={{ color: 'var(--gold)' }} />
+      <img className="brand-mark" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" />
+      <div className="brand-copy">
+        <img className="brand-wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="FIFA World Cup 26" />
+        <div className="brand-sub">
+          <span>Centro de mando</span>
+          <span>Privado</span>
         </div>
-        <div className="brand-sub">Centro de mando</div>
       </div>
     </div>
   );
@@ -145,7 +159,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavList />
           </nav>
           <div className="sidebar-foot">
-            Mundial 2026 · datos abiertos.
+            FIFA World Cup 26 · datos abiertos.
             <br />
             No oficial · sin afiliación FIFA.
           </div>
@@ -181,6 +195,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link to="/analyst" className="icon-btn" title="Analista IA">
               <Icon name="ai" size={18} />
             </Link>
+            {!isLocalHost && (
+              <button type="button" className="icon-btn logout-btn" title="Salir" onClick={logout}>
+                <Icon name="arrowR" size={18} />
+              </button>
+            )}
           </header>
 
           <div className="content">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER } from '@worldcup/shared';
-import { useMatches, usePlayers, useStandings, useTeams } from '@/hooks';
+import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext } from '@/lib/aiClient';
 
@@ -18,6 +18,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const { data: teamsData } = useTeams();
   const { data: playersData } = usePlayers();
   const { data: matchData } = useMatches();
+  const { data: venuesData } = useVenues();
   const { data: standings } = useStandings();
 
   const [ctx, setCtx] = useState<Ctx>((ctxProp as Ctx) ?? 'tournament');
@@ -36,6 +37,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       teams: teamsData?.items ?? [],
       players: playersData?.items ?? [],
       matches: matchData?.items ?? [],
+      venues: venuesData?.items ?? [],
       standings: standings?.groups ?? {},
     };
     const cid = ctx === 'tournament' ? undefined : id;
@@ -49,7 +51,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
     if (ai.ok && ai.answer) {
       setUsedAI(true);
-      setAnswer({ text: ai.answer, sources: ['IA (OpenAI)', 'datos locales'] });
+      setAnswer({ text: ai.answer, sources: ['IA', 'datos locales'] });
     } else {
       setUsedAI(false);
       setAnswer(local);
@@ -70,12 +72,6 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <h3>Analista de partidos</h3>
             </div>
             <div className="card-pad brief-body">
-              <p style={{ marginTop: 0 }}>
-                Pregunta sobre el torneo, un partido, una selección o un jugador. Si hay una clave de
-                OpenAI configurada, responde con IA (enviando solo el contexto de datos al servidor); si
-                no, usa el analista local. Siempre basado en los datos cargados.
-              </p>
-
               <div className="row gap-6 wrap" style={{ marginBottom: 10 }}>
                 {(['tournament', 'match', 'team', 'player'] as Ctx[]).map((c) => (
                   <Pill
@@ -146,7 +142,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <div className="row gap-8" style={{ marginBottom: 8 }}>
                 <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
                 <span className="mono-label" style={{ margin: 0 }}>
-                  {usedAI ? 'Analista IA (OpenAI)' : 'Analista local'}
+                  {usedAI ? 'Analista IA' : 'Analista local'}
                 </span>
                 {usedAI && <span className="badge gold">IA</span>}
               </div>

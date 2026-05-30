@@ -14,15 +14,27 @@
  */
 export const config = { runtime: 'edge' };
 
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT = 30;
+
 const SYSTEM_PROMPT =
   'Eres un analista del Mundial 2026. Responde SIEMPRE en español, de forma concisa y analítica. ' +
   'Usa ÚNICAMENTE los datos proporcionados en el contexto; no inventes resultados, estadísticas ni ' +
   'jugadores. Si algo no está en los datos (por ejemplo, el torneo aún no se ha jugado), dilo con ' +
-  'claridad. No añadas avisos legales ni disclaimers.';
+  'claridad. Si el contexto incluye "Partido inaugural confirmado", úsalo para preguntas sobre el ' +
+  'primer partido, apertura o arranque. No añadas avisos legales ni disclaimers.';
 
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
     return Response.json({ ok: false, reason: 'method' }, { status: 405 });
+  }
+
+  const rate = checkRateLimit(request);
+  if ('retryAfter' in rate) {
+    return Response.json(
+      { ok: false, reason: 'rate-limit', retryAfter: rate.retryAfter },
+      { status: 429, headers: { 'Retry-After': String(rate.retryAfter), 'Cache-Control': 'no-store' } },
+    );
   }
 
   const key = process.env.OPENAI_API_KEY;
@@ -63,4 +75,36 @@ export default async function handler(request: Request): Promise<Response> {
   } catch {
     return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });
   }
+}
+
+function checkRateLimit(request: Request): { ok: true } | { ok: false; retryAfter: number } {
+  const store = getRateStore();
+  const now = Date.now();
+  const key = rateKey(request);
+  const current = store.get(key);
+  if (!current || now - current.startedAt > RATE_WINDOW_MS) {
+    store.set(key, { count: 1, startedAt: now });
+    return { ok: true };
+  }
+  if (current.count >= RATE_LIMIT) {
+    return { ok: false, retryAfter: Math.ceil((RATE_WINDOW_MS - (now - current.startedAt)) / 1000) };
+  }
+  current.count += 1;
+  return { ok: true };
+}
+
+function getRateStore(): Map<string, { count: number; startedAt: number }> {
+  const g = globalThis as typeof globalThis & {
+    __wcAnalystRateLimit?: Map<string, { count: number; startedAt: number }>;
+  };
+  g.__wcAnalystRateLimit ??= new Map();
+  return g.__wcAnalystRateLimit;
+}
+
+function rateKey(request: Request): string {
+  const cookie = request.headers.get('cookie') ?? '';
+  const session = cookie.match(/(?:^|;\s*)wc_session=([^;]+)/)?.[1];
+  if (session) return `session:${session.slice(-20)}`;
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  return `ip:${forwarded || 'unknown'}`;
 }

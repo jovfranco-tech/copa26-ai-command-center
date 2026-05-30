@@ -1,25 +1,37 @@
 /**
  * Calls the server-side AI analyst (/api/analyst). Builds a compact, GROUNDED
- * Spanish context from the local data and sends it; the OpenAI key never touches
- * the client. Falls back to the offline analyst when the function says 'no-key'.
+ * Spanish context from the local data and sends it; the AI provider key never
+ * touches the client. Falls back to the offline analyst when the function says 'no-key'.
  */
-import type { Match, Player, StandingRow, Team } from '@worldcup/shared';
+import type { Match, Player, StandingRow, Team, Venue } from '@worldcup/shared';
 
 export interface AIData {
   teams: Team[];
   players: Player[];
   matches: Match[];
+  venues?: Venue[];
   standings: Record<string, StandingRow[]>;
 }
 
 const tName = (teams: Team[], code: string) => teams.find((t) => t.code === code)?.name ?? code;
+const venueName = (venues: Venue[] | undefined, id: string) => {
+  const v = venues?.find((x) => x.id === id);
+  return v ? `${v.stadium}, ${v.city}` : id;
+};
+const byKickoff = (a: Match, b: Match) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`);
 
 export function buildAIContext(ctx: string, id: string | undefined, d: AIData): string {
   const played = d.matches.filter((m) => m.status === 'FT');
+  const opening = [...d.matches].sort(byKickoff)[0];
   const lines: string[] = [
     `Mundial 2026 (Canadá/EE. UU./México), 48 selecciones, 12 grupos. Arranca el 11-jun-2026.`,
     `Partidos jugados: ${played.length}/${d.matches.length} (si es 0, el torneo no ha comenzado y no hay resultados ni estadísticas).`,
   ];
+  if (opening) {
+    lines.push(
+      `Partido inaugural confirmado en el calendario local: ${tName(d.teams, opening.home)} vs ${tName(d.teams, opening.away)} (${opening.home}-${opening.away}), ${opening.date} ${opening.time}, ${opening.stage}, sede ${venueName(d.venues, opening.venue)}.`,
+    );
+  }
 
   if (ctx === 'team' && id) {
     const t = d.teams.find((x) => x.code === id);
@@ -45,6 +57,14 @@ export function buildAIContext(ctx: string, id: string | undefined, d: AIData): 
         `Partido consultado: ${tName(d.teams, m.home)} vs ${tName(d.teams, m.away)}, ${m.date} ${m.time}, ${m.stage}. Estado: ${m.status}. Marcador: ${m.homeGoals ?? '-'}–${m.awayGoals ?? '-'}.`,
       );
   } else {
+    const firstUpcoming = [...d.matches].filter((m) => m.status === 'UPCOMING').sort(byKickoff).slice(0, 6);
+    if (firstUpcoming.length) {
+      lines.push(
+        `Primeros partidos programados: ${firstUpcoming
+          .map((m) => `${tName(d.teams, m.home)} vs ${tName(d.teams, m.away)} (${m.date} ${m.time})`)
+          .join('; ')}.`,
+      );
+    }
     for (const [g, rows] of Object.entries(d.standings)) {
       lines.push(`Grupo ${g}: ${rows.map((r) => tName(d.teams, r.team)).join(', ')}.`);
     }

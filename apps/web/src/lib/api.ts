@@ -149,6 +149,25 @@ export const fetchSyncStatus = () =>
     assetsTracked: 0,
   }));
 
+export interface DataSyncCheck {
+  ok: boolean;
+  status: string;
+  checkedAt: string;
+  mode: 'manual' | 'cron' | 'local-fallback';
+  cron: string;
+  results: string;
+}
+
+export const fetchDataSyncCheck = () =>
+  safeGet<DataSyncCheck>('/data-sync?manual=1', () => ({
+    ok: true,
+    status: 'Flujo local listo',
+    checkedAt: new Date().toISOString(),
+    mode: 'local-fallback',
+    cron: 'Diario 12:00 UTC en Vercel',
+    results: 'Pendientes hasta el 11 de junio de 2026',
+  }));
+
 /** Build a same-origin URL to a locally-stored asset (served only by the API). */
 export const assetUrl = (assetId: string | null | undefined): string | null =>
   assetId ? `${BASE}/assets/${assetId}` : null;

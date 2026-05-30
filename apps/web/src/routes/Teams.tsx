@@ -37,7 +37,7 @@ export function Teams() {
       ) : teams.length === 0 ? (
         <Empty icon="teams" title="Sin selecciones" text="No hay selecciones en el dataset." />
       ) : (
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))' }}>
+        <div className="grid team-grid">
           {teams.map((t) => (
             <TeamCard key={t.code} code={t.code} standing={standingByCode[t.code]} />
           ))}

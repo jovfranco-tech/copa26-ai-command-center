@@ -66,6 +66,8 @@ export function Crest({ code, colorA = '#2a3550', colorB = '#566080', size = 40,
         width={size}
         height={size}
         className="crest"
+        loading="lazy"
+        decoding="async"
         style={{ borderRadius: Math.round(size * 0.22), objectFit: 'cover' }}
         onError={() => setOk(false)}
       />
@@ -105,6 +107,8 @@ export function Flag({ code, colorA = '#2a3550', colorB = '#566080', size = 22, 
         src={src}
         alt={`${code} flag`}
         className="flag"
+        loading="lazy"
+        decoding="async"
         style={{ width: size * 1.4, height: size, borderRadius: round, objectFit: 'cover' }}
         onError={() => setOk(false)}
       />
@@ -141,6 +145,8 @@ export function Avatar({ name, colorA = '#2a3550', colorB = '#566080', size = 44
         alt={name}
         width={size}
         height={size}
+        loading="lazy"
+        decoding="async"
         style={{ borderRadius: 12, objectFit: 'cover', flex: 'none' }}
         onError={() => setOk(false)}
       />

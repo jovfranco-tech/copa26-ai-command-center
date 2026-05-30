@@ -1,14 +1,54 @@
 /** Data-bound identity components: look up team colors + local asset slots. */
-import { Crest, Flag, Avatar, FavButton } from '@worldcup/ui';
+import { useEffect, useMemo, useState } from 'react';
+import { Crest, Flag, Avatar, FavButton, Jersey } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
+import { downloadedPlayerPhotoExts, playerPhotoFallbacks } from '@/generated/playerPhotos';
+import { downloadedTeamCrestExts, teamCrestFallbacks } from '@/generated/teamCrests';
+import { downloadedTeamKitExts, teamKitFallbacks } from '@/generated/teamKits';
 import { useAsset, useTeamsMap } from '@/hooks';
 import { useFavorites, type FavKind } from '@/store/favorites';
 
 export function TeamCrest({ code, size = 40 }: { code: string; size?: number }) {
   const teams = useTeamsMap();
   const t = teams[code];
-  const src = useAsset(t?.crestAssetId);
-  return <Crest code={code} colorA={t?.colorA} colorB={t?.colorB} size={size} src={src} />;
+  const assetSrc = useAsset(t?.crestAssetId);
+  const downloadedExt = downloadedTeamCrestExts[code];
+  const fallback = teamCrestFallbacks[code];
+  const candidates = useMemo(() => {
+    const staticSrc = downloadedExt ? `/team-crests/${encodeURIComponent(code)}.${downloadedExt}` : null;
+    return [assetSrc, staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
+  }, [assetSrc, code, downloadedExt, fallback?.src]);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  useEffect(() => setCandidateIndex(0), [assetSrc, code, downloadedExt, fallback?.src]);
+
+  const src = candidates[candidateIndex] ?? null;
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={`${t?.name ?? code} crest`}
+        width={size}
+        height={size}
+        className="crest official-crest asset-img"
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        style={{
+          background: 'rgba(255, 255, 255, 0.94)',
+          borderRadius: Math.round(size * 0.22),
+          display: 'block',
+          width: size,
+          height: size,
+          objectFit: 'contain',
+          padding: Math.max(3, Math.round(size * 0.08)),
+          boxSizing: 'border-box',
+        }}
+        onError={() => setCandidateIndex((i) => i + 1)}
+      />
+    );
+  }
+
+  return <Crest code={code} colorA={t?.colorA} colorB={t?.colorB} size={size} />;
 }
 
 export function TeamFlag({ code, size = 18 }: { code: string; size?: number }) {
@@ -20,11 +60,71 @@ export function TeamFlag({ code, size = 18 }: { code: string; size?: number }) {
   return <Flag code={code} colorA={t?.colorA} colorB={t?.colorB} size={size} src={src} />;
 }
 
+export function TeamKit({ code, size = 36 }: { code: string; size?: number }) {
+  const teams = useTeamsMap();
+  const t = teams[code];
+  const fallback = teamKitFallbacks[code];
+  const downloadedExt = downloadedTeamKitExts[code];
+  const candidates = useMemo(() => {
+    const staticSrc = downloadedExt ? `/team-kits/${encodeURIComponent(code)}.${downloadedExt}` : null;
+    return [staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
+  }, [code, downloadedExt, fallback?.src]);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  useEffect(() => setCandidateIndex(0), [code, downloadedExt, fallback?.src]);
+
+  const src = candidates[candidateIndex] ?? null;
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={`${t?.name ?? code} kit`}
+        width={size}
+        height={Math.round((size * 44) / 48)}
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        className="asset-img"
+        style={{ objectFit: 'contain', flex: 'none' }}
+        onError={() => setCandidateIndex((i) => i + 1)}
+      />
+    );
+  }
+
+  return <Jersey colorA={t?.colorA} colorB={t?.colorB} size={size} />;
+}
+
 export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: number }) {
   const teams = useTeamsMap();
   const t = teams[player.team];
-  const src = useAsset(player.photoAssetId);
-  return <Avatar name={player.name} colorA={t?.colorA} colorB={t?.colorB} size={size} src={src} />;
+  const assetSrc = useAsset(player.photoAssetId);
+  const fallback = playerPhotoFallbacks[player.id];
+  const downloadedExt = downloadedPlayerPhotoExts[player.id];
+  const candidates = useMemo(() => {
+    const staticSrc = downloadedExt ? `/player-photos/${encodeURIComponent(player.id)}.${downloadedExt}` : null;
+    return [assetSrc, staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
+  }, [assetSrc, downloadedExt, fallback?.src, player.id]);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  useEffect(() => setCandidateIndex(0), [assetSrc, downloadedExt, fallback?.src, player.id]);
+
+  const src = candidates[candidateIndex] ?? null;
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={player.name}
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        className="asset-img player-photo"
+        style={{ borderRadius: 12, objectFit: 'cover', flex: 'none' }}
+        onError={() => setCandidateIndex((i) => i + 1)}
+      />
+    );
+  }
+
+  return <Avatar name={player.name} colorA={t?.colorA} colorB={t?.colorB} size={size} />;
 }
 
 export function TeamLabel({

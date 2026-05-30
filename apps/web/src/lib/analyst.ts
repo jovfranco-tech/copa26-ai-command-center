@@ -3,7 +3,7 @@
  * locales cargados. Sin llamadas a internet. No inventa: cada frase se arma con
  * los números recibidos, y reporta qué tablas locales usó.
  */
-import { avg, fmtFull, type Match, type Player, type StandingRow, type Team } from '@worldcup/shared';
+import { avg, fmtFull, type Match, type Player, type StandingRow, type Team, type Venue } from '@worldcup/shared';
 
 export interface AnalystInput {
   question: string;
@@ -12,6 +12,7 @@ export interface AnalystInput {
   teams: Team[];
   players: Player[];
   matches: Match[];
+  venues?: Venue[];
   standings: Record<string, StandingRow[]>;
 }
 
@@ -24,12 +25,36 @@ function teamName(teams: Team[], code: string): string {
   return teams.find((t) => t.code === code)?.name ?? code;
 }
 
+function venueName(venues: Venue[] | undefined, id: string): string {
+  const v = venues?.find((x) => x.id === id);
+  return v ? `${v.stadium}, ${v.city}` : id;
+}
+
+function firstMatch(matches: Match[]): Match | undefined {
+  return [...matches].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))[0];
+}
+
 export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
-  const { ctx, id, teams, players, matches, standings } = input;
+  const { ctx, id, teams, players, matches, venues, standings } = input;
   const q = input.question.toLowerCase();
   const played = matches.filter((m) => m.status === 'FT');
   const goals = played.reduce((s, m) => s + (m.homeGoals ?? 0) + (m.awayGoals ?? 0), 0);
   const scorers = [...players].sort((a, b) => b.goals - a.goals);
+  const opening = firstMatch(matches);
+  const asksOpening =
+    q.includes('primer partido') ||
+    q.includes('partido inaugural') ||
+    q.includes('inaugural') ||
+    q.includes('apertura') ||
+    q.includes('arranca') ||
+    q.includes('inicia');
+
+  if (asksOpening && opening) {
+    return {
+      text: `El primer partido confirmado en el calendario es ${teamName(teams, opening.home)} vs ${teamName(teams, opening.away)} el ${fmtFull(opening.date)} a las ${opening.time}, en ${venueName(venues, opening.venue)} (${opening.stage}).`,
+      sources: ['partidos', 'sedes'],
+    };
+  }
 
   if (ctx === 'match' && id) {
     const m = matches.find((x) => x.id === id);
@@ -96,6 +121,11 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
     lines.push(
       `El Mundial 2026 aún no comienza (arranca el 11 de junio). Hay ${upcoming.length} partidos programados en 16 sedes de Canadá, EE. UU. y México.`,
     );
+    if (opening) {
+      lines.push(
+        `El partido inaugural del calendario es ${teamName(teams, opening.home)} vs ${teamName(teams, opening.away)} el ${fmtFull(opening.date)} a las ${opening.time}.`,
+      );
+    }
   }
   if (top && top.goals > 0) lines.push(`${top.name} lidera el goleo con ${top.goals} goles y ${top.assists} asistencias.`);
   if (leaderA) {

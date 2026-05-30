@@ -29,7 +29,7 @@ export function checkGitignore(log?: Logger): GitignoreCheck {
 }
 
 export function preflight(log: Logger): void {
-  log.info('Local-only ingestion. Public pages only · robots.txt respected · 4–10s delay · concurrency 1.');
+  log.info('Local-only ingestion. Public pages only · robots.txt respected · configured delay · concurrency 1.');
   log.info('No proxies · no stealth · no CAPTCHA bypass. On any block the run stops and reports.');
   checkGitignore(log);
 }

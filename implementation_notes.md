@@ -89,7 +89,7 @@ Dashboard · Match Center (filters: date/group/team/stage/venue/status) · Match
   (last run wins). Could split into per-entity report files.
 
 ## Guardrails recap (all enforced)
-Local-only · no public deploy · no Vercel/Docker public config · no cloud backend · no
-auth · API loopback-only · assets gitignored and served only by the API · scrapers polite,
-robots-respecting, stop-on-block, no proxies/stealth/bypass. See `LOCAL_ONLY_NOTICE.md`
-and `scraper_policy.md`.
+Personal-use only · private Vercel deploy behind Edge access middleware · no remote
+database · raw assets gitignored · optimized static derivatives only for private deploy ·
+scrapers polite, robots-respecting, stop-on-block, no proxies/stealth/bypass. See
+`LOCAL_ONLY_NOTICE.md` and `scraper_policy.md`.

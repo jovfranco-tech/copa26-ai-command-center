@@ -1,16 +1,16 @@
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts';
 import type { Player } from '@worldcup/shared';
-import { ATTR_LABELS, attrColor, playerRatings } from '@/lib/ratings';
+import { attrColor, attrLabelsFor, playerRatings, ratingSourceText } from '@/lib/ratings';
 import { PlayerAvatar, TeamFlag } from './identity';
 import { useTeamsMap } from '@/hooks';
 
-/** Original "game-card" style view: overall + power gauge + radar + attribute bars.
- *  Attributes are illustrative/generated — not real ratings. */
+/** Game-card style view: overall + power gauge + radar + attribute bars. */
 export function PlayerGameCard({ p }: { p: Player }) {
   const teams = useTeamsMap();
   const t = teams[p.team];
   const r = playerRatings(p);
-  const radarData = ATTR_LABELS.map((a) => ({ label: a.short, value: r[a.key] }));
+  const labels = attrLabelsFor(p);
+  const radarData = labels.map((a) => ({ label: a.short, value: r[a.key] }));
 
   return (
     <div className="card" style={{ overflow: 'hidden' }}>
@@ -52,6 +52,7 @@ export function PlayerGameCard({ p }: { p: Player }) {
               <span className="mono-label" style={{ margin: 0 }}>
                 #{p.number ?? '—'} · {p.club}
               </span>
+              <span className={`rating-source ${r.source}`}>{r.source === 'fc26' ? 'FC 26' : 'Estimado'}</span>
             </div>
             <ResponsiveContainer width="100%" height={210}>
               <RadarChart data={radarData} outerRadius="72%">
@@ -65,7 +66,7 @@ export function PlayerGameCard({ p }: { p: Player }) {
 
         {/* attribute bars */}
         <div className="kpi-grid" style={{ marginTop: 8 }}>
-          {ATTR_LABELS.map((a) => {
+          {labels.map((a) => {
             const v = r[a.key];
             return (
               <div key={a.key}>
@@ -86,7 +87,8 @@ export function PlayerGameCard({ p }: { p: Player }) {
         </div>
 
         <div className="mono-label" style={{ marginTop: 12 }}>
-          Atributos ilustrativos · generados, no oficiales · no son ratings de ningún videojuego
+          {ratingSourceText(r)}
+          {r.source === 'fc26' ? ' · actualizar antes del torneo' : ' · sin ficha pública FC 26 encontrada'}
         </div>
       </div>
     </div>
