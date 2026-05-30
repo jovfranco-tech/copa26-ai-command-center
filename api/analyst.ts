@@ -22,7 +22,22 @@ const SYSTEM_PROMPT =
   'Usa ÚNICAMENTE los datos proporcionados en el contexto; no inventes resultados, estadísticas ni ' +
   'jugadores. Si algo no está en los datos (por ejemplo, el torneo aún no se ha jugado), dilo con ' +
   'claridad. Si el contexto incluye "Partido inaugural confirmado", úsalo para preguntas sobre el ' +
-  'primer partido, apertura o arranque. No añadas avisos legales ni disclaimers.';
+  'primer partido, apertura o arranque. No añadas avisos legales ni disclaimers. ' +
+  'Si el usuario te pide comparar estadísticas numéricas entre selecciones o jugadores (por ejemplo, goles, disparos, posesión o ranking), ' +
+  'además de tu respuesta narrativa en texto, genera al final de tu respuesta un bloque de código JSON con un gráfico estructurado ' +
+  'delimitado exactamente por ```json y ```. ' +
+  'El formato del JSON debe ser exactamente el siguiente, sin textos adicionales dentro del bloque de código:\n' +
+  '{\n' +
+  '  "chart": {\n' +
+  '    "type": "bar" | "line",\n' +
+  '    "title": "Título descriptivo del gráfico",\n' +
+  '    "keys": ["NombreDeLaMetrica"],\n' +
+  '    "data": [\n' +
+  '      { "name": "NombreElemento", "NombreDeLaMetrica": valorNumerico }\n' +
+  '    ]\n' +
+  '  }\n' +
+  '}\n' +
+  'No uses tildes ni caracteres especiales en las llaves del JSON o en "keys". Si no hay datos numéricos suficientes, responde únicamente en texto plano y no incluyas el bloque JSON.';
 
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'POST') {

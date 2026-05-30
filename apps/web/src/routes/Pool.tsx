@@ -197,7 +197,7 @@ function SummaryTile({ icon, label, value }: { icon: IconName; label: string; va
 }
 
 function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: string; awayName: string }) {
-  const pick = usePool((s) => s.picks[match.id] ?? {});
+  const pick = usePool((s) => s.picks[match.id]);
   const setOutcome = usePool((s) => s.setOutcome);
   const setScore = usePool((s) => s.setScore);
   const clearMatch = usePool((s) => s.clearMatch);
@@ -211,8 +211,12 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
     return Number.isFinite(n) ? Math.max(0, Math.min(30, Math.round(n))) : undefined;
   };
 
+  const outcome = pick?.outcome;
+  const homeGoals = pick?.homeGoals;
+  const awayGoals = pick?.awayGoals;
+
   const pointsInfo = useMemo(() => {
-    if (!isLocked || !pick.outcome) return null;
+    if (!isLocked || !outcome) return null;
     const realHome = match.homeGoals ?? 0;
     const realAway = match.awayGoals ?? 0;
 
@@ -220,8 +224,8 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
     if (realHome > realAway) realOutcome = 'home';
     else if (realHome < realAway) realOutcome = 'away';
 
-    const isExact = pick.homeGoals === realHome && pick.awayGoals === realAway;
-    const isOutcomeCorrect = pick.outcome === realOutcome;
+    const isExact = homeGoals === realHome && awayGoals === realAway;
+    const isOutcomeCorrect = outcome === realOutcome;
 
     if (isExact) {
       return { text: '+3 PTS', className: 'gold-badge', label: 'Marcador Exacto', icon: 'trophy' };
@@ -230,7 +234,7 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
     } else {
       return { text: '0 PTS', className: 'gray-badge', label: 'Predicción Incorrecta', icon: 'close' };
     }
-  }, [isLocked, pick, match.homeGoals, match.awayGoals]);
+  }, [isLocked, outcome, homeGoals, awayGoals, match.homeGoals, match.awayGoals]);
 
   return (
     <div className={`card pool-match${isLocked ? ' is-locked' : ''}`}>
@@ -273,7 +277,7 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
           <button
             key={o.id}
             type="button"
-            className={`pool-pick${pick.outcome === o.id ? ' on' : ''}`}
+            className={`pool-pick${outcome === o.id ? ' on' : ''}`}
             onClick={() => setOutcome(match.id, o.id)}
             disabled={isLocked}
           >
@@ -286,7 +290,7 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
           <span className="mono-label">{match.home}</span>
           <input
             inputMode="numeric"
-            value={scoreValue(pick.homeGoals)}
+            value={scoreValue(homeGoals)}
             onChange={(e) => setScore(match.id, 'homeGoals', parseScore(e.target.value))}
             aria-label={`Goles ${homeName}`}
             disabled={isLocked}
@@ -297,7 +301,7 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
           <span className="mono-label">{match.away}</span>
           <input
             inputMode="numeric"
-            value={scoreValue(pick.awayGoals)}
+            value={scoreValue(awayGoals)}
             onChange={(e) => setScore(match.id, 'awayGoals', parseScore(e.target.value))}
             aria-label={`Goles ${awayName}`}
             disabled={isLocked}
