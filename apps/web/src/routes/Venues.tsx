@@ -4,6 +4,7 @@ import { fmtInt, fmtDay } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useAsset, useMatches, useVenues } from '@/hooks';
+import { venueImage } from '@/lib/venueImages';
 
 export function Venues() {
   const { data, isLoading } = useVenues();
@@ -24,7 +25,7 @@ export function Venues() {
           const isOpen = open === v.id;
           return (
             <div key={v.id} className="card" style={{ overflow: 'hidden' }}>
-              <VenueImage assetId={v.imageAssetId} city={v.city} />
+              <VenueImage assetId={v.imageAssetId} id={v.id} city={v.city} />
               <div className="card-pad">
                 <div className="row gap-8">
                   <Icon name="pin" size={15} style={{ color: 'var(--gold)' }} />
@@ -83,11 +84,46 @@ export function Venues() {
   );
 }
 
-function VenueImage({ assetId, city }: { assetId: string | null | undefined; city: string }) {
-  const url = useAsset(assetId);
-  if (url) return <img src={url} alt={city} style={{ width: '100%', height: 132, objectFit: 'cover' }} />;
-  // Stylized stadium illustration (original artwork — real photos are not used on
-  // the public site for copyright reasons).
+function VenueImage({ assetId, id, city }: { assetId: string | null | undefined; id: string; city: string }) {
+  const localUrl = useAsset(assetId);
+  const wiki = venueImage(id);
+  const [imgOk, setImgOk] = useState(true);
+  const src = localUrl ?? (imgOk ? (wiki?.src ?? null) : null);
+  if (src)
+    return (
+      <div style={{ position: 'relative', height: 132 }}>
+        <img
+          src={src}
+          alt={`Estadio en ${city}`}
+          loading="lazy"
+          onError={() => setImgOk(false)}
+          style={{ width: '100%', height: 132, objectFit: 'cover', display: 'block' }}
+        />
+        {wiki && !localUrl && (
+          <a
+            href={wiki.page}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'absolute',
+              bottom: 4,
+              right: 6,
+              background: 'rgba(0,0,0,.55)',
+              color: '#fff',
+              padding: '1px 6px',
+              borderRadius: 4,
+              fontSize: 8.5,
+              letterSpacing: '.04em',
+              textDecoration: 'none',
+            }}
+          >
+            Wikimedia Commons ↗
+          </a>
+        )}
+      </div>
+    );
+  // Stylized stadium illustration fallback (original artwork).
   return (
     <div style={{ height: 132, background: 'linear-gradient(180deg, #0e1626, #0a111d)', position: 'relative', overflow: 'hidden' }}>
       <svg viewBox="0 0 320 132" width="100%" height="132" preserveAspectRatio="xMidYMid slice" aria-label={`Estadio en ${city}`}>

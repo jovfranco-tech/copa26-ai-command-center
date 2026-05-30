@@ -3,6 +3,7 @@ import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
+import { askAI, buildAIContext } from '@/lib/aiClient';
 
 type Ctx = 'tournament' | 'match' | 'team' | 'player';
 
@@ -23,20 +24,36 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [id, setId] = useState<string>(idProp ?? '');
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState<AnalystAnswer | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [usedAI, setUsedAI] = useState(false);
 
-  const ask = (qOverride?: string) => {
+  const ask = async (qOverride?: string) => {
     const q = qOverride ?? question;
-    const res = buildAnalystAnswer({
-      question: q,
-      ctx,
-      id: ctx === 'tournament' ? undefined : id,
+    if (!q.trim() || busy) return;
+    if (qOverride) setQuestion(qOverride);
+
+    const data = {
       teams: teamsData?.items ?? [],
       players: playersData?.items ?? [],
       matches: matchData?.items ?? [],
       standings: standings?.groups ?? {},
-    });
-    if (qOverride) setQuestion(qOverride);
-    setAnswer(res);
+    };
+    const cid = ctx === 'tournament' ? undefined : id;
+
+    // Always have the grounded local answer ready as a fallback.
+    const local = buildAnalystAnswer({ question: q, ctx, id: cid, ...data });
+
+    setBusy(true);
+    const ai = await askAI(q, buildAIContext(ctx, cid, data));
+    setBusy(false);
+
+    if (ai.ok && ai.answer) {
+      setUsedAI(true);
+      setAnswer({ text: ai.answer, sources: ['IA (OpenAI)', 'datos locales'] });
+    } else {
+      setUsedAI(false);
+      setAnswer(local);
+    }
   };
 
   return (
@@ -54,8 +71,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             </div>
             <div className="card-pad brief-body">
               <p style={{ marginTop: 0 }}>
-                Pregunta sobre el torneo, un partido, una selección o un jugador. Las respuestas se arman
-                solo con los datos locales cargados — nada sale de este equipo.
+                Pregunta sobre el torneo, un partido, una selección o un jugador. Si hay una clave de
+                OpenAI configurada, responde con IA (enviando solo el contexto de datos al servidor); si
+                no, usa el analista local. Siempre basado en los datos cargados.
               </p>
 
               <div className="row gap-6 wrap" style={{ marginBottom: 10 }}>
@@ -116,8 +134,8 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
-                <button type="submit" className="btn gold">
-                  <Icon name="send" size={14} /> Preguntar
+                <button type="submit" className="btn gold" disabled={busy}>
+                  <Icon name={busy ? 'sparkSmall' : 'send'} size={14} /> {busy ? 'Pensando…' : 'Preguntar'}
                 </button>
               </form>
             </div>
@@ -128,8 +146,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <div className="row gap-8" style={{ marginBottom: 8 }}>
                 <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
                 <span className="mono-label" style={{ margin: 0 }}>
-                  Analista
+                  {usedAI ? 'Analista IA (OpenAI)' : 'Analista local'}
                 </span>
+                {usedAI && <span className="badge gold">IA</span>}
               </div>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{answer.text}</p>
               <div className="row gap-6 wrap" style={{ marginTop: 10 }}>
