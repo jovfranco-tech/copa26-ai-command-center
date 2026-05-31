@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { type ComponentType, lazy, Suspense } from 'react';
 import { Skeleton } from '@worldcup/ui';
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 import { AppShell } from '@/components/AppShell';
@@ -78,7 +78,25 @@ const standingsRoute = createRoute({
   },
 });
 
-const LazyStats = lazy(() => import('./routes/Stats').then((m) => ({ default: m.Stats })));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function lazyWithRetry<T extends ComponentType<any>>(componentImport: () => Promise<{ default: T }>) {
+  return lazy(async () => {
+    try {
+      return await componentImport();
+    } catch (error) {
+      console.error('Dynamic import failed, reloading page...', error);
+      const lastReload = sessionStorage.getItem('chunk_reload');
+      const now = Date.now();
+      if (!lastReload || now - Number(lastReload) > 10000) {
+        sessionStorage.setItem('chunk_reload', String(now));
+        window.location.reload();
+      }
+      throw error;
+    }
+  });
+}
+
+const LazyStats = lazyWithRetry(() => import('./routes/Stats').then((m) => ({ default: m.Stats })));
 
 // eslint-disable-next-line react-refresh/only-export-components
 function StatsSkeleton() {

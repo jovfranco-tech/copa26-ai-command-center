@@ -56,7 +56,7 @@
   --line-2: rgba(20, 31, 52, 0.22);
   --tx: #101726;
   --tx-2: #4b5870;
-  --tx-3: #76839a;
+  --tx-3: #505d74;
   --shadow: 0 14px 34px -22px rgba(25, 39, 68, 0.36);
   --shadow-lg: 0 28px 68px -28px rgba(25, 39, 68, 0.42);
   --card-grad: linear-gradient(180deg, #ffffff, #f8fbff);
@@ -2317,6 +2317,11 @@ body {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+.team-crest, .crest img, img.brand-mark {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 /* Efecto de Escala 3D y drop shadow en hover */
 .team-crest:hover {
   transform: scale(1.1) translateY(-1px);
@@ -2490,5 +2495,54 @@ body {
     transform: scale(1.15);
     color: var(--gold);
     filter: drop-shadow(0 0 2px var(--gold));
+  }
+}
+
+/* --- Progress Bar Loading Animation --- */
+@keyframes progress-bar-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* --- AI Copilots Leaderboard Glowing Effects --- */
+.ai-gala-row {
+  position: relative;
+  transition: all 0.3s ease;
+  animation: ai-row-gala-pulse 3s infinite ease-in-out alternate;
+}
+
+.ai-gala-row td {
+  color: var(--gold) !important;
+  text-shadow: 0 0 6px rgba(201, 162, 75, 0.2);
+}
+
+@keyframes ai-row-gala-pulse {
+  0% {
+    background-color: transparent;
+    box-shadow: inset 0 0 4px rgba(201, 162, 75, 0.02);
+  }
+  100% {
+    background-color: rgba(201, 162, 75, 0.04);
+    box-shadow: inset 0 0 16px rgba(201, 162, 75, 0.12);
+  }
+}
+
+.ai-gala-row.computing {
+  animation: ai-row-gala-compute-pulse 0.7s infinite ease-in-out alternate !important;
+  background-color: rgba(201, 162, 75, 0.08) !important;
+}
+
+@keyframes ai-row-gala-compute-pulse {
+  0% {
+    box-shadow: inset 0 0 8px rgba(201, 162, 75, 0.15);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: inset 0 0 32px rgba(201, 162, 75, 0.4);
+    filter: brightness(1.2);
   }
 }

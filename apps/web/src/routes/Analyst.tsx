@@ -6,6 +6,8 @@ import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hoo
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext } from '@/lib/aiClient';
 import { useFavorites } from '@/store/favorites';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 interface ParsedAnswer {
   text: string;
@@ -88,6 +90,92 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const { data: matchData } = useMatches();
   const { data: venuesData } = useVenues();
   const { data: standings } = useStandings();
+
+  const [leaderName, setLeaderName] = useState<string>('');
+
+  useEffect(() => {
+    const matchItems = matchData?.items ?? [];
+    if (!matchItems.length) return;
+
+    const unsubscribe = onSnapshot(
+      collection(db, 'poolPicks'),
+      (snapshot) => {
+        let maxPoints = -1;
+        let topUser = '';
+
+        const playedMatches = matchItems.filter((m) => m.status === 'FT');
+
+        snapshot.forEach((docSnap) => {
+          const name = docSnap.id;
+          const docData = docSnap.data();
+          const picks = docData.picks || {};
+
+          let points = 0;
+          for (const m of playedMatches) {
+            const pick = picks[m.id];
+            if (!pick || !pick.outcome) continue;
+
+            const realHome = m.homeGoals ?? 0;
+            const realAway = m.awayGoals ?? 0;
+
+            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
+            if (realHome > realAway) realOutcome = 'home';
+            else if (realHome < realAway) realOutcome = 'away';
+
+            const isExact = pick.homeGoals === realHome && pick.awayGoals === realAway;
+            const isOutcomeCorrect = pick.outcome === realOutcome;
+
+            if (isExact) {
+              points += 3;
+            } else if (isOutcomeCorrect) {
+              points += 1;
+            }
+          }
+
+          if (points > maxPoints) {
+            maxPoints = points;
+            topUser = name;
+          }
+        });
+
+        if (topUser) {
+          setLeaderName(topUser);
+        }
+      },
+      (error) => {
+        console.error('Firestore onSnapshot in Analyst error:', error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [matchData]);
+
+  const dynamicSuggestedQuestions = useMemo(() => {
+    const list = [...SUGGESTED_QUESTIONS];
+    const matchItems = matchData?.items ?? [];
+    
+    // Find the last finished match
+    const playedMatches = matchItems
+      .filter((m) => m.status === 'FT')
+      .sort((a, b) => `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`));
+
+    if (playedMatches.length > 0) {
+      const lastMatch = playedMatches[0];
+      const hName = teamsData?.items.find((t) => t.code === lastMatch.home)?.name ?? lastMatch.home;
+      const aName = teamsData?.items.find((t) => t.code === lastMatch.away)?.name ?? lastMatch.away;
+      
+      // Inject dynamic questions about the last match
+      list[2] = `¿Qué análisis táctico nos dejas del último ${hName} vs ${aName}?`;
+      list[3] = `¿Cuál es el balance ofensivo y posesión de ${hName}?`;
+    }
+
+    if (leaderName) {
+      // Inject dynamic question about the leaderboard trend
+      list[4] = `¿Quién va ganando la quiniela familiar y cómo rinde el puntero ${leaderName}?`;
+    }
+
+    return list;
+  }, [matchData, teamsData, leaderName]);
 
   const [ctx, setCtx] = useState<Ctx>((ctxProp as Ctx) ?? 'tournament');
   const [id, setId] = useState<string>(idProp ?? '');
@@ -449,7 +537,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             <h3>Sugeridas</h3>
           </div>
           <div className="card-pad" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {SUGGESTED_QUESTIONS.map((s) => (
+            {dynamicSuggestedQuestions.map((s) => (
               <button
                 key={s}
                 type="button"

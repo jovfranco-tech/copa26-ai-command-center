@@ -20,6 +20,8 @@ import {
   type Venue,
 } from '@worldcup/shared';
 import type { PoolPick } from '@/store/pool';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from './firebase';
 
 
 const BASE = '/api';
@@ -243,24 +245,27 @@ export const fetchLeaderboard = () =>
     leaderboard: [],
   }));
 
-export const fetchPoolPicks = (playerName: string) =>
-  safeGet<{ ok: boolean; picks: Record<string, PoolPick> }>(
-    `/pool/picks?playerName=${encodeURIComponent(playerName)}`,
-    () => ({
-      ok: true,
-      picks: {},
-    }),
-  );
+export const fetchPoolPicks = async (playerName: string) => {
+  try {
+    const docRef = doc(db, 'poolPicks', playerName.trim());
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { ok: true, picks: docSnap.data().picks as Record<string, PoolPick> };
+    }
+    return { ok: true, picks: {} };
+  } catch (error) {
+    console.error("fetchPoolPicks from Firestore failed", error);
+    return { ok: false, picks: {} };
+  }
+};
 
 export async function syncPoolPicks(playerName: string, picks: Record<string, PoolPick>): Promise<boolean> {
   try {
-    const res = await fetch(`${BASE}/pool/sync`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ playerName, picks }),
-    });
-    return res.ok;
-  } catch {
+    const docRef = doc(db, 'poolPicks', playerName.trim());
+    await setDoc(docRef, { picks, updatedAt: new Date().toISOString() }, { merge: true });
+    return true;
+  } catch (error) {
+    console.error("syncPoolPicks to Firestore failed", error);
     return false;
   }
 }

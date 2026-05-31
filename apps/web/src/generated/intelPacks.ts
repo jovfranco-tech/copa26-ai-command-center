@@ -113,7 +113,7 @@ export const intelDataPacks: IntelDataPack[] = [
     "status": "ready",
     "count": 16,
     "total": 16,
-    "source": "openfootball stadiums CSV",
+    "source": "Sedes del torneo",
     "note": "Lat/lon, zona UTC, Wikidata y Wikipedia por sede."
   },
   {
@@ -165,7 +165,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 33.755556,
     "longitude": -84.4,
     "capacity": 75000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "bos": {
     "id": "bos",
@@ -177,7 +177,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 42.091,
     "longitude": -71.264,
     "capacity": 65000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "dal": {
     "id": "dal",
@@ -189,7 +189,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 32.747778,
     "longitude": -97.092778,
     "capacity": 94000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "gdl": {
     "id": "gdl",
@@ -201,7 +201,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 20.681667,
     "longitude": -103.462778,
     "capacity": 48000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "hou": {
     "id": "hou",
@@ -213,7 +213,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 29.684722,
     "longitude": -95.410833,
     "capacity": 72000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "kc": {
     "id": "kc",
@@ -225,7 +225,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 39.048889,
     "longitude": -94.483889,
     "capacity": 73000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "lax": {
     "id": "lax",
@@ -237,7 +237,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 33.953,
     "longitude": -118.339,
     "capacity": 70000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "mex": {
     "id": "mex",
@@ -249,7 +249,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 19.303056,
     "longitude": -99.150556,
     "capacity": 83000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "mia": {
     "id": "mia",
@@ -261,7 +261,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 25.958056,
     "longitude": -80.238889,
     "capacity": 65000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "mty": {
     "id": "mty",
@@ -273,7 +273,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 25.669167,
     "longitude": -100.244444,
     "capacity": 53500,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "nyc": {
     "id": "nyc",
@@ -285,7 +285,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 40.813528,
     "longitude": -74.074361,
     "capacity": 82500,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "phi": {
     "id": "phi",
@@ -297,7 +297,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 39.900833,
     "longitude": -75.1675,
     "capacity": 69000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "sea": {
     "id": "sea",
@@ -309,7 +309,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 47.595278,
     "longitude": -122.331667,
     "capacity": 69000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "sf": {
     "id": "sf",
@@ -321,7 +321,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 37.403,
     "longitude": -121.97,
     "capacity": 71000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "tor": {
     "id": "tor",
@@ -333,7 +333,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 43.633333,
     "longitude": -79.418611,
     "capacity": 45000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   },
   "van": {
     "id": "van",
@@ -345,7 +345,7 @@ export const venueExtras: Record<string, VenueExtra> = {
     "latitude": 49.276667,
     "longitude": -123.111944,
     "capacity": 54000,
-    "source": "openfootball stadiums CSV (CC0)"
+    "source": "Sedes del torneo"
   }
 };
 

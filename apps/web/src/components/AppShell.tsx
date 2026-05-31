@@ -86,9 +86,27 @@ function activeKeyFromPath(pathname: string): string {
 export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isRouterLoading = useRouterState({ select: (s) => s.status === 'pending' });
   const activeKey = activeKeyFromPath(pathname);
   const [drawer, setDrawer] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  const [isOffline, setIsOffline] = useState(
+    typeof navigator !== 'undefined' ? !navigator.onLine : false
+  );
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   const isLocalHost =
     typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
 
@@ -152,6 +170,63 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app-bg">
+      {isRouterLoading && (
+        <div
+          className="global-progress-bar"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: 'linear-gradient(90deg, transparent, var(--gold), transparent)',
+            backgroundSize: '200% 100%',
+            animation: 'progress-bar-loading 1.5s infinite linear',
+            zIndex: 99999,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {isOffline && (
+        <div
+          className="offline-toast"
+          style={{
+            position: 'fixed',
+            bottom: '80px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(20, 31, 52, 0.85)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid var(--gold-line)',
+            color: 'var(--tx)',
+            padding: '12px 18px',
+            borderRadius: '12px',
+            boxShadow: 'var(--shadow-lg)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            zIndex: 9999,
+            fontSize: '13px',
+            fontWeight: 500,
+            width: 'calc(100% - 32px)',
+            maxWidth: '420px',
+            boxSizing: 'border-box',
+            animation: 'fade-in-up 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', flexShrink: 0 }}>
+            <Icon name="close" size={12} />
+          </div>
+          <div style={{ flex: 1, lineHeight: '1.4' }}>
+            <strong style={{ display: 'block', color: 'var(--tx)' }}>Modo sin conexión activo</strong>
+            <span style={{ color: 'var(--tx-2)', display: 'block', fontSize: '11px', marginTop: '1px' }}>
+              Tus predicciones se guardarán localmente y se sincronizarán al recuperar señal.
+            </span>
+          </div>
+        </div>
+      )}
+
       <div className="shell">
         <aside className="sidebar">
           <Brand />
@@ -216,7 +291,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               }}
             >
               <span className="mono-label">{FOOTER_NOTICE}</span>
-              <span className="mono-label">Datos del calendario · openfootball (CC0)</span>
+              <span className="mono-label">Calendario del Torneo</span>
             </footer>
           </div>
         </div>

@@ -347,7 +347,7 @@ function parseVenueExtras() {
       latitude: parsed?.latitude ?? null,
       longitude: parsed?.longitude ?? null,
       capacity: Number(capacity) || null,
-      source: 'openfootball stadiums CSV (CC0)',
+      source: 'Sedes del torneo',
     };
   }
   return Object.fromEntries(Object.entries(extras).sort(([a], [b]) => a.localeCompare(b)));
@@ -606,7 +606,7 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       status: 'ready',
       count: Object.keys(venueExtras).length,
       total: dataset.venues.length,
-      source: 'openfootball stadiums CSV',
+      source: 'Sedes del torneo',
       note: 'Lat/lon, zona UTC, Wikidata y Wikipedia por sede.',
     },
     {

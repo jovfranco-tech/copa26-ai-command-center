@@ -6,7 +6,9 @@ import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap } from '@/hooks';
 import { usePool, type PoolOutcome } from '@/store/pool';
 import { askPoolAgent } from '@/lib/aiClient';
-import { fetchLeaderboard, fetchPoolPicks, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
+import { fetchPoolPicks, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const playTick = () => {
   try {
@@ -200,23 +202,160 @@ export function Pool() {
     return () => window.removeEventListener('online', handleOnline);
   }, [pool.playerName, pool.picks]);
 
-  // Load Leaderboard unconditionally when picks change
+  // Load Leaderboard in real-time from Firestore onSnapshot
   useEffect(() => {
-    const loadLeaderboard = async () => {
-      setLoadingLeaderboard(true);
-      try {
-        const res = await fetchLeaderboard();
-        if (res.ok && res.leaderboard) {
-          setLeaderboard(res.leaderboard);
+    const matchItems = data?.items ?? [];
+    const teamItems = Object.values(teams);
+    const teamMap = new Map(teamItems.map((t) => [t.code, t]));
+
+    if (isLoading || !matchItems.length) return;
+
+    setLoadingLeaderboard(true);
+
+    const unsubscribe = onSnapshot(
+      collection(db, 'poolPicks'),
+      (snapshot) => {
+        const board: LeaderboardEntry[] = [];
+        const playedMatches = matchItems.filter((m) => m.status === 'FT');
+
+        // 1. Process all participant predictions from Firestore documents
+        snapshot.forEach((docSnap) => {
+          const name = docSnap.id;
+          const docData = docSnap.data();
+          const picks = docData.picks || {};
+
+          let points = 0;
+          let exactScores = 0;
+          let outcomeHits = 0;
+          let predictedPlayedCount = 0;
+
+          for (const m of playedMatches) {
+            const pick = picks[m.id];
+            if (!pick || !pick.outcome) continue;
+
+            predictedPlayedCount++;
+            const realHome = m.homeGoals ?? 0;
+            const realAway = m.awayGoals ?? 0;
+
+            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
+            if (realHome > realAway) realOutcome = 'home';
+            else if (realHome < realAway) realOutcome = 'away';
+
+            const isExact = pick.homeGoals === realHome && pick.awayGoals === realAway;
+            const isOutcomeCorrect = pick.outcome === realOutcome;
+
+            if (isExact) {
+              points += 3;
+              exactScores++;
+            } else if (isOutcomeCorrect) {
+              points += 1;
+              outcomeHits++;
+            }
+          }
+
+          const efficiency = predictedPlayedCount > 0
+            ? Math.round(((exactScores + outcomeHits) / predictedPlayedCount) * 100)
+            : 0;
+
+          board.push({
+            playerName: name,
+            points,
+            exactScores,
+            outcomeHits,
+            efficiency,
+            predictedCount: Object.keys(picks).length,
+          });
+        });
+
+        // 2. Inject the 3 virtual AI agents to compete in the leaderboard
+        const agents: Array<'optimista' | 'stats' | 'contrarian'> = ['optimista', 'stats', 'contrarian'];
+        const agentNames = {
+          optimista: '🤖 El Analista Optimista',
+          stats: '🤖 El Simulador Estadístico',
+          contrarian: '🤖 El Agente Contrarian',
+        };
+
+        for (const agent of agents) {
+          let points = 0;
+          let exactScores = 0;
+          let outcomeHits = 0;
+          let predictedPlayedCount = 0;
+
+          for (const m of playedMatches) {
+            const homeTeam = teamMap.get(m.home);
+            const awayTeam = teamMap.get(m.away);
+
+            const homeRank = homeTeam?.ranking ?? 50;
+            const awayRank = awayTeam?.ranking ?? 50;
+            const rankDiff = awayRank - homeRank;
+
+            let pred: { homeGoals: number; awayGoals: number; outcome: 'home' | 'draw' | 'away' };
+            if (agent === 'optimista') {
+              if (rankDiff > 10) pred = { homeGoals: 3, awayGoals: 1, outcome: 'home' };
+              else if (rankDiff < -10) pred = { homeGoals: 1, awayGoals: 3, outcome: 'away' };
+              else pred = { homeGoals: 2, awayGoals: 2, outcome: 'draw' };
+            } else if (agent === 'stats') {
+              if (rankDiff > 5) pred = { homeGoals: 1, awayGoals: 0, outcome: 'home' };
+              else if (rankDiff < -5) pred = { homeGoals: 0, awayGoals: 1, outcome: 'away' };
+              else pred = { homeGoals: 1, awayGoals: 1, outcome: 'draw' };
+            } else {
+              if (rankDiff > 15) pred = { homeGoals: 1, awayGoals: 2, outcome: 'away' };
+              else if (rankDiff < -15) pred = { homeGoals: 2, awayGoals: 1, outcome: 'home' };
+              else pred = { homeGoals: 0, awayGoals: 0, outcome: 'draw' };
+            }
+
+            predictedPlayedCount++;
+            const realHome = m.homeGoals ?? 0;
+            const realAway = m.awayGoals ?? 0;
+
+            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
+            if (realHome > realAway) realOutcome = 'home';
+            else if (realHome < realAway) realOutcome = 'away';
+
+            const isExact = pred.homeGoals === realHome && pred.awayGoals === realAway;
+            const isOutcomeCorrect = pred.outcome === realOutcome;
+
+            if (isExact) {
+              points += 3;
+              exactScores++;
+            } else if (isOutcomeCorrect) {
+              points += 1;
+              outcomeHits++;
+            }
+          }
+
+          const efficiency = predictedPlayedCount > 0
+            ? Math.round(((exactScores + outcomeHits) / predictedPlayedCount) * 100)
+            : 0;
+
+          board.push({
+            playerName: agentNames[agent],
+            points,
+            exactScores,
+            outcomeHits,
+            efficiency,
+            predictedCount: playedMatches.length,
+          });
         }
-      } catch (e) {
-        console.error(e);
-      } finally {
+
+        // 3. Sort leaderboard by points, then exact scores, then efficiency
+        board.sort((a, b) => {
+          if (b.points !== a.points) return b.points - a.points;
+          if (b.exactScores !== a.exactScores) return b.exactScores - a.exactScores;
+          return b.efficiency - a.efficiency;
+        });
+
+        setLeaderboard(board);
+        setLoadingLeaderboard(false);
+      },
+      (error) => {
+        console.error('Firestore onSnapshot error:', error);
         setLoadingLeaderboard(false);
       }
-    };
-    loadLeaderboard();
-  }, [pool.picks]);
+    );
+
+    return () => unsubscribe();
+  }, [data, teams, isLoading]);
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('wc_theme') as 'dark' | 'light') ?? 'dark';
@@ -682,10 +821,12 @@ export function Pool() {
                   {leaderboard.map((row, index) => {
                     const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}º`;
                     const isCurrentUser = row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
+                    const isAiAgent = row.playerName.startsWith('🤖');
 
                     return (
                       <tr
                         key={row.playerName}
+                        className={isAiAgent ? `ai-gala-row${loadingAgent ? ' computing' : ''}` : ''}
                         style={{
                           borderBottom: '1px solid var(--line)',
                           background: isCurrentUser ? 'var(--gold-soft)' : 'transparent',

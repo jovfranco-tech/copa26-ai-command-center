@@ -160,6 +160,16 @@ async function main() {
       const awayTeam = teamMap.get(existingMatch.awayTeamId ?? -1);
       const matchLabel = `${homeTeam?.name ?? existingMatch.homeTeamId} vs ${awayTeam?.name ?? existingMatch.awayTeamId}`;
 
+      // Redundancy and duplication guard: skip database update if match is already FT with the same score
+      if (existingMatch.status === 'FT' && existingMatch.homeScore === parsed.homeGoals && existingMatch.awayScore === parsed.awayGoals) {
+        console.log(`⚠️ Advertencia: El partido '${matchLabel}' ya está finalizado (FT) con el marcador idéntico ${parsed.homeGoals} - ${parsed.awayGoals}. Saltando actualización de BD.`);
+        const newFilename = `[ingested]-${filename}`;
+        const newFilePath = join(screenshotsDir, newFilename);
+        renameSync(filePath, newFilePath);
+        console.log(`📁 Archivo renombrado a: ${newFilename}`);
+        continue;
+      }
+
       await db
         .update(schema.matches)
         .set({

@@ -55,7 +55,9 @@
       "esbuild",
       "@libsql/client",
       "libsql",
-      "better-sqlite3"
+      "better-sqlite3",
+      "protobufjs",
+      "@firebase/util"
     ]
   },
   "dependencies": {

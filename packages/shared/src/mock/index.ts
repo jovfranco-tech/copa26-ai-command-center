@@ -75,10 +75,10 @@ export const FAV_DEFAULTS = {
 export const TODAY = '2026-06-11';
 
 export const META: CacheMeta = {
-  lastSync: `Open data · ${dataset.meta.generatedAt}`,
-  cacheStatus: 'Open data (CC0)',
+  lastSync: `Datos del torneo · ${dataset.meta.generatedAt}`,
+  cacheStatus: 'Datos del torneo',
   assets: { crests: 0, photos: 0, venues: 0, flags: TEAMS.length },
-  db: 'worldcup2026 · openfootball',
+  db: 'worldcup2026',
   sizeMB: 0,
   source: 'mock',
 };

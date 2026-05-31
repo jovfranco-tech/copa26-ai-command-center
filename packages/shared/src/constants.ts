@@ -54,7 +54,7 @@ export const LOCAL_ONLY = {
 } as const;
 
 export const FOOTER_NOTICE =
-  'No oficial · sin afiliación con la FIFA · calendario de openfootball (CC0).';
+  'No oficial · sin afiliación con la FIFA · calendario del torneo.';
 export const ANALYST_DISCLAIMER = 'Respuestas basadas en el dataset cargado del Mundial.';
 export const MOCK_BANNER =
-  'Calendario real del Mundial 2026 (openfootball, CC0). Plantillas, resultados y estadísticas aparecen cuando se jueguen los partidos (11 jun).';
+  'Calendario real del Mundial 2026. Plantillas, resultados y estadísticas aparecen cuando se jueguen los partidos (11 jun).';

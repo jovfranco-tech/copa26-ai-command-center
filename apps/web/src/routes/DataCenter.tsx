@@ -74,7 +74,7 @@ export function DataCenter() {
             <h3>Flujo de actualización</h3>
           </div>
           <div className="card-pad">
-            <UpdateStep status="ok" title="Calendario" text="Snapshot local de openfootball con 104 partidos y sedes." />
+            <UpdateStep status="ok" title="Calendario" text="Snapshot local de datos con 104 partidos y sedes." />
             <UpdateStep status={played ? 'ok' : 'wait'} title="Resultados" text="Se activan cuando empiecen los partidos del 11 de junio de 2026." />
             <UpdateStep status={played ? 'ok' : 'wait'} title="Tablas y estadísticas" text="Se recalculan desde resultados reales cuando existan marcadores." />
             <UpdateStep status="ok" title="Cron Vercel" text="Revisión diaria a las 12:00 UTC en producción." />

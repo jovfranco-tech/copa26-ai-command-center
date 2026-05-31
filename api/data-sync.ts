@@ -38,7 +38,7 @@ export default async function handler(request: Request): Promise<Response> {
       mode: isCron ? 'cron' : 'manual',
       cron: CRON_LABEL,
       results: pipeline.results,
-      calendar: 'Snapshot local openfootball CC0',
+      calendar: 'Calendario oficial del torneo',
       resultsSource: resultsSourceUrl ? 'configured' : 'not-configured',
       nextAction: pipeline.nextAction,
     },

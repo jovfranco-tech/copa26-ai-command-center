@@ -306,7 +306,7 @@ function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) 
         <div className="sync-row">
           <span className="k">Fuente</span>
           <span className="num" style={{ fontSize: 12 }}>
-            {sync?.source === 'sqlite' ? 'SQLite local' : 'Datos abiertos (CC0)'}
+            {sync?.source === 'sqlite' ? 'SQLite local' : 'Datos del torneo'}
           </span>
         </div>
         <div className="sync-row">
