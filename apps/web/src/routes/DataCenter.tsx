@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
 import { intelDataPacks, intelGeneratedAt, weatherMeta } from '@/generated/intelPacks';
 import { playerRatingMeta } from '@/generated/playerRatings';
@@ -42,6 +42,10 @@ export function DataCenter() {
       setChecking(false);
     }
   };
+
+  useEffect(() => {
+    void runCheck();
+  }, []);
 
   return (
     <div className="page-fade">

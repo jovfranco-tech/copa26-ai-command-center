@@ -19,6 +19,9 @@ const userAgent =
 const fetchDelayMs = Math.max(0, Number(process.env.INTEL_FETCH_DELAY_MS ?? 180));
 const playerLimit = Number(process.env.INTEL_PLAYER_PHOTO_LIMIT ?? 0);
 const force = process.env.INTEL_FORCE === '1';
+const downloadPlayers = force || process.env.INTEL_DOWNLOAD_PLAYERS === '1' || process.env.INTEL_DOWNLOAD_MISSING === '1';
+const downloadCoaches = force || process.env.INTEL_DOWNLOAD_COACHES === '1' || process.env.INTEL_DOWNLOAD_MISSING === '1';
+const downloadVenues = process.env.INTEL_DOWNLOAD_VENUES !== '0';
 
 const VENUE_PHOTO_FILES = {
   van: 'BC Place Opening Day 2011-09-30.jpg',
@@ -164,6 +167,7 @@ async function materializePlayerPhotos() {
       downloaded++;
       continue;
     }
+    if (!downloadPlayers) continue;
     const url = item.sourceUrl ?? (item.filename ? commonsFilePath(item.filename, 420) : null);
     if (!url) continue;
     try {
@@ -192,6 +196,18 @@ async function materializeVenuePhotos() {
     const filename = VENUE_PHOTO_FILES[venue.id];
     if (!filename) continue;
     const target = join(venuePhotoDir, `${venue.id}.webp`);
+    if (existsSync(target) && !force) {
+      downloaded++;
+      downloadedExts[venue.id] = 'webp';
+      const enc = encodeURIComponent(filename);
+      credits[venue.id] = {
+        src: `/venue-photos/${venue.id}.webp`,
+        page: `https://commons.wikimedia.org/wiki/File:${enc}`,
+        source: 'Wikimedia Commons',
+      };
+      continue;
+    }
+    if (!downloadVenues) continue;
     if (!existsSync(target) || force) {
       try {
         await fetchConvert(VENUE_PHOTO_URLS[venue.id] ?? commonsFilePath(filename, 1200), target, {
@@ -253,7 +269,7 @@ async function resolveCoachProfiles() {
     const image = summary?.thumbnail?.source ?? summary?.originalimage?.source;
     if (image) {
       const target = join(coachPhotoDir, `${team.code}.webp`);
-      if (!existsSync(target) || force) {
+      if ((!existsSync(target) || force) && downloadCoaches) {
         try {
           await fetchConvert(image, target, {
             label: `coach:${team.code}`,
@@ -553,7 +569,7 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       count: playerPhotos.downloaded,
       total: totalPlayers,
       source: 'Wikimedia Commons / Wikipedia',
-      note: 'Optimizadas a WebP local; se usan fallbacks remotos si una foto libre no existe.',
+      note: 'WebP locales disponibles; los jugadores restantes usan fallback remoto libre cuando existe.',
     },
     {
       id: 'coach-profiles',
@@ -580,7 +596,10 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       count: venuePhotos.downloaded,
       total: dataset.venues.length,
       source: 'Wikimedia Commons',
-      note: 'Incluye Arrowhead y las 16 sedes optimizadas para Vercel.',
+      note:
+        venuePhotos.downloaded === dataset.venues.length
+          ? 'Las 16 sedes estan optimizadas localmente para Vercel.'
+          : `Locales: ${venuePhotos.downloaded}. El resto usa fallback remoto de Wikimedia hasta poder descargarse sin rate-limit.`,
     },
     {
       id: 'kit-variants',

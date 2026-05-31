@@ -37,6 +37,7 @@ npm-debug.log*
 pnpm-debug.log*
 .eslintcache
 coverage/
+.tmp-intel-packs/
 
 # --- Editor / OS ---
 .DS_Store
