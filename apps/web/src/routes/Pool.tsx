@@ -235,6 +235,7 @@ export function Pool() {
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
     playTick(); // Play organic low-latency tick on theme click
+    if ('vibrate' in navigator) navigator.vibrate(12);
   };
 
   const [accent, setAccent] = useState<'gold' | 'emerald' | 'crimson'>(() => {
@@ -829,7 +830,11 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
             key={o.id}
             type="button"
             className={`pool-pick${outcome === o.id ? ' on' : ''}`}
-            onClick={() => setOutcome(match.id, o.id)}
+            onClick={() => {
+              setOutcome(match.id, o.id);
+              playTick();
+              if ('vibrate' in navigator) navigator.vibrate(10);
+            }}
             disabled={isLocked}
           >
             {o.label}
@@ -842,7 +847,11 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
           <input
             inputMode="numeric"
             value={scoreValue(homeGoals)}
-            onChange={(e) => setScore(match.id, 'homeGoals', parseScore(e.target.value))}
+            onChange={(e) => {
+              setScore(match.id, 'homeGoals', parseScore(e.target.value));
+              playTick();
+              if ('vibrate' in navigator) navigator.vibrate(6);
+            }}
             aria-label={`Goles ${homeName}`}
             disabled={isLocked}
           />
@@ -853,7 +862,11 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
           <input
             inputMode="numeric"
             value={scoreValue(awayGoals)}
-            onChange={(e) => setScore(match.id, 'awayGoals', parseScore(e.target.value))}
+            onChange={(e) => {
+              setScore(match.id, 'awayGoals', parseScore(e.target.value));
+              playTick();
+              if ('vibrate' in navigator) navigator.vibrate(6);
+            }}
             aria-label={`Goles ${awayName}`}
             disabled={isLocked}
           />

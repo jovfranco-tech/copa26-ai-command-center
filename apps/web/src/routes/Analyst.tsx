@@ -96,6 +96,30 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [busy, setBusy] = useState(false);
   const [usedAI, setUsedAI] = useState(false);
 
+  const [attachedPdf, setAttachedPdf] = useState<{ name: string; data: string } | null>(null);
+
+  const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Por favor, selecciona un archivo PDF de gala válido.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = (reader.result as string).split(',')[1];
+      if (base64Data) {
+        setAttachedPdf({
+          name: file.name,
+          data: base64Data,
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const [listening, setListening] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recognition, setRecognition] = useState<any>(null);
@@ -162,8 +186,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     const local = buildAnalystAnswer({ question: q, ctx, id: cid, ...data });
 
     setBusy(true);
-    const ai = await askAI(q, buildAIContext(ctx, cid, data));
+    const ai = await askAI(q, buildAIContext(ctx, cid, data), attachedPdf || undefined);
     setBusy(false);
+    setAttachedPdf(null);
 
     if (ai.ok && ai.answer) {
       setUsedAI(true);
@@ -195,6 +220,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       response: parsed.text,
       chart: parsed.chart,
     });
+    if ('vibrate' in navigator) navigator.vibrate([15, 5, 15]);
   };
 
   return (
@@ -255,6 +281,44 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 </select>
               )}
 
+              {attachedPdf && (
+                <div
+                  className="row gap-6 align-center"
+                  style={{
+                    marginBottom: 10,
+                    background: 'var(--bg-1)',
+                    border: '1px solid var(--gold-line)',
+                    padding: '4px 10px',
+                    borderRadius: 'var(--r-sm)',
+                    fontSize: 12,
+                    color: 'var(--tx)',
+                    width: 'fit-content',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon name="stats" size={11} style={{ color: 'var(--gold)' }} />
+                  <span className="nowrap" style={{ fontWeight: 600 }}>{attachedPdf.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => setAttachedPdf(null)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#ef4444',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: 2,
+                      marginLeft: 4
+                    }}
+                    title="Quitar PDF"
+                  >
+                    <Icon name="close" size={11} />
+                  </button>
+                </div>
+              )}
+
               <form
                 className="row gap-8"
                 onSubmit={(e) => {
@@ -265,11 +329,37 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
                   <input
                     className="searchbox"
-                    style={{ flex: 1, marginLeft: 0, paddingRight: '40px' }}
-                    placeholder="Escribe una pregunta…"
+                    style={{ flex: 1, marginLeft: 0, paddingRight: '68px' }}
+                    placeholder="Escribe una pregunta táctica..."
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
                   />
+                  {/* PDF Upload Button */}
+                  <label
+                    style={{
+                      position: 'absolute',
+                      right: recognition ? '34px' : '8px',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--tx-3)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '6px',
+                      borderRadius: '50%',
+                      transition: 'all 0.2s ease',
+                    }}
+                    title="Adjuntar reporte táctico (PDF)"
+                  >
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handlePdfUpload}
+                      style={{ display: 'none' }}
+                    />
+                    <Icon name="stats" size={14} style={{ color: attachedPdf ? 'var(--gold)' : 'var(--tx-3)' }} />
+                  </label>
                   {/* Web Speech API Microphone Button */}
                   {recognition && (
                     <button

@@ -130,7 +130,7 @@ function syncPoolPicks() {
 
           console.log('[sw] Attempting to sync background picks for player:', playerName);
           
-          fetch('/api/pool/sync', {
+          fetchWithBackoff('/api/pool/sync', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ playerName, picks })
@@ -145,7 +145,7 @@ function syncPoolPicks() {
               }
             })
             .catch((err) => {
-              console.error('[sw] Sync fetch failed:', err);
+              console.error('[sw] Sync fetch failed after retries:', err);
               reject(); // retry later
             });
         } catch (err) {
@@ -155,5 +155,26 @@ function syncPoolPicks() {
       };
     };
   });
+}
+
+function fetchWithBackoff(url, options, retries = 3, delay = 1000) {
+  return fetch(url, options)
+    .then((res) => {
+      if (res.ok) return res;
+      if (retries > 0 && (res.status >= 500 || res.status === 429)) {
+        console.warn(`[sw] Server temporary error (${res.status}), retrying with exponential backoff in ${delay}ms...`);
+        return new Promise((resolve) => setTimeout(resolve, delay))
+          .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
+      }
+      return res;
+    })
+    .catch((err) => {
+      if (retries > 0) {
+        console.warn(`[sw] Network fetch failed, retrying with exponential backoff in ${delay}ms...`, err);
+        return new Promise((resolve) => setTimeout(resolve, delay))
+          .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
+      }
+      throw err;
+    });
 }
 

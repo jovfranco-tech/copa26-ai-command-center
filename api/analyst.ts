@@ -58,9 +58,9 @@ export default async function handler(request: Request): Promise<Response> {
   const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
   if (!key) return Response.json({ ok: false, reason: 'no-key' });
 
-  let body: { question?: string; context?: string };
+  let body: { question?: string; context?: string; pdf?: { name: string; data: string } };
   try {
-    body = (await request.json()) as { question?: string; context?: string };
+    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string } };
   } catch {
     return Response.json({ ok: false, reason: 'bad-request' }, { status: 400 });
   }
@@ -81,7 +81,10 @@ export default async function handler(request: Request): Promise<Response> {
         contents: [
           {
             role: 'user',
-            parts: [{ text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` }]
+            parts: [
+              { text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
+              ...(body.pdf ? [{ inlineData: { mimeType: 'application/pdf', data: body.pdf.data } }] : [])
+            ]
           }
         ],
         generationConfig: {
