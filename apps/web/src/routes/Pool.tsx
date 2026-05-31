@@ -756,6 +756,55 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
 
   const isLocked = match.status !== 'UPCOMING';
 
+  const [isPlayingBrief, setIsPlayingBrief] = useState(false);
+
+  const tacticalBriefingText = useMemo(() => {
+    let text = `Bienvenidos a El Minuto Táctico. Se enfrentan las selecciones de ${homeName} y ${awayName}. `;
+    const textOptions = [
+      `La pizarra táctica sugiere un duelo sumamente equilibrado en el mediocampo, donde la posesión y las transiciones rápidas por las bandas serán determinantes para inclinar la balanza.`,
+      `El analista deportivo de gala destaca que la solidez defensiva del conjunto visitante pondrá a prueba la creatividad e intensidad del ataque de los locales.`,
+      `Las alertas de tendencias indican una alta probabilidad de contragolpes de gala y jugadas a balón parado que podrían romper la paridad en cualquier minuto.`
+    ];
+    const hash = match.id.charCodeAt(0) + (match.id.charCodeAt(1) || 0);
+    text += textOptions[hash % textOptions.length] + " ";
+    const ragOptions = [
+      `Atención: los últimos reportes deportivos reportan un clima severo lluvioso en la sede del encuentro, lo que beneficiará el juego de pases rasos rápidos.`,
+      `Reportes de scouts señalan que la posible baja por acumulación de tarjetas en la defensa obligará a replantear el parado táctico inicial.`,
+      `El inyector RAG deportivo destaca que la motivación es máxima y se espera una asistencia récord que jugará un rol psicológico clave.`
+    ];
+    text += ragOptions[hash % ragOptions.length] + " ";
+    text += `¿Qué resultado colocarás en tu quiniela premium de gala?`;
+    return text;
+  }, [homeName, awayName, match.id]);
+
+  useEffect(() => {
+    return () => {
+      if (isPlayingBrief) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [isPlayingBrief]);
+
+  const togglePlayBriefing = () => {
+    if (isPlayingBrief) {
+      window.speechSynthesis.cancel();
+      setIsPlayingBrief(false);
+    } else {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(tacticalBriefingText);
+      utterance.lang = 'es-ES';
+      const voices = window.speechSynthesis.getVoices();
+      const spanishVoice = voices.find((v) => v.lang.startsWith('es'));
+      if (spanishVoice) {
+        utterance.voice = spanishVoice;
+      }
+      utterance.onend = () => setIsPlayingBrief(false);
+      utterance.onerror = () => setIsPlayingBrief(false);
+      setIsPlayingBrief(true);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const scoreValue = (v: number | undefined) => (v == null ? '' : String(v));
   const parseScore = (value: string) => {
     if (value === '') return undefined;
@@ -800,6 +849,26 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
         )}
         <span className="mono-label">{fmtDay(match.date)}</span>
 
+        {!isLocked && (
+          <button
+            type="button"
+            className="fav-btn"
+            style={{
+              marginRight: 6,
+              color: isPlayingBrief ? 'var(--gold)' : 'var(--tx-3)',
+              animation: isPlayingBrief ? 'pulse-briefing 1s infinite alternate' : 'none',
+              transition: 'all 0.2s ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onClick={togglePlayBriefing}
+            title={isPlayingBrief ? "Detener Minuto Táctico" : "Escuchar Minuto Táctico (IA)"}
+            aria-label="Minuto Táctico"
+          >
+            <Icon name={isPlayingBrief ? "sparkSmall" : "ai"} size={14} />
+          </button>
+        )}
         {pointsInfo ? (
           <span className={`badge-points ${pointsInfo.className}`} title={pointsInfo.label}>
             <Icon name={pointsInfo.icon} size={11} />

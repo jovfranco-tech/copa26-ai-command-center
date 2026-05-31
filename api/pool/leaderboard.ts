@@ -159,7 +159,14 @@ export async function GET(request: Request): Promise<Response> {
       return b.efficiency - a.efficiency;
     });
 
-    return Response.json({ ok: true, leaderboard: board });
+    return Response.json(
+      { ok: true, leaderboard: board },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (e) {
     console.error('leaderboard fetch failed', e);
     const msg = e instanceof Error ? e.message : 'database-error';

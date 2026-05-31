@@ -2076,6 +2076,43 @@ body {
   text-align: right;
 }
 
+@supports (animation-timeline: scroll()) {
+  @keyframes reveal-timeline-event-left {
+    0% {
+      opacity: 0;
+      transform: translateX(-35px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+  @keyframes reveal-timeline-event-right {
+    0% {
+      opacity: 0;
+      transform: translateX(35px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+  .tl-ev {
+    view-timeline-name: --timeline-item;
+    view-timeline-axis: block;
+  }
+  .tl-card {
+    animation: reveal-timeline-event-right linear both;
+    animation-timeline: --timeline-item;
+    animation-range: entry 5% cover 25%;
+  }
+  .tl-card.right {
+    animation: reveal-timeline-event-left linear both;
+    animation-timeline: --timeline-item;
+    animation-range: entry 5% cover 25%;
+  }
+}
+
 /* ---------- utilities ---------- */
 .row {
   display: flex;
@@ -2440,5 +2477,18 @@ body {
   }
   .pool-actions button {
     width: 100% !important;
+  }
+}
+
+/* --- Animación de Minuto Táctico Audio --- */
+@keyframes pulse-briefing {
+  0% {
+    transform: scale(1);
+    color: var(--tx-3);
+  }
+  100% {
+    transform: scale(1.15);
+    color: var(--gold);
+    filter: drop-shadow(0 0 2px var(--gold));
   }
 }
