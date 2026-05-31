@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const datasetFile = join(repoRoot, 'packages', 'shared', 'src', 'data', 'worldcup2026.json');
-const stadiumsFile = join(repoRoot, 'packages', 'ingestion', 'vendor', 'openfootball-2026', 'cup_stadiums.csv');
+const stadiumsFile = join(repoRoot, 'packages', 'ingestion', 'vendor', 'tournament-data-2026', 'cup_stadiums.csv');
 const playerPhotoCacheFile = join(repoRoot, 'scraped-cache', 'json', 'player-photo-resolutions.json');
 const generatedFile = join(repoRoot, 'apps', 'web', 'src', 'generated', 'intelPacks.ts');
 const playerPhotoDir = join(repoRoot, 'apps', 'web', 'static', 'player-photos');

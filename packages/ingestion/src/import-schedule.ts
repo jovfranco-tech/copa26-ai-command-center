@@ -1,23 +1,23 @@
 /**
- * Open-data importer (NOT a scraper). Reads the vendored openfootball CC0 files
+ * Data importer (NOT a scraper). Reads the vendored tournament dataset files
  * for World Cup 2026 and writes packages/shared/src/data/worldcup2026.json — the
  * app's REAL dataset: real teams, groups, venues and the full match schedule.
  *
- * Source: https://github.com/openfootball/world-cup (2026--usa), CC0 1.0.
+ * Source: Calendario del torneo con licencia de uso libre.
  * Player squads/stats and results are intentionally absent: the tournament has
  * not been played yet (kickoff 2026-06-11), so those simply do not exist.
  *
- * Run: pnpm --filter @worldcup/ingestion import:openfootball
+ * Run: pnpm --filter @worldcup/ingestion import:schedule
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const VENDOR = join(HERE, '..', 'vendor', 'openfootball-2026');
+const VENDOR = join(HERE, '..', 'vendor', 'tournament-data-2026');
 const OUT = join(HERE, '..', '..', 'shared', 'src', 'data', 'worldcup2026.json');
 
-// openfootball team name -> { code (FIFA-style), iso2 (flagcdn), colorA, colorB }
+// team name mapping -> { code (FIFA-style), iso2 (flagcdn), colorA, colorB }
 const TEAM_META: Record<string, { code: string; iso2: string; colorA: string; colorB: string }> = {
   Mexico: { code: 'MEX', iso2: 'mx', colorA: '#1c8a4d', colorB: '#c8102e' },
   'South Africa': { code: 'RSA', iso2: 'za', colorA: '#007a4d', colorB: '#ffb612' },
@@ -69,7 +69,7 @@ const TEAM_META: Record<string, { code: string; iso2: string; colorA: string; co
   Panama: { code: 'PAN', iso2: 'pa', colorA: '#005293', colorB: '#c8102e' },
 };
 
-// exact openfootball city string -> { id, city (clean label) }
+// exact city string -> { id, city (clean label) }
 const VENUE_ID: Record<string, string> = {
   Vancouver: 'van',
   Seattle: 'sea',
@@ -92,7 +92,7 @@ const VENUE_ID: Record<string, string> = {
 const COUNTRY = { us: 'Estados Unidos', ca: 'Canadá', mx: 'México' } as const;
 const MONTHS: Record<string, string> = { June: '06', July: '07' };
 
-// openfootball English name -> Spanish display name
+// English name -> Spanish display name
 const ES_NAME: Record<string, string> = {
   Mexico: 'México',
   'South Africa': 'Sudáfrica',
@@ -146,7 +146,7 @@ const ES_NAME: Record<string, string> = {
 
 function meta(name: string) {
   const m = TEAM_META[name.trim()];
-  if (!m) throw new Error(`No TEAM_META for "${name}". Update import-openfootball.ts.`);
+  if (!m) throw new Error(`No TEAM_META for "${name}". Update import-schedule.ts.`);
   return m;
 }
 function esName(name: string): string {
@@ -264,8 +264,8 @@ function main() {
 
   const dataset = {
     meta: {
-      source: 'openfootball/world-cup (2026--usa)',
-      license: 'CC0-1.0',
+      source: 'Calendario del torneo',
+      license: 'Licencia de uso libre',
       generatedAt: new Date().toISOString().slice(0, 10),
       note: 'Real WC2026 teams/groups/venues/schedule. No squads/results yet (tournament not played).',
     },
@@ -279,7 +279,7 @@ function main() {
   writeFileSync(OUT, JSON.stringify(dataset, null, 2) + '\n', 'utf8');
   if (!existsSync(OUT)) throw new Error('write failed');
   console.log(
-    `[import:openfootball] wrote ${OUT}\n  ${teams.length} teams, ${groups.length} groups, ${venues.length} venues, ${matches.length} matches`,
+    `[import:schedule] wrote ${OUT}\n  ${teams.length} teams, ${groups.length} groups, ${venues.length} venues, ${matches.length} matches`,
   );
 }
 

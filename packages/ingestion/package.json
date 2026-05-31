@@ -16,7 +16,7 @@
     "ingest:player-photos": "tsx src/assets/download-player-photos.ts",
     "ingest:player-photos:wikimedia": "tsx src/assets/download-wikimedia-player-photos.ts",
     "ingest:all": "tsx src/ingest-all.ts",
-    "import:openfootball": "tsx src/import-openfootball.ts",
+    "import:schedule": "tsx src/import-schedule.ts",
     "validate:data": "tsx src/validate-ingested-data.ts",
     "report:data": "tsx src/generate-data-quality-report.ts",
     "check:gitignore": "tsx src/check-gitignore.ts",

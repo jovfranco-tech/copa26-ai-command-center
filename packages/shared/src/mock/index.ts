@@ -1,6 +1,6 @@
 /**
- * REAL World Cup 2026 dataset — generated from openfootball (CC0) by
- * `pnpm --filter @worldcup/ingestion import:openfootball` into
+ * REAL World Cup 2026 dataset — generated from source dataset by
+ * `pnpm --filter @worldcup/ingestion import:schedule` into
  * ../data/worldcup2026.json. (Module kept at this path for back-compat; it is no
  * longer mock data.)
  *
