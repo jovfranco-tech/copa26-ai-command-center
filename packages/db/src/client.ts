@@ -1,11 +1,13 @@
 /** libsql + Drizzle client for the local SQLite file. */
 import { existsSync, mkdirSync, statSync } from 'node:fs';
-import { createClient, type Client } from '@libsql/client';
+import { createClient } from '@libsql/client';
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
 import * as schema from './schema.js';
 import { LOCAL_DB_DIR, resolveDbFilePath, resolveDbFileUrl } from './paths.js';
 
 export type DB = LibSQLDatabase<typeof schema>;
+
+type Client = ReturnType<typeof createClient>;
 
 let _client: Client | null = null;
 let _db: DB | null = null;
