@@ -1020,19 +1020,78 @@ function PressRoom({
       </div>
 
       <div
+        className="row gap-12"
         style={{
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid var(--line)',
-          borderRadius: 14,
-          padding: '12px 16px',
-          fontSize: 13.5,
-          fontWeight: 600,
-          color: 'var(--tx-2)',
-          marginBottom: 16,
-          fontStyle: 'italic',
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px solid var(--gold-line)',
+          borderRadius: 16,
+          padding: '16px',
+          marginBottom: 18,
+          alignItems: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+          backdropFilter: 'blur(8px)',
         }}
       >
-        "{questions[activeJournalist]}"
+        <div style={{ position: 'relative', width: 64, height: 64, flexShrink: 0 }}>
+          <img
+            src={`/avatars/${activeJournalist}.png`}
+            alt={
+              activeJournalist === 'jeanluc'
+                ? "Jean-Luc (L'Equipe)"
+                : activeJournalist === 'gary'
+                ? "Gary (The Athletic)"
+                : "Diego (TyC Sports)"
+            }
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '2px solid var(--gold)',
+              boxShadow: '0 0 10px rgba(201, 162, 75, 0.3)',
+            }}
+          />
+          <span
+            style={{
+              position: 'absolute',
+              bottom: -2,
+              right: -2,
+              fontSize: 14,
+              background: 'var(--bg-3)',
+              borderRadius: '50%',
+              width: 20,
+              height: 20,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            }}
+          >
+            {activeJournalist === 'jeanluc' ? '🇫🇷' : activeJournalist === 'gary' ? '🇬🇧' : '🇦🇷'}
+          </span>
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <div className="mono-label" style={{ fontSize: 10, color: 'var(--gold-2)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {activeJournalist === 'jeanluc'
+              ? "Jean-Luc · L'Equipe"
+              : activeJournalist === 'gary'
+              ? "Gary · The Athletic"
+              : "Diego · TyC Sports"}
+          </div>
+          <div
+            style={{
+              fontSize: 13.5,
+              fontWeight: 600,
+              color: 'var(--tx-2)',
+              fontStyle: 'italic',
+              lineHeight: 1.4,
+            }}
+          >
+            "{questions[activeJournalist]}"
+          </div>
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -11,6 +11,7 @@ import {
   normalizeTeams,
   normalizeVenues,
 } from './normalizers/index.js';
+import { downloadMediaAssets } from './scrapers/download-media-assets.js';
 
 const log = makeLogger('ingest:all');
 
@@ -35,6 +36,8 @@ async function main() {
     'Asset download — all types',
     'asset-download-report.md',
   );
+
+  await downloadMediaAssets();
 
   const v = runValidation();
   log.info(`validation: source=${v.source}, totalInvalid=${v.totalInvalid}`);

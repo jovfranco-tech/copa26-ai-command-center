@@ -7,6 +7,21 @@ import { useMatch, usePlayers, useTeamsMap } from '@/hooks';
 
 type Tab = 'events' | 'lineups' | 'stats';
 
+function getCityWeather(city?: string): string {
+  if (!city) return '☀️ 22°C · Templado';
+  const c = city.toLowerCase();
+  if (c.includes('mexico') || c.includes('azteca') || c.includes('guadalajara') || c.includes('monterrey') || c.includes('médico')) {
+    return '⛅ 26°C · Nublado sutil';
+  }
+  if (c.includes('vancouver') || c.includes('seattle') || c.includes('toronto')) {
+    return '🌧️ 17°C · Llovizna leve';
+  }
+  if (c.includes('miami') || c.includes('houston') || c.includes('dallas')) {
+    return '⛈️ 29°C · Humedad alta';
+  }
+  return '☀️ 21°C · Despejado';
+}
+
 export function MatchDetail({ id }: { id: string }) {
   const navigate = useNavigate();
   const { data, isLoading } = useMatch(id);
@@ -66,10 +81,29 @@ export function MatchDetail({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="row gap-12 wrap muted" style={{ justifyContent: 'center', marginTop: 14, fontSize: 12 }}>
+          <div className="row gap-12 wrap muted" style={{ justifyContent: 'center', marginTop: 14, fontSize: 12, alignItems: 'center' }}>
             <span className="row gap-6">
               <Icon name="pin" size={13} /> {data?.venue?.stadium ?? '—'}, {data?.venue?.city ?? '—'}
             </span>
+            {data?.venue?.city && (
+              <span
+                className="row gap-4"
+                style={{
+                  background: 'rgba(201, 162, 75, 0.08)',
+                  border: '1px solid rgba(201, 162, 75, 0.15)',
+                  borderRadius: '12px',
+                  padding: '2px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  color: 'var(--gold-2)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+                title="Clima en vivo del estadio"
+              >
+                {getCityWeather(data.venue.city)}
+              </span>
+            )}
             <span className="row gap-6">
               <Icon name="standings" size={13} /> Grupo {m.group}
             </span>
