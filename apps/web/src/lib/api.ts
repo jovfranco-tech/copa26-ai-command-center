@@ -158,6 +158,8 @@ export interface DataSyncCheck {
   mode: 'manual' | 'cron' | 'local-fallback';
   cron: string;
   results: string;
+  resultsSource?: string;
+  nextAction?: string;
 }
 
 export const fetchDataSyncCheck = () =>
@@ -168,6 +170,62 @@ export const fetchDataSyncCheck = () =>
     mode: 'local-fallback',
     cron: 'Diario 12:00 UTC en Vercel',
     results: 'Pendientes hasta el 11 de junio de 2026',
+    resultsSource: 'not-configured',
+    nextAction: 'Conectar feed de resultados autorizado cuando empiece el torneo.',
+  }));
+
+export interface PoolPersistenceStatus {
+  mode: 'remote-libsql' | 'local-sqlite' | 'missing';
+  ready: boolean;
+  durable: boolean;
+  label: string;
+  detail: string;
+}
+
+export const fetchPoolStatus = () =>
+  safeGet<{ ok: boolean; persistence: PoolPersistenceStatus }>('/pool/status', () => ({
+    ok: true,
+    persistence: {
+      mode: 'missing',
+      ready: false,
+      durable: false,
+      label: 'Base no verificada',
+      detail: 'No se pudo consultar el estado de la base desde este navegador.',
+    },
+  }));
+
+export interface MonitoringSnapshot {
+  ok: boolean;
+  usage: {
+    provider: 'upstash' | 'memory';
+    day: string;
+    items: Record<string, number>;
+  };
+  pool: PoolPersistenceStatus;
+  limits: Record<string, string>;
+  ai: {
+    configured: boolean;
+    model: string;
+  };
+}
+
+export const fetchMonitoring = () =>
+  safeGet<MonitoringSnapshot>('/monitoring', () => ({
+    ok: true,
+    usage: {
+      provider: 'memory',
+      day: new Date().toISOString().slice(0, 10),
+      items: {},
+    },
+    pool: {
+      mode: 'missing',
+      ready: false,
+      durable: false,
+      label: 'Monitoreo local',
+      detail: 'Sin snapshot remoto disponible.',
+    },
+    limits: {},
+    ai: { configured: false, model: 'gpt-4o-mini' },
   }));
 
 export interface LeaderboardEntry {

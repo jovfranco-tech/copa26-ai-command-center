@@ -20,6 +20,7 @@ import {
   Cloud,
   CloudRain,
   Crosshair,
+  Database,
   Filter,
   Flame,
   Goal,
@@ -108,6 +109,7 @@ const REGISTRY: Record<string, LucideIcon> = {
   route: Route,
   crosshair: Crosshair,
   activity: Activity,
+  database: Database,
 };
 
 export type IconName = keyof typeof REGISTRY | (string & {});

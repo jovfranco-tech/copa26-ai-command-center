@@ -15,7 +15,7 @@ import {
   loadBundle,
 } from './data-source.js';
 import { assertLocalOnly, env } from './env.js';
-import { getDb, schema } from '@worldcup/db';
+import { getDb, getPoolPersistenceStatus, schema } from '@worldcup/db';
 import { and, eq } from 'drizzle-orm';
 
 const app = new Hono();
@@ -99,6 +99,22 @@ app.get('/api/standings', async (c) => c.json(await getStandings()));
 app.get('/api/stats', async (c) => c.json(await getStats()));
 
 app.get('/api/sync/status', async (c) => c.json(await getSyncStatus()));
+
+app.get('/api/pool/status', (c) => c.json({ ok: true, persistence: getPoolPersistenceStatus() }));
+
+app.get('/api/monitoring', (c) =>
+  c.json({
+    ok: true,
+    usage: { provider: 'memory', day: new Date().toISOString().slice(0, 10), items: {} },
+    pool: getPoolPersistenceStatus(),
+    limits: {
+      analyst: '30 requests / 10 min por sesion o IP',
+      poolAgent: '30 requests / 10 min por sesion o IP',
+      poolStorage: 'persistente si DATABASE_URL remoto esta configurado',
+    },
+    ai: { configured: Boolean(process.env.OPENAI_API_KEY), model: process.env.OPENAI_MODEL || 'gpt-4o-mini' },
+  }),
+);
 
 app.post('/api/pool/sync', async (c) => {
   let body: {

@@ -4,6 +4,7 @@ import { Icon, Empty, Form, cn } from '@worldcup/ui';
 import { fmtGD } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
 import { PlayerCard, MatchRow, StandingsTable } from '@/components/cards';
+import { coachProfiles } from '@/generated/intelPacks';
 import { useMatches, usePlayers, useStandings, useTeam } from '@/hooks';
 
 type Tab = 'squad' | 'fixtures' | 'group';
@@ -24,6 +25,7 @@ export function TeamDetail({ code }: { code: string }) {
   const row = groupRows.find((r) => r.team === code);
   const squad = players?.items ?? [];
   const fixtures = (matches?.items ?? []).sort((a, b) => a.date.localeCompare(b.date));
+  const coach = coachProfiles.items[code as keyof typeof coachProfiles.items];
 
   return (
     <div className="page-fade">
@@ -55,6 +57,21 @@ export function TeamDetail({ code }: { code: string }) {
                   </div>
                 </div>
               </div>
+            )}
+            {coach?.name && (
+              <a
+                href={coach.pageUrl ?? undefined}
+                target="_blank"
+                rel="noreferrer"
+                className="coach-chip"
+                title="Ficha pública del entrenador"
+              >
+                {coach.photo ? <img src={coach.photo} alt={coach.name} loading="lazy" decoding="async" /> : null}
+                <span>
+                  <span className="mono-label">Entrenador</span>
+                  <strong>{coach.name}</strong>
+                </span>
+              </a>
             )}
           </div>
         </div>

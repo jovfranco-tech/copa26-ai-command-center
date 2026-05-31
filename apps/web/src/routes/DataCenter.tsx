@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
+import { intelDataPacks, intelGeneratedAt, weatherMeta } from '@/generated/intelPacks';
 import { playerRatingMeta } from '@/generated/playerRatings';
-import { fetchDataSyncCheck, type DataSyncCheck } from '@/lib/api';
+import {
+  fetchDataSyncCheck,
+  fetchMonitoring,
+  fetchPoolStatus,
+  type DataSyncCheck,
+  type MonitoringSnapshot,
+  type PoolPersistenceStatus,
+} from '@/lib/api';
 import { useMatches, usePlayers, useSyncStatus, useTeams, useVenues } from '@/hooks';
 
 export function DataCenter() {
@@ -11,6 +19,8 @@ export function DataCenter() {
   const { data: players } = usePlayers();
   const { data: venues } = useVenues();
   const [check, setCheck] = useState<DataSyncCheck | null>(null);
+  const [poolStatus, setPoolStatus] = useState<PoolPersistenceStatus | null>(null);
+  const [monitoring, setMonitoring] = useState<MonitoringSnapshot | null>(null);
   const [checking, setChecking] = useState(false);
 
   const played = (matches?.items ?? []).filter((m) => m.status === 'FT').length;
@@ -20,7 +30,14 @@ export function DataCenter() {
   const runCheck = async () => {
     setChecking(true);
     try {
-      setCheck(await fetchDataSyncCheck());
+      const [dataCheck, pool, usage] = await Promise.all([
+        fetchDataSyncCheck(),
+        fetchPoolStatus(),
+        fetchMonitoring(),
+      ]);
+      setCheck(dataCheck);
+      setPoolStatus(pool.persistence);
+      setMonitoring(usage);
     } finally {
       setChecking(false);
     }
@@ -61,6 +78,7 @@ export function DataCenter() {
             <UpdateStep status={played ? 'ok' : 'wait'} title="Resultados" text="Se activan cuando empiecen los partidos del 11 de junio de 2026." />
             <UpdateStep status={played ? 'ok' : 'wait'} title="Tablas y estadísticas" text="Se recalculan desde resultados reales cuando existan marcadores." />
             <UpdateStep status="ok" title="Cron Vercel" text="Revisión diaria a las 12:00 UTC en producción." />
+            <UpdateStep status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Feed real" text={check?.nextAction ?? 'Preparado para RESULTS_SOURCE_URL cuando exista un feed autorizado.'} />
           </div>
         </div>
 
@@ -86,6 +104,72 @@ export function DataCenter() {
               <span className="k">Estimados</span>
               <span className="num">{estimatedRatings}</span>
             </div>
+            <div className="sync-row">
+              <span className="k">Quiniela</span>
+              <span className="num">{poolStatus?.label ?? 'Sin revisar'}</span>
+            </div>
+            <div className="sync-row">
+              <span className="k">IA</span>
+              <span className="num">{monitoring?.ai.configured ? monitoring.ai.model : 'No verificada'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card data-packs">
+        <div className="card-hd">
+          <Icon name="download" size={15} style={{ color: 'var(--gold)' }} />
+          <h3>Descargas y datos preparados</h3>
+          <span className="spacer" />
+          <span className="mono-label">{new Date(intelGeneratedAt).toLocaleString()}</span>
+        </div>
+        <div className="card-pad pack-grid">
+          {intelDataPacks.map((pack) => (
+            <div key={pack.id} className="pack-row">
+              <span className={`pack-dot ${pack.status}`} />
+              <div>
+                <strong>{pack.label}</strong>
+                <p>{pack.note}</p>
+              </div>
+              <span className="num">{pack.count}/{pack.total}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid data-columns">
+        <div className="card">
+          <div className="card-hd">
+            <Icon name="database" size={15} style={{ color: 'var(--gold)' }} />
+            <h3>Quiniela persistente</h3>
+          </div>
+          <div className="card-pad">
+            <p className="muted" style={{ marginTop: 0 }}>
+              {poolStatus?.detail ?? 'Pulsa actualizar ahora para verificar si producción ya tiene una base remota durable.'}
+            </p>
+            <UpdateStep status={poolStatus?.durable ? 'ok' : 'wait'} title="Base compartida" text={poolStatus?.durable ? 'Lista para varios dispositivos.' : 'Configura DATABASE_URL remoto para uso familiar real.'} />
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-hd">
+            <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
+            <h3>Monitoreo</h3>
+          </div>
+          <div className="card-pad">
+            <div className="sync-row">
+              <span className="k">Proveedor</span>
+              <span className="num">{monitoring?.usage.provider ?? '—'}</span>
+            </div>
+            {Object.entries(monitoring?.usage.items ?? {}).slice(0, 5).map(([key, value]) => (
+              <div key={key} className="sync-row">
+                <span className="k">{key}</span>
+                <span className="num">{value}</span>
+              </div>
+            ))}
+            <p className="muted" style={{ marginBottom: 0 }}>
+              {weatherMeta.matchesCovered} partidos con clima base; cron y endpoints emiten métricas para logs/KV.
+            </p>
           </div>
         </div>
       </div>
@@ -110,6 +194,10 @@ export function DataCenter() {
             <div>
               <span className="mono-label">Resultados</span>
               <strong>{check.results}</strong>
+            </div>
+            <div>
+              <span className="mono-label">Siguiente acción</span>
+              <strong>{check.nextAction ?? '—'}</strong>
             </div>
           </div>
         </div>

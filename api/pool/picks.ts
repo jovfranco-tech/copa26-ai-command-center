@@ -1,10 +1,12 @@
 import { eq } from 'drizzle-orm';
-import { getDb, schema } from '../../packages/db/src/index.js';
+import { getPoolPersistenceStatus } from '../../packages/db/src/persistence.js';
+import { recordUsage } from '../_shared/usage.js';
 
-export default async function handler(request: Request): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   if (request.method !== 'GET') {
     return Response.json({ ok: false, error: 'method' }, { status: 405 });
   }
+  await recordUsage('pool.picks');
 
   const url = new URL(request.url);
   const playerName = url.searchParams.get('playerName');
@@ -12,7 +14,13 @@ export default async function handler(request: Request): Promise<Response> {
     return Response.json({ ok: false, error: 'missing-playerName' }, { status: 400 });
   }
 
+  const persistence = getPoolPersistenceStatus();
+  if (!persistence.ready) {
+    return Response.json({ ok: false, error: 'persistent-db-required', persistence }, { status: 503 });
+  }
+
   try {
+    const { getDb, schema } = await import('../../packages/db/src/index.js');
     const db = getDb();
     const rows = await db
       .select()

@@ -6,7 +6,7 @@
   "description": "Private, local-only World Cup intelligence dashboard. Not for public distribution.",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=20"
+    "node": ">=22 <25"
   },
   "packageManager": "pnpm@11.1.2",
   "scripts": {
@@ -30,6 +30,7 @@
     "ingest:match-stats": "pnpm --filter @worldcup/ingestion ingest:match-stats",
     "ingest:venues": "pnpm --filter @worldcup/ingestion ingest:venues",
     "ingest:assets": "pnpm --filter @worldcup/ingestion ingest:assets",
+    "assets:intel": "node scripts/generate-intel-packs.mjs && node scripts/generate-player-photo-fallbacks.mjs",
     "ingest:all": "pnpm --filter @worldcup/ingestion ingest:all",
     "validate:data": "pnpm --filter @worldcup/ingestion validate:data",
     "report:data": "pnpm --filter @worldcup/ingestion report:data",

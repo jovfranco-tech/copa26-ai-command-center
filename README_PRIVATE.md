@@ -75,6 +75,7 @@ pnpm ingest:player-photos:wikimedia    # resolve free Wikimedia photos from Wiki
 pnpm ingest:match-stats
 pnpm ingest:venues
 pnpm ingest:assets        # flags / crests / player photos / venue images
+pnpm assets:intel         # optimized player/venue/coach images + weather/venue data packs
 pnpm ingest:all           # everything, then validate + quality report
 pnpm validate:data        # Zod-validate the active dataset
 pnpm report:data          # write reports/data-quality-report.md
@@ -98,7 +99,36 @@ PLAYER_PHOTO_DOWNLOAD_LIMIT=8 pnpm ingest:player-photos:wikimedia
 | `pnpm db:migrate` | Apply migrations to local SQLite |
 | `pnpm db:seed` | Seed SQLite from mock data |
 | `pnpm ingest:*` | Controlled, public-only ingestion (see above) |
+| `pnpm assets:intel` | Generates private-deployable WebP assets and data packs from free/public sources |
 | `pnpm validate:data` / `pnpm report:data` | Zod validation / data-quality report |
+
+## Family pool persistence
+
+The quiniela can persist across devices when production has a remote libSQL/Turso
+database configured:
+
+```bash
+vercel env add DATABASE_URL production
+vercel env add DATABASE_AUTH_TOKEN production
+```
+
+Local SQLite is fine for development, but it is not a durable multi-device store inside
+Vercel functions. `/api/pool/status` and the Data Center show whether the current deploy
+is using a durable remote DB or only a local fallback.
+
+## Results pipeline
+
+`/api/data-sync` is cron-protected with `CRON_SECRET`. Before kickoff it reports readiness.
+After `2026-06-11`, set `RESULTS_SOURCE_URL` to an authorized JSON feed of match results;
+the cron will validate reachability and flag the next ingestion/redeploy action. It does
+not scrape blocked FIFA pages or invent scores.
+
+## Monitoring
+
+`/api/monitoring` reports AI, quiniela and sync counters. If Vercel KV / Upstash REST
+environment variables are present (`KV_REST_API_URL` + `KV_REST_API_TOKEN`, or the
+`UPSTASH_REDIS_*` equivalents), counters are durable; otherwise they are best-effort
+per-function memory plus Vercel logs.
 
 ## Safety checklist (all enforced here)
 

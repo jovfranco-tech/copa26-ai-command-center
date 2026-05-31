@@ -1,3 +1,5 @@
+import { recordUsage } from './_shared/usage.js';
+
 /**
  * Vercel Edge Function — AI pool co-pilot.
  *
@@ -96,6 +98,7 @@ export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
     return Response.json({ ok: false, reason: 'method' }, { status: 405 });
   }
+  await recordUsage('ai.pool-agent');
 
   const rate = checkRateLimit(request);
   if ('retryAfter' in rate) {

@@ -2,3 +2,4 @@
 export * from './schema.js';
 export * from './client.js';
 export * from './paths.js';
+export * from './persistence.js';

@@ -3,6 +3,7 @@ import { Icon, Empty } from '@worldcup/ui';
 import { fmtInt, fmtDay } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
+import { downloadedVenuePhotoExts, matchWeather, venueExtras, venuePhotoCredits } from '@/generated/intelPacks';
 import { useAsset, useMatches, useVenues } from '@/hooks';
 import { venueImage } from '@/lib/venueImages';
 
@@ -40,6 +41,11 @@ export function Venues() {
                   <Meta label="Aforo" value={fmtInt(v.capacity)} />
                   <Meta label="Superficie" value={v.surface} />
                   <Meta label="Partidos" value={fixtures.length} />
+                </div>
+                <div className="row" style={{ marginTop: 10, justifyContent: 'space-between' }}>
+                  <Meta label="Zona" value={venueExtras[v.id]?.timezone ?? '—'} />
+                  <Meta label="Lat/Lon" value={formatCoords(v.id)} />
+                  <Meta label="Clima" value={weatherLabel(fixtures[0]?.id)} />
                 </div>
                 <button
                   type="button"
@@ -87,8 +93,11 @@ export function Venues() {
 function VenueImage({ assetId, id, city }: { assetId: string | null | undefined; id: string; city: string }) {
   const localUrl = useAsset(assetId);
   const wiki = venueImage(id);
+  const staticExt = downloadedVenuePhotoExts[id];
+  const staticCredit = venuePhotoCredits[id];
+  const staticUrl = staticExt ? `/venue-photos/${encodeURIComponent(id)}.${staticExt}` : null;
   const [imgOk, setImgOk] = useState(true);
-  const src = localUrl ?? (imgOk ? (wiki?.src ?? null) : null);
+  const src = localUrl ?? (imgOk ? (staticUrl ?? wiki?.src ?? null) : null);
   if (src)
     return (
       <div style={{ position: 'relative', height: 132 }}>
@@ -99,9 +108,9 @@ function VenueImage({ assetId, id, city }: { assetId: string | null | undefined;
           onError={() => setImgOk(false)}
           style={{ width: '100%', height: 132, objectFit: 'cover', display: 'block' }}
         />
-        {wiki && !localUrl && (
+        {(staticCredit ?? wiki) && !localUrl && (
           <a
-            href={wiki.page}
+            href={staticCredit?.page ?? wiki?.page}
             target="_blank"
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
@@ -118,7 +127,7 @@ function VenueImage({ assetId, id, city }: { assetId: string | null | undefined;
               textDecoration: 'none',
             }}
           >
-            Wikimedia Commons ↗
+            {(staticCredit?.source ?? 'Wikimedia Commons')} ↗
           </a>
         )}
       </div>
@@ -153,6 +162,18 @@ function VenueImage({ assetId, id, city }: { assetId: string | null | undefined;
       <Icon name="venues" size={16} style={{ position: 'absolute', top: 8, right: 8, color: 'var(--gold)' }} />
     </div>
   );
+}
+
+function formatCoords(id: string): string {
+  const v = venueExtras[id];
+  if (v?.latitude == null || v.longitude == null) return '—';
+  return `${v.latitude.toFixed(2)}, ${v.longitude.toFixed(2)}`;
+}
+
+function weatherLabel(matchId: string | undefined): string {
+  const w = matchId ? matchWeather[matchId] : null;
+  if (!w || w.temperatureMaxC == null) return '—';
+  return `${Math.round(w.temperatureMaxC)}°C`;
 }
 
 function Meta({ label, value }: { label: string; value: string | number }) {
