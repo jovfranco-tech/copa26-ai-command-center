@@ -52,6 +52,7 @@ import {
   User,
   Users,
   X,
+  Mic,
   type LucideIcon,
 } from 'lucide-react';
 import type { CSSProperties } from 'react';
@@ -60,6 +61,7 @@ const REGISTRY: Record<string, LucideIcon> = {
   home: Home,
   calendar: CalendarDays,
   teams: Shield,
+  mic: Mic,
   players: Users,
   standings: ListOrdered,
   bracket: Network,

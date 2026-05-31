@@ -185,6 +185,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [usedAI, setUsedAI] = useState(false);
 
   const [attachedPdf, setAttachedPdf] = useState<{ name: string; data: string } | null>(null);
+  const [attachedAudio, setAttachedAudio] = useState<{ name: string; data: string } | null>(null);
+  const [recordingAudio, setRecordingAudio] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -206,6 +209,52 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const startAudioRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      const chunks: Blob[] = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = (reader.result as string).split(',')[1];
+          if (base64Data) {
+            setAttachedAudio({
+              name: `Nota_voz_${new Date().toLocaleTimeString('es-ES').replace(/:/g, '-')}.webm`,
+              data: base64Data,
+            });
+          }
+        };
+        reader.readAsDataURL(audioBlob);
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      setMediaRecorder(recorder);
+      recorder.start();
+      setRecordingAudio(true);
+      if ('vibrate' in navigator) navigator.vibrate([20]);
+    } catch (err) {
+      console.error('Failed to start audio recording:', err);
+      alert('No se pudo acceder al micrófono. Asegúrate de dar los permisos necesarios.');
+    }
+  };
+
+  const stopAudioRecording = () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+      setRecordingAudio(false);
+      if ('vibrate' in navigator) navigator.vibrate([10, 5, 10]);
+    }
   };
 
   const [listening, setListening] = useState(false);
@@ -274,9 +323,10 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     const local = buildAnalystAnswer({ question: q, ctx, id: cid, ...data });
 
     setBusy(true);
-    const ai = await askAI(q, buildAIContext(ctx, cid, data), attachedPdf || undefined);
+    const ai = await askAI(q, buildAIContext(ctx, cid, data), attachedPdf || undefined, attachedAudio || undefined);
     setBusy(false);
     setAttachedPdf(null);
+    setAttachedAudio(null);
 
     if (ai.ok && ai.answer) {
       setUsedAI(true);
@@ -369,43 +419,81 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 </select>
               )}
 
-              {attachedPdf && (
-                <div
-                  className="row gap-6 align-center"
-                  style={{
-                    marginBottom: 10,
-                    background: 'var(--bg-1)',
-                    border: '1px solid var(--gold-line)',
-                    padding: '4px 10px',
-                    borderRadius: 'var(--r-sm)',
-                    fontSize: 12,
-                    color: 'var(--tx)',
-                    width: 'fit-content',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Icon name="stats" size={11} style={{ color: 'var(--gold)' }} />
-                  <span className="nowrap" style={{ fontWeight: 600 }}>{attachedPdf.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => setAttachedPdf(null)}
+              <div className="row gap-8 wrap" style={{ marginBottom: 10 }}>
+                {attachedPdf && (
+                  <div
+                    className="row gap-6 align-center"
                     style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: '#ef4444',
-                      cursor: 'pointer',
+                      background: 'var(--bg-1)',
+                      border: '1px solid var(--gold-line)',
+                      padding: '4px 10px',
+                      borderRadius: 'var(--r-sm)',
+                      fontSize: 12,
+                      color: 'var(--tx)',
+                      width: 'fit-content',
                       display: 'flex',
-                      alignItems: 'center',
-                      padding: 2,
-                      marginLeft: 4
+                      alignItems: 'center'
                     }}
-                    title="Quitar PDF"
                   >
-                    <Icon name="close" size={11} />
-                  </button>
-                </div>
-              )}
+                    <Icon name="stats" size={11} style={{ color: 'var(--gold)' }} />
+                    <span className="nowrap" style={{ fontWeight: 600 }}>{attachedPdf.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => setAttachedPdf(null)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: 2,
+                        marginLeft: 4
+                      }}
+                      title="Quitar PDF"
+                    >
+                      <Icon name="close" size={11} />
+                    </button>
+                  </div>
+                )}
+
+                {attachedAudio && (
+                  <div
+                    className="row gap-6 align-center animate-fade-in"
+                    style={{
+                      background: 'var(--bg-1)',
+                      border: '1px solid var(--gold-line)',
+                      padding: '4px 10px',
+                      borderRadius: 'var(--r-sm)',
+                      fontSize: 12,
+                      color: 'var(--tx)',
+                      width: 'fit-content',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span className="dot pulse" style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--gold)', marginRight: 2, display: 'inline-block' }} />
+                    <span className="nowrap" style={{ fontWeight: 600 }}>🎤 {attachedAudio.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => setAttachedAudio(null)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: 2,
+                        marginLeft: 4
+                      }}
+                      title="Quitar audio"
+                    >
+                      <Icon name="close" size={11} />
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <form
                 className="row gap-8"
@@ -417,16 +505,42 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
                   <input
                     className="searchbox"
-                    style={{ flex: 1, marginLeft: 0, paddingRight: '68px' }}
-                    placeholder="Escribe una pregunta táctica..."
+                    style={{ flex: 1, marginLeft: 0, paddingRight: recognition ? '94px' : '68px' }}
+                    placeholder={recordingAudio ? "Grabando tu voz táctica... Presiona el micrófono para finalizar" : "Escribe una pregunta táctica..."}
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
+                    disabled={recordingAudio}
                   />
+
+                  {/* Real Voice Note Recorder Button */}
+                  <button
+                    type="button"
+                    onClick={recordingAudio ? stopAudioRecording : startAudioRecording}
+                    style={{
+                      position: 'absolute',
+                      right: recognition ? '64px' : '36px',
+                      background: 'transparent',
+                      border: 'none',
+                      color: recordingAudio ? '#ef4444' : attachedAudio ? 'var(--gold)' : 'var(--tx-3)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '6px',
+                      borderRadius: '50%',
+                      transition: 'all 0.2s ease',
+                      animation: recordingAudio ? 'pulse-microphone 1s infinite alternate' : 'none',
+                    }}
+                    title={recordingAudio ? 'Detener grabación de audio' : 'Grabar nota de voz táctica para Gemini'}
+                  >
+                    <Icon name="mic" size={14} style={{ color: recordingAudio ? '#ef4444' : attachedAudio ? 'var(--gold)' : 'var(--tx-3)' }} />
+                  </button>
+
                   {/* PDF Upload Button */}
                   <label
                     style={{
                       position: 'absolute',
-                      right: recognition ? '34px' : '8px',
+                      right: recognition ? '36px' : '8px',
                       background: 'transparent',
                       border: 'none',
                       color: 'var(--tx-3)',
@@ -448,6 +562,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     />
                     <Icon name="stats" size={14} style={{ color: attachedPdf ? 'var(--gold)' : 'var(--tx-3)' }} />
                   </label>
+
                   {/* Web Speech API Microphone Button */}
                   {recognition && (
                     <button
@@ -474,7 +589,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     </button>
                   )}
                 </div>
-                <button type="submit" className="btn gold" disabled={busy}>
+                <button type="submit" className="btn gold" disabled={busy || recordingAudio}>
                   <Icon name={busy ? 'sparkSmall' : 'send'} size={14} /> {busy ? 'Pensando…' : 'Preguntar'}
                 </button>
               </form>

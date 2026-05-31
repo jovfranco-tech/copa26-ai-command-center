@@ -82,12 +82,13 @@ export async function askAI(
   question: string,
   context: string,
   pdf?: { name: string; data: string },
+  audio?: { name: string; data: string },
 ): Promise<AIResult> {
   try {
     const res = await fetch('/api/analyst', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, context, pdf }),
+      body: JSON.stringify({ question, context, pdf, audio }),
     });
     const data = (await res.json().catch(() => ({}))) as AIResult;
     if (!res.ok) return { ok: false, reason: data.reason ?? `http-${res.status}` };

@@ -1,18 +1,134 @@
-import { useState } from 'react';
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useEffect, useState } from 'react';
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend } from 'recharts';
 import { Icon, Pill, Empty } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
 import { PlayerMini } from '@/components/cards';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
-import { useStats, useTeamsMap } from '@/hooks';
+import { useStats, useTeamsMap, useMatches } from '@/hooks';
+import { usePool } from '@/store/pool';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
-type Segment = 'players' | 'keepers' | 'teams';
+type Segment = 'players' | 'keepers' | 'teams' | 'arena';
 
 export function Stats() {
   const { data, isLoading } = useStats();
   const teams = useTeamsMap();
+  const matchData = useMatches();
+  const pool = usePool();
   const [seg, setSeg] = useState<Segment>('players');
+
+  const [leaderboard, setLeaderboard] = useState<Array<{ name: string; points: number }>>([]);
+
+  useEffect(() => {
+    const matchItems = matchData?.data?.items ?? [];
+    if (!matchItems.length) return;
+
+    const playedMatches = matchItems.filter((m) => m.status === 'FT');
+    const teamItems = Object.values(teams);
+    const teamMap = new Map(teamItems.map((t) => [t.code, t]));
+
+    const unsubscribe = onSnapshot(
+      collection(db, 'poolPicks'),
+      (snapshot) => {
+        const board: Array<{ name: string; points: number }> = [];
+
+        snapshot.forEach((docSnap) => {
+          const name = docSnap.id;
+          const docData = docSnap.data();
+          const picks = docData.picks || {};
+
+          let points = 0;
+          for (const m of playedMatches) {
+            const pick = picks[m.id];
+            if (!pick || !pick.outcome) continue;
+
+            const realHome = m.homeGoals ?? 0;
+            const realAway = m.awayGoals ?? 0;
+
+            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
+            if (realHome > realAway) realOutcome = 'home';
+            else if (realHome < realAway) realOutcome = 'away';
+
+            const isExact = pick.homeGoals === realHome && pick.awayGoals === realAway;
+            const isOutcomeCorrect = pick.outcome === realOutcome;
+
+            if (isExact) points += 3;
+            else if (isOutcomeCorrect) points += 1;
+          }
+
+          board.push({ name, points });
+        });
+
+        // Inject the 3 AI Agents
+        const agents: Array<'optimista' | 'stats' | 'contrarian'> = ['optimista', 'stats', 'contrarian'];
+        const agentNames = {
+          optimista: '🤖 El Analista Optimista',
+          stats: '🤖 El Simulador Estadístico',
+          contrarian: '🤖 El Agente Contrarian',
+        };
+
+        for (const agent of agents) {
+          let points = 0;
+          for (const m of playedMatches) {
+            const homeTeam = teamMap.get(m.home);
+            const awayTeam = teamMap.get(m.away);
+
+            const homeRank = homeTeam?.ranking ?? 50;
+            const awayRank = awayTeam?.ranking ?? 50;
+            const rankDiff = awayRank - homeRank;
+
+            let pred: { homeGoals: number; awayGoals: number; outcome: 'home' | 'draw' | 'away' };
+            if (agent === 'optimista') {
+              if (rankDiff > 10) pred = { homeGoals: 3, awayGoals: 1, outcome: 'home' };
+              else if (rankDiff < -10) pred = { homeGoals: 1, awayGoals: 3, outcome: 'away' };
+              else pred = { homeGoals: 2, awayGoals: 2, outcome: 'draw' };
+            } else if (agent === 'stats') {
+              if (rankDiff > 5) pred = { homeGoals: 1, awayGoals: 0, outcome: 'home' };
+              else if (rankDiff < -5) pred = { homeGoals: 0, awayGoals: 1, outcome: 'away' };
+              else pred = { homeGoals: 1, awayGoals: 1, outcome: 'draw' };
+            } else {
+              if (rankDiff > 15) pred = { homeGoals: 1, awayGoals: 2, outcome: 'away' };
+              else if (rankDiff < -15) pred = { homeGoals: 2, awayGoals: 1, outcome: 'home' };
+              else pred = { homeGoals: 0, awayGoals: 0, outcome: 'draw' };
+            }
+
+            const realHome = m.homeGoals ?? 0;
+            const realAway = m.awayGoals ?? 0;
+
+            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
+            if (realHome > realAway) realOutcome = 'home';
+            else if (realHome < realAway) realOutcome = 'away';
+
+            const isExact = pred.homeGoals === realHome && pred.awayGoals === realAway;
+            const isOutcomeCorrect = pred.outcome === realOutcome;
+
+            if (isExact) points += 3;
+            else if (isOutcomeCorrect) points += 1;
+          }
+
+          board.push({ name: agentNames[agent], points });
+        }
+
+        board.sort((a, b) => b.points - a.points);
+        setLeaderboard(board);
+      },
+      (error) => {
+        console.error('Firestore onSnapshot in Stats error:', error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [matchData, teams]);
+
+  const radarData = [
+    { subject: 'Ataque Ofensivo', optimista: 95, stats: 45, contrarian: 80, fullMark: 100 },
+    { subject: 'Eficacia Goleo', optimista: 90, stats: 50, contrarian: 75, fullMark: 100 },
+    { subject: 'Posesión Balón', optimista: 85, stats: 75, contrarian: 45, fullMark: 100 },
+    { subject: 'Afinidad Sorpresa', optimista: 40, stats: 20, contrarian: 95, fullMark: 100 },
+    { subject: 'Consistencia', optimista: 65, stats: 95, contrarian: 30, fullMark: 100 },
+  ];
 
   if (isLoading) return <p className="muted">Cargando estadísticas…</p>;
   if (!data) return <Empty icon="stats" title="Sin estadísticas" text="Las estadísticas aparecen cuando se juegan los partidos." />;
@@ -22,9 +138,9 @@ export function Stats() {
       <MockBanner />
 
       <div className="row gap-6 wrap" style={{ marginBottom: 16 }}>
-        {(['players', 'keepers', 'teams'] as Segment[]).map((s) => (
+        {(['players', 'keepers', 'teams', 'arena'] as Segment[]).map((s) => (
           <Pill key={s} on={seg === s} onClick={() => setSeg(s)}>
-            {s === 'players' ? 'Jugadores' : s === 'keepers' ? 'Porteros' : 'Selecciones'}
+            {s === 'players' ? 'Jugadores' : s === 'keepers' ? 'Porteros' : s === 'teams' ? 'Selecciones' : 'Arena de Co-pilotos'}
           </Pill>
         ))}
       </div>
@@ -102,6 +218,66 @@ export function Stats() {
 
           <TeamLeader title="Posesión %" rows={data.teamPossession.map((r) => [r.team, r.possession])} />
           <TeamLeader title="Tiros" rows={data.teamShots.map((r) => [r.team, r.shots])} />
+        </div>
+      )}
+
+      {seg === 'arena' && (
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))' }}>
+          <div className="card animate-fade-in">
+            <div className="card-hd">
+              <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
+              <h3>Huella Táctica de Co-pilotos (Radar)</h3>
+            </div>
+            <div className="card-pad" style={{ height: 320, display: 'flex', justifyContent: 'center' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                  <PolarGrid stroke="var(--line)" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--tx-2)', fontSize: 10 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: 'var(--tx-3)', fontSize: 8 }} />
+                  <Radar name="Optimista" dataKey="optimista" stroke="#c9a24b" fill="#c9a24b" fillOpacity={0.15} />
+                  <Radar name="Estadístico" dataKey="stats" stroke="#10b981" fill="#10b981" fillOpacity={0.15} />
+                  <Radar name="Contrarian" dataKey="contrarian" stroke="#e11d48" fill="#e11d48" fillOpacity={0.15} />
+                  <Legend wrapperStyle={{ fontSize: 10, paddingTop: 10 }} />
+                  <Tooltip contentStyle={{ background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--tx)' }} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="card animate-fade-in">
+            <div className="card-hd">
+              <Icon name="trophy" size={15} style={{ color: 'var(--gold)' }} />
+              <h3>Rendimiento Real Quiniela (Firestore)</h3>
+            </div>
+            <div className="card-pad" style={{ height: 320 }}>
+              {leaderboard.length ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={leaderboard.slice(0, 5)} layout="vertical" margin={{ left: 8, right: 16 }}>
+                    <XAxis type="number" hide />
+                    <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 9, fill: 'var(--tx-2)' }} />
+                    <Tooltip
+                      cursor={{ fill: 'var(--bg-3)' }}
+                      contentStyle={{ background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--tx)' }}
+                    />
+                    <Bar dataKey="points" name="Puntos" radius={[0, 6, 6, 0]}>
+                      {leaderboard.slice(0, 5).map((d) => {
+                        const isAi = d.name.startsWith('🤖');
+                        const isUser = d.name.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
+                        const color = isUser ? 'var(--gold)' : isAi ? 'var(--tx-3)' : '#4f46e5';
+                        return <Cell key={d.name} fill={color} />;
+                      })}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                  <p className="muted" style={{ fontSize: 12, textAlign: 'center' }}>
+                    Cargando clasificación en tiempo real desde Firestore…
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
