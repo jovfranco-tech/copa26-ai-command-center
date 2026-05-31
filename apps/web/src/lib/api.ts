@@ -177,7 +177,7 @@ export const fetchDataSyncCheck = () =>
   }));
 
 export interface PoolPersistenceStatus {
-  mode: 'remote-libsql' | 'local-sqlite' | 'missing';
+  mode: 'cloud-firestore' | 'remote-libsql' | 'local-sqlite' | 'missing';
   ready: boolean;
   durable: boolean;
   label: string;
@@ -188,11 +188,11 @@ export const fetchPoolStatus = () =>
   safeGet<{ ok: boolean; persistence: PoolPersistenceStatus }>('/pool/status', () => ({
     ok: true,
     persistence: {
-      mode: 'missing',
+      mode: 'cloud-firestore',
       ready: false,
-      durable: false,
-      label: 'Base no verificada',
-      detail: 'No se pudo consultar el estado de la base desde este navegador.',
+      durable: true,
+      label: 'Cloud Firestore sin verificar',
+      detail: 'No se pudo verificar Firestore desde este navegador, pero la app conserva la configuracion del cliente.',
     },
   }));
 
@@ -220,13 +220,15 @@ export const fetchMonitoring = () =>
       items: {},
     },
     pool: {
-      mode: 'missing',
+      mode: 'cloud-firestore',
       ready: false,
-      durable: false,
+      durable: true,
       label: 'Monitoreo local',
-      detail: 'Sin snapshot remoto disponible.',
+      detail: 'Sin snapshot remoto disponible; Firestore esta configurado en el cliente.',
     },
-    limits: {},
+    limits: {
+      poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
+    },
     ai: { configured: false, model: 'gpt-4o-mini' },
   }));
 

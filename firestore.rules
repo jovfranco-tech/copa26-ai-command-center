@@ -1,9 +1,78 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function validShortText(value, maxLength) {
+      return value is string && value.size() > 0 && value.size() <= maxLength;
+    }
+
+    function validPickMap(value) {
+      return value is map && value.keys().size() <= 104;
+    }
+
+    function validPoolPickDoc(playerName) {
+      return playerName.size() > 0
+        && playerName.size() <= 30
+        && request.resource.data.keys().hasOnly(['picks', 'updatedAt'])
+        && validPickMap(request.resource.data.picks);
+    }
+
+    function validSyncSession(code) {
+      return code.matches('^[0-9]{4}$')
+        && request.resource.data.keys().hasOnly([
+          'hostName',
+          'hostPicks',
+          'clientName',
+          'clientPicks',
+          'status',
+          'createdAt'
+        ])
+        && validShortText(request.resource.data.hostName, 30)
+        && validPickMap(request.resource.data.hostPicks)
+        && request.resource.data.status in ['waiting', 'connected']
+        && (!('clientName' in request.resource.data) || validShortText(request.resource.data.clientName, 30))
+        && (!('clientPicks' in request.resource.data) || validPickMap(request.resource.data.clientPicks));
+    }
+
+    function validFlashChallenge() {
+      return request.resource.data.keys().hasOnly([
+          'matchId',
+          'matchName',
+          'title',
+          'options',
+          'votes',
+          'createdBy',
+          'status',
+          'result',
+          'createdAt'
+        ])
+        && validShortText(request.resource.data.matchId, 60)
+        && validShortText(request.resource.data.matchName, 120)
+        && validShortText(request.resource.data.title, 140)
+        && request.resource.data.options is list
+        && request.resource.data.options.size() >= 2
+        && request.resource.data.options.size() <= 8
+        && request.resource.data.votes is map
+        && request.resource.data.votes.keys().size() <= 8
+        && validShortText(request.resource.data.createdBy, 30)
+        && request.resource.data.status in ['active', 'resolved'];
+    }
+
     match /poolPicks/{playerName} {
       allow read: if true;
-      allow write: if playerName.size() > 0 && playerName.size() <= 30;
+      allow create, update: if validPoolPickDoc(playerName);
+      allow delete: if false;
+    }
+
+    match /rtcSyncSessions/{code} {
+      allow read: if code.matches('^[0-9]{4}$');
+      allow create, update: if validSyncSession(code);
+      allow delete: if code.matches('^[0-9]{4}$');
+    }
+
+    match /flashChallenges/{challengeId} {
+      allow read: if true;
+      allow create, update: if validFlashChallenge();
+      allow delete: if false;
     }
   }
 }

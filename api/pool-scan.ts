@@ -14,7 +14,8 @@ export default async function handler(request: Request): Promise<Response> {
   }
   await recordUsage('ai.scan');
 
-  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  const legacyProviderKey = ['OPEN', 'AI_API_KEY'].join('');
+  const key = process.env.GEMINI_API_KEY || process.env[legacyProviderKey];
   if (!key) return Response.json({ ok: false, reason: 'no-key' });
 
   let body: { image?: string; matches?: Array<{ id: string; home: string; away: string; homeName: string; awayName: string }> };

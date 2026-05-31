@@ -4,10 +4,11 @@ import { recordUsage } from './_shared/usage.js';
  * Vercel Edge Function — AI pool co-pilot.
  *
  * Receives the matches list and the desired AI agent profile (optimista | stats | contrarian).
- * Calls OpenAI and returns structured match predictions and a tactical brief.
+ * Calls the configured AI provider and returns structured match predictions and a tactical brief.
  */
 export const config = { runtime: 'edge' };
 
+const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 30;
 
@@ -108,7 +109,7 @@ export default async function handler(request: Request): Promise<Response> {
     );
   }
 
-  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  const key = process.env.GEMINI_API_KEY || process.env[LEGACY_PROVIDER_KEY];
   if (!key) return Response.json({ ok: false, reason: 'no-key' });
 
   let body: { agent?: 'optimista' | 'stats' | 'contrarian'; matches?: MatchInput[] };

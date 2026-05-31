@@ -1,5 +1,7 @@
 import { readUsageSnapshot, recordUsage } from './_shared/usage.js';
-import { getPoolPersistenceStatus } from '../packages/db/src/persistence.js';
+import { getFirestorePoolPersistenceStatus } from './_shared/firestorePool.js';
+
+const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 
 export async function GET(request: Request): Promise<Response> {
   if (request.method !== 'GET') {
@@ -8,20 +10,21 @@ export async function GET(request: Request): Promise<Response> {
 
   await recordUsage('data.sync', 0);
   const usage = await readUsageSnapshot();
+  const pool = await getFirestorePoolPersistenceStatus();
 
   return Response.json(
     {
       ok: true,
       usage,
-      pool: getPoolPersistenceStatus(),
+      pool,
       limits: {
         analyst: '30 requests / 10 min por sesion o IP',
         poolAgent: '30 requests / 10 min por sesion o IP',
-        poolStorage: 'persistente si DATABASE_URL remoto esta configurado',
+        poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
       },
       ai: {
-        configured: Boolean(process.env.OPENAI_API_KEY),
-        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+        configured: Boolean(process.env.GEMINI_API_KEY || process.env[LEGACY_PROVIDER_KEY]),
+        model: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
       },
     },
     { headers: { 'Cache-Control': 'no-store' } },

@@ -104,17 +104,17 @@ PLAYER_PHOTO_DOWNLOAD_LIMIT=8 pnpm ingest:player-photos:wikimedia
 
 ## Family pool persistence
 
-The quiniela can persist across devices when production has a remote libSQL/Turso
-database configured:
+The quiniela persists across devices through Cloud Firestore. The browser writes
+`poolPicks/{playerName}` directly with Firebase's offline cache, and the service
+worker can retry `/api/pool/sync` after reconnecting. Keep `firestore.rules` deployed
+before sharing the production link:
 
 ```bash
-vercel env add DATABASE_URL production
-vercel env add DATABASE_AUTH_TOKEN production
+firebase deploy --only firestore:rules,firestore:indexes
 ```
 
-Local SQLite is fine for development, but it is not a durable multi-device store inside
-Vercel functions. `/api/pool/status` and the Data Center show whether the current deploy
-is using a durable remote DB or only a local fallback.
+`/api/pool/status` and the Data Center verify the Firestore connection used by the
+family leaderboard.
 
 ## Results pipeline
 

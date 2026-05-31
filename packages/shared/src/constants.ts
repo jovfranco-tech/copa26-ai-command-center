@@ -42,6 +42,20 @@ export type AssetType = (typeof ASSET_TYPES)[number];
 export const ASSET_STATUSES = ['present', 'missing', 'error', 'placeholder'] as const;
 export type AssetStatus = (typeof ASSET_STATUSES)[number];
 
+/**
+ * Public Firebase client config for the family pool.
+ * Firebase web API keys are project identifiers, not server secrets; access is
+ * controlled by Firestore rules in `firestore.rules`.
+ */
+export const POOL_FIRESTORE_CONFIG = {
+  apiKey: 'AIzaSyARtWft2X8kCxXhQKNS506f885G5zphMt4',
+  authDomain: 'fifa-quiniela-2026-jovs.firebaseapp.com',
+  projectId: 'fifa-quiniela-2026-jovs',
+  storageBucket: 'fifa-quiniela-2026-jovs.firebasestorage.app',
+  messagingSenderId: '252571103268',
+  appId: '1:252571103268:web:37736f5884ea70e512e8b1',
+} as const;
+
 /** Where the API served its data from — drives the "mock data" banner in the UI. */
 export type DataSourceKind = 'mock' | 'sqlite';
 

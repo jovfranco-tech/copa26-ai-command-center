@@ -112,7 +112,7 @@ export function Pool() {
       } else {
         setAgentError(
           res.reason === 'no-key'
-            ? 'No se ha configurado la API Key de OpenAI para habilitar co-pilotos.'
+            ? 'No se ha configurado la clave del proveedor IA para habilitar co-pilotos.'
             : 'Error al conectar con el co-piloto.',
         );
       }
@@ -259,14 +259,14 @@ export function Pool() {
           setSyncStatus('synced');
         }
       } catch (e) {
-        console.error('Failed to load picks from SQLite', e);
+        console.error('Failed to load picks from Firestore', e);
       }
     };
     loadPicks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.playerName]);
 
-  // Sync picks to local database (debounced to avoid spamming the connection)
+  // Sync picks to Firestore (debounced to avoid spamming the connection)
   useEffect(() => {
     if (!pool.playerName.trim()) return;
 
@@ -640,8 +640,8 @@ export function Pool() {
           <span className="mono-label">Quiniela familiar</span>
           <h2>Pronósticos para compartir en casa</h2>
           <p>
-            Guarda tus picks en este navegador. Cuando empiece el torneo, los resultados reales servirán para comparar
-            aciertos.
+            Guarda tus picks en la nube familiar. Cuando empiece el torneo, los resultados reales servirán para
+            comparar aciertos entre todos.
           </p>
         </div>
         <div className="pool-profile">
@@ -660,7 +660,7 @@ export function Pool() {
                 }}
               >
                 <Icon name={syncStatus === 'synced' ? 'check' : syncStatus === 'syncing' ? 'sparkSmall' : 'close'} size={11} />
-                {syncStatus === 'synced' ? 'Guardado en DB' : syncStatus === 'syncing' ? 'Sincronizando…' : 'Sin conexión'}
+                {syncStatus === 'synced' ? 'Guardado en nube' : syncStatus === 'syncing' ? 'Sincronizando…' : 'Sin conexión'}
               </span>
             )}
           </label>
@@ -950,14 +950,14 @@ export function Pool() {
             )}
           </div>
           <p className="muted" style={{ margin: '0 0 12px 0', fontSize: 12 }}>
-            Puntuaciones en tiempo real de todos los participantes basándose en los resultados de la base de datos local SQLite.
+            Puntuaciones en tiempo real de todos los participantes basándose en Firestore y los resultados del torneo.
           </p>
 
           {loadingLeaderboard ? (
             <p className="muted" style={{ fontSize: 13 }}>Cargando tabla de posiciones…</p>
           ) : !leaderboard.length ? (
             <div className="card card-pad muted" style={{ fontSize: 13, textAlign: 'center' }}>
-              No hay predicciones sincronizadas en la base de datos local todavía. ¡Escribe tu nombre y guarda algunos marcadores!
+              No hay predicciones sincronizadas todavía. Escribe tu nombre y guarda algunos marcadores.
             </div>
           ) : (
             <div className="card" style={{ overflowX: 'auto', border: '1px solid var(--gold-line)' }}>

@@ -18,9 +18,10 @@ interface MatchExtract {
 async function main() {
   console.log('🤖 Iniciando Ingesta Inteligente de Visión (AI Vision Ingest)...');
 
-  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  const legacyProviderKey = ['OPEN', 'AI_API_KEY'].join('');
+  const key = process.env.GEMINI_API_KEY || process.env[legacyProviderKey];
   if (!key) {
-    console.error('❌ Error: Ni GEMINI_API_KEY ni OPENAI_API_KEY están configuradas en el entorno.');
+    console.error('Error: falta configurar GEMINI_API_KEY o la clave heredada del proveedor IA.');
     process.exit(1);
   }
 

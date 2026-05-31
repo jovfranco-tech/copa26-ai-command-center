@@ -1,6 +1,21 @@
-export type UsageKind = 'ai.analyst' | 'ai.pool-agent' | 'pool.sync' | 'pool.picks' | 'pool.leaderboard' | 'data.sync';
+export type UsageKind =
+  | 'ai.analyst'
+  | 'ai.pool-agent'
+  | 'ai.scan'
+  | 'pool.sync'
+  | 'pool.picks'
+  | 'pool.leaderboard'
+  | 'data.sync';
 
-const USAGE_KEYS: UsageKind[] = ['ai.analyst', 'ai.pool-agent', 'pool.sync', 'pool.picks', 'pool.leaderboard', 'data.sync'];
+const USAGE_KEYS: UsageKind[] = [
+  'ai.analyst',
+  'ai.pool-agent',
+  'ai.scan',
+  'pool.sync',
+  'pool.picks',
+  'pool.leaderboard',
+  'data.sync',
+];
 
 export async function recordUsage(kind: UsageKind, units = 1): Promise<void> {
   const day = new Date().toISOString().slice(0, 10);

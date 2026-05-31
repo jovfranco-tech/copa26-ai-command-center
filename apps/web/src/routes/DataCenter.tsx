@@ -147,7 +147,7 @@ export function DataCenter() {
             <p className="muted" style={{ marginTop: 0 }}>
               {poolStatus?.detail ?? 'Pulsa actualizar ahora para verificar si producción ya tiene una base remota durable.'}
             </p>
-            <UpdateStep status={poolStatus?.durable ? 'ok' : 'wait'} title="Base compartida" text={poolStatus?.durable ? 'Lista para varios dispositivos.' : 'Configura DATABASE_URL remoto para uso familiar real.'} />
+            <UpdateStep status={poolStatus?.durable ? 'ok' : 'wait'} title="Base compartida" text={poolStatus?.durable ? 'Lista para varios dispositivos.' : 'Revisa las reglas de Firestore antes de compartir el link.'} />
           </div>
         </div>
 

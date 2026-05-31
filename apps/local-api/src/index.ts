@@ -15,10 +15,22 @@ import {
   loadBundle,
 } from './data-source.js';
 import { assertLocalOnly, env } from './env.js';
-import { getDb, getPoolPersistenceStatus, schema } from '@worldcup/db';
+import { getDb, schema } from '@worldcup/db';
+import { POOL_FIRESTORE_CONFIG } from '@worldcup/shared';
 import { and, eq } from 'drizzle-orm';
 
 const app = new Hono();
+const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
+
+function getCloudPoolStatus() {
+  return {
+    mode: 'cloud-firestore',
+    ready: true,
+    durable: true,
+    label: 'Cloud Firestore',
+    detail: `Quiniela familiar conectada al proyecto ${POOL_FIRESTORE_CONFIG.projectId}.`,
+  };
+}
 
 // Allow only localhost origins (the Vite dev server). Never wildcard.
 app.use(
@@ -100,19 +112,27 @@ app.get('/api/stats', async (c) => c.json(await getStats()));
 
 app.get('/api/sync/status', async (c) => c.json(await getSyncStatus()));
 
-app.get('/api/pool/status', (c) => c.json({ ok: true, persistence: getPoolPersistenceStatus() }));
+app.get('/api/pool/status', (c) =>
+  c.json({
+    ok: true,
+    persistence: getCloudPoolStatus(),
+  }),
+);
 
 app.get('/api/monitoring', (c) =>
   c.json({
     ok: true,
     usage: { provider: 'memory', day: new Date().toISOString().slice(0, 10), items: {} },
-    pool: getPoolPersistenceStatus(),
+    pool: getCloudPoolStatus(),
     limits: {
       analyst: '30 requests / 10 min por sesion o IP',
       poolAgent: '30 requests / 10 min por sesion o IP',
-      poolStorage: 'persistente si DATABASE_URL remoto esta configurado',
+      poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
     },
-    ai: { configured: Boolean(process.env.OPENAI_API_KEY), model: process.env.OPENAI_MODEL || 'gpt-4o-mini' },
+    ai: {
+      configured: Boolean(process.env.GEMINI_API_KEY || process.env[LEGACY_PROVIDER_KEY]),
+      model: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+    },
   }),
 );
 

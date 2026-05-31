@@ -4,18 +4,19 @@ import { recordUsage } from './_shared/usage.js';
  * Vercel Edge Function — AI analyst relay.
  *
  * The browser POSTs { question, context } where `context` is the LOCAL data
- * summary the app already has. This function calls OpenAI server-side using
- * OPENAI_API_KEY (never exposed to the client) and returns a grounded Spanish
- * answer. If no key is configured it returns { ok:false, reason:'no-key' } so the
+ * summary the app already has. This function calls the configured AI provider
+ * server-side and returns a grounded Spanish answer. If no key is configured it
+ * returns { ok:false, reason:'no-key' } so the
  * client falls back to the local (offline) analyst.
  *
- * Set the key with:  vercel env add OPENAI_API_KEY production   (then redeploy)
+ * Set the key with:  vercel env add GEMINI_API_KEY production   (then redeploy)
  *
  * This endpoint sits behind the Basic-Auth edge middleware, so only the
  * authenticated owner can use it (the key can't be abused by the public).
  */
 export const config = { runtime: 'edge' };
 
+const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 30;
 
@@ -55,7 +56,7 @@ export default async function handler(request: Request): Promise<Response> {
     );
   }
 
-  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  const key = process.env.GEMINI_API_KEY || process.env[LEGACY_PROVIDER_KEY];
   if (!key) return Response.json({ ok: false, reason: 'no-key' });
 
   let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string } };

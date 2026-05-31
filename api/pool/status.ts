@@ -1,4 +1,4 @@
-import { getPoolPersistenceStatus } from '../../packages/db/src/persistence.js';
+import { getFirestorePoolPersistenceStatus } from '../_shared/firestorePool.js';
 
 export async function GET(request: Request): Promise<Response> {
   if (request.method !== 'GET') {
@@ -8,7 +8,7 @@ export async function GET(request: Request): Promise<Response> {
   return Response.json(
     {
       ok: true,
-      persistence: getPoolPersistenceStatus(),
+      persistence: await getFirestorePoolPersistenceStatus(),
     },
     {
       headers: {

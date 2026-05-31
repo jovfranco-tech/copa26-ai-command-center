@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { resolveDbFilePath } from './paths.js';
 
-export type PoolPersistenceMode = 'remote-libsql' | 'local-sqlite' | 'missing';
+export type PoolPersistenceMode = 'cloud-firestore' | 'remote-libsql' | 'local-sqlite' | 'missing';
 
 export interface PoolPersistenceStatus {
   mode: PoolPersistenceMode;
@@ -19,7 +19,7 @@ export function getPoolPersistenceStatus(): PoolPersistenceStatus {
       ready: true,
       durable: true,
       label: 'Base persistente remota',
-      detail: 'DATABASE_URL remoto configurado para compartir quiniela entre dispositivos.',
+      detail: 'DATABASE_URL remoto configurado para datos operativos.',
     };
   }
 
@@ -30,7 +30,7 @@ export function getPoolPersistenceStatus(): PoolPersistenceStatus {
       durable: !process.env.VERCEL,
       label: process.env.VERCEL ? 'SQLite local temporal' : 'SQLite local',
       detail: process.env.VERCEL
-        ? 'En Vercel se recomienda DATABASE_URL remoto; el filesystem de funciones no es una base familiar durable.'
+        ? 'En Vercel el filesystem de funciones es temporal; la quiniela familiar usa Cloud Firestore.'
         : `Usando ${resolveDbFilePath()}`,
     };
   }
@@ -40,7 +40,7 @@ export function getPoolPersistenceStatus(): PoolPersistenceStatus {
     ready: false,
     durable: false,
     label: 'Base pendiente',
-    detail: 'Configura DATABASE_URL remoto o corre pnpm db:migrate en local antes de sincronizar quinielas.',
+    detail: 'Base local opcional no inicializada; corre pnpm db:migrate si necesitas SQLite en desarrollo.',
   };
 }
 
