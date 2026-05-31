@@ -53,6 +53,10 @@ import {
   Users,
   X,
   Mic,
+  Share2,
+  Camera,
+  Volume2,
+  VolumeX,
   type LucideIcon,
 } from 'lucide-react';
 import type { CSSProperties } from 'react';
@@ -62,6 +66,8 @@ const REGISTRY: Record<string, LucideIcon> = {
   calendar: CalendarDays,
   teams: Shield,
   mic: Mic,
+  share: Share2,
+  camera: Camera,
   players: Users,
   standings: ListOrdered,
   bracket: Network,
@@ -112,6 +118,8 @@ const REGISTRY: Record<string, LucideIcon> = {
   crosshair: Crosshair,
   activity: Activity,
   database: Database,
+  volume: Volume2,
+  mute: VolumeX,
 };
 
 export type IconName = keyof typeof REGISTRY | (string & {});

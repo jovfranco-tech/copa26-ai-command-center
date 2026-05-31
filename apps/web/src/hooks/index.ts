@@ -87,3 +87,5 @@ export function useSyncStatus() {
 export function useAsset(assetId: string | null | undefined): string | null {
   return assetUrl(assetId);
 }
+
+export { useHolographicTilt } from './useHolographicTilt';

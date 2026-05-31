@@ -2677,3 +2677,113 @@ body {
   border-radius: 2px;
   transition: width 0.3s linear;
 }
+
+/* --- Holographic Shiny Card Effects --- */
+.holographic-card {
+  position: relative;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.holographic-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--sheen-x, 50%) var(--sheen-y, 50%),
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(201, 162, 75, 0.2) 30%,
+    transparent 80%
+  );
+  opacity: var(--sheen-opacity, 0);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+/* P2P Sync Radar Animation */
+.radar-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(201, 162, 75, 0.15);
+  border: 1px solid var(--gold-line);
+  animation: radar-pulse-anim 3s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes radar-pulse-anim {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 320px;
+    height: 320px;
+    opacity: 0;
+  }
+}
+
+/* Scroll-Driven Parallax Timeline Animations */
+@supports (animation-timeline: view()) {
+  .tl-ev {
+    animation: reveal-timeline-event linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 30%;
+  }
+
+  @keyframes reveal-timeline-event {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .tl-card.right {
+    animation: slide-in-left linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
+  }
+
+  .tl-card:not(.right) {
+    animation: slide-in-right linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
+  }
+
+  @keyframes slide-in-left {
+    0% {
+      transform: translateX(-40px);
+      filter: blur(4px);
+    }
+    100% {
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes slide-in-right {
+    0% {
+      transform: translateX(40px);
+      filter: blur(4px);
+    }
+    100% {
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+}

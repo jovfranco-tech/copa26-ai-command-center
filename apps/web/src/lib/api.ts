@@ -273,3 +273,27 @@ export async function syncPoolPicks(playerName: string, picks: Record<string, Po
 /** Build a same-origin URL to a locally-stored asset (served only by the API). */
 export const assetUrl = (assetId: string | null | undefined): string | null =>
   assetId ? `${BASE}/assets/${assetId}` : null;
+
+export interface AIScanResult {
+  ok: boolean;
+  predictions?: Record<string, { homeGoals: number; awayGoals: number; outcome: 'home' | 'draw' | 'away' }>;
+  reason?: string;
+}
+
+export async function scanPoolPaper(
+  base64Image: string,
+  matches: Array<{ id: string; home: string; away: string; homeName: string; awayName: string }>,
+): Promise<AIScanResult> {
+  try {
+    const res = await fetch('/api/pool-scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: base64Image, matches }),
+    });
+    const data = (await res.json().catch(() => ({}))) as AIScanResult;
+    if (!res.ok) return { ok: false, reason: data.reason ?? `http-${res.status}` };
+    return data;
+  } catch {
+    return { ok: false, reason: 'network' };
+  }
+}

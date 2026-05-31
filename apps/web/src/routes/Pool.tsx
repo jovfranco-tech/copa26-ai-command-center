@@ -7,8 +7,11 @@ import { useMatches, useTeamsMap } from '@/hooks';
 import { usePool, type PoolOutcome } from '@/store/pool';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchPoolPicks, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { QuinielaScanner } from '@/components/QuinielaScanner';
+import { P2PSyncPanel } from '@/components/P2PSyncPanel';
+import { RetoRelampago } from '@/components/RetoRelampago';
 
 const playTick = () => {
   try {
@@ -123,6 +126,126 @@ export function Pool() {
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
+
+  const shareLeaderboardLogro = async () => {
+    const userRow = leaderboard.find((row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase());
+    if (!userRow) {
+      alert('Asegúrate de registrar tu nombre en el perfil para compartir tu puesto.');
+      return;
+    }
+
+    const rankIndex = leaderboard.findIndex((row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase());
+    const rankNum = rankIndex + 1;
+    const medal = rankNum === 1 ? '🥇' : rankNum === 2 ? '🥈' : rankNum === 3 ? '🥉' : '';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Draw premium glassmorphic background with gold border
+    const gradient = ctx.createLinearGradient(0, 0, 600, 400);
+    gradient.addColorStop(0, '#0f0f0f');
+    gradient.addColorStop(0.5, '#1e1a12');
+    gradient.addColorStop(1, '#0a0a0a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 600, 400);
+
+    ctx.strokeStyle = '#c9a24b';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(10, 10, 580, 380);
+
+    ctx.strokeStyle = 'rgba(201, 162, 75, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(15, 15, 570, 370);
+
+    ctx.fillStyle = '#c9a24b';
+    ctx.font = 'bold 20px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('COPA MUNDIAL DE LA FIFA 2026', 300, 50);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px monospace';
+    ctx.fillText('QUINIELA FAMILIAR OFICIAL DE GALA', 300, 70);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+    ctx.beginPath();
+    ctx.roundRect(50, 100, 500, 200, 15);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText(`${userRow.playerName}`, 300, 145);
+
+    ctx.fillStyle = '#c9a24b';
+    ctx.font = 'bold 24px monospace';
+    ctx.fillText(`${medal} PUESTO Nº ${rankNum} ${medal ? '' : 'º'}`, 300, 185);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px monospace';
+    ctx.fillText('PUNTOS', 150, 230);
+    ctx.fillText('EFECTIVIDAD', 300, 230);
+    ctx.fillText('PLENOS (+3)', 450, 230);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px sans-serif';
+    ctx.fillText(`${userRow.points}`, 150, 270);
+    ctx.fillText(`${userRow.efficiency}%`, 300, 270);
+    ctx.fillText(`${userRow.exactScores}`, 450, 270);
+
+    ctx.fillStyle = 'rgba(201, 162, 75, 0.6)';
+    ctx.font = 'italic 11px sans-serif';
+    ctx.fillText('¡Desafía a tu familia en tiempo real en la quiniela!', 300, 340);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('✨ Quiniela IA Native ✨', 300, 365);
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], 'Quiniela_Gala_Logro.png', { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Mi Logro en la Quiniela FIFA 2026',
+            text: `¡Voy en el puesto ${rankNum}º con ${userRow.points} puntos en la quiniela familiar! ¿Quién me supera? ⚽🏆`,
+          });
+          if ('vibrate' in navigator) navigator.vibrate([15]);
+        } catch (err) {
+          console.log('Share canceled or failed', err);
+        }
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Quiniela_Logro_${userRow.playerName}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        if ('vibrate' in navigator) navigator.vibrate([15]);
+        alert('Tu tarjeta de gala se ha descargado con éxito. ¡Compártela en tus redes favoritas!');
+      }
+    }, 'image/png');
+  };
+
+  const handleP2PSyncComplete = async (peerName: string, peerPicks: any) => {
+    try {
+      const docRef = doc(db, 'poolPicks', peerName);
+      await setDoc(docRef, {
+        picks: peerPicks,
+        updatedAt: new Date().toISOString(),
+      });
+      playSuccessTick();
+    } catch (e) {
+      console.error('Failed to save peer picks to Firestore:', e);
+    }
+  };
 
   // Load existing picks from DB when the participant name changes
   useEffect(() => {
@@ -651,6 +774,23 @@ export function Pool() {
         </div>
       </div>
 
+      {pool.playerName && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 18 }}>
+          <P2PSyncPanel
+            playerName={pool.playerName}
+            picks={pool.picks}
+            onSyncComplete={handleP2PSyncComplete}
+          />
+          {upcomingMatches.length > 0 && (
+            <RetoRelampago
+              playerName={pool.playerName}
+              activeMatchId={upcomingMatches[0].id}
+              activeMatchName={`${upcomingMatches[0].home} vs ${upcomingMatches[0].away}`}
+            />
+          )}
+        </div>
+      )}
+
       {activeTab === 'predict' ? (
         <div className="pool-summary">
           <SummaryTile icon="check" label="Partidos elegidos" value={`${pickedPending}/${upcomingMatches.length}`} />
@@ -672,6 +812,10 @@ export function Pool() {
             <button type="button" className="btn ghost" onClick={() => window.print()} title="Imprimir reporte oficial de gala en PDF">
               <Icon name="print" size={15} />
               Imprimir PDF
+            </button>
+            <button type="button" className="btn ghost animate-fade-in" onClick={() => setShowScanner(true)} title="Escanear quiniela física manuscrita con cámara">
+              <Icon name="camera" size={15} style={{ color: 'var(--gold)' }} />
+              Escanear Papel
             </button>
           </div>
         </div>
@@ -788,10 +932,22 @@ export function Pool() {
 
       {activeTab === 'results' && (
         <div className="copilot-section" style={{ marginBottom: 24 }}>
-          <div className="row gap-8" style={{ alignItems: 'center' }}>
-            <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Ranking Familiar (Leaderboard)</h3>
-            <span className="badge gold">Compartido</span>
+          <div className="row spread align-center animate-fade-in" style={{ marginBottom: 6 }}>
+            <div className="row gap-8 align-center">
+              <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Ranking Familiar (Leaderboard)</h3>
+              <span className="badge gold">Compartido</span>
+            </div>
+            {leaderboard.length > 0 && (
+              <button
+                type="button"
+                className="btn gold btn-sm"
+                style={{ height: 26, fontSize: 11, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 4 }}
+                onClick={shareLeaderboardLogro}
+              >
+                <Icon name="share" size={11} /> Compartir Logro
+              </button>
+            )}
           </div>
           <p className="muted" style={{ margin: '0 0 12px 0', fontSize: 12 }}>
             Puntuaciones en tiempo real de todos los participantes basándose en los resultados de la base de datos local SQLite.
@@ -874,6 +1030,22 @@ export function Pool() {
             <PoolMatch key={m.id} match={m} homeName={teams[m.home]?.name ?? m.home} awayName={teams[m.away]?.name ?? m.away} />
           ))}
         </div>
+      )}
+
+      {showScanner && (
+        <QuinielaScanner
+          onClose={() => setShowScanner(false)}
+          onScanSuccess={(predictions) => {
+            pool.importPicks(predictions);
+          }}
+          matches={upcomingMatches.map((m) => ({
+            id: m.id,
+            home: m.home,
+            away: m.away,
+            homeName: teams[m.home]?.name ?? m.home,
+            awayName: teams[m.away]?.name ?? m.away,
+          }))}
+        />
       )}
     </div>
   );
