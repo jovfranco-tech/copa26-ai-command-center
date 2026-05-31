@@ -18,9 +18,9 @@ interface MatchExtract {
 async function main() {
   console.log('🤖 Iniciando Ingesta Inteligente de Visión (AI Vision Ingest)...');
 
-  const key = process.env.OPENAI_API_KEY;
+  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
   if (!key) {
-    console.error('❌ Error: La variable de entorno OPENAI_API_KEY no está configurada.');
+    console.error('❌ Error: Ni GEMINI_API_KEY ni OPENAI_API_KEY están configuradas en el entorno.');
     process.exit(1);
   }
 
@@ -78,67 +78,69 @@ async function main() {
       const mimeType = getMimeType(filename);
       const base64Image = imageBuffer.toString('base64');
 
-      console.log('🧠 Enviando captura a GPT-4o Vision...');
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      console.log('🧠 Enviando captura a Gemini 1.5 Flash Vision...');
+      const systemPrompt =
+        "Eres un transcriptor experto en partidos y estadísticas de fútbol de la Copa del Mundo.\n" +
+        "Tu objetivo es leer la captura de pantalla provista (que puede ser un marcador de televisión, reporte web, tabla o gráfico de estadísticas) " +
+        "e identificar cuál partido de la lista corresponde a la captura y extraer con precisión los marcadores y estadísticas.\n" +
+        "Debes devolver un objeto JSON estructurado estrictamente con este formato:\n" +
+        "{\n" +
+        "  \"matchFifaId\": \"fifaId del partido coincidente\",\n" +
+        "  \"status\": \"FT\" | \"LIVE\",\n" +
+        "  \"homeGoals\": number,\n" +
+        "  \"awayGoals\": number,\n" +
+        "  \"possessionHome\": number (0-100, opcional),\n" +
+        "  \"shotsHome\": number (opcional),\n" +
+        "  \"shotsAway\": number (opcional),\n" +
+        "  \"shotsTargetHome\": number (opcional),\n" +
+        "  \"shotsTargetAway\": number (opcional)\n" +
+        "}\n" +
+        "Busca coincidencias lógicas: si la captura dice 'ARG 2-1 FRA', asócialo al partido donde juega Argentina (ARG) contra Francia (FRA). " +
+        "No agregues texto explicativo, responde únicamente con el objeto JSON.";
+
+      const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${key}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4o',
-          temperature: 0.1,
-          response_format: { type: 'json_object' },
-          messages: [
-            {
-              role: 'system',
-              content:
-                "Eres un transcriptor experto en partidos y estadísticas de fútbol de la Copa del Mundo.\n" +
-                "Tu objetivo es leer la captura de pantalla provista (que puede ser un marcador de televisión, reporte web, tabla o gráfico de estadísticas) " +
-                "e identificar cuál partido de la lista corresponde a la captura y extraer con precisión los marcadores y estadísticas.\n" +
-                "Debes devolver un objeto JSON estructurado estrictamente con este formato:\n" +
-                "{\n" +
-                "  \"matchFifaId\": \"fifaId del partido coincidente\",\n" +
-                "  \"status\": \"FT\" | \"LIVE\",\n" +
-                "  \"homeGoals\": number,\n" +
-                "  \"awayGoals\": number,\n" +
-                "  \"possessionHome\": number (0-100, opcional),\n" +
-                "  \"shotsHome\": number (opcional),\n" +
-                "  \"shotsAway\": number (opcional),\n" +
-                "  \"shotsTargetHome\": number (opcional),\n" +
-                "  \"shotsTargetAway\": number (opcional)\n" +
-                "}\n" +
-                "Busca coincidencias lógicas: si la captura dice 'ARG 2-1 FRA', asócialo al partido donde juega Argentina (ARG) contra Francia (FRA). " +
-                "No agregues texto explicativo, responde únicamente con el objeto JSON.",
-            },
+          systemInstruction: {
+            parts: [{ text: systemPrompt }]
+          },
+          contents: [
             {
               role: 'user',
-              content: [
+              parts: [
                 {
-                  type: 'text',
-                  text: `LISTA DE PARTIDOS EN BASE DE DATOS:\n${JSON.stringify(matchContext, null, 2)}`,
+                  text: `LISTA DE PARTIDOS EN BASE DE DATOS:\n${JSON.stringify(matchContext, null, 2)}`
                 },
                 {
-                  type: 'image_url',
-                  image_url: {
-                    url: `data:${mimeType};base64,${base64Image}`,
-                  },
-                },
-              ],
-            },
+                  inlineData: {
+                    mimeType: mimeType,
+                    data: base64Image
+                  }
+                }
+              ]
+            }
           ],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: 'application/json',
+          }
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
       }
 
-      const resData = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
-      const jsonText = resData.choices?.[0]?.message?.content?.trim() ?? '';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resData = (await response.json()) as any;
+      const jsonText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
 
       if (!jsonText) {
-        throw new Error('Respuesta vacía de OpenAI');
+        throw new Error('Respuesta vacía de Gemini');
       }
 
       const parsed = JSON.parse(jsonText) as MatchExtract;

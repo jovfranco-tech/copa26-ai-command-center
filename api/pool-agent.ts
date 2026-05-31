@@ -105,7 +105,7 @@ export default async function handler(request: Request): Promise<Response> {
     );
   }
 
-  const key = process.env.OPENAI_API_KEY;
+  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
   if (!key) return Response.json({ ok: false, reason: 'no-key' });
 
   let body: { agent?: 'optimista' | 'stats' | 'contrarian'; matches?: MatchInput[] };
@@ -131,18 +131,25 @@ export default async function handler(request: Request): Promise<Response> {
   const userContent = `NOTICIAS Y REPORTE DE ÚLTIMA HORA (RAG DE CONTEXTO REAL):\n${relevantNews.map((n) => `- ${n}`).join('\n')}\n\nPARTIDOS A PRONOSTICAR:\n${JSON.stringify(matches, null, 2)}\n\nUtiliza la información del reporte táctico de última hora para influenciar directamente tus predicciones de marcadores y tu breve informe táctico ("brief"). Por ejemplo, si un jugador clave está lesionado o suspendido, o si llueve torrencialmente, ajusta los goles de forma lógica y coméntalo brevemente en tu brief.`;
 
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-        temperature: 0.7,
-        max_tokens: 1500,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userContent },
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: userContent }]
+          }
         ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1500,
+          responseMimeType: 'application/json',
+        }
       }),
     });
 
@@ -150,8 +157,9 @@ export default async function handler(request: Request): Promise<Response> {
       return Response.json({ ok: false, reason: 'api-error', status: res.status }, { status: 502 });
     }
 
-    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
-    const content = data.choices?.[0]?.message?.content?.trim() ?? '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = (await res.json()) as any;
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
     if (!content) return Response.json({ ok: false, reason: 'empty-answer' }, { status: 502 });
 
     try {
@@ -161,7 +169,8 @@ export default async function handler(request: Request): Promise<Response> {
       console.error('Failed to parse AI agent predictions JSON', e, content);
       return Response.json({ ok: false, reason: 'parse-failed', raw: content }, { status: 502 });
     }
-  } catch {
+  } catch (e) {
+    console.error('Gemini API fetch error in pool-agent:', e);
     return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });
   }
 }

@@ -52,7 +52,7 @@ export default async function handler(request: Request): Promise<Response> {
     );
   }
 
-  const key = process.env.OPENAI_API_KEY;
+  const key = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
   if (!key) return Response.json({ ok: false, reason: 'no-key' });
 
   let body: { question?: string; context?: string };
@@ -67,27 +67,36 @@ export default async function handler(request: Request): Promise<Response> {
   if (!question) return Response.json({ ok: false, reason: 'empty' }, { status: 400 });
 
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-        temperature: 0.3,
-        max_tokens: 450,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
+        systemInstruction: {
+          parts: [{ text: SYSTEM_PROMPT }]
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` }]
+          }
         ],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 450,
+        }
       }),
     });
     if (!res.ok) {
       return Response.json({ ok: false, reason: 'api-error', status: res.status }, { status: 502 });
     }
-    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
-    const answer = data.choices?.[0]?.message?.content?.trim() ?? '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = (await res.json()) as any;
+    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
     if (!answer) return Response.json({ ok: false, reason: 'empty-answer' }, { status: 502 });
     return Response.json({ ok: true, answer });
-  } catch {
+  } catch (e) {
+    console.error('Gemini API fetch error:', e);
     return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });
   }
 }
