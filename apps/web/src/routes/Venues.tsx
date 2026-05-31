@@ -4,6 +4,7 @@ import { fmtInt, fmtDay } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { downloadedVenuePhotoExts, matchWeather, venueExtras, venuePhotoCredits } from '@/generated/intelPacks';
+import { venueGalleryImages } from '@/generated/venueGallery';
 import { useAsset, useMatches, useVenues } from '@/hooks';
 import { venueImage } from '@/lib/venueImages';
 
@@ -47,6 +48,7 @@ export function Venues() {
                   <Meta label="Lat/Lon" value={formatCoords(v.id)} />
                   <Meta label="Clima" value={weatherLabel(fixtures[0]?.id)} />
                 </div>
+                <VenueGallery id={v.id} city={v.city} />
                 <button
                   type="button"
                   className="btn ghost btn-sm"
@@ -86,6 +88,20 @@ export function Venues() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function VenueGallery({ id, city }: { id: string; city: string }) {
+  const images = venueGalleryImages[id] ?? [];
+  if (!images.length) return null;
+  return (
+    <div className="venue-gallery-strip">
+      {images.map((image, index) => (
+        <a key={image.src} href={image.page} target="_blank" rel="noreferrer" title={image.source}>
+          <img src={image.src} alt={`${city} ${index + 1}`} loading="lazy" decoding="async" />
+        </a>
+      ))}
     </div>
   );
 }

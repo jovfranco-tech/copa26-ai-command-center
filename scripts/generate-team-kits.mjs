@@ -9,12 +9,18 @@ const privateKitsDir = join(repoRoot, 'private-assets', 'kits');
 const staticKitsDir = join(repoRoot, 'apps', 'web', 'static', 'team-kits');
 const generatedFile = join(repoRoot, 'apps', 'web', 'src', 'generated', 'teamKits.ts');
 const downloadEnabled = process.env.TEAM_KIT_DOWNLOAD === '1';
+const downloadDir = process.env.TEAM_KIT_DOWNLOAD_STATIC === '1' ? staticKitsDir : privateKitsDir;
 const downloadLimit = Number(process.env.TEAM_KIT_DOWNLOAD_LIMIT ?? 0);
 const minDelayMs = Math.max(1000, Number(process.env.TEAM_KIT_MIN_DELAY_MS ?? 2500));
 const maxDelayMs = Math.max(minDelayMs, Number(process.env.TEAM_KIT_MAX_DELAY_MS ?? 6000));
 const userAgent =
   process.env.INGEST_USER_AGENT ??
   'FIFA-Private-Dashboard/0.1 (personal local research; Wikimedia kit resolver)';
+const KIT_VARIANTS = [
+  { id: 'home', slot: '1', fallbackColor: 'colorA' },
+  { id: 'away', slot: '2', fallbackColor: 'colorB' },
+  { id: 'third', slot: '3', fallbackColor: 'colorA' },
+];
 
 const TEAM_PAGES = {
   ALG: 'Algeria national football team',
@@ -79,7 +85,7 @@ writeGeneratedFile(resolutions);
 writeFileSync(cacheFile, `${JSON.stringify(resolutions, null, 2)}\n`);
 
 console.log(
-  `[generate-team-kits] wrote ${resolutions.filter((r) => r.status === 'resolved').length} kit fallbacks and ${Object.keys(readDownloadedKitExts()).length} local kit entries.`,
+  `[generate-team-kits] wrote ${resolutions.filter((r) => r.status === 'resolved').length} kit fallbacks and ${countDownloadedKitVariants()} local kit variant entries.`,
 );
 
 function readCache() {
@@ -96,38 +102,74 @@ async function resolveTeamKits() {
     const requestedTitle = TEAM_PAGES[team.code];
     const page = requestedTitle ? pageByTitle.get(requestedTitle) : null;
     const fields = parseKitFields(page?.content ?? '');
-    const patternBody = normalizePattern(fields.pattern_b1);
-    const bodyColor = normalizeColor(fields.body1, team.colorA);
+    const variants = Object.fromEntries(
+      KIT_VARIANTS.map((variant) => {
+        const patternBody = normalizePattern(fields[`pattern_b${variant.slot}`]);
+        const bodyColor = normalizeColor(fields[`body${variant.slot}`], team[variant.fallbackColor] ?? team.colorA);
+        return [
+          variant.id,
+          {
+            variant: variant.id,
+            status: patternBody ? 'resolved' : 'missing',
+            patternBody,
+            bodyColor,
+            fileTitle: patternBody ? `File:Kit body ${patternBody}.png` : null,
+            sourceUrl: null,
+            sourcePage: null,
+            mimeType: null,
+          },
+        ];
+      }),
+    );
+    const home = variants.home;
     return {
       teamId: team.code,
       teamName: team.name,
       pageTitle: page?.title ?? requestedTitle ?? null,
       pageUrl: page?.title ? `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replaceAll(' ', '_'))}` : null,
-      status: patternBody || bodyColor ? 'resolved' : 'missing',
-      patternBody,
-      bodyColor,
-      fileTitle: patternBody ? `File:Kit body ${patternBody}.png` : null,
+      status: home.status,
+      patternBody: home.patternBody,
+      bodyColor: home.bodyColor,
+      fileTitle: home.fileTitle,
       sourceUrl: null,
       sourcePage: null,
       mimeType: null,
+      variants,
       resolvedAt: new Date().toISOString(),
     };
   });
 
   const imageMap = await resolveCommonsImages(
-    initial.map((item) => item.fileTitle).filter((title) => title),
+    initial.flatMap((item) => Object.values(item.variants).map((variant) => variant.fileTitle).filter((title) => title)),
   );
 
   return initial.map((item) => {
-    if (!item.fileTitle) return item;
-    const image = imageMap.get(item.fileTitle);
-    if (!image?.url) return { ...item, status: 'missing' };
+    const variants = Object.fromEntries(
+      Object.entries(item.variants).map(([variantId, variant]) => {
+        if (!variant.fileTitle) return [variantId, variant];
+        const image = imageMap.get(variant.fileTitle);
+        if (!image?.url) return [variantId, { ...variant, status: 'missing' }];
+        const filename = variant.fileTitle.replace(/^File:/, '');
+        return [
+          variantId,
+          {
+            ...variant,
+            status: 'resolved',
+            sourceUrl: commonsFilePath(filename, 256),
+            sourcePage: image.descriptionurl ?? null,
+            mimeType: image.mime ?? null,
+          },
+        ];
+      }),
+    );
+    const home = variants.home;
     return {
       ...item,
-      status: 'resolved',
-      sourceUrl: image.url,
-      sourcePage: image.descriptionurl ?? null,
-      mimeType: image.mime ?? null,
+      status: home?.status ?? 'missing',
+      sourceUrl: home?.sourceUrl ?? null,
+      sourcePage: home?.sourcePage ?? null,
+      mimeType: home?.mimeType ?? null,
+      variants,
     };
   });
 }
@@ -191,7 +233,7 @@ async function resolveCommonsImages(titles) {
 function parseKitFields(wikitext) {
   const fields = {};
   for (const line of wikitext.split('\n')) {
-    const match = line.match(/^\|\s*([a-z_]+1)\s*=\s*(.*?)\s*$/i);
+    const match = line.match(/^\|\s*([a-z_]+[1-9])\s*=\s*(.*?)\s*$/i);
     if (!match) continue;
     fields[match[1].toLowerCase()] = cleanWikiValue(match[2]);
   }
@@ -219,26 +261,25 @@ function normalizeColor(value, fallback) {
 }
 
 async function downloadTeamKits(items) {
-  mkdirSync(privateKitsDir, { recursive: true });
-  const resolved = items.filter((item) => item.status === 'resolved' && item.sourceUrl);
+  mkdirSync(downloadDir, { recursive: true });
+  const resolved = items.flatMap((item) =>
+    Object.values(item.variants ?? {})
+      .filter((variant) => variant.status === 'resolved' && variant.sourceUrl)
+      .map((variant) => ({ ...variant, teamId: item.teamId })),
+  );
   const selected = Number.isFinite(downloadLimit) && downloadLimit > 0 ? resolved.slice(0, downloadLimit) : resolved;
   let downloaded = 0;
   for (const item of selected) {
     const ext = extname(new URL(item.sourceUrl).pathname).slice(1).toLowerCase() || 'png';
-    const target = join(privateKitsDir, `${item.teamId}.${ext}`);
+    const basename = item.variant === 'home' ? item.teamId : `${item.teamId}-${item.variant}`;
+    const target = join(downloadDir, `${basename}.${ext}`);
     if (existsSync(target) && process.env.TEAM_KIT_FORCE_DOWNLOAD !== '1') continue;
     await politeDelay();
-    const res = await fetch(item.sourceUrl, { headers: { 'user-agent': userAgent } });
-    if (res.status === 429) {
-      const retryAfter = res.headers.get('retry-after');
-      throw new Error(
-        `Wikimedia rate-limited kit downloads at ${item.teamId}${retryAfter ? `; retry after ${retryAfter}s` : ''}.`,
-      );
-    }
+    const res = await fetchWithRetry(item.sourceUrl, `kit:${item.teamId}:${item.variant}`);
     if (!res.ok) throw new Error(`Kit download failed for ${item.teamId}: HTTP ${res.status}`);
     writeFileSync(target, Buffer.from(await res.arrayBuffer()));
     downloaded++;
-    console.log(`[generate-team-kits] downloaded ${item.teamId} -> private-assets/kits/${item.teamId}.${ext}`);
+    console.log(`[generate-team-kits] downloaded ${item.teamId}:${item.variant} -> ${target.replace(`${repoRoot}/`, '')}`);
   }
   console.log(`[generate-team-kits] downloaded ${downloaded} kit image${downloaded === 1 ? '' : 's'}.`);
 }
@@ -251,15 +292,61 @@ function readDownloadedKitExts() {
       const ext = extname(file).slice(1).toLowerCase();
       if (!['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext)) continue;
       const code = file.slice(0, -ext.length - 1);
-      if (code) entries[code] = ext;
+      if (/^[A-Z]{3}$/.test(code)) entries[code] = ext;
     }
   }
   return Object.fromEntries(Object.entries(entries).sort(([a], [b]) => a.localeCompare(b)));
 }
 
+function readDownloadedKitVariantExts() {
+  const variants = {};
+  for (const dir of [privateKitsDir, staticKitsDir]) {
+    if (!existsSync(dir)) continue;
+    for (const file of readdirSync(dir)) {
+      const ext = extname(file).slice(1).toLowerCase();
+      if (!['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext)) continue;
+      const id = file.slice(0, -ext.length - 1);
+      const match = id.match(/^([A-Z]{3})-(home|away|third|gk)$/);
+      if (match) {
+        variants[match[1]] = { ...(variants[match[1]] ?? {}), [match[2]]: ext };
+        continue;
+      }
+      if (/^[A-Z]{3}$/.test(id)) {
+        variants[id] = { ...(variants[id] ?? {}), home: ext };
+      }
+    }
+  }
+  return Object.fromEntries(Object.entries(variants).sort(([a], [b]) => a.localeCompare(b)));
+}
+
+function countDownloadedKitVariants() {
+  return Object.values(readDownloadedKitVariantExts()).reduce((sum, variants) => sum + Object.keys(variants).length, 0);
+}
+
 function writeGeneratedFile(items) {
   mkdirSync(dirname(generatedFile), { recursive: true });
   const downloadedTeamKitExts = readDownloadedKitExts();
+  const downloadedTeamKitVariantExts = readDownloadedKitVariantExts();
+  const teamKitVariants = Object.fromEntries(
+    items
+      .map((item) => [
+        item.teamId,
+        Object.fromEntries(
+          Object.entries(item.variants ?? {})
+            .filter(([, variant]) => variant.status === 'resolved' && variant.sourceUrl)
+            .map(([variantId, variant]) => [
+              variantId,
+              {
+                src: variant.sourceUrl,
+                page: variant.sourcePage ?? item.pageUrl ?? undefined,
+                bodyColor: variant.bodyColor,
+              },
+            ]),
+        ),
+      ])
+      .filter(([, variants]) => Object.keys(variants).length > 0)
+      .sort(([a], [b]) => a.localeCompare(b)),
+  );
   const teamKitFallbacks = Object.fromEntries(
     items
       .filter((item) => item.status === 'resolved' && item.sourceUrl)
@@ -275,6 +362,7 @@ function writeGeneratedFile(items) {
   );
   const file = `// Generated by scripts/generate-team-kits.mjs. Do not edit manually.
 export type TeamKitExt = 'png' | 'jpg' | 'jpeg' | 'webp' | 'svg';
+export type TeamKitVariant = 'home' | 'away' | 'third' | 'gk';
 
 export interface TeamKitFallback {
   src: string;
@@ -284,7 +372,11 @@ export interface TeamKitFallback {
 
 export const downloadedTeamKitExts: Record<string, TeamKitExt> = ${JSON.stringify(downloadedTeamKitExts, null, 2)};
 
+export const downloadedTeamKitVariantExts: Record<string, Partial<Record<TeamKitVariant, TeamKitExt>>> = ${JSON.stringify(downloadedTeamKitVariantExts, null, 2)};
+
 export const teamKitFallbacks: Record<string, TeamKitFallback> = ${JSON.stringify(teamKitFallbacks, null, 2)};
+
+export const teamKitVariants: Record<string, Partial<Record<TeamKitVariant, TeamKitFallback>>> = ${JSON.stringify(teamKitVariants, null, 2)};
 `;
   writeFileSync(generatedFile, file);
 }
@@ -295,10 +387,31 @@ async function fetchJson(url) {
   return res.json();
 }
 
+async function fetchWithRetry(url, label) {
+  let res = null;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    res = await fetch(url, { headers: { 'user-agent': userAgent } });
+    if (res.status === 429 || res.status === 503) {
+      const retryAfter = Number(res.headers.get('retry-after') ?? 0);
+      if (retryAfter >= 120) throw new Error(`Wikimedia rate-limited ${label}; retry after ${retryAfter}s.`);
+      const waitMs = retryAfter > 0 ? retryAfter * 1000 : (attempt + 1) * 10_000;
+      console.warn(`[generate-team-kits] HTTP ${res.status} for ${label}; retrying in ${waitMs}ms`);
+      await sleep(waitMs);
+      continue;
+    }
+    return res;
+  }
+  return res;
+}
+
 function chunks(values, size) {
   const out = [];
   for (let i = 0; i < values.length; i += size) out.push(values.slice(i, i + size));
   return out;
+}
+
+function commonsFilePath(filename, width) {
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=${width}`;
 }
 
 async function politeDelay() {

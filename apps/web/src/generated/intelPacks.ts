@@ -50,26 +50,26 @@ export interface MatchWeather {
   note: string;
 }
 
-export const intelGeneratedAt = "2026-05-31T20:31:14.561Z";
+export const intelGeneratedAt = "2026-05-31T21:35:05.224Z";
 
 export const intelDataPacks: IntelDataPack[] = [
   {
     "id": "player-photos",
     "label": "Fotos de jugadores",
-    "status": "ready",
-    "count": 154,
+    "status": "partial",
+    "count": 236,
     "total": 240,
     "source": "Wikimedia Commons / Wikipedia",
-    "note": "WebP locales disponibles; los jugadores restantes usan fallback remoto libre cuando existe."
+    "note": "236 fotos libres localizadas ya estan en WebP local; faltan 4 jugadores sin fuente libre identificada."
   },
   {
     "id": "coach-profiles",
     "label": "Entrenadores",
-    "status": "ready",
-    "count": 48,
+    "status": "partial",
+    "count": 44,
     "total": 48,
     "source": "Wikipedia / Wikimedia Commons",
-    "note": "Nombre y foto pública cuando Wikipedia expone imagen libre."
+    "note": "48/48 perfiles resueltos; 44 fotos locales cuando Wikipedia expone imagen libre."
   },
   {
     "id": "squad-status",
@@ -83,20 +83,20 @@ export const intelDataPacks: IntelDataPack[] = [
   {
     "id": "venue-photos",
     "label": "Fotos de estadios",
-    "status": "partial",
-    "count": 3,
+    "status": "ready",
+    "count": 16,
     "total": 16,
     "source": "Wikimedia Commons",
-    "note": "Locales: 3. El resto usa fallback remoto de Wikimedia hasta poder descargarse sin rate-limit."
+    "note": "Las 16 sedes estan optimizadas localmente para Vercel."
   },
   {
     "id": "kit-variants",
-    "label": "Uniformes home/away/GK",
+    "label": "Uniformes home/away/third",
     "status": "partial",
-    "count": 46,
-    "total": 48,
+    "count": 100,
+    "total": 144,
     "source": "Wikipedia kit templates / assets manuales oficiales",
-    "note": "Home kit disponible; away/GK quedan como slots de actualización segura."
+    "note": "Home y away descargados cuando Commons los expone; tercer kit parcial. GK queda como slot privado/manual."
   },
   {
     "id": "weather",
@@ -115,6 +115,15 @@ export const intelDataPacks: IntelDataPack[] = [
     "total": 16,
     "source": "Sedes del torneo",
     "note": "Lat/lon, zona UTC, Wikidata y Wikipedia por sede."
+  },
+  {
+    "id": "venue-gallery",
+    "label": "Galerías de sedes",
+    "status": "partial",
+    "count": 5,
+    "total": 48,
+    "source": "Wikimedia Commons",
+    "note": "Miniaturas locales adicionales; pausado cuando Wikimedia aplica rate-limit."
   },
   {
     "id": "head-to-head",
@@ -147,10 +156,10 @@ export const intelDataPacks: IntelDataPack[] = [
     "id": "official-commercial-assets",
     "label": "Assets comerciales oficiales",
     "status": "manual",
-    "count": 0,
+    "count": 3,
     "total": 4,
     "source": "Carga manual con permiso/licencia",
-    "note": "No se descargan automaticamente: Trofeo/imagen comercial oficial de FIFA World Cup 26; Balon oficial; Badges comerciales de patrocinio; Cualquier asset FIFA que no tenga licencia abierta o permiso propio."
+    "note": "Marca privada cargada en static/brand; balon/trofeo/badges quedan como carga manual si hay permiso."
   }
 ];
 
@@ -350,12 +359,65 @@ export const venueExtras: Record<string, VenueExtra> = {
 };
 
 export const downloadedVenuePhotoExts: Record<string, 'webp'> = {
+  "van": "webp",
+  "sea": "webp",
+  "sf": "webp",
+  "lax": "webp",
+  "gdl": "webp",
+  "mex": "webp",
+  "mty": "webp",
+  "hou": "webp",
   "dal": "webp",
   "kc": "webp",
-  "atl": "webp"
+  "atl": "webp",
+  "mia": "webp",
+  "tor": "webp",
+  "bos": "webp",
+  "phi": "webp",
+  "nyc": "webp"
 };
 
 export const venuePhotoCredits: Record<string, { src: string; page: string; source: string }> = {
+  "van": {
+    "src": "/venue-photos/van.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:BC%20Place%20Opening%20Day%202011-09-30.jpg",
+    "source": "Wikimedia Commons"
+  },
+  "sea": {
+    "src": "/venue-photos/sea.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Qwest%20Field%20North.jpg",
+    "source": "Wikimedia Commons"
+  },
+  "sf": {
+    "src": "/venue-photos/sf.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Levi's%20Stadium%20interior%201.jpg",
+    "source": "Wikimedia Commons"
+  },
+  "lax": {
+    "src": "/venue-photos/lax.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:SoFi%20Stadium%20(51126606022).jpg",
+    "source": "Wikimedia Commons"
+  },
+  "gdl": {
+    "src": "/venue-photos/gdl.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Estadio%20Omnilife%20Chivas.jpg",
+    "source": "Wikimedia Commons"
+  },
+  "mex": {
+    "src": "/venue-photos/mex.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Vista%20a%C3%A9rea%20del%20Estadio%20Azteca%20-%202026%20-%2002.jpg",
+    "source": "Wikimedia Commons"
+  },
+  "mty": {
+    "src": "/venue-photos/mty.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Mexico%20Guadalupe%20Monterrey%20Estadio%20BBVA%20Bancomer%20fifa%20world%20cup%202026%206.JPG",
+    "source": "Wikimedia Commons"
+  },
+  "hou": {
+    "src": "/venue-photos/hou.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Reliantstadium.jpg",
+    "source": "Wikimedia Commons"
+  },
   "dal": {
     "src": "/venue-photos/dal.webp",
     "page": "https://commons.wikimedia.org/wiki/File:Cowboys%20Stadium%202.jpg",
@@ -370,6 +432,31 @@ export const venuePhotoCredits: Record<string, { src: string; page: string; sour
     "src": "/venue-photos/atl.webp",
     "page": "https://commons.wikimedia.org/wiki/File:Mercedes%20Benz%20Stadium%20time%20lapse%20capture%202017-08-13.jpg",
     "source": "Wikimedia Commons"
+  },
+  "mia": {
+    "src": "/venue-photos/mia.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Hard%20Rock%20Stadium%20for%20Super%20Bowl%20LIV%20(49606707583).jpg",
+    "source": "Wikimedia Commons"
+  },
+  "tor": {
+    "src": "/venue-photos/tor.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:BMO%20Field%20in%202016.png",
+    "source": "Wikimedia Commons"
+  },
+  "bos": {
+    "src": "/venue-photos/bos.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Gillette%20Stadium02.jpg",
+    "source": "Wikimedia Commons"
+  },
+  "phi": {
+    "src": "/venue-photos/phi.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:Philly%20(45).JPG",
+    "source": "Wikimedia Commons"
+  },
+  "nyc": {
+    "src": "/venue-photos/nyc.webp",
+    "page": "https://commons.wikimedia.org/wiki/File:New%20Meadowlands%20Stadium%20Mezz%20Corner.jpg",
+    "source": "Wikimedia Commons"
   }
 };
 
@@ -383,10 +470,10 @@ export const coachProfiles = {
       "name": "Vladimir Petković",
       "pageTitle": "Vladimir Petković",
       "pageUrl": "https://en.wikipedia.org/wiki/Vladimir_Petkovi%C4%87",
-      "photo": null,
+      "photo": "/coach-photos/ALG.webp",
       "source": "https://en.wikipedia.org/wiki/Algeria_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Bosnian football manager (born 1963)"
     },
     "ARG": {
@@ -395,10 +482,10 @@ export const coachProfiles = {
       "name": "Lionel Scaloni",
       "pageTitle": "Lionel Scaloni",
       "pageUrl": "https://en.wikipedia.org/wiki/Lionel_Scaloni",
-      "photo": null,
+      "photo": "/coach-photos/ARG.webp",
       "source": "https://en.wikipedia.org/wiki/Argentina_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Argentine football manager (born 1978)"
     },
     "AUS": {
@@ -407,10 +494,10 @@ export const coachProfiles = {
       "name": "Tony Popovic",
       "pageTitle": "Tony Popovic",
       "pageUrl": "https://en.wikipedia.org/wiki/Tony_Popovic",
-      "photo": null,
+      "photo": "/coach-photos/AUS.webp",
       "source": "https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Australian soccer manager (born 1973)"
     },
     "AUT": {
@@ -419,10 +506,10 @@ export const coachProfiles = {
       "name": "Ralf Rangnick",
       "pageTitle": "Ralf Rangnick",
       "pageUrl": "https://en.wikipedia.org/wiki/Ralf_Rangnick",
-      "photo": null,
+      "photo": "/coach-photos/AUT.webp",
       "source": "https://en.wikipedia.org/wiki/Austria_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "German football manager (born 1958)"
     },
     "BEL": {
@@ -434,7 +521,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/BEL.webp",
       "source": "https://en.wikipedia.org/wiki/Belgium_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "French football manager (born 1964)"
     },
     "BIH": {
@@ -446,7 +533,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/BIH.webp",
       "source": "https://en.wikipedia.org/wiki/Bosnia_and_Herzegovina_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Bosnian football manager (born 1971)"
     },
     "BRA": {
@@ -458,7 +545,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/BRA.webp",
       "source": "https://en.wikipedia.org/wiki/Brazil_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Italian football manager (born 1959)"
     },
     "CAN": {
@@ -470,7 +557,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/CAN.webp",
       "source": "https://en.wikipedia.org/wiki/Canada_men's_national_soccer_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "American soccer coach and former player"
     },
     "CIV": {
@@ -482,7 +569,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/CIV.webp",
       "source": "https://en.wikipedia.org/wiki/Ivory_Coast_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Ivorian-French football manager (born 1984)"
     },
     "COD": {
@@ -491,10 +578,10 @@ export const coachProfiles = {
       "name": "Sébastien Desabre",
       "pageTitle": "Sébastien Desabre",
       "pageUrl": "https://en.wikipedia.org/wiki/S%C3%A9bastien_Desabre",
-      "photo": null,
+      "photo": "/coach-photos/COD.webp",
       "source": "https://en.wikipedia.org/wiki/DR_Congo_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "French football manager (born 1976)"
     },
     "COL": {
@@ -503,10 +590,10 @@ export const coachProfiles = {
       "name": "Néstor Lorenzo",
       "pageTitle": "Néstor Lorenzo",
       "pageUrl": "https://en.wikipedia.org/wiki/N%C3%A9stor_Lorenzo",
-      "photo": null,
+      "photo": "/coach-photos/COL.webp",
       "source": "https://en.wikipedia.org/wiki/Colombia_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Argentine football manager (born 1966)"
     },
     "CPV": {
@@ -518,7 +605,7 @@ export const coachProfiles = {
       "photo": null,
       "source": "https://en.wikipedia.org/wiki/Cape_Verde_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Cape Verdean footballer and coach (born 1970)"
     },
     "CRO": {
@@ -527,10 +614,10 @@ export const coachProfiles = {
       "name": "Zlatko Dalić",
       "pageTitle": "Zlatko Dalić",
       "pageUrl": "https://en.wikipedia.org/wiki/Zlatko_Dali%C4%87",
-      "photo": null,
+      "photo": "/coach-photos/CRO.webp",
       "source": "https://en.wikipedia.org/wiki/Croatia_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Croatian football manager (born 1966)"
     },
     "CUW": {
@@ -542,7 +629,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/CUW.webp",
       "source": "https://en.wikipedia.org/wiki/Cura%C3%A7ao_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Dutch footballer and manager (born 1947)"
     },
     "CZE": {
@@ -554,7 +641,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/CZE.webp",
       "source": "https://en.wikipedia.org/wiki/Czech_Republic_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Czech former goalkeeper and manager (born 1951)"
     },
     "ECU": {
@@ -566,7 +653,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/ECU.webp",
       "source": "https://en.wikipedia.org/wiki/Ecuador_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Argentine football manager (born 1980)"
     },
     "EGY": {
@@ -578,7 +665,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/EGY.webp",
       "source": "https://en.wikipedia.org/wiki/Egypt_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Egyptian football manager (born 1966)"
     },
     "ENG": {
@@ -590,7 +677,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/ENG.webp",
       "source": "https://en.wikipedia.org/wiki/England_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "German football manager (born 1973)"
     },
     "ESP": {
@@ -602,7 +689,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/ESP.webp",
       "source": "https://en.wikipedia.org/wiki/Spain_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Spanish football manager (born 1961)"
     },
     "FRA": {
@@ -614,7 +701,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/FRA.webp",
       "source": "https://en.wikipedia.org/wiki/France_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "French football manager (born 1968)"
     },
     "GER": {
@@ -626,7 +713,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/GER.webp",
       "source": "https://en.wikipedia.org/wiki/Germany_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "German football manager (born 1987)"
     },
     "GHA": {
@@ -635,10 +722,10 @@ export const coachProfiles = {
       "name": "Carlos Queiroz",
       "pageTitle": "Carlos Queiroz",
       "pageUrl": "https://en.wikipedia.org/wiki/Carlos_Queiroz",
-      "photo": null,
+      "photo": "/coach-photos/GHA.webp",
       "source": "https://en.wikipedia.org/wiki/Ghana_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Portuguese football manager (born 1953)"
     },
     "HAI": {
@@ -650,7 +737,7 @@ export const coachProfiles = {
       "photo": null,
       "source": "https://en.wikipedia.org/wiki/Haiti_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "French football coach and former player (born 1972)"
     },
     "IRN": {
@@ -662,7 +749,7 @@ export const coachProfiles = {
       "photo": null,
       "source": "https://en.wikipedia.org/wiki/Iran_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Iraqi football manager and former player (born 1961)"
     },
     "IRQ": {
@@ -671,10 +758,10 @@ export const coachProfiles = {
       "name": "Graham Arnold",
       "pageTitle": "Graham Arnold",
       "pageUrl": "https://en.wikipedia.org/wiki/Graham_Arnold",
-      "photo": null,
+      "photo": "/coach-photos/IRQ.webp",
       "source": "https://en.wikipedia.org/wiki/Iraq_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Australian professional football manager"
     },
     "JOR": {
@@ -683,10 +770,10 @@ export const coachProfiles = {
       "name": "Jamal Sellami",
       "pageTitle": "Jamal Sellami",
       "pageUrl": "https://en.wikipedia.org/wiki/Jamal_Sellami",
-      "photo": null,
+      "photo": "/coach-photos/JOR.webp",
       "source": "https://en.wikipedia.org/wiki/Jordan_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Moroccan footballer"
     },
     "JPN": {
@@ -698,7 +785,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/JPN.webp",
       "source": "https://en.wikipedia.org/wiki/Japan_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Japanese association football player and manager (born 1968)"
     },
     "KOR": {
@@ -710,7 +797,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/KOR.webp",
       "source": "https://en.wikipedia.org/wiki/South_Korea_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "South Korean footballer and manager"
     },
     "KSA": {
@@ -722,7 +809,7 @@ export const coachProfiles = {
       "photo": null,
       "source": "https://en.wikipedia.org/wiki/Saudi_Arabia_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Greek football manager and former player"
     },
     "MAR": {
@@ -734,7 +821,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/MAR.webp",
       "source": "https://en.wikipedia.org/wiki/Morocco_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Moroccan football manager (born 1981)"
     },
     "MEX": {
@@ -746,7 +833,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/MEX.webp",
       "source": "https://en.wikipedia.org/wiki/Mexico_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Mexican former player and manager (born 1958)"
     },
     "NED": {
@@ -758,7 +845,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/NED.webp",
       "source": "https://en.wikipedia.org/wiki/Netherlands_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Dutch football manager (born 1963)"
     },
     "NOR": {
@@ -767,10 +854,10 @@ export const coachProfiles = {
       "name": "Ståle Solbakken",
       "pageTitle": "Ståle Solbakken",
       "pageUrl": "https://en.wikipedia.org/wiki/St%C3%A5le_Solbakken",
-      "photo": null,
+      "photo": "/coach-photos/NOR.webp",
       "source": "https://en.wikipedia.org/wiki/Norway_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Norwegian footballer and manager (born 1968)"
     },
     "NZL": {
@@ -782,7 +869,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/NZL.webp",
       "source": "https://en.wikipedia.org/wiki/New_Zealand_men's_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "English footballer and coach (born 1972)"
     },
     "PAN": {
@@ -791,10 +878,10 @@ export const coachProfiles = {
       "name": "Thomas Christiansen",
       "pageTitle": "Thomas Christiansen",
       "pageUrl": "https://en.wikipedia.org/wiki/Thomas_Christiansen",
-      "photo": null,
+      "photo": "/coach-photos/PAN.webp",
       "source": "https://en.wikipedia.org/wiki/Panama_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Danish footballer (born 1973)"
     },
     "PAR": {
@@ -806,7 +893,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/PAR.webp",
       "source": "https://en.wikipedia.org/wiki/Paraguay_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Argentine football manager"
     },
     "POR": {
@@ -815,10 +902,10 @@ export const coachProfiles = {
       "name": "Roberto Martínez",
       "pageTitle": "Roberto Martínez",
       "pageUrl": "https://en.wikipedia.org/wiki/Roberto_Mart%C3%ADnez",
-      "photo": null,
+      "photo": "/coach-photos/POR.webp",
       "source": "https://en.wikipedia.org/wiki/Portugal_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Spanish football manager (born 1973)"
     },
     "QAT": {
@@ -830,7 +917,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/QAT.webp",
       "source": "https://en.wikipedia.org/wiki/Qatar_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Spanish footballer and manager (born 1966)"
     },
     "RSA": {
@@ -842,7 +929,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/RSA.webp",
       "source": "https://en.wikipedia.org/wiki/South_Africa_national_soccer_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Belgian football manager and former player"
     },
     "SCO": {
@@ -854,7 +941,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/SCO.webp",
       "source": "https://en.wikipedia.org/wiki/Scotland_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Scottish footballer and manager born 1963"
     },
     "SEN": {
@@ -866,7 +953,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/SEN.webp",
       "source": "https://en.wikipedia.org/wiki/Senegal_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Senegalese football manager (born 1981)"
     },
     "SUI": {
@@ -878,7 +965,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/SUI.webp",
       "source": "https://en.wikipedia.org/wiki/Switzerland_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Swiss football manager (born 1974)"
     },
     "SWE": {
@@ -890,7 +977,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/SWE.webp",
       "source": "https://en.wikipedia.org/wiki/Sweden_men's_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "English footballer and manager (born 1975)"
     },
     "TUN": {
@@ -902,7 +989,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/TUN.webp",
       "source": "https://en.wikipedia.org/wiki/Tunisia_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Tunisian-French football manager (born 1971)"
     },
     "TUR": {
@@ -914,7 +1001,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/TUR.webp",
       "source": "https://en.wikipedia.org/wiki/Turkey_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Italian footballer and manager"
     },
     "URU": {
@@ -926,7 +1013,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/URU.webp",
       "source": "https://en.wikipedia.org/wiki/Uruguay_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Argentine football manager (born 1955)"
     },
     "USA": {
@@ -938,7 +1025,7 @@ export const coachProfiles = {
       "photo": "/coach-photos/USA.webp",
       "source": "https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Argentine football manager (born 1972)"
     },
     "UZB": {
@@ -947,10 +1034,10 @@ export const coachProfiles = {
       "name": "Fabio Cannavaro",
       "pageTitle": "Fabio Cannavaro",
       "pageUrl": "https://en.wikipedia.org/wiki/Fabio_Cannavaro",
-      "photo": null,
+      "photo": "/coach-photos/UZB.webp",
       "source": "https://en.wikipedia.org/wiki/Uzbekistan_national_football_team",
       "status": "resolved",
-      "updatedAt": "2026-05-31T20:31:14.561Z",
+      "updatedAt": "2026-05-31T21:35:05.224Z",
       "summary": "Italian footballer"
     }
   }
@@ -1827,6 +1914,6 @@ export const weatherMeta = {
   "source": "Open-Meteo Archive API",
   "sourceUrl": "https://archive-api.open-meteo.com/v1/archive",
   "type": "historical-baseline",
-  "generatedAt": "2026-05-31T20:31:14.561Z",
+  "generatedAt": "2026-05-31T21:35:05.224Z",
   "matchesCovered": 72
 } as const;

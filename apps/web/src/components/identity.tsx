@@ -4,7 +4,13 @@ import { Crest, Flag, Avatar, FavButton, Jersey } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
 import { downloadedPlayerPhotoExts, playerPhotoFallbacks } from '@/generated/playerPhotos';
 import { downloadedTeamCrestExts, teamCrestFallbacks } from '@/generated/teamCrests';
-import { downloadedTeamKitExts, teamKitFallbacks } from '@/generated/teamKits';
+import {
+  downloadedTeamKitExts,
+  downloadedTeamKitVariantExts,
+  teamKitFallbacks,
+  teamKitVariants,
+  type TeamKitVariant,
+} from '@/generated/teamKits';
 import { useAsset, useTeamsMap } from '@/hooks';
 import { useFavorites, type FavKind } from '@/store/favorites';
 
@@ -60,17 +66,18 @@ export function TeamFlag({ code, size = 18 }: { code: string; size?: number }) {
   return <Flag code={code} colorA={t?.colorA} colorB={t?.colorB} size={size} src={src} />;
 }
 
-export function TeamKit({ code, size = 36 }: { code: string; size?: number }) {
+export function TeamKit({ code, size = 36, variant = 'home' }: { code: string; size?: number; variant?: TeamKitVariant }) {
   const teams = useTeamsMap();
   const t = teams[code];
-  const fallback = teamKitFallbacks[code];
-  const downloadedExt = downloadedTeamKitExts[code];
+  const fallback = teamKitVariants[code]?.[variant] ?? (variant === 'home' ? teamKitFallbacks[code] : null);
+  const downloadedExt = downloadedTeamKitVariantExts[code]?.[variant] ?? (variant === 'home' ? downloadedTeamKitExts[code] : null);
   const candidates = useMemo(() => {
-    const staticSrc = downloadedExt ? `/team-kits/${encodeURIComponent(code)}.${downloadedExt}` : null;
+    const staticName = variant === 'home' ? code : `${code}-${variant}`;
+    const staticSrc = downloadedExt ? `/team-kits/${encodeURIComponent(staticName)}.${downloadedExt}` : null;
     return [staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
-  }, [code, downloadedExt, fallback?.src]);
+  }, [code, downloadedExt, fallback?.src, variant]);
   const [candidateIndex, setCandidateIndex] = useState(0);
-  useEffect(() => setCandidateIndex(0), [code, downloadedExt, fallback?.src]);
+  useEffect(() => setCandidateIndex(0), [code, downloadedExt, fallback?.src, variant]);
 
   const src = candidates[candidateIndex] ?? null;
   if (src) {

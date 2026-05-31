@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +10,10 @@ const playerPhotoCacheFile = join(repoRoot, 'scraped-cache', 'json', 'player-pho
 const generatedFile = join(repoRoot, 'apps', 'web', 'src', 'generated', 'intelPacks.ts');
 const playerPhotoDir = join(repoRoot, 'apps', 'web', 'static', 'player-photos');
 const venuePhotoDir = join(repoRoot, 'apps', 'web', 'static', 'venue-photos');
+const venueGalleryDir = join(repoRoot, 'apps', 'web', 'static', 'venue-gallery');
 const coachPhotoDir = join(repoRoot, 'apps', 'web', 'static', 'coach-photos');
+const teamKitDir = join(repoRoot, 'apps', 'web', 'static', 'team-kits');
+const brandAssetDir = join(repoRoot, 'apps', 'web', 'static', 'brand');
 const tempDir = join(repoRoot, '.tmp-intel-packs');
 
 const userAgent =
@@ -40,25 +43,6 @@ const VENUE_PHOTO_FILES = {
   bos: 'Gillette Stadium02.jpg',
   phi: 'Philly (45).JPG',
   nyc: 'New Meadowlands Stadium Mezz Corner.jpg',
-};
-
-const VENUE_PHOTO_URLS = {
-  van: 'https://upload.wikimedia.org/wikipedia/commons/4/42/BC_Place_Opening_Day_2011-09-30.jpg',
-  sea: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Qwest_Field_North.jpg',
-  sf: 'https://upload.wikimedia.org/wikipedia/commons/d/d2/Levi%27s_Stadium_interior_1.jpg',
-  lax: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/SoFi_Stadium_%2851126606022%29.jpg',
-  gdl: 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Estadio_Omnilife_Chivas.jpg',
-  mex: 'https://upload.wikimedia.org/wikipedia/commons/0/07/Vista_a%C3%A9rea_del_Estadio_Azteca_-_2026_-_02.jpg',
-  mty: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG',
-  hou: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Reliantstadium.jpg',
-  dal: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Cowboys_Stadium_2.jpg',
-  kc: 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Arrowhead_Stadium_2010.JPG',
-  atl: 'https://upload.wikimedia.org/wikipedia/commons/1/10/Mercedes_Benz_Stadium_time_lapse_capture_2017-08-13.jpg',
-  mia: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606707583%29.jpg',
-  tor: 'https://upload.wikimedia.org/wikipedia/commons/d/d2/BMO_Field_in_2016.png',
-  bos: 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Gillette_Stadium02.jpg',
-  phi: 'https://upload.wikimedia.org/wikipedia/commons/7/71/Philly_%2845%29.JPG',
-  nyc: 'https://upload.wikimedia.org/wikipedia/commons/4/46/New_Meadowlands_Stadium_Mezz_Corner.jpg',
 };
 
 const TEAM_PAGES = {
@@ -168,7 +152,7 @@ async function materializePlayerPhotos() {
       continue;
     }
     if (!downloadPlayers) continue;
-    const url = item.sourceUrl ?? (item.filename ? commonsFilePath(item.filename, 420) : null);
+    const url = item.filename ? commonsFilePath(item.filename, 420) : normalizeCommonsImageUrl(item.sourceUrl, 420);
     if (!url) continue;
     try {
       await fetchConvert(url, target, {
@@ -210,7 +194,7 @@ async function materializeVenuePhotos() {
     if (!downloadVenues) continue;
     if (!existsSync(target) || force) {
       try {
-        await fetchConvert(VENUE_PHOTO_URLS[venue.id] ?? commonsFilePath(filename, 1200), target, {
+        await fetchConvert(commonsFilePath(filename, 1200), target, {
           label: `venue:${venue.id}`,
           resize: '1200x675^',
           extent: '1200x675',
@@ -266,7 +250,7 @@ async function resolveCoachProfiles() {
     const item = coachByTeam[team.code];
     if (!item?.pageTitle) continue;
     const summary = summaries.get(item.pageTitle);
-    const image = summary?.thumbnail?.source ?? summary?.originalimage?.source;
+    const image = normalizeCommonsImageUrl(summary?.originalimage?.source ?? summary?.thumbnail?.source, 420);
     if (image) {
       const target = join(coachPhotoDir, `${team.code}.webp`);
       if ((!existsSync(target) || force) && downloadCoaches) {
@@ -561,24 +545,33 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
     'Cualquier asset FIFA que no tenga licencia abierta o permiso propio',
   ];
   const totalPlayers = countPlayersFromGeneratedSource();
+  const coachPhotoCount = Object.values(coaches.items ?? {}).filter((coach) => coach?.photo?.startsWith('/')).length;
+  const kitVariantCount = countLocalKitVariants();
+  const kitVariantTotal = dataset.teams.length * 3;
+  const venueGalleryCount = countStaticImages(venueGalleryDir);
+  const venueGalleryTotal = dataset.venues.length * 3;
+  const brandAssetCount = countStaticImages(brandAssetDir);
   return [
     {
       id: 'player-photos',
       label: 'Fotos de jugadores',
-      status: playerPhotos.downloaded > 0 ? 'ready' : 'partial',
+      status: playerPhotos.downloaded === totalPlayers ? 'ready' : 'partial',
       count: playerPhotos.downloaded,
       total: totalPlayers,
       source: 'Wikimedia Commons / Wikipedia',
-      note: 'WebP locales disponibles; los jugadores restantes usan fallback remoto libre cuando existe.',
+      note:
+        playerPhotos.downloaded === playerPhotos.resolved
+          ? `${playerPhotos.downloaded} fotos libres localizadas ya estan en WebP local; faltan ${Math.max(0, totalPlayers - playerPhotos.resolved)} jugadores sin fuente libre identificada.`
+          : 'WebP locales disponibles; los jugadores restantes usan fallback remoto libre cuando existe.',
     },
     {
       id: 'coach-profiles',
       label: 'Entrenadores',
-      status: coaches.resolved > 0 ? 'ready' : 'partial',
-      count: coaches.resolved,
+      status: coachPhotoCount === dataset.teams.length ? 'ready' : 'partial',
+      count: coachPhotoCount,
       total: dataset.teams.length,
       source: 'Wikipedia / Wikimedia Commons',
-      note: 'Nombre y foto pública cuando Wikipedia expone imagen libre.',
+      note: `${coaches.resolved}/${dataset.teams.length} perfiles resueltos; ${coachPhotoCount} fotos locales cuando Wikipedia expone imagen libre.`,
     },
     {
       id: 'squad-status',
@@ -603,12 +596,12 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
     },
     {
       id: 'kit-variants',
-      label: 'Uniformes home/away/GK',
-      status: 'partial',
-      count: readGeneratedRecordCount('teamKits.ts', 'downloadedTeamKitExts'),
-      total: dataset.teams.length,
+      label: 'Uniformes home/away/third',
+      status: kitVariantCount >= kitVariantTotal ? 'ready' : 'partial',
+      count: kitVariantCount,
+      total: kitVariantTotal,
       source: 'Wikipedia kit templates / assets manuales oficiales',
-      note: 'Home kit disponible; away/GK quedan como slots de actualización segura.',
+      note: 'Home y away descargados cuando Commons los expone; tercer kit parcial. GK queda como slot privado/manual.',
     },
     {
       id: 'weather',
@@ -627,6 +620,18 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       total: dataset.venues.length,
       source: 'Sedes del torneo',
       note: 'Lat/lon, zona UTC, Wikidata y Wikipedia por sede.',
+    },
+    {
+      id: 'venue-gallery',
+      label: 'Galerías de sedes',
+      status: venueGalleryCount >= venueGalleryTotal ? 'ready' : venueGalleryCount > 0 ? 'partial' : 'watching',
+      count: venueGalleryCount,
+      total: venueGalleryTotal,
+      source: 'Wikimedia Commons',
+      note:
+        venueGalleryCount > 0
+          ? 'Miniaturas locales adicionales; pausado cuando Wikimedia aplica rate-limit.'
+          : 'Preparado para bajar 3 imagenes por sede cuando no haya rate-limit.',
     },
     {
       id: 'head-to-head',
@@ -659,10 +664,13 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       id: 'official-commercial-assets',
       label: 'Assets comerciales oficiales',
       status: 'manual',
-      count: 0,
+      count: Math.min(brandAssetCount, officialManualItems.length),
       total: officialManualItems.length,
       source: 'Carga manual con permiso/licencia',
-      note: `No se descargan automaticamente: ${officialManualItems.join('; ')}.`,
+      note:
+        brandAssetCount > 0
+          ? 'Marca privada cargada en static/brand; balon/trofeo/badges quedan como carga manual si hay permiso.'
+          : `No se descargan automaticamente: ${officialManualItems.join('; ')}.`,
     },
   ];
 }
@@ -745,16 +753,39 @@ function countPlayersFromGeneratedSource() {
   return (squads.match(/\[\s*['"`]/g) ?? []).length;
 }
 
-function readGeneratedRecordCount(fileName, exportName) {
-  const full = join(repoRoot, 'apps', 'web', 'src', 'generated', fileName);
-  if (!existsSync(full)) return 0;
-  const text = readFileSync(full, 'utf8');
-  const match = text.match(new RegExp(`export const ${exportName}:[^{]+= \\{([\\s\\S]*?)\\};`));
-  return match ? (match[1].match(/":/g) ?? []).length : 0;
+function countLocalKitVariants() {
+  if (!existsSync(teamKitDir)) return 0;
+  const variants = new Set();
+  for (const file of readdirSync(teamKitDir)) {
+    const match = file.match(/^([A-Z]{3})(?:-(home|away|third|gk))?\.(?:png|jpg|jpeg|webp|svg)$/);
+    if (!match) continue;
+    const variant = match[2] ?? 'home';
+    if (['home', 'away', 'third'].includes(variant)) variants.add(`${match[1]}:${variant}`);
+  }
+  return variants.size;
+}
+
+function countStaticImages(dir) {
+  if (!existsSync(dir)) return 0;
+  return readdirSync(dir).filter((file) => /\.(?:png|jpe?g|webp|svg)$/i.test(file)).length;
 }
 
 function commonsFilePath(filename, width) {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=${width}`;
+}
+
+function normalizeCommonsImageUrl(url, width) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    if (!parsed.hostname.endsWith('wikimedia.org')) return url;
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    const filename = parts.at(-1);
+    if (!filename) return url;
+    return commonsFilePath(decodeURIComponent(filename.replace(/^\d+px-/, '')), width);
+  } catch {
+    return url;
+  }
 }
 
 function extFromUrl(value) {

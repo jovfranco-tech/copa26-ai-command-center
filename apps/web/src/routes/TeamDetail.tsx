@@ -5,6 +5,7 @@ import { fmtGD } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
 import { PlayerCard, MatchRow, StandingsTable } from '@/components/cards';
 import { coachProfiles } from '@/generated/intelPacks';
+import { downloadedTeamKitVariantExts, teamKitVariants, type TeamKitVariant } from '@/generated/teamKits';
 import { useMatches, usePlayers, useStandings, useTeam } from '@/hooks';
 
 type Tab = 'squad' | 'fixtures' | 'group';
@@ -74,6 +75,7 @@ export function TeamDetail({ code }: { code: string }) {
               </a>
             )}
           </div>
+          <KitStrip code={code} />
         </div>
       </div>
 
@@ -123,6 +125,29 @@ export function TeamDetail({ code }: { code: string }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function KitStrip({ code }: { code: string }) {
+  const variants = (['home', 'away', 'third'] as TeamKitVariant[]).filter(
+    (variant) => downloadedTeamKitVariantExts[code]?.[variant] || teamKitVariants[code]?.[variant],
+  );
+  if (variants.length <= 1) return null;
+  const label: Record<TeamKitVariant, string> = {
+    home: 'Local',
+    away: 'Visita',
+    third: 'Tercer',
+    gk: 'Portero',
+  };
+  return (
+    <div className="kit-strip">
+      {variants.map((variant) => (
+        <div key={variant} className="kit-variant">
+          <TeamKit code={code} variant={variant} size={42} />
+          <span className="mono-label">{label[variant]}</span>
+        </div>
+      ))}
     </div>
   );
 }
