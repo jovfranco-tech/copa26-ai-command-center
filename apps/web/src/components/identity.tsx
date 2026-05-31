@@ -107,24 +107,33 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
   useEffect(() => setCandidateIndex(0), [assetSrc, downloadedExt, fallback?.src, player.id]);
 
   const src = candidates[candidateIndex] ?? null;
-  if (src) {
-    return (
-      <img
-        src={src}
-        alt={player.name}
-        width={size}
-        height={size}
-        loading="lazy"
-        decoding="async"
-        draggable={false}
-        className="asset-img player-photo"
-        style={{ borderRadius: 12, objectFit: 'cover', flex: 'none' }}
-        onError={() => setCandidateIndex((i) => i + 1)}
-      />
-    );
-  }
-
-  return <Avatar name={player.name} colorA={t?.colorA} colorB={t?.colorB} size={size} />;
+  return (
+    <span
+      className="player-avatar-wrapper"
+      style={{
+        display: 'inline-flex',
+        flex: 'none',
+        viewTransitionName: `player-photo-${player.id}`,
+      } as React.CSSProperties}
+    >
+      {src ? (
+        <img
+          src={src}
+          alt={player.name}
+          width={size}
+          height={size}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          className="asset-img player-photo"
+          style={{ borderRadius: 12, objectFit: 'cover', flex: 'none' }}
+          onError={() => setCandidateIndex((i) => i + 1)}
+        />
+      ) : (
+        <Avatar name={player.name} colorA={t?.colorA} colorB={t?.colorB} size={size} />
+      )}
+    </span>
+  );
 }
 
 export function TeamLabel({

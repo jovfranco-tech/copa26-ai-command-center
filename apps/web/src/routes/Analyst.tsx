@@ -5,6 +5,7 @@ import { ANALYST_DISCLAIMER } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext } from '@/lib/aiClient';
+import { useFavorites } from '@/store/favorites';
 
 interface ParsedAnswer {
   text: string;
@@ -178,6 +179,24 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     return parseAIAnswer(answer.text);
   }, [answer]);
 
+  const favs = useFavorites();
+  const tacticalNotes = favs.tacticalNotes;
+
+  const isNoteSaved = useMemo(() => {
+    if (!answer || !parsed) return false;
+    const notesList = tacticalNotes ?? [];
+    return notesList.some((n) => n.query === question && n.response === parsed.text);
+  }, [answer, parsed, tacticalNotes, question]);
+
+  const handleSaveNote = () => {
+    if (!answer || !parsed || isNoteSaved) return;
+    favs.addTacticalNote({
+      query: question,
+      response: parsed.text,
+      chart: parsed.chart,
+    });
+  };
+
   return (
     <div className="page-fade">
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 300px', gap: 16, alignItems: 'start' }}>
@@ -286,12 +305,32 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
           {answer && parsed && (
             <div className="card card-pad">
-              <div className="row gap-8" style={{ marginBottom: 8 }}>
-                <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
-                <span className="mono-label" style={{ margin: 0 }}>
-                  {usedAI ? 'Analista IA' : 'Analista local'}
-                </span>
-                {usedAI && <span className="badge gold">IA</span>}
+              <div className="row spread" style={{ marginBottom: 12, alignItems: 'center' }}>
+                <div className="row gap-8" style={{ alignItems: 'center' }}>
+                  <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
+                  <span className="mono-label" style={{ margin: 0 }}>
+                    {usedAI ? 'Analista IA' : 'Analista local'}
+                  </span>
+                  {usedAI && <span className="badge gold">IA</span>}
+                </div>
+                
+                <button
+                  type="button"
+                  onClick={handleSaveNote}
+                  className="btn ghost btn-sm"
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: 11,
+                    border: '1px solid var(--line)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                  }}
+                  disabled={isNoteSaved}
+                >
+                  <Icon name="star" size={11} style={{ color: isNoteSaved ? 'var(--gold)' : 'var(--tx-3)' }} />
+                  {isNoteSaved ? 'Guardada' : 'Guardar en Notas'}
+                </button>
               </div>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{parsed.text}</p>
               

@@ -1,6 +1,6 @@
 /** Family pool picks. Client-side only, persisted per browser. */
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware';
 
 export type PoolOutcome = 'home' | 'draw' | 'away';
 
@@ -20,6 +20,60 @@ interface PoolState {
   reset: () => void;
   importPicks: (picks: Record<string, PoolPick>) => void;
 }
+
+const indexedDBStorage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return new Promise((resolve) => {
+      const request = indexedDB.open('wc_family_pool_db', 1);
+      request.onupgradeneeded = () => {
+        request.result.createObjectStore('keyval');
+      };
+      request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction('keyval', 'readonly');
+        const store = tx.objectStore('keyval');
+        const getReq = store.get(name);
+        getReq.onsuccess = () => {
+          resolve(getReq.result || null);
+        };
+        getReq.onerror = () => resolve(null);
+      };
+      request.onerror = () => resolve(null);
+    });
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    return new Promise((resolve) => {
+      const request = indexedDB.open('wc_family_pool_db', 1);
+      request.onupgradeneeded = () => {
+        request.result.createObjectStore('keyval');
+      };
+      request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction('keyval', 'readwrite');
+        const store = tx.objectStore('keyval');
+        store.put(value, name);
+        tx.oncomplete = () => resolve();
+      };
+      request.onerror = () => resolve();
+    });
+  },
+  removeItem: async (name: string): Promise<void> => {
+    return new Promise((resolve) => {
+      const request = indexedDB.open('wc_family_pool_db', 1);
+      request.onupgradeneeded = () => {
+        request.result.createObjectStore('keyval');
+      };
+      request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction('keyval', 'readwrite');
+        const store = tx.objectStore('keyval');
+        store.delete(name);
+        tx.oncomplete = () => resolve();
+      };
+      request.onerror = () => resolve();
+    });
+  },
+};
 
 export const usePool = create<PoolState>()(
   persist(
@@ -90,6 +144,9 @@ export const usePool = create<PoolState>()(
           },
         })),
     }),
-    { name: 'wc_family_pool' },
+    {
+      name: 'wc_family_pool',
+      storage: createJSONStorage(() => indexedDBStorage),
+    },
   ),
 );

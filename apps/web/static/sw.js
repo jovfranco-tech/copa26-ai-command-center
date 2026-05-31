@@ -75,3 +75,85 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-pool-picks') {
+    event.waitUntil(syncPoolPicks());
+  }
+});
+
+function syncPoolPicks() {
+  return new Promise((resolve, reject) => {
+    // Open the IndexedDB database wc_family_pool_db
+    const request = indexedDB.open('wc_family_pool_db', 1);
+    
+    request.onerror = () => {
+      console.error('[sw] Failed to open IndexedDB wc_family_pool_db');
+      reject();
+    };
+
+    request.onsuccess = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('keyval')) {
+        db.close();
+        resolve();
+        return;
+      }
+      
+      const tx = db.transaction('keyval', 'readonly');
+      const store = tx.objectStore('keyval');
+      const getReq = store.get('wc_family_pool');
+
+      getReq.onerror = () => {
+        db.close();
+        reject();
+      };
+
+      getReq.onsuccess = () => {
+        db.close();
+        const raw = getReq.result;
+        if (!raw) {
+          resolve();
+          return;
+        }
+
+        try {
+          const parsed = JSON.parse(raw);
+          const state = parsed.state;
+          const playerName = state?.playerName;
+          const picks = state?.picks;
+
+          if (!playerName || !picks || Object.keys(picks).length === 0) {
+            resolve();
+            return;
+          }
+
+          console.log('[sw] Attempting to sync background picks for player:', playerName);
+          
+          fetch('/api/pool/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerName, picks })
+          })
+            .then((res) => {
+              if (res.ok) {
+                console.log('[sw] Background sync of pool picks successful!');
+                resolve();
+              } else {
+                console.warn('[sw] Sync server returned non-ok status:', res.status);
+                reject(); // retry later
+              }
+            })
+            .catch((err) => {
+              console.error('[sw] Sync fetch failed:', err);
+              reject(); // retry later
+            });
+        } catch (err) {
+          console.error('[sw] Parse error on persisted pool picks:', err);
+          resolve(); // don't retry if corrupt
+        }
+      };
+    };
+  });
+}
+

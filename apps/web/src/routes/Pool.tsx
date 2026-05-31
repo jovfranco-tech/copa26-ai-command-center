@@ -154,13 +154,50 @@ export function Pool() {
           playSuccessTick(); // Play premium tactical success chime when successfully saved to DB!
         } else {
           setSyncStatus('error');
+          // Offline fallback: attempt to register Background Sync
+          if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            navigator.serviceWorker.ready
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .then((reg) => (reg as any).sync.register('sync-pool-picks'))
+              .then(() => console.log('[Pool] Registered background sync tag "sync-pool-picks"'))
+              .catch((err) => console.error('[Pool] Background sync registration failed:', err));
+          }
         }
       } catch {
         setSyncStatus('error');
+        if ('serviceWorker' in navigator && 'SyncManager' in window) {
+          navigator.serviceWorker.ready
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .then((reg) => (reg as any).sync.register('sync-pool-picks'))
+            .catch(() => {});
+        }
       }
     }, 1000);
 
     return () => clearTimeout(timer);
+  }, [pool.playerName, pool.picks]);
+
+  // Fallback listener for online window event
+  useEffect(() => {
+    const handleOnline = async () => {
+      if (!pool.playerName.trim()) return;
+      console.log('[Pool] Browser detected online, triggering manual sync...');
+      setSyncStatus('syncing');
+      try {
+        const ok = await syncPoolPicks(pool.playerName, pool.picks);
+        if (ok) {
+          setSyncStatus('synced');
+          playSuccessTick();
+        } else {
+          setSyncStatus('error');
+        }
+      } catch {
+        setSyncStatus('error');
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
   }, [pool.playerName, pool.picks]);
 
   // Load Leaderboard unconditionally when picks change
