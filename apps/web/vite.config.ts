@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
   const apiTarget = env.VITE_LOCAL_API_URL ?? `http://127.0.0.1:${apiPort}`;
 
   return {
+    publicDir: 'static',
     plugins: [react()],
     resolve: {
       alias: {

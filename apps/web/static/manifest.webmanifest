@@ -1,0 +1,19 @@
+{
+  "name": "FIFA World Cup 26 · Quiniela y Control",
+  "short_name": "Quiniela FIFA 26",
+  "description": "Dashboard privado para calendario, selecciones, jugadores, quiniela familiar y analista táctico IA.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#121826",
+  "theme_color": "#c9a24b",
+  "categories": ["sports", "entertainment"],
+  "icons": [
+    {
+      "src": "/brand/fwc26-emblem.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
