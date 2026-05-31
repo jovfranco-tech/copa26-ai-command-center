@@ -8,7 +8,53 @@ import { usePool, type PoolOutcome } from '@/store/pool';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchLeaderboard, fetchPoolPicks, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
 
+const playTick = () => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.frequency.setValueAtTime(600, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.06);
+    
+    gain.gain.setValueAtTime(0.02, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.06);
+  } catch {
+    // AudioContext blocked
+  }
+};
 
+const playSuccessTick = () => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.06); // E5
+    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.12); // G5
+    
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.22);
+  } catch {
+    // AudioContext blocked
+  }
+};
 
 const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
   { id: 'home', label: 'Local' },
@@ -105,6 +151,7 @@ export function Pool() {
         const ok = await syncPoolPicks(pool.playerName, pool.picks);
         if (ok) {
           setSyncStatus('synced');
+          playSuccessTick(); // Play premium tactical success chime when successfully saved to DB!
         } else {
           setSyncStatus('error');
         }
@@ -148,7 +195,27 @@ export function Pool() {
     localStorage.setItem('wc_theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+    playTick(); // Play organic low-latency tick on theme click
+  };
+
+  const [accent, setAccent] = useState<'gold' | 'emerald' | 'crimson'>(() => {
+    return (localStorage.getItem('wc_accent') as 'gold' | 'emerald' | 'crimson') ?? 'gold';
+  });
+
+  useEffect(() => {
+    const el = document.documentElement;
+    el.classList.remove('accent-emerald', 'accent-crimson');
+    if (accent === 'emerald') el.classList.add('accent-emerald');
+    if (accent === 'crimson') el.classList.add('accent-crimson');
+    localStorage.setItem('wc_accent', accent);
+  }, [accent]);
+
+  const changeAccent = (acc: 'gold' | 'emerald' | 'crimson') => {
+    setAccent(acc);
+    playTick(); // Play click chime on accent change
+  };
 
   const exportCSV = () => {
     let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
@@ -297,14 +364,45 @@ export function Pool() {
               </span>
             )}
           </label>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%', flexWrap: 'wrap' }}>
             <input
               id="pool-name"
               value={pool.playerName}
               onChange={(e) => pool.setPlayerName(e.target.value)}
               placeholder="Tu nombre"
-              style={{ flex: 1 }}
+              style={{ flex: 1, minWidth: '120px' }}
             />
+            {/* Accent Theme Color Dot Selector */}
+            <div style={{ display: 'flex', gap: '6px', background: 'var(--bg-3)', border: '1px solid var(--line)', borderRadius: '10px', padding: '0 8px', height: '42px', alignItems: 'center', boxSizing: 'border-box' }}>
+              {(['gold', 'emerald', 'crimson'] as const).map((acc) => {
+                const colors = {
+                  gold: '#c9a24b',
+                  emerald: '#10b981',
+                  crimson: '#e11d48',
+                };
+                const active = accent === acc;
+                return (
+                  <button
+                    key={acc}
+                    type="button"
+                    onClick={() => changeAccent(acc)}
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      background: colors[acc],
+                      border: active ? '2px solid var(--tx)' : 'none',
+                      cursor: 'pointer',
+                      transform: active ? 'scale(1.15)' : 'scale(1)',
+                      boxShadow: active ? '0 0 4px rgba(0,0,0,0.2)' : 'none',
+                      transition: 'all 0.2s ease',
+                      padding: 0,
+                    }}
+                    title={`Acento ${acc === 'gold' ? 'Dorado' : acc === 'emerald' ? 'Esmeralda' : 'Carmesí'}`}
+                  />
+                );
+              })}
+            </div>
             <button
               type="button"
               onClick={toggleTheme}
@@ -336,7 +434,7 @@ export function Pool() {
         <button
           type="button"
           className={`pool-tab${activeTab === 'predict' ? ' on' : ''}`}
-          onClick={() => setActiveTab('predict')}
+          onClick={() => { setActiveTab('predict'); playTick(); }}
         >
           <Icon name="calendar" size={15} />
           Pronosticar
@@ -345,7 +443,7 @@ export function Pool() {
         <button
           type="button"
           className={`pool-tab${activeTab === 'results' ? ' on' : ''}`}
-          onClick={() => setActiveTab('results')}
+          onClick={() => { setActiveTab('results'); playTick(); }}
         >
           <Icon name="trophy" size={15} />
           Resultados y Aciertos

@@ -13,7 +13,7 @@ export function TweaksPanel() {
     <>
       <button
         type="button"
-        className="icon-btn"
+        className="icon-btn tweaks-toggle-btn"
         title="Apariencia"
         onClick={() => setOpen((v) => !v)}
         style={{ position: 'fixed', right: 18, bottom: 18, zIndex: 70, width: 44, height: 44 }}
@@ -25,7 +25,7 @@ export function TweaksPanel() {
         <>
           <div className="drawer-scrim" style={{ zIndex: 71 }} onClick={() => setOpen(false)} />
           <div
-            className="card"
+            className="card tweaks-panel-card"
             style={{
               position: 'fixed',
               right: 16,

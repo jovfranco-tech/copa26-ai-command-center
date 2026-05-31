@@ -2319,3 +2319,62 @@ body {
   }
 }
 
+/* --- Personalización de Acentuación (Gala, Esmeralda, Carmesí) --- */
+:root.accent-emerald {
+  --gold: #10b981;      /* Esmeralda vibrante */
+  --gold-2: #34d399;    /* Esmeralda claro */
+  --gold-line: rgba(16, 185, 129, 0.3);
+  --gold-soft: rgba(16, 185, 129, 0.08);
+  --gold-glow: rgba(16, 185, 129, 0.15);
+}
+
+:root.accent-crimson {
+  --gold: #e11d48;      /* Carmesí vibrante */
+  --gold-2: #fb7185;    /* Carmesí claro */
+  --gold-line: rgba(225, 29, 72, 0.3);
+  --gold-soft: rgba(225, 29, 72, 0.08);
+  --gold-glow: rgba(225, 29, 72, 0.15);
+}
+
+/* --- Animación de Micrófono para Búsqueda Vocal --- */
+@keyframes pulse-microphone {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  100% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+}
+
+/* --- Ajustes de Alineación Responsiva (Móvil) --- */
+@media (max-width: 960px) {
+  .pool-summary {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  /* Lifts Tweaks button and panel above mobile nav bar */
+  .tweaks-toggle-btn {
+    bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+  }
+  .tweaks-panel-card {
+    bottom: calc(124px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .pool-summary {
+    grid-template-columns: 1fr !important;
+  }
+  .pool-actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .pool-actions button {
+    width: 100% !important;
+  }
+}
+
+
+

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER } from '@worldcup/shared';
@@ -94,6 +94,54 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [answer, setAnswer] = useState<AnalystAnswer | null>(null);
   const [busy, setBusy] = useState(false);
   const [usedAI, setUsedAI] = useState(false);
+
+  const [listening, setListening] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [recognition, setRecognition] = useState<any>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRec) {
+      const rec = new SpeechRec();
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'es-ES';
+
+      rec.onstart = () => {
+        setListening(true);
+      };
+
+      rec.onend = () => {
+        setListening(false);
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rec.onerror = (e: any) => {
+        console.error('Speech recognition error', e);
+        setListening(false);
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rec.onresult = (event: any) => {
+        const result = event.results[0][0].transcript;
+        if (result) {
+          setQuestion(result);
+        }
+      };
+
+      setRecognition(rec);
+    }
+  }, []);
+
+  const toggleSpeech = () => {
+    if (!recognition) return;
+    if (listening) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
+  };
 
   const ask = async (qOverride?: string) => {
     const q = qOverride ?? question;
@@ -195,13 +243,40 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   ask();
                 }}
               >
-                <input
-                  className="searchbox"
-                  style={{ flex: 1, marginLeft: 0 }}
-                  placeholder="Escribe una pregunta…"
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                />
+                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                  <input
+                    className="searchbox"
+                    style={{ flex: 1, marginLeft: 0, paddingRight: '40px' }}
+                    placeholder="Escribe una pregunta…"
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                  />
+                  {/* Web Speech API Microphone Button */}
+                  {recognition && (
+                    <button
+                      type="button"
+                      onClick={toggleSpeech}
+                      style={{
+                        position: 'absolute',
+                        right: '8px',
+                        background: 'transparent',
+                        border: 'none',
+                        color: listening ? '#ef4444' : 'var(--gold)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '6px',
+                        borderRadius: '50%',
+                        transition: 'all 0.2s ease',
+                        animation: listening ? 'pulse-microphone 1s infinite alternate' : 'none',
+                      }}
+                      title={listening ? 'Escuchando... Haz clic para detener' : 'Preguntar con la voz'}
+                    >
+                      <Icon name={listening ? 'sparkSmall' : 'ai'} size={18} />
+                    </button>
+                  )}
+                </div>
                 <button type="submit" className="btn gold" disabled={busy}>
                   <Icon name={busy ? 'sparkSmall' : 'send'} size={14} /> {busy ? 'Pensando…' : 'Preguntar'}
                 </button>
