@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Icon, Pill } from '@worldcup/ui';
-import { ANALYST_DISCLAIMER } from '@worldcup/shared';
+import { ANALYST_DISCLAIMER, type Match as WorldCupMatch } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext } from '@/lib/aiClient';
@@ -18,6 +18,29 @@ interface ParsedAnswer {
     data: Array<{ name: string; [key: string]: number | string }>;
   } | null;
 }
+
+interface BrowserSpeechRecognitionEvent extends Event {
+  results: ArrayLike<ArrayLike<{ transcript: string }>>;
+}
+
+interface BrowserSpeechRecognition {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: (() => void) | null;
+  onend: (() => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onresult: ((event: BrowserSpeechRecognitionEvent) => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+type BrowserSpeechRecognitionConstructor = new () => BrowserSpeechRecognition;
+type WindowWithSpeechRecognition = Window &
+  typeof globalThis & {
+    SpeechRecognition?: BrowserSpeechRecognitionConstructor;
+    webkitSpeechRecognition?: BrowserSpeechRecognitionConstructor;
+  };
 
 function parseAIAnswer(text: string): ParsedAnswer {
   const match = text.match(/```json\s*([\s\S]*?)\s*```/);
@@ -262,12 +285,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   };
 
   const [listening, setListening] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [recognition, setRecognition] = useState<any>(null);
+  const [recognition, setRecognition] = useState<BrowserSpeechRecognition | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRec =
+      (window as WindowWithSpeechRecognition).SpeechRecognition ??
+      (window as WindowWithSpeechRecognition).webkitSpeechRecognition;
     if (SpeechRec) {
       const rec = new SpeechRec();
       rec.continuous = false;
@@ -282,15 +305,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         setListening(false);
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      rec.onerror = (e: any) => {
+      rec.onerror = (e: Event) => {
         console.error('Speech recognition error', e);
         setListening(false);
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      rec.onresult = (event: any) => {
-        const result = event.results[0][0].transcript;
+      rec.onresult = (event: BrowserSpeechRecognitionEvent) => {
+        const result = event.results[0]?.[0]?.transcript;
         if (result) {
           setQuestion(result);
         }
@@ -961,7 +982,7 @@ function PressRoom({
   answering,
 }: {
   matchId: string;
-  matches: any[];
+  matches: WorldCupMatch[];
   onAnswer: (text: string) => void;
   answering: boolean;
 }) {

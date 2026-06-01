@@ -10,7 +10,7 @@ import { TournamentTimeline } from '@/components/TournamentTimeline';
 import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt } from '@/hooks';
 import { focusMatch } from '@/lib/matchMeta';
 import { useFavorites } from '@/store/favorites';
-import { stadiumAudio } from '@/lib/audioSynth';
+import { getBrowserAudioContext, stadiumAudio } from '@/lib/audioSynth';
 
 /** Derive the tournament "focus day": a live day, else latest played, else next up. */
 function focusDate(matches: Match[]): string {
@@ -260,8 +260,8 @@ function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: numb
 
   const playPodcastChime = () => {
     try {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioContextClass();
+      const ctx = getBrowserAudioContext();
+      if (!ctx) return;
       const osc = ctx.createOscillator();
       const filter = ctx.createBiquadFilter();
       const gain = ctx.createGain();

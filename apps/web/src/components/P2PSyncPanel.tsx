@@ -2,11 +2,23 @@ import { useState, useEffect, useRef } from 'react';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
 import { Icon } from '@worldcup/ui';
+import type { PoolPick } from '@/store/pool';
+
+type PeerPicks = Record<string, PoolPick>;
+
+interface SyncSession {
+  hostName?: string;
+  hostPicks?: PeerPicks;
+  clientName?: string;
+  clientPicks?: PeerPicks;
+  status?: 'waiting' | 'connected';
+  createdAt?: string;
+}
 
 interface P2PSyncPanelProps {
   playerName: string;
-  picks: Record<string, any>;
-  onSyncComplete: (peerName: string, peerPicks: any) => void;
+  picks: PeerPicks;
+  onSyncComplete: (peerName: string, peerPicks: PeerPicks) => void;
 }
 
 export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanelProps) {
@@ -60,17 +72,19 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
       // Listen for peer connection
       unsubscribeRef.current = onSnapshot(docRef, async (docSnap) => {
         if (!docSnap.exists()) return;
-        const data = docSnap.data();
+        const data = docSnap.data() as SyncSession;
 
         if (data.status === 'connected' && data.clientName) {
+          const clientName = data.clientName;
+          const clientPicks = data.clientPicks ?? {};
           setMode('syncing');
-          setStatusMessage(`¡Enlace establecido! Sincronizando picks con ${data.clientName}...`);
+          setStatusMessage(`¡Enlace establecido! Sincronizando picks con ${clientName}...`);
           playHaptic([40, 20, 40]);
           
           // Wait briefly for smooth animation feel
           setTimeout(async () => {
-            setPeerName(data.clientName);
-            onSyncComplete(data.clientName, data.clientPicks);
+            setPeerName(clientName);
+            onSyncComplete(clientName, clientPicks);
             setMode('success');
             playHaptic([100, 50, 100]);
 
@@ -116,14 +130,16 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         return;
       }
 
-      const data = docSnap.data();
+      const data = docSnap.data() as SyncSession;
       if (data.status !== 'waiting') {
         setMode('error');
         setStatusMessage('Este canal ya está ocupado por otra sincronización.');
         return;
       }
 
-      setPeerName(data.hostName);
+      const hostName = data.hostName ?? 'Participante';
+      const hostPicks = data.hostPicks ?? {};
+      setPeerName(hostName);
 
       // Write client picks to signal connection
       await setDoc(docRef, {
@@ -133,11 +149,11 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         status: 'connected',
       });
 
-      setStatusMessage(`¡Conectado con ${data.hostName}! Intercambiando datos tácticos...`);
+      setStatusMessage(`¡Conectado con ${hostName}! Intercambiando datos tácticos...`);
       playHaptic([40, 20, 40]);
 
       setTimeout(() => {
-        onSyncComplete(data.hostName, data.hostPicks);
+        onSyncComplete(hostName, hostPicks);
         setMode('success');
         playHaptic([100, 50, 100]);
       }, 1500);

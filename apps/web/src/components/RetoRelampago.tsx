@@ -12,6 +12,7 @@ interface Challenge {
   createdBy: string;
   status: 'active' | 'resolved';
   result?: string;
+  createdAt?: string;
 }
 
 interface RetoRelampagoProps {
@@ -48,7 +49,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
     return () => unsubscribe();
   }, [activeMatchId]);
 
-  const dataCreated = (c: any) => {
+  const dataCreated = (c: Pick<Challenge, 'createdAt'>) => {
     return c.createdAt ? new Date(c.createdAt).getTime() : 0;
   };
 

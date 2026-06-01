@@ -1,9 +1,16 @@
 let audioCtx: AudioContext | null = null;
 
-function getAudioContext(): AudioContext | null {
+type BrowserAudioContextConstructor = new (contextOptions?: AudioContextOptions) => AudioContext;
+type WindowWithWebKitAudio = Window &
+  typeof globalThis & {
+    webkitAudioContext?: BrowserAudioContextConstructor;
+  };
+
+export function getBrowserAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
   if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass =
+      window.AudioContext ?? (window as WindowWithWebKitAudio).webkitAudioContext;
     if (AudioContextClass) {
       audioCtx = new AudioContextClass();
     }
@@ -23,7 +30,7 @@ export const stadiumAudio = {
    * @param pan - The pan value (-1 to 1)
    */
   playWhistle(pan: number = 0) {
-    const ctx = getAudioContext();
+    const ctx = getBrowserAudioContext();
     if (!ctx) return;
 
     try {
@@ -35,9 +42,8 @@ export const stadiumAudio = {
       const filter = ctx.createBiquadFilter();
       const mainGain = ctx.createGain();
 
-      let pannerNode: StereoPannerNode | null = null;
-      if (ctx.createStereoPanner) {
-        pannerNode = ctx.createStereoPanner();
+      const pannerNode = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      if (pannerNode) {
         pannerNode.pan.value = pan;
       }
 
@@ -104,7 +110,7 @@ export const stadiumAudio = {
    * @param pan - The pan value (-1 to 1)
    */
   playCrowdCheer(pan: number = 0) {
-    const ctx = getAudioContext();
+    const ctx = getBrowserAudioContext();
     if (!ctx) return;
 
     try {
@@ -135,9 +141,8 @@ export const stadiumAudio = {
 
       const mainGain = ctx.createGain();
 
-      let pannerNode: StereoPannerNode | null = null;
-      if (ctx.createStereoPanner) {
-        pannerNode = ctx.createStereoPanner();
+      const pannerNode = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      if (pannerNode) {
         pannerNode.pan.value = pan;
       }
 

@@ -4,11 +4,12 @@ import { fmtDay, type Match } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap } from '@/hooks';
-import { usePool, type PoolOutcome } from '@/store/pool';
+import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
 import { isMatchLocked, lockLabel } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
+import { getBrowserAudioContext } from '@/lib/audioSynth';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { QuinielaScanner } from '@/components/QuinielaScanner';
@@ -17,8 +18,8 @@ import { RetoRelampago } from '@/components/RetoRelampago';
 
 const playTick = () => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const ctx = getBrowserAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     
@@ -40,8 +41,8 @@ const playTick = () => {
 
 const playSuccessTick = () => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const ctx = getBrowserAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     
@@ -61,6 +62,18 @@ const playSuccessTick = () => {
   } catch {
     // AudioContext blocked
   }
+};
+
+interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
+  sync?: {
+    register: (tag: string) => Promise<void>;
+  };
+}
+
+const registerPoolBackgroundSync = async () => {
+  if (!('serviceWorker' in navigator) || !('SyncManager' in window)) return;
+  const registration = (await navigator.serviceWorker.ready) as ServiceWorkerRegistrationWithSync;
+  await registration.sync?.register('sync-pool-picks');
 };
 
 const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
@@ -243,7 +256,7 @@ export function Pool() {
     }, 'image/png');
   };
 
-  const handleP2PSyncComplete = async (peerName: string, peerPicks: any) => {
+  const handleP2PSyncComplete = async (peerName: string, peerPicks: Record<string, PoolPick>) => {
     try {
       const docRef = doc(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members', peerName);
       await setDoc(docRef, {
@@ -292,22 +305,13 @@ export function Pool() {
         } else {
           setSyncStatus('error');
           // Offline fallback: attempt to register Background Sync
-          if ('serviceWorker' in navigator && 'SyncManager' in window) {
-            navigator.serviceWorker.ready
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              .then((reg) => (reg as any).sync.register('sync-pool-picks'))
-              .then(() => console.log('[Pool] Registered background sync tag "sync-pool-picks"'))
-              .catch((err) => console.error('[Pool] Background sync registration failed:', err));
-          }
+          registerPoolBackgroundSync()
+            .then(() => console.log('[Pool] Registered background sync tag "sync-pool-picks"'))
+            .catch((err) => console.error('[Pool] Background sync registration failed:', err));
         }
       } catch {
         setSyncStatus('error');
-        if ('serviceWorker' in navigator && 'SyncManager' in window) {
-          navigator.serviceWorker.ready
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .then((reg) => (reg as any).sync.register('sync-pool-picks'))
-            .catch(() => {});
-        }
+        registerPoolBackgroundSync().catch(() => {});
       }
     }, 1000);
 
