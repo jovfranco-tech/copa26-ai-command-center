@@ -3,7 +3,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
 import { FOOTER_NOTICE } from '@worldcup/shared';
 import { useMatches } from '@/hooks';
-import { usePreferences, applyPreferences } from '@/store/preferences';
+import { usePreferences, applyPreferences, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
 
@@ -117,6 +117,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     applyPreferences(prefs);
   }, [prefs]);
+  const roleLabel = prefs.role === 'admin' ? 'Admin' : prefs.role === 'family' ? 'Familia' : 'Invitado';
 
   const { data: liveData } = useMatches({ status: 'LIVE' });
   const liveCount = liveData?.items.length ?? 0;
@@ -270,6 +271,17 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="dot-ok" />
               <span className="sb-text">Datos</span>
             </span>
+            <select
+              className="role-switch"
+              value={prefs.role}
+              aria-label="Rol de uso"
+              title={`Rol activo: ${roleLabel}`}
+              onChange={(e) => prefs.set('role', e.target.value as AppRole)}
+            >
+              <option value="admin">Admin</option>
+              <option value="family">Familia</option>
+              <option value="guest">Invitado</option>
+            </select>
             <Link to="/analyst" className="icon-btn" title="Analista IA">
               <Icon name="ai" size={18} />
             </Link>

@@ -4,8 +4,10 @@ import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER, type Match as WorldCupMatch } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
-import { askAI, buildAIContext } from '@/lib/aiClient';
+import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
+import { clearAIMemory, readAIMemory, saveAIMemory, type AIMemoryRecord } from '@/lib/aiMemory';
 import { useFavorites } from '@/store/favorites';
+import { usePreferences } from '@/store/preferences';
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
@@ -210,6 +212,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [answer, setAnswer] = useState<AnalystAnswer | null>(null);
   const [busy, setBusy] = useState(false);
   const [usedAI, setUsedAI] = useState(false);
+  const [lastAiMeta, setLastAiMeta] = useState<AIResult['meta'] | null>(null);
+  const [memory, setMemory] = useState<AIMemoryRecord[]>(() => readAIMemory());
+  const role = usePreferences((s) => s.role);
 
   const [attachedPdf, setAttachedPdf] = useState<{ name: string; data: string } | null>(null);
   const [attachedAudio, setAttachedAudio] = useState<{ name: string; data: string } | null>(null);
@@ -330,6 +335,27 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     }
   };
 
+  const commitAnswer = (
+    q: string,
+    next: AnalystAnswer,
+    mode: 'remote' | 'local' | 'simulation',
+    meta?: AIResult['meta'] | null,
+  ) => {
+    setUsedAI(mode !== 'local');
+    setLastAiMeta(meta ?? null);
+    setAnswer(next);
+    setMemory(saveAIMemory({
+      question: q,
+      answer: next.text,
+      mode,
+      context: CTX_ES[ctx],
+      sources: next.sources,
+      confidence: meta?.confidence ?? (mode === 'local' ? 'Alta local' : 'Media'),
+      model: meta?.model,
+      tools: meta?.tools,
+    }));
+  };
+
   const ask = async (qOverride?: string) => {
     const q = qOverride ?? question;
     if (!q.trim() || busy) return;
@@ -352,18 +378,30 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       ...data,
     });
 
+    const contextText = buildAIContext(ctx, cid, data);
+    if (role === 'guest') {
+      commitAnswer(q, { ...local, sources: [...local.sources, 'modo invitado local'] }, 'local', {
+        provider: 'local',
+        confidence: 'Alta local',
+        contextChars: contextText.length,
+        tools: ['calendario', 'partidos', 'selecciones', 'jugadores', 'sedes'],
+      });
+      setAttachedPdf(null);
+      setAttachedAudio(null);
+      return;
+    }
+
     setBusy(true);
-    const ai = await askAI(q, buildAIContext(ctx, cid, data), attachedPdf || undefined, attachedAudio || undefined);
+    const ai = await askAI(q, contextText, attachedPdf || undefined, attachedAudio || undefined);
     setBusy(false);
     setAttachedPdf(null);
     setAttachedAudio(null);
 
     if (ai.ok && ai.answer) {
-      setUsedAI(true);
-      setAnswer({ text: ai.answer, sources: ['IA', 'datos locales'] });
+      commitAnswer(q, { text: ai.answer, sources: ai.meta?.sources ?? ['IA', 'datos locales'] }, 'remote', ai.meta);
     } else {
-      setUsedAI(false);
-      setAnswer(local);
+      const reason = ai.reason === 'rate-limit' ? `limite IA ${ai.retryAfter ?? ''}s` : 'fallback local';
+      commitAnswer(q, { ...local, sources: [...local.sources, reason] }, 'local', ai.meta);
     }
   };
 
@@ -393,7 +431,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
   return (
     <div className="page-fade">
-      <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 300px', gap: 16, alignItems: 'start' }}>
+      <div className="grid analyst-layout">
         <div className="grid">
           <div className="card brief">
             <div className="card-hd">
@@ -404,8 +442,8 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               </span>
               <h3>Analista de partidos</h3>
             </div>
-            <div className="card-pad brief-body">
-              <div className="row gap-6 wrap" style={{ marginBottom: 10 }}>
+              <div className="card-pad brief-body">
+                <div className="row gap-6 wrap" style={{ marginBottom: 10 }}>
                 {(['tournament', 'match', 'team', 'player', 'hawkeye', 'pressroom'] as Ctx[]).map((c) => (
                   <Pill
                     key={c}
@@ -467,6 +505,21 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 </div>
               )}
 
+              <div className="ai-native-strip">
+                <div>
+                  <span className="mono-label">Rol activo</span>
+                  <strong>{role === 'admin' ? 'Admin' : role === 'family' ? 'Familia' : 'Invitado local'}</strong>
+                </div>
+                <div>
+                  <span className="mono-label">Herramientas</span>
+                  <strong>Datos · Adjuntos · Voz · Memoria</strong>
+                </div>
+                <div>
+                  <span className="mono-label">Consumo IA</span>
+                  <strong>{role === 'guest' ? 'Bloqueado remoto' : 'Limitado por sesión'}</strong>
+                </div>
+              </div>
+
               {ctx === 'hawkeye' && (
                 <div className="row gap-8" style={{ marginBottom: 12, maxWidth: 320 }}>
                   <select
@@ -501,8 +554,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   awayTeam={scanAwayTeam}
                   simulating={busy}
                   onSimulate={(report) => {
-                    setUsedAI(true);
-                    setAnswer({ text: report, sources: ['IA (Ojo de Halcón)', 'datos tácticos'] });
+                    commitAnswer(
+                      `Simulación táctica ${scanHomeTeam} vs ${scanAwayTeam}`,
+                      { text: report, sources: ['IA (Ojo de Halcón)', 'datos tácticos'] },
+                      'simulation',
+                      { provider: 'local-simulation', confidence: 'Media', tools: ['pizarra táctica'] },
+                    );
                   }}
                 />
               )}
@@ -513,8 +570,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   matches={matchData?.items ?? []}
                   answering={busy}
                   onAnswer={(report) => {
-                    setUsedAI(true);
-                    setAnswer({ text: report, sources: ['Prensa deportiva', 'opinión táctica'] });
+                    commitAnswer(
+                      'Sala de prensa',
+                      { text: report, sources: ['Prensa deportiva', 'opinión táctica'] },
+                      'simulation',
+                      { provider: 'local-simulation', confidence: 'Media', tools: ['preguntas guiadas'] },
+                    );
                   }}
                 />
               )}
@@ -733,17 +794,25 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <div className="analyst-source-grid">
                 <div>
                   <span className="mono-label">Modo</span>
-                  <strong>{usedAI ? 'Proveedor IA configurado' : 'Motor local'}</strong>
+                  <strong>{usedAI ? (lastAiMeta?.model ?? 'Proveedor IA') : role === 'guest' ? 'Invitado local' : 'Motor local'}</strong>
                 </div>
                 <div>
                   <span className="mono-label">Datos enviados</span>
-                  <strong>Contexto resumido</strong>
+                  <strong>{lastAiMeta?.contextChars ? `${lastAiMeta.contextChars} chars` : 'Contexto resumido'}</strong>
                 </div>
                 <div>
                   <span className="mono-label">Confianza</span>
-                  <strong>{usedAI ? 'Media' : 'Alta local'}</strong>
+                  <strong>{lastAiMeta?.confidence ?? (usedAI ? 'Media' : 'Alta local')}</strong>
                 </div>
               </div>
+              {lastAiMeta?.tools?.length ? (
+                <div className="row gap-6 wrap" style={{ marginTop: 10 }}>
+                  <span className="mono-label">Herramientas:</span>
+                  {lastAiMeta.tools.map((tool) => (
+                    <span key={tool} className="cite">{tool}</span>
+                  ))}
+                </div>
+              ) : null}
               
               <div className="row gap-6 wrap" style={{ marginTop: 14 }}>
                 <span className="mono-label" style={{ margin: 0 }}>
@@ -784,6 +853,57 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             </div>
           </div>
         </div>
+
+        <AIMemoryPanel
+          records={memory}
+          onReuse={(record) => {
+            setQuestion(record.question);
+            setAnswer({ text: record.answer, sources: record.sources });
+            setUsedAI(record.mode !== 'local');
+            setLastAiMeta({ model: record.model, confidence: record.confidence, tools: record.tools });
+          }}
+          onClear={() => setMemory(clearAIMemory())}
+        />
+      </div>
+    </div>
+  );
+}
+
+function AIMemoryPanel({
+  records,
+  onReuse,
+  onClear,
+}: {
+  records: AIMemoryRecord[];
+  onReuse: (record: AIMemoryRecord) => void;
+  onClear: () => void;
+}) {
+  return (
+    <div className="card ai-memory-panel">
+      <div className="card-hd">
+        <Icon name="database" size={15} style={{ color: 'var(--gold)' }} />
+        <h3>Memoria IA</h3>
+        <span className="spacer" />
+        {records.length ? (
+          <button type="button" className="card-link" onClick={onClear}>Limpiar</button>
+        ) : null}
+      </div>
+      <div className="card-pad">
+        {!records.length ? (
+          <p className="muted" style={{ margin: 0, fontSize: 12.5 }}>
+            Las preguntas guardadas aparecerán aquí para reutilizarlas durante la quiniela.
+          </p>
+        ) : (
+          <div className="ai-memory-list">
+            {records.slice(0, 6).map((record) => (
+              <button key={record.id} type="button" className="ai-memory-row" onClick={() => onReuse(record)}>
+                <span className="mono-label">{new Date(record.createdAt).toLocaleString()}</span>
+                <strong>{record.question}</strong>
+                <small>{record.mode === 'remote' ? record.model ?? 'IA remota' : record.mode === 'simulation' ? 'Simulación local' : 'Local'} · {record.confidence}</small>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

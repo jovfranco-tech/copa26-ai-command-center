@@ -5,6 +5,7 @@ import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap } from '@/hooks';
 import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
+import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
 import { isMatchLocked, lockLabel } from '@/lib/matchMeta';
@@ -86,6 +87,7 @@ export function Pool() {
   const { data, isLoading } = useMatches();
   const teams = useTeamsMap();
   const pool = usePool();
+  const role = usePreferences((s) => s.role);
   const [view, setView] = useState<'next' | 'all'>('next');
   const [activeTab, setActiveTab] = useState<'predict' | 'results'>('predict');
   const [inviteCopied, setInviteCopied] = useState(false);
@@ -114,6 +116,10 @@ export function Pool() {
 
   const summonAgent = async (agentName: 'optimista' | 'stats' | 'contrarian') => {
     if (loadingAgent) return;
+    if (role === 'guest') {
+      setAgentError('Modo invitado: los co-pilotos remotos están desactivados para proteger consumo.');
+      return;
+    }
     setLoadingAgent(true);
     setAgentError(null);
 
@@ -903,7 +909,13 @@ export function Pool() {
               <Icon name="print" size={15} />
               Imprimir PDF
             </button>
-            <button type="button" className="btn ghost animate-fade-in" onClick={() => setShowScanner(true)} title="Escanear quiniela física manuscrita con cámara">
+            <button
+              type="button"
+              className="btn ghost animate-fade-in"
+              onClick={() => setShowScanner(true)}
+              title="Escanear quiniela física manuscrita con cámara"
+              disabled={role === 'guest'}
+            >
               <Icon name="camera" size={15} style={{ color: 'var(--gold)' }} />
               Escanear Papel
             </button>
@@ -928,6 +940,12 @@ export function Pool() {
           <p className="muted" style={{ margin: '0 0 4px 0', fontSize: 12 }}>
             Invoca a un asistente de IA táctico para que rellene automáticamente tu quiniela con su filosofía de juego y te dé su justificación.
           </p>
+          {role === 'guest' && (
+            <div className="ai-guard-note">
+              <Icon name="shield" size={13} />
+              Modo invitado activo: co-pilotos y scanner quedan en pausa para proteger consumo y permisos.
+            </div>
+          )}
 
           {agentError && (
             <div
@@ -961,7 +979,7 @@ export function Pool() {
                 className={`btn ${activeAgent === 'optimista' ? 'gold' : 'ghost'}`}
                 style={{ width: '100%', marginTop: 8 }}
                 onClick={() => summonAgent('optimista')}
-                disabled={loadingAgent}
+                disabled={loadingAgent || role === 'guest'}
               >
                 {loadingAgent && activeAgent === 'optimista' ? 'Convocando…' : activeAgent === 'optimista' ? 'Activo' : 'Invocar Optimista'}
               </button>
@@ -980,7 +998,7 @@ export function Pool() {
                 className={`btn ${activeAgent === 'stats' ? 'gold' : 'ghost'}`}
                 style={{ width: '100%', marginTop: 8 }}
                 onClick={() => summonAgent('stats')}
-                disabled={loadingAgent}
+                disabled={loadingAgent || role === 'guest'}
               >
                 {loadingAgent && activeAgent === 'stats' ? 'Convocando…' : activeAgent === 'stats' ? 'Activo' : 'Invocar Estadístico'}
               </button>
@@ -999,7 +1017,7 @@ export function Pool() {
                 className={`btn ${activeAgent === 'contrarian' ? 'gold' : 'ghost'}`}
                 style={{ width: '100%', marginTop: 8 }}
                 onClick={() => summonAgent('contrarian')}
-                disabled={loadingAgent}
+                disabled={loadingAgent || role === 'guest'}
               >
                 {loadingAgent && activeAgent === 'contrarian' ? 'Convocando…' : activeAgent === 'contrarian' ? 'Activo' : 'Invocar Contrarian'}
               </button>

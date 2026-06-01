@@ -19,6 +19,7 @@ export const config = { runtime: 'edge' };
 const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 30;
+const ANALYST_TOOLS = ['calendario', 'partidos', 'selecciones', 'jugadores', 'sedes', 'clasificacion', 'adjuntos'];
 
 const SYSTEM_PROMPT =
   'Eres un analista del Mundial 2026. Responde SIEMPRE en español, de forma concisa y analítica. ' +
@@ -57,7 +58,13 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   const key = process.env.GEMINI_API_KEY || process.env[LEGACY_PROVIDER_KEY];
-  if (!key) return Response.json({ ok: false, reason: 'no-key' });
+  if (!key) {
+    return Response.json({
+      ok: false,
+      reason: 'no-key',
+      meta: { provider: 'local-fallback', confidence: 'Alta local', tools: ANALYST_TOOLS.slice(0, 6) },
+    });
+  }
 
   let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string } };
   try {
@@ -102,7 +109,18 @@ export default async function handler(request: Request): Promise<Response> {
     const data = (await res.json()) as any;
     const answer = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
     if (!answer) return Response.json({ ok: false, reason: 'empty-answer' }, { status: 502 });
-    return Response.json({ ok: true, answer });
+    return Response.json({
+      ok: true,
+      answer,
+      meta: {
+        provider: 'gemini',
+        model: modelName,
+        confidence: 'Media',
+        contextChars: context.length,
+        tools: ANALYST_TOOLS,
+        sources: ['contexto local', body.pdf ? `PDF: ${body.pdf.name}` : null, body.audio ? `Audio: ${body.audio.name}` : null].filter(Boolean),
+      },
+    });
   } catch (e) {
     console.error('Gemini API fetch error:', e);
     return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });

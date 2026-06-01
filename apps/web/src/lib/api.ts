@@ -233,7 +233,7 @@ export const fetchMonitoring = () =>
     limits: {
       poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
     },
-    ai: { configured: false, model: 'gpt-4o-mini' },
+    ai: { configured: false, model: 'local-fallback' },
   }));
 
 export interface LeaderboardEntry {

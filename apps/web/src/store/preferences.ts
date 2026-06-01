@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 
 export type Theme = 'dark' | 'light';
 export type Density = 'compact' | 'regular' | 'comfy';
+export type AppRole = 'admin' | 'family' | 'guest';
 
 export const FONT_PRESETS: Record<string, [ui: string, num: string]> = {
   Archivo: ["'Archivo', 'Space Grotesk', system-ui, sans-serif", "'JetBrains Mono', ui-monospace, monospace"],
@@ -14,6 +15,7 @@ export const FONT_PRESETS: Record<string, [ui: string, num: string]> = {
 export interface PreferencesState {
   theme: Theme;
   density: Density;
+  role: AppRole;
   accent: string;
   goldAmt: number; // 0..100
   radius: number; // px
@@ -25,6 +27,7 @@ export interface PreferencesState {
 const DEFAULTS = {
   theme: 'light' as Theme,
   density: 'regular' as Density,
+  role: 'family' as AppRole,
   accent: '#c9a24b',
   goldAmt: 30,
   radius: 14,
@@ -40,8 +43,8 @@ export const usePreferences = create<PreferencesState>()(
     }),
     {
       name: 'wc_prefs',
-      version: 1,
-      migrate: (persisted) => ({ ...(persisted as Partial<PreferencesState>), theme: 'light' }),
+      version: 2,
+      migrate: (persisted) => ({ ...(persisted as Partial<PreferencesState>), theme: 'light', role: 'family' }),
     },
   ),
 );
@@ -51,6 +54,7 @@ export function applyPreferences(p: PreferencesState): void {
   const r = document.documentElement;
   r.setAttribute('data-theme', p.theme);
   r.setAttribute('data-density', p.density);
+  r.setAttribute('data-role', p.role);
   r.style.setProperty('--gold', p.accent);
   r.style.setProperty('--gold-2', p.accent);
   r.style.setProperty('--gold-amt', (p.goldAmt / 100).toFixed(2));

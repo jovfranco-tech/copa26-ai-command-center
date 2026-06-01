@@ -11,6 +11,7 @@ import {
   type PoolPersistenceStatus,
 } from '@/lib/api';
 import { useMatches, usePlayers, useSyncStatus, useTeams, useVenues } from '@/hooks';
+import { usePreferences } from '@/store/preferences';
 
 export function DataCenter() {
   const { data: sync } = useSyncStatus();
@@ -18,6 +19,7 @@ export function DataCenter() {
   const { data: teams } = useTeams();
   const { data: players } = usePlayers();
   const { data: venues } = useVenues();
+  const role = usePreferences((s) => s.role);
   const [check, setCheck] = useState<DataSyncCheck | null>(null);
   const [poolStatus, setPoolStatus] = useState<PoolPersistenceStatus | null>(null);
   const [monitoring, setMonitoring] = useState<MonitoringSnapshot | null>(null);
@@ -109,6 +111,21 @@ export function DataCenter() {
             <Icon name={checking ? 'sparkSmall' : 'cloud'} size={14} />
             {checking ? 'Revisando...' : 'Revisar producción'}
           </button>
+        </div>
+      </div>
+
+      <div className="card ai-native-ops">
+        <div className="card-hd">
+          <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
+          <h3>AI native operativo</h3>
+          <span className="spacer" />
+          <span className="badge gold">{role === 'admin' ? 'Admin' : role === 'family' ? 'Familia' : 'Invitado'}</span>
+        </div>
+        <div className="card-pad ai-native-grid">
+          <AINativeTile label="Modelo" value={monitoring?.ai.configured ? monitoring.ai.model : 'Local fallback'} note={monitoring?.ai.configured ? 'Proveedor remoto configurado.' : 'Responde con analista local si falta clave.'} />
+          <AINativeTile label="Limite analista" value={monitoring?.limits.analyst ?? '30 / 10 min'} note={role === 'guest' ? 'Modo invitado usa motor local.' : 'Protege consumo cuando compartes link.'} />
+          <AINativeTile label="Herramientas" value="7 conectadas" note="Calendario, equipos, jugadores, sedes, tablas, adjuntos y memoria." />
+          <AINativeTile label="Uso hoy" value={String(monitoring?.usage.items?.['ai.analyst'] ?? 0)} note={`Proveedor de métricas: ${monitoring?.usage.provider ?? 'memory'}.`} />
         </div>
       </div>
 
@@ -354,6 +371,16 @@ function TrustSource({ label, source, confidence }: { label: string; source: str
         <p>{source}</p>
       </div>
       <span className="badge">{confidence}</span>
+    </div>
+  );
+}
+
+function AINativeTile({ label, value, note }: { label: string; value: string; note: string }) {
+  return (
+    <div className="ai-native-tile">
+      <span className="mono-label">{label}</span>
+      <strong>{value}</strong>
+      <p>{note}</p>
     </div>
   );
 }

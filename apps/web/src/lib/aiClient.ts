@@ -76,6 +76,15 @@ export interface AIResult {
   ok: boolean;
   answer?: string;
   reason?: string;
+  retryAfter?: number;
+  meta?: {
+    provider?: string;
+    model?: string;
+    confidence?: string;
+    contextChars?: number;
+    tools?: string[];
+    sources?: string[];
+  };
 }
 
 export async function askAI(
@@ -91,7 +100,14 @@ export async function askAI(
       body: JSON.stringify({ question, context, pdf, audio }),
     });
     const data = (await res.json().catch(() => ({}))) as AIResult;
-    if (!res.ok) return { ok: false, reason: data.reason ?? `http-${res.status}` };
+    if (!res.ok) {
+      return {
+        ok: false,
+        reason: data.reason ?? `http-${res.status}`,
+        retryAfter: data.retryAfter,
+        meta: data.meta,
+      };
+    }
     return data;
   } catch {
     return { ok: false, reason: 'network' };
@@ -122,4 +138,3 @@ export async function askPoolAgent(
     return { ok: false, reason: 'network' };
   }
 }
-
