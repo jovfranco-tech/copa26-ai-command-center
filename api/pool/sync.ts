@@ -6,11 +6,15 @@ export async function POST(request: Request): Promise<Response> {
 
   let body: {
     playerName?: string;
+    groupId?: string;
+    avatarUrl?: string;
     picks?: Record<string, FirestorePoolPick>;
   };
   try {
     body = (await request.json()) as {
       playerName?: string;
+      groupId?: string;
+      avatarUrl?: string;
       picks?: Record<string, FirestorePoolPick>;
     };
   } catch {
@@ -33,7 +37,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    await writePoolPicksToFirestore(playerName, picks);
+    await writePoolPicksToFirestore(playerName, picks, body.groupId, body.avatarUrl);
     return Response.json({ ok: true }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return Response.json(

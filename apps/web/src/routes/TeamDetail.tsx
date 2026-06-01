@@ -7,8 +7,9 @@ import { PlayerCard, MatchRow, StandingsTable } from '@/components/cards';
 import { coachProfiles } from '@/generated/intelPacks';
 import { downloadedTeamKitVariantExts, teamKitVariants, type TeamKitVariant } from '@/generated/teamKits';
 import { useMatches, usePlayers, useStandings, useTeam } from '@/hooks';
+import { playerRatings } from '@/lib/ratings';
 
-type Tab = 'squad' | 'fixtures' | 'group';
+type Tab = 'profile' | 'squad' | 'fixtures' | 'kits' | 'group';
 
 export function TeamDetail({ code }: { code: string }) {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export function TeamDetail({ code }: { code: string }) {
   const { data: players } = usePlayers({ team: code });
   const { data: matches } = useMatches({ team: code });
   const { data: standings } = useStandings();
-  const [tab, setTab] = useState<Tab>('squad');
+  const [tab, setTab] = useState<Tab>('profile');
 
   if (isLoading) return <p className="muted">Cargando selección…</p>;
   const t = teamData?.item;
@@ -80,12 +81,16 @@ export function TeamDetail({ code }: { code: string }) {
       </div>
 
       <div className="row gap-6" style={{ marginBottom: 14 }}>
-        {(['squad', 'fixtures', 'group'] as Tab[]).map((tb) => (
+        {(['profile', 'squad', 'fixtures', 'kits', 'group'] as Tab[]).map((tb) => (
           <button key={tb} type="button" className={cn('pill', tab === tb && 'on')} onClick={() => setTab(tb)}>
-            {tb === 'squad' ? 'Plantilla' : tb === 'fixtures' ? 'Partidos' : 'Grupo'}
+            {tb === 'profile' ? 'Perfil' : tb === 'squad' ? 'Plantilla' : tb === 'fixtures' ? 'Partidos' : tb === 'kits' ? 'Uniformes' : 'Grupo'}
           </button>
         ))}
       </div>
+
+      {tab === 'profile' && (
+        <TeamProfile code={code} players={squad} fixtures={fixtures} coach={coach} ranking={t.ranking} />
+      )}
 
       {tab === 'squad' &&
         (squad.length ? (
@@ -110,6 +115,12 @@ export function TeamDetail({ code }: { code: string }) {
         </div>
       )}
 
+      {tab === 'kits' && (
+        <div className="card card-pad team-kits-panel">
+          <KitStrip code={code} force />
+        </div>
+      )}
+
       {tab === 'group' && (
         <div className="card">
           <div className="card-hd">
@@ -129,11 +140,86 @@ export function TeamDetail({ code }: { code: string }) {
   );
 }
 
-function KitStrip({ code }: { code: string }) {
+function TeamProfile({
+  code,
+  players,
+  fixtures,
+  coach,
+  ranking,
+}: {
+  code: string;
+  players: Array<{ id: string; name: string; pos: string; club: string; team: string; age: number | null }>;
+  fixtures: Array<{ id: string; home: string; away: string; date: string; time: string; status: string }>;
+  coach: { name: string | null; photo: string | null; summary?: string | null } | undefined;
+  ranking: number | null;
+}) {
+  const ratings = players.map((p) => ({ player: p, rating: playerRatings(p) })).sort((a, b) => b.rating.overall - a.rating.overall);
+  const avgRating = ratings.length ? Math.round(ratings.reduce((sum, row) => sum + row.rating.overall, 0) / ratings.length) : 0;
+  const star = ratings[0];
+  const next = fixtures.find((m) => m.status === 'UPCOMING');
+
+  return (
+    <div className="grid team-profile-grid">
+      <div className="card card-pad profile-main-card">
+        <span className="mono-label">Perfil de seleccion</span>
+        <h3>{code}</h3>
+        <div className="profile-kpis">
+          <ProfileKpi label="Rating medio" value={avgRating || '—'} />
+          <ProfileKpi label="Ranking" value={ranking ?? 'Pendiente'} />
+          <ProfileKpi label="Plantilla" value={players.length} />
+        </div>
+        <div className="divider" />
+        {star ? (
+          <div className="row gap-12 wrap">
+            <span className="badge gold">Figura</span>
+            <strong>{star.player.name}</strong>
+            <span className="mono-label">{star.player.club}</span>
+            <span className="num tx-gold">{star.rating.overall}</span>
+          </div>
+        ) : (
+          <p className="muted">La figura se calcula cuando hay jugadores cargados.</p>
+        )}
+      </div>
+      <div className="card card-pad">
+        <span className="mono-label">Entrenador</span>
+        <div className="row gap-12" style={{ marginTop: 10 }}>
+          {coach?.photo ? <img src={coach.photo} alt={coach.name ?? 'Entrenador'} className="profile-coach-photo" loading="lazy" /> : null}
+          <div>
+            <strong>{coach?.name ?? 'Pendiente'}</strong>
+            <p className="muted" style={{ margin: '4px 0 0', fontSize: 12.5 }}>{coach?.summary ?? 'Perfil preparado para actualizarse.'}</p>
+          </div>
+        </div>
+      </div>
+      <div className="card card-pad">
+        <span className="mono-label">Proximo partido</span>
+        {next ? (
+          <div style={{ marginTop: 10 }}>
+            <strong>{next.home} vs {next.away}</strong>
+            <div className="mono-label">{next.date} · {next.time}</div>
+          </div>
+        ) : (
+          <p className="muted">Sin partido pendiente.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ProfileKpi({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div>
+      <span className="mono-label">{label}</span>
+      <strong className="num">{value}</strong>
+    </div>
+  );
+}
+
+function KitStrip({ code, force = false }: { code: string; force?: boolean }) {
   const variants = (['home', 'away', 'third'] as TeamKitVariant[]).filter(
     (variant) => downloadedTeamKitVariantExts[code]?.[variant] || teamKitVariants[code]?.[variant],
   );
-  if (variants.length <= 1) return null;
+  if (variants.length <= 1 && !force) return null;
+  const visible = variants.length ? variants : (['home'] as TeamKitVariant[]);
   const label: Record<TeamKitVariant, string> = {
     home: 'Local',
     away: 'Visita',
@@ -142,7 +228,7 @@ function KitStrip({ code }: { code: string }) {
   };
   return (
     <div className="kit-strip">
-      {variants.map((variant) => (
+      {visible.map((variant) => (
         <div key={variant} className="kit-variant">
           <TeamKit code={code} variant={variant} size={42} />
           <span className="mono-label">{label[variant]}</span>

@@ -4,8 +4,11 @@ import { Icon, Section, StatTile, Skeleton } from '@worldcup/ui';
 import { avg, fmtGD, type Match } from '@worldcup/shared';
 import { MatchCard, MatchRow, Ticker, PlayerMini } from '@/components/cards';
 import { TeamCrest } from '@/components/identity';
+import { MatchdayHero } from '@/components/MatchdayHero';
 import { MockBanner } from '@/components/MockBanner';
+import { TournamentTimeline } from '@/components/TournamentTimeline';
 import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt } from '@/hooks';
+import { focusMatch } from '@/lib/matchMeta';
 import { useFavorites } from '@/store/favorites';
 import { stadiumAudio } from '@/lib/audioSynth';
 
@@ -33,6 +36,7 @@ export function Dashboard() {
   const day = useMemo(() => focusDate(matches), [matches]);
   const today = matches.filter((m) => m.date === day);
   const live = matches.filter((m) => m.status === 'LIVE');
+  const heroMatch = useMemo(() => focusMatch(matches), [matches]);
   const upcoming = matches.filter((m) => m.status === 'UPCOMING').slice(0, 5);
   const results = matches.filter((m) => m.status === 'FT').slice(-6).reverse();
   const played = matches.filter((m) => m.status === 'FT').length;
@@ -55,6 +59,7 @@ export function Dashboard() {
   return (
     <div className="page-fade">
       <MockBanner />
+      <MatchdayHero match={heroMatch} />
 
       <div className="stat-strip" style={{ marginBottom: 18 }}>
         <StatTile icon="ball" label="Goles" value={goals} sub="Torneo" spark={[40, 55, 38, 70, 62, 90, 100]} />
@@ -145,6 +150,8 @@ export function Dashboard() {
               )}
             </div>
           </Section>
+
+          <TournamentTimeline matches={matches} />
         </div>
 
         {/* rail */}

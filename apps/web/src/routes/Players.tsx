@@ -16,7 +16,7 @@ export function Players() {
     <div className="page-fade">
       <MockBanner />
 
-      <div className="card card-pad" style={{ marginBottom: 18 }}>
+      <div className="card card-pad filter-sticky" style={{ marginBottom: 18 }}>
         <div className="searchbox" style={{ marginLeft: 0, marginBottom: 10, maxWidth: 360 }}>
           <Icon name="search" size={15} />
           <input
@@ -105,4 +105,3 @@ function PlayersSkeleton() {
     </div>
   );
 }
-

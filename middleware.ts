@@ -185,10 +185,10 @@ function accessPage({
   <title>Mundial 2026 · Acceso privado</title>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f3f6fb; color: #121826; }
-    body::before { content: ""; position: fixed; inset: 0; background: radial-gradient(800px 440px at 74% -10%, rgba(201,162,75,.24), transparent 62%), linear-gradient(180deg, rgba(255,255,255,.86), rgba(235,241,249,.92)); pointer-events: none; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #111827 url('/venue-photos/mex.webp') center / cover no-repeat; color: #121826; }
+    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(115deg, rgba(248,250,252,.96), rgba(248,250,252,.84) 48%, rgba(12,18,30,.44)), radial-gradient(800px 440px at 74% -10%, rgba(201,162,75,.24), transparent 62%); pointer-events: none; }
     main { position: relative; width: min(420px, calc(100vw - 36px)); }
-    .card { border: 1px solid rgba(18,28,48,.12); border-radius: 22px; background: rgba(255,255,255,.9); box-shadow: 0 26px 70px -34px rgba(22,35,60,.45); overflow: hidden; }
+    .card { border: 1px solid rgba(18,28,48,.12); border-radius: 22px; background: rgba(255,255,255,.92); backdrop-filter: blur(18px); box-shadow: 0 26px 70px -34px rgba(22,35,60,.45); overflow: hidden; }
     .stripe { height: 6px; background: linear-gradient(90deg, #c9a24b, #111827, #c9a24b); }
     .body { padding: 28px; }
     .mark { width: 54px; height: 54px; border-radius: 15px; display: grid; place-items: center; background: linear-gradient(145deg, #d8b45f, #b58c32); color: #111827; box-shadow: 0 14px 30px -18px rgba(0,0,0,.45); }
@@ -199,7 +199,9 @@ function accessPage({
     input:focus { border-color: #c9a24b; box-shadow: 0 0 0 4px rgba(201,162,75,.16); }
     button { width: 100%; height: 46px; margin-top: 14px; border: 0; border-radius: 12px; background: linear-gradient(145deg, #d8b45f, #b58c32); color: #181203; font-weight: 800; cursor: pointer; }
     .error { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: #fff3f2; color: #b42318; border: 1px solid #ffd2cc; font-size: 13px; }
-    .foot { margin-top: 14px; text-align: center; color: #8d98ab; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+    .meta { display: flex; gap: 8px; flex-wrap: wrap; margin: -6px 0 18px; }
+    .meta span { border: 1px solid rgba(18,28,48,.12); border-radius: 999px; padding: 5px 9px; color: #657086; font-size: 11px; font-weight: 700; }
+    .foot { margin-top: 14px; text-align: center; color: #4b5565; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -212,6 +214,7 @@ function accessPage({
         </div>
         <h1>Mundial 2026</h1>
         <p>Dashboard privado para calendario, selecciones, jugadores, quiniela familiar y analista.</p>
+        <div class="meta"><span>Quiniela familiar</span><span>Datos del torneo</span><span>Modo TV</span></div>
         ${error ? `<div class="error">${escapeHtml(error)}</div>` : ''}
         <form method="post" action="/api/login">
           <input type="hidden" name="redirectTo" value="${escapeHtml(redirectTo)}" />

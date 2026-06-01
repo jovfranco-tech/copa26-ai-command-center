@@ -44,7 +44,7 @@ export function MatchCenter() {
     <div className="page-fade">
       <MockBanner />
 
-      <div className="card card-pad" style={{ marginBottom: 18 }}>
+      <div className="card card-pad filter-sticky" style={{ marginBottom: 18 }}>
         <div className="row gap-8 wrap" style={{ marginBottom: 10 }}>
           {STATUSES.map((s) => (
             <Pill key={s.v} on={f.status === s.v} onClick={() => f.set({ status: s.v })}>

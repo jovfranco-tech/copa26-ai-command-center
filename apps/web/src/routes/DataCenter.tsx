@@ -71,6 +71,22 @@ export function DataCenter() {
         <DataTile icon="venues" label="Sedes" value={venues?.count ?? 0} note="Fotos y estadios" />
       </div>
 
+      <div className="card data-exec">
+        <div className="card-hd">
+          <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
+          <h3>Semaforo ejecutivo</h3>
+          <span className="spacer" />
+          <span className="mono-label">Fuente · fecha · confianza</span>
+        </div>
+        <div className="card-pad exec-grid">
+          <ExecSignal status="ok" title="Calendario" source="Dataset local del torneo" date="2026-05-31" confidence="Alta" />
+          <ExecSignal status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Resultados" source={check?.resultsSource === 'configured' ? 'Feed autorizado' : 'RESULTS_SOURCE_URL pendiente'} date={check?.checkedAt ?? 'Sin revision'} confidence={check?.resultsSource === 'configured' ? 'Alta' : 'Pendiente'} />
+          <ExecSignal status={estimatedRatings ? 'wait' : 'ok'} title="Ratings" source={playerRatingMeta.source} date={playerRatingMeta.downloadedAt.slice(0, 10)} confidence={estimatedRatings ? 'Media' : 'Alta'} />
+          <ExecSignal status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela" source={poolStatus?.label ?? 'Sin revisar'} date={check?.checkedAt ?? 'Sin revision'} confidence={poolStatus?.durable ? 'Alta' : 'Pendiente'} />
+          <ExecSignal status={monitoring?.ai.configured ? 'ok' : 'wait'} title="IA" source={monitoring?.ai.model ?? 'Proveedor pendiente'} date={monitoring?.usage.day ?? 'Sin revision'} confidence={monitoring?.ai.configured ? 'Media' : 'Pendiente'} />
+        </div>
+      </div>
+
       <div className="grid data-columns">
         <div className="card">
           <div className="card-hd">
@@ -78,7 +94,7 @@ export function DataCenter() {
             <h3>Flujo de actualización</h3>
           </div>
           <div className="card-pad">
-            <UpdateStep status="ok" title="Calendario" text="Snapshot local de datos con 104 partidos y sedes." />
+            <UpdateStep status="ok" title="Calendario" text={`Snapshot local de datos con ${matches?.count ?? 0} partidos y ${venues?.count ?? 0} sedes.`} />
             <UpdateStep status={played ? 'ok' : 'wait'} title="Resultados" text="Se activan cuando empiecen los partidos del 11 de junio de 2026." />
             <UpdateStep status={played ? 'ok' : 'wait'} title="Tablas y estadísticas" text="Se recalculan desde resultados reales cuando existan marcadores." />
             <UpdateStep status="ok" title="Cron Vercel" text="Revisión diaria a las 12:00 UTC en producción." />
@@ -208,6 +224,72 @@ export function DataCenter() {
       ) : (
         <Empty icon="cloud" title="Sin revisión manual todavía" text="Pulsa actualizar ahora para comprobar el flujo de datos desde producción." />
       )}
+
+      <div className="grid data-columns" style={{ marginTop: 18 }}>
+        <div className="card">
+          <div className="card-hd">
+            <Icon name="list" size={15} style={{ color: 'var(--gold)' }} />
+            <h3>Log de actualizacion</h3>
+          </div>
+          <div className="card-pad">
+            {(check?.logs?.length ? check.logs : ['Sin log remoto todavia. Ejecuta Actualizar ahora.']).map((line) => (
+              <div key={line} className="data-log-row">{line}</div>
+            ))}
+            {check?.errors?.length ? (
+              <div className="data-error-box">
+                {check.errors.map((error) => <span key={error}>{error}</span>)}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-hd">
+            <Icon name="clock" size={15} style={{ color: 'var(--gold)' }} />
+            <h3>Historial de cambios</h3>
+          </div>
+          <div className="card-pad">
+            <ChangeItem title="Assets e intel" date={intelGeneratedAt} text="Fotos, kits, clima, sedes, entrenadores y packs de datos regenerados." />
+            <ChangeItem title="Ratings" date={playerRatingMeta.downloadedAt} text={`${playerRatingMeta.resolved}/${playerRatingMeta.total} ratings FC 26 cargados; el resto queda estimado.`} />
+            <ChangeItem title="Clima" date={weatherMeta.generatedAt} text={`${weatherMeta.matchesCovered} partidos con baseline historico.`} />
+            <ChangeItem title="Sync" date={sync?.meta.lastSync ?? 'Sin fecha'} text="Calendario base y tablas se recalculan desde resultados cuando existan marcadores." />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExecSignal({
+  status,
+  title,
+  source,
+  date,
+  confidence,
+}: {
+  status: 'ok' | 'wait';
+  title: string;
+  source: string;
+  date: string;
+  confidence: string;
+}) {
+  return (
+    <div className="exec-signal">
+      <span className={status === 'ok' ? 'dot-ok' : 'dot-warn'} />
+      <strong>{title}</strong>
+      <span>{source}</span>
+      <span className="mono-label">{date}</span>
+      <span className="badge">{confidence}</span>
+    </div>
+  );
+}
+
+function ChangeItem({ title, date, text }: { title: string; date: string; text: string }) {
+  return (
+    <div className="change-item">
+      <span className="mono-label">{date}</span>
+      <strong>{title}</strong>
+      <p>{text}</p>
     </div>
   );
 }

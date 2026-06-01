@@ -29,18 +29,21 @@ export default async function handler(request: Request): Promise<Response> {
 
   const resultsSourceUrl = process.env.RESULTS_SOURCE_URL;
   const pipeline = await checkResultsPipeline(resultsSourceUrl);
+  const checkedAt = new Date().toISOString();
 
   return Response.json(
     {
       ok: true,
       status: pipeline.status,
-      checkedAt: new Date().toISOString(),
+      checkedAt,
       mode: isCron ? 'cron' : 'manual',
       cron: CRON_LABEL,
       results: pipeline.results,
       calendar: 'Calendario oficial del torneo',
       resultsSource: resultsSourceUrl ? 'configured' : 'not-configured',
       nextAction: pipeline.nextAction,
+      logs: [`${checkedAt} · ${isCron ? 'cron' : 'manual'} · health-check`, `${checkedAt} · results · ${pipeline.results}`],
+      errors: pipeline.errors,
     },
     {
       headers: {
@@ -54,6 +57,7 @@ async function checkResultsPipeline(resultsSourceUrl: string | undefined): Promi
   status: string;
   results: string;
   nextAction: string;
+  errors: string[];
 }> {
   const today = new Date().toISOString().slice(0, 10);
   if (today < OPENING_DATE) {
@@ -61,6 +65,7 @@ async function checkResultsPipeline(resultsSourceUrl: string | undefined): Promi
       status: 'Pipeline listo; torneo pendiente',
       results: `Pendientes hasta el ${OPENING_DATE}`,
       nextAction: 'Mantener cron activo; conectar RESULTS_SOURCE_URL cuando exista feed de marcadores autorizado.',
+      errors: [],
     };
   }
 
@@ -70,6 +75,7 @@ async function checkResultsPipeline(resultsSourceUrl: string | undefined): Promi
       results: 'Torneo en ventana de juego; falta RESULTS_SOURCE_URL',
       nextAction:
         'Configura RESULTS_SOURCE_URL con JSON de marcadores autorizado; luego el cron podra validar cambios y avisar redeploy.',
+      errors: ['RESULTS_SOURCE_URL no configurado'],
     };
   }
 
@@ -82,12 +88,15 @@ async function checkResultsPipeline(resultsSourceUrl: string | undefined): Promi
       status: count > 0 ? 'Feed de resultados reachable' : 'Feed reachable sin marcadores',
       results: `${count} registros detectados${body.updatedAt ? ` · ${body.updatedAt}` : ''}`,
       nextAction: 'Validar marcadores, correr ingestion local y redeployar snapshot de produccion.',
+      errors: [],
     };
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'fetch-error';
     return {
       status: 'Feed de resultados con error',
-      results: error instanceof Error ? error.message : 'fetch-error',
+      results: message,
       nextAction: 'Revisar RESULTS_SOURCE_URL o credenciales antes del siguiente cron.',
+      errors: [message],
     };
   }
 }

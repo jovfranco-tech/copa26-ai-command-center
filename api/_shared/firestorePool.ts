@@ -21,7 +21,7 @@ export async function getFirestorePoolPersistenceStatus(): Promise<PoolPersisten
   };
 
   try {
-    const res = await fetch(`${BASE_URL}/poolPicks?pageSize=1&key=${POOL_FIRESTORE_CONFIG.apiKey}`, {
+    const res = await fetch(`${BASE_URL}/poolGroups/familia-2026/members?pageSize=1&key=${POOL_FIRESTORE_CONFIG.apiKey}`, {
       headers: { accept: 'application/json' },
     });
     if (res.ok) {
@@ -46,13 +46,18 @@ export async function getFirestorePoolPersistenceStatus(): Promise<PoolPersisten
 export async function writePoolPicksToFirestore(
   playerName: string,
   picks: Record<string, FirestorePoolPick>,
+  groupId = 'familia-2026',
+  avatarUrl = '',
 ): Promise<void> {
   const cleanName = normalizePlayerName(playerName);
-  const res = await fetch(`${BASE_URL}/poolPicks/${encodeURIComponent(cleanName)}?key=${POOL_FIRESTORE_CONFIG.apiKey}`, {
+  const cleanGroup = normalizeGroupId(groupId);
+  const res = await fetch(`${BASE_URL}/poolGroups/${encodeURIComponent(cleanGroup)}/members/${encodeURIComponent(cleanName)}?key=${POOL_FIRESTORE_CONFIG.apiKey}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       fields: {
+        playerName: { stringValue: cleanName },
+        avatarUrl: { stringValue: avatarUrl.trim().slice(0, 280) },
         picks: {
           mapValue: {
             fields: Object.fromEntries(
@@ -76,6 +81,10 @@ export function normalizePlayerName(playerName: string): string {
     throw new Error('invalid-player-name');
   }
   return clean;
+}
+
+export function normalizeGroupId(groupId: string): string {
+  return groupId.trim().replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 40) || 'familia-2026';
 }
 
 function pickToFirestoreValue(pick: FirestorePoolPick): {

@@ -7,15 +7,10 @@ import { MatchCenter } from '@/routes/MatchCenter';
 import { MatchDetail } from '@/routes/MatchDetail';
 import { Teams } from '@/routes/Teams';
 import { TeamDetail } from '@/routes/TeamDetail';
-import { Players } from '@/routes/Players';
 import { PlayerDetail } from '@/routes/PlayerDetail';
 import { Standings } from '@/routes/Standings';
 import { Bracket } from '@/routes/Bracket';
-import { Venues } from '@/routes/Venues';
 import { Favorites } from '@/routes/Favorites';
-import { Pool } from '@/routes/Pool';
-import { DataCenter } from '@/routes/DataCenter';
-import { Analyst } from '@/routes/Analyst';
 
 type AnalystCtx = 'tournament' | 'match' | 'team' | 'player';
 
@@ -54,8 +49,6 @@ const teamDetailRoute = createRoute({
     return <TeamDetail code={code} />;
   },
 });
-
-const playersRoute = createRoute({ getParentRoute: () => rootRoute, path: '/players', component: Players });
 
 const playerDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -97,6 +90,24 @@ function lazyWithRetry<T extends ComponentType<any>>(componentImport: () => Prom
 }
 
 const LazyStats = lazyWithRetry(() => import('./routes/Stats').then((m) => ({ default: m.Stats })));
+const LazyPlayers = lazyWithRetry(() => import('./routes/Players').then((m) => ({ default: m.Players })));
+const LazyVenues = lazyWithRetry(() => import('./routes/Venues').then((m) => ({ default: m.Venues })));
+const LazyPool = lazyWithRetry(() => import('./routes/Pool').then((m) => ({ default: m.Pool })));
+const LazyDataCenter = lazyWithRetry(() => import('./routes/DataCenter').then((m) => ({ default: m.DataCenter })));
+const LazyAnalyst = lazyWithRetry(() => import('./routes/Analyst').then((m) => ({ default: m.Analyst })));
+const LazyTVMode = lazyWithRetry(() => import('./routes/TVMode').then((m) => ({ default: m.TVMode })));
+
+const playersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/players',
+  component: function PlayersRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={240} />}>
+        <LazyPlayers />
+      </Suspense>
+    );
+  },
+});
 
 // eslint-disable-next-line react-refresh/only-export-components
 function StatsSkeleton() {
@@ -127,10 +138,51 @@ const statsRoute = createRoute({
   },
 });
 const bracketRoute = createRoute({ getParentRoute: () => rootRoute, path: '/bracket', component: Bracket });
-const venuesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/venues', component: Venues });
+const venuesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/venues',
+  component: function VenuesRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyVenues />
+      </Suspense>
+    );
+  },
+});
 const favoritesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/favorites', component: Favorites });
-const poolRoute = createRoute({ getParentRoute: () => rootRoute, path: '/pool', component: Pool });
-const dataRoute = createRoute({ getParentRoute: () => rootRoute, path: '/data', component: DataCenter });
+const poolRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/pool',
+  component: function PoolRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyPool />
+      </Suspense>
+    );
+  },
+});
+const dataRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/data',
+  component: function DataRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyDataCenter />
+      </Suspense>
+    );
+  },
+});
+const tvRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tv',
+  component: function TVRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyTVMode />
+      </Suspense>
+    );
+  },
+});
 
 const analystRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -145,7 +197,11 @@ const analystRoute = createRoute({
   },
   component: function AnalystRoute() {
     const { ctx, id } = analystRoute.useSearch();
-    return <Analyst ctx={ctx} id={id} />;
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyAnalyst ctx={ctx} id={id} />
+      </Suspense>
+    );
   },
 });
 
@@ -164,6 +220,7 @@ const routeTree = rootRoute.addChildren([
   favoritesRoute,
   poolRoute,
   dataRoute,
+  tvRoute,
   analystRoute,
 ]);
 

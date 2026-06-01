@@ -2,25 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge, Empty, cn } from '@worldcup/ui';
 import { fmtFull, type MatchEvent, type Player } from '@worldcup/shared';
-import { TeamCrest, TeamFlag, FavStar } from '@/components/identity';
+import { DataSourceBadge } from '@/components/DataSourceBadge';
+import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
 import { useMatch, usePlayers, useTeamsMap } from '@/hooks';
+import { h2hSummary, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 
-type Tab = 'events' | 'lineups' | 'stats';
-
-function getCityWeather(city?: string): string {
-  if (!city) return '☀️ 22°C · Templado';
-  const c = city.toLowerCase();
-  if (c.includes('mexico') || c.includes('azteca') || c.includes('guadalajara') || c.includes('monterrey') || c.includes('médico')) {
-    return '⛅ 26°C · Nublado sutil';
-  }
-  if (c.includes('vancouver') || c.includes('seattle') || c.includes('toronto')) {
-    return '🌧️ 17°C · Llovizna leve';
-  }
-  if (c.includes('miami') || c.includes('houston') || c.includes('dallas')) {
-    return '⛈️ 29°C · Humedad alta';
-  }
-  return '☀️ 21°C · Despejado';
-}
+type Tab = 'events' | 'lineups' | 'stats' | 'intel';
 
 export function MatchDetail({ id }: { id: string }) {
   const navigate = useNavigate();
@@ -36,15 +23,26 @@ export function MatchDetail({ id }: { id: string }) {
   const awayName = teams[m.away]?.name ?? m.away;
   const pH = m.possH ?? 50;
   const events = data?.events ?? [];
+  const weather = weatherSummary(m.id);
+  const h2h = h2hSummary(m.home, m.away);
+  const source = matchSourceInfo(m);
+  const photo = venuePhotoSrc(m.venue);
 
   return (
     <div className="page-fade">
-      <div className="card" style={{ overflow: 'hidden', marginBottom: 18 }}>
+      <div
+        className="card match-detail-hero"
+        style={photo ? { '--match-hero-img': `url(${photo})` } as React.CSSProperties : undefined}
+      >
+        <div className="match-detail-bg" />
         <div style={{ height: 5, background: `linear-gradient(90deg, ${teams[m.home]?.colorA ?? '#888'}, ${teams[m.away]?.colorB ?? '#888'})` }} />
         <div className="card-pad">
           <div className="row gap-8" style={{ justifyContent: 'space-between', marginBottom: 14 }}>
-            <span className="mono-label">
-              {m.stage} · {m.round}
+            <span className="row gap-8 wrap">
+              <span className="mono-label">
+                {m.stage} · {m.round}
+              </span>
+              <DataSourceBadge {...source} compact />
             </span>
             <span className="row gap-8">
               <FavStar kind="matches" id={m.id} />
@@ -57,6 +55,7 @@ export function MatchDetail({ id }: { id: string }) {
               <TeamCrest code={m.home} size={64} />
               <span style={{ fontWeight: 700 }}>{homeName}</span>
               <TeamFlag code={m.home} size={16} />
+              <TeamKit code={m.home} size={46} />
             </div>
             <div style={{ textAlign: 'center' }}>
               {m.status === 'UPCOMING' ? (
@@ -73,11 +72,15 @@ export function MatchDetail({ id }: { id: string }) {
               <div className="mono-label" style={{ marginTop: 6 }}>
                 {fmtFull(m.date)}
               </div>
+              <div className="mono-label" style={{ marginTop: 4 }}>
+                {venueTimeLabel(m)}
+              </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
               <TeamCrest code={m.away} size={64} />
               <span style={{ fontWeight: 700 }}>{awayName}</span>
               <TeamFlag code={m.away} size={16} />
+              <TeamKit code={m.away} size={46} />
             </div>
           </div>
 
@@ -85,25 +88,12 @@ export function MatchDetail({ id }: { id: string }) {
             <span className="row gap-6">
               <Icon name="pin" size={13} /> {data?.venue?.stadium ?? '—'}, {data?.venue?.city ?? '—'}
             </span>
-            {data?.venue?.city && (
-              <span
-                className="row gap-4"
-                style={{
-                  background: 'rgba(201, 162, 75, 0.08)',
-                  border: '1px solid rgba(201, 162, 75, 0.15)',
-                  borderRadius: '12px',
-                  padding: '2px 8px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  color: 'var(--gold-2)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                }}
-                title="Clima en vivo del estadio"
-              >
-                {getCityWeather(data.venue.city)}
-              </span>
-            )}
+            <span className="match-chip" title={`${weather.source} · ${weather.date}`}>
+              <Icon name="rain" size={13} /> {weather.label}
+            </span>
+            <span className="match-chip" title={`${h2h.source} · ${h2h.date}`}>
+              <Icon name="activity" size={13} /> {h2h.label}
+            </span>
             <span className="row gap-6">
               <Icon name="standings" size={13} /> Grupo {m.group}
             </span>
@@ -121,9 +111,9 @@ export function MatchDetail({ id }: { id: string }) {
       </div>
 
       <div className="row gap-6" style={{ marginBottom: 14 }}>
-        {(['events', 'lineups', 'stats'] as Tab[]).map((t) => (
+        {(['events', 'lineups', 'stats', 'intel'] as Tab[]).map((t) => (
           <button key={t} type="button" className={cn('pill', tab === t && 'on')} onClick={() => setTab(t)}>
-            {t === 'events' ? 'Eventos' : t === 'lineups' ? 'Alineaciones' : 'Estadísticas'}
+            {t === 'events' ? 'Eventos' : t === 'lineups' ? 'Alineaciones' : t === 'stats' ? 'Estadísticas' : 'Fuentes'}
           </button>
         ))}
       </div>
@@ -131,6 +121,35 @@ export function MatchDetail({ id }: { id: string }) {
       {tab === 'events' && <EventsTimeline events={events} homeCode={m.home} />}
       {tab === 'lineups' && <Lineups homeCode={m.home} awayCode={m.away} />}
       {tab === 'stats' && <MatchStats m={m} pH={pH} />}
+      {tab === 'intel' && <MatchIntel source={source} weather={weather} h2h={h2h} />}
+    </div>
+  );
+}
+
+function MatchIntel({
+  source,
+  weather,
+  h2h,
+}: {
+  source: ReturnType<typeof matchSourceInfo>;
+  weather: ReturnType<typeof weatherSummary>;
+  h2h: ReturnType<typeof h2hSummary>;
+}) {
+  return (
+    <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))' }}>
+      <IntelCard title="Calendario / resultado" data={source} />
+      <IntelCard title="Clima" data={{ label: weather.label, source: weather.source, date: weather.date, confidence: weather.confidence }} />
+      <IntelCard title="Historial H2H" data={h2h} />
+    </div>
+  );
+}
+
+function IntelCard({ title, data }: { title: string; data: { label: string; source: string; date: string; confidence: 'Alta' | 'Media' | 'Pendiente' | 'Manual' } }) {
+  return (
+    <div className="card card-pad source-card">
+      <span className="mono-label">{title}</span>
+      <strong>{data.label}</strong>
+      <DataSourceBadge {...data} />
     </div>
   );
 }
@@ -283,4 +302,3 @@ function MatchDetailSkeleton() {
     </div>
   );
 }
-

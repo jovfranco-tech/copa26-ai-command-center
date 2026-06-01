@@ -12,8 +12,12 @@ export interface PoolPick {
 
 interface PoolState {
   playerName: string;
+  groupId: string;
+  avatarUrl: string;
   picks: Record<string, PoolPick>;
   setPlayerName: (name: string) => void;
+  setGroupId: (groupId: string) => void;
+  setAvatarUrl: (avatarUrl: string) => void;
   setOutcome: (matchId: string, outcome: PoolOutcome) => void;
   setScore: (matchId: string, side: 'homeGoals' | 'awayGoals', value: number | undefined) => void;
   clearMatch: (matchId: string) => void;
@@ -79,8 +83,12 @@ export const usePool = create<PoolState>()(
   persist(
     (set) => ({
       playerName: '',
+      groupId: 'familia-2026',
+      avatarUrl: '',
       picks: {},
       setPlayerName: (playerName) => set({ playerName }),
+      setGroupId: (groupId) => set({ groupId }),
+      setAvatarUrl: (avatarUrl) => set({ avatarUrl }),
       setOutcome: (matchId, outcome) =>
         set((s) => {
           const pick = s.picks[matchId] ?? {};
@@ -135,7 +143,7 @@ export const usePool = create<PoolState>()(
           delete picks[matchId];
           return { picks };
         }),
-      reset: () => set({ playerName: '', picks: {} }),
+      reset: () => set({ picks: {} }),
       importPicks: (newPicks) =>
         set((s) => ({
           picks: {

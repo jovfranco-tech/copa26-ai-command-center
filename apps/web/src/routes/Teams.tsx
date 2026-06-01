@@ -21,7 +21,7 @@ export function Teams() {
   return (
     <div className="page-fade">
       <MockBanner />
-      <div className="row gap-8 wrap" style={{ marginBottom: 16 }}>
+      <div className="row gap-8 wrap filter-sticky" style={{ marginBottom: 16 }}>
         <Pill on={!group} onClick={() => setGroup('')}>
           Todas
         </Pill>

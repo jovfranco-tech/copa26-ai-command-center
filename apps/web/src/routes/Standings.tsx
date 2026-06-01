@@ -1,4 +1,5 @@
 import { Empty } from '@worldcup/ui';
+import { DataSourceBadge } from '@/components/DataSourceBadge';
 import { StandingsTable } from '@/components/cards';
 import { MockBanner } from '@/components/MockBanner';
 import { useStandings } from '@/hooks';
@@ -27,6 +28,12 @@ export function Standings({ group }: { group?: string }) {
           <span>
             <span className="zone-sw" style={{ background: 'var(--neg)' }} /> Eliminado
           </span>
+          <DataSourceBadge
+            label="Tabla recalculada"
+            source={data?.source === 'sqlite' ? 'Resultados SQLite' : 'Dataset local'}
+            date="2026-05-31"
+            confidence="Alta"
+          />
         </div>
       </div>
 

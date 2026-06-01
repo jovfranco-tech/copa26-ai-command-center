@@ -3,7 +3,10 @@ import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge, Form, cn } from '@worldcup/ui';
 import { fmtDay, fmtGD, nextMatchFor, type Match, type Player, type StandingRow } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, TeamKit, FavStar, PlayerAvatar } from './identity';
+import { DataSourceBadge } from './DataSourceBadge';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
+import { playerRatingMeta } from '@/generated/playerRatings';
+import { h2hSummary, matchSourceInfo, weatherSummary } from '@/lib/matchMeta';
 import { attrColor, attrLabelsFor, playerRatings, ratingSourceText } from '@/lib/ratings';
 
 export function MatchCard({ m }: { m: Match }) {
@@ -14,6 +17,9 @@ export function MatchCard({ m }: { m: Match }) {
   const played = m.status !== 'UPCOMING';
   const pH = m.possH != null ? Math.min(72, Math.max(28, m.possH)) : 50;
   const city = venues[m.venue]?.city ?? '';
+  const source = matchSourceInfo(m);
+  const weather = weatherSummary(m.id);
+  const h2h = h2hSummary(m.home, m.away);
 
   return (
     <div
@@ -34,6 +40,7 @@ export function MatchCard({ m }: { m: Match }) {
       <div className="match-row">
         <span className="match-team">
           <TeamCrest code={m.home} size={30} />
+          <TeamKit code={m.home} size={24} />
           <span className="tname">{teams[m.home]?.name ?? m.home}</span>
         </span>
         {m.status === 'UPCOMING' ? (
@@ -51,7 +58,17 @@ export function MatchCard({ m }: { m: Match }) {
         )}
         <span className="match-team away">
           <TeamCrest code={m.away} size={30} />
+          <TeamKit code={m.away} size={24} />
           <span className="tname">{teams[m.away]?.name ?? m.away}</span>
+        </span>
+      </div>
+
+      <div className="match-intel-row">
+        <span title={weather.detail}>
+          <Icon name="rain" size={12} /> {weather.label}
+        </span>
+        <span title={`${h2h.source} · ${h2h.date}`}>
+          <Icon name="activity" size={12} /> {h2h.label}
         </span>
       </div>
 
@@ -86,8 +103,11 @@ export function MatchCard({ m }: { m: Match }) {
       )}
 
       <div className="mc-foot">
-        <span className="mono-label" style={{ margin: 0 }}>
-          {live ? `EN VIVO · ${m.minute}'` : played ? 'Final' : `${fmtDay(m.date)} · ${m.time}`}
+        <span className="row gap-6 wrap">
+          <span className="mono-label" style={{ margin: 0 }}>
+            {live ? `EN VIVO · ${m.minute}'` : played ? 'Final' : `${fmtDay(m.date)} · ${m.time}`}
+          </span>
+          <DataSourceBadge {...source} compact />
         </span>
         <span className="mc-cta">
           Ver partido <Icon name="chevR" size={12} />
@@ -205,6 +225,15 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
               </span>
             </div>
             <div className="mono-label">Grupo {t.group}</div>
+            <div style={{ marginTop: 6 }}>
+              <DataSourceBadge
+                label={t.ranking ? 'Ranking cargado' : 'Ranking pendiente'}
+                source={t.ranking ? 'Dataset local' : 'Feed FIFA/Elo pendiente'}
+                date={t.ranking ? '2026-05-31' : 'Por actualizar'}
+                confidence={t.ranking ? 'Media' : 'Pendiente'}
+                compact
+              />
+            </div>
           </div>
           <FavStar kind="teams" id={code} />
         </div>
@@ -302,6 +331,13 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
             <span className={`rating-source ${r.source}`} title={ratingSourceText(r)}>
               {r.source === 'fc26' ? 'FC 26' : 'Estimado'}
             </span>
+            <DataSourceBadge
+              label={r.source === 'fc26' ? 'Rating FC 26' : 'Rating estimado'}
+              source={r.sourceLabel}
+              date={r.source === 'fc26' ? playerRatingMeta.downloadedAt.slice(0, 10) : '2026-05-30'}
+              confidence={r.source === 'fc26' ? 'Alta' : 'Media'}
+              compact
+            />
           </div>
           <div className="row gap-6 muted" style={{ fontSize: 11.5, marginTop: 2 }}>
             <TeamFlag code={p.team} size={13} />

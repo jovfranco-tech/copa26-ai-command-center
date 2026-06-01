@@ -162,6 +162,8 @@ export interface DataSyncCheck {
   results: string;
   resultsSource?: string;
   nextAction?: string;
+  logs?: string[];
+  errors?: string[];
 }
 
 export const fetchDataSyncCheck = () =>
@@ -174,6 +176,8 @@ export const fetchDataSyncCheck = () =>
     results: 'Pendientes hasta el 11 de junio de 2026',
     resultsSource: 'not-configured',
     nextAction: 'Conectar feed de resultados autorizado cuando empiece el torneo.',
+    logs: [`${new Date().toISOString()} · local · fallback`],
+    errors: [],
   }));
 
 export interface PoolPersistenceStatus {
@@ -234,6 +238,7 @@ export const fetchMonitoring = () =>
 
 export interface LeaderboardEntry {
   playerName: string;
+  avatarUrl?: string;
   points: number;
   exactScores: number;
   outcomeHits: number;
@@ -247,24 +252,54 @@ export const fetchLeaderboard = () =>
     leaderboard: [],
   }));
 
-export const fetchPoolPicks = async (playerName: string) => {
+export function normalizePoolGroupId(groupId: string): string {
+  return groupId.trim().replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 40) || 'familia-2026';
+}
+
+export const poolMembersCollectionPath = (groupId: string) => ['poolGroups', normalizePoolGroupId(groupId), 'members'] as const;
+
+export const fetchPoolPicks = async (playerName: string, groupId = 'familia-2026') => {
   try {
-    const docRef = doc(db, 'poolPicks', playerName.trim());
+    const cleanGroup = normalizePoolGroupId(groupId);
+    const docRef = cleanGroup
+      ? doc(db, 'poolGroups', cleanGroup, 'members', playerName.trim())
+      : doc(db, 'poolPicks', playerName.trim());
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return { ok: true, picks: docSnap.data().picks as Record<string, PoolPick> };
+      const data = docSnap.data();
+      return {
+        ok: true,
+        picks: data.picks as Record<string, PoolPick>,
+        avatarUrl: typeof data.avatarUrl === 'string' ? data.avatarUrl : '',
+      };
     }
-    return { ok: true, picks: {} };
+    return { ok: true, picks: {}, avatarUrl: '' };
   } catch (error) {
     console.error("fetchPoolPicks from Firestore failed", error);
-    return { ok: false, picks: {} };
+    return { ok: false, picks: {}, avatarUrl: '' };
   }
 };
 
-export async function syncPoolPicks(playerName: string, picks: Record<string, PoolPick>): Promise<boolean> {
+export async function syncPoolPicks(
+  playerName: string,
+  picks: Record<string, PoolPick>,
+  groupId = 'familia-2026',
+  avatarUrl = '',
+): Promise<boolean> {
   try {
-    const docRef = doc(db, 'poolPicks', playerName.trim());
-    await setDoc(docRef, { picks, updatedAt: new Date().toISOString() }, { merge: true });
+    const cleanGroup = normalizePoolGroupId(groupId);
+    const cleanName = playerName.trim();
+    const docRef = cleanGroup ? doc(db, 'poolGroups', cleanGroup, 'members', cleanName) : doc(db, 'poolPicks', cleanName);
+    await setDoc(
+      docRef,
+      {
+        picks,
+        playerName: cleanName,
+        avatarUrl: avatarUrl.trim().slice(0, 280),
+        updatedAt: new Date().toISOString(),
+      },
+      { merge: true },
+    );
     return true;
   } catch (error) {
     console.error("syncPoolPicks to Firestore failed", error);

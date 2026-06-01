@@ -6,7 +6,9 @@ import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap } from '@/hooks';
 import { usePool, type PoolOutcome } from '@/store/pool';
 import { askPoolAgent } from '@/lib/aiClient';
-import { fetchPoolPicks, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
+import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
+import { isMatchLocked, lockLabel } from '@/lib/matchMeta';
+import { shareTextCard } from '@/lib/shareCards';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { QuinielaScanner } from '@/components/QuinielaScanner';
@@ -73,6 +75,13 @@ export function Pool() {
   const pool = usePool();
   const [view, setView] = useState<'next' | 'all'>('next');
   const [activeTab, setActiveTab] = useState<'predict' | 'results'>('predict');
+  const [inviteCopied, setInviteCopied] = useState(false);
+
+  useEffect(() => {
+    const invitedGroup = new URLSearchParams(window.location.search).get('group');
+    if (invitedGroup) pool.setGroupId(normalizePoolGroupId(invitedGroup));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Sort and separate matches
   const { upcomingMatches, playedMatches } = useMemo(() => {
@@ -236,9 +245,11 @@ export function Pool() {
 
   const handleP2PSyncComplete = async (peerName: string, peerPicks: any) => {
     try {
-      const docRef = doc(db, 'poolPicks', peerName);
+      const docRef = doc(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members', peerName);
       await setDoc(docRef, {
         picks: peerPicks,
+        playerName: peerName,
+        avatarUrl: '',
         updatedAt: new Date().toISOString(),
       });
       playSuccessTick();
@@ -253,9 +264,10 @@ export function Pool() {
 
     const loadPicks = async () => {
       try {
-        const res = await fetchPoolPicks(pool.playerName);
+        const res = await fetchPoolPicks(pool.playerName, pool.groupId);
         if (res.ok && res.picks && Object.keys(res.picks).length > 0) {
           pool.importPicks(res.picks);
+          if (res.avatarUrl && !pool.avatarUrl) pool.setAvatarUrl(res.avatarUrl);
           setSyncStatus('synced');
         }
       } catch (e) {
@@ -264,7 +276,7 @@ export function Pool() {
     };
     loadPicks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.playerName]);
+  }, [pool.playerName, pool.groupId]);
 
   // Sync picks to Firestore (debounced to avoid spamming the connection)
   useEffect(() => {
@@ -273,7 +285,7 @@ export function Pool() {
     setSyncStatus('syncing');
     const timer = setTimeout(async () => {
       try {
-        const ok = await syncPoolPicks(pool.playerName, pool.picks);
+        const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
         if (ok) {
           setSyncStatus('synced');
           playSuccessTick(); // Play premium tactical success chime when successfully saved to DB!
@@ -300,7 +312,7 @@ export function Pool() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [pool.playerName, pool.picks]);
+  }, [pool.playerName, pool.picks, pool.groupId, pool.avatarUrl]);
 
   // Fallback listener for online window event
   useEffect(() => {
@@ -309,7 +321,7 @@ export function Pool() {
       console.log('[Pool] Browser detected online, triggering manual sync...');
       setSyncStatus('syncing');
       try {
-        const ok = await syncPoolPicks(pool.playerName, pool.picks);
+        const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
         if (ok) {
           setSyncStatus('synced');
           playSuccessTick();
@@ -323,7 +335,7 @@ export function Pool() {
 
     window.addEventListener('online', handleOnline);
     return () => window.removeEventListener('online', handleOnline);
-  }, [pool.playerName, pool.picks]);
+  }, [pool.playerName, pool.picks, pool.groupId, pool.avatarUrl]);
 
   // Load Leaderboard in real-time from Firestore onSnapshot
   useEffect(() => {
@@ -336,15 +348,15 @@ export function Pool() {
     setLoadingLeaderboard(true);
 
     const unsubscribe = onSnapshot(
-      collection(db, 'poolPicks'),
+      collection(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members'),
       (snapshot) => {
         const board: LeaderboardEntry[] = [];
         const playedMatches = matchItems.filter((m) => m.status === 'FT');
 
         // 1. Process all participant predictions from Firestore documents
         snapshot.forEach((docSnap) => {
-          const name = docSnap.id;
           const docData = docSnap.data();
+          const name = typeof docData.playerName === 'string' ? docData.playerName : docSnap.id;
           const picks = docData.picks || {};
 
           let points = 0;
@@ -382,6 +394,7 @@ export function Pool() {
 
           board.push({
             playerName: name,
+            avatarUrl: typeof docData.avatarUrl === 'string' ? docData.avatarUrl : '',
             points,
             exactScores,
             outcomeHits,
@@ -478,7 +491,7 @@ export function Pool() {
     );
 
     return () => unsubscribe();
-  }, [data, teams, isLoading]);
+  }, [data, teams, isLoading, pool.groupId]);
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('wc_theme') as 'dark' | 'light') ?? 'dark';
@@ -537,6 +550,18 @@ export function Pool() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const copyInviteLink = async () => {
+    const group = normalizePoolGroupId(pool.groupId);
+    const url = `${window.location.origin}/pool?group=${encodeURIComponent(group)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setInviteCopied(true);
+      window.setTimeout(() => setInviteCopied(false), 1800);
+    } catch {
+      window.prompt('Copia este link de invitacion:', url);
+    }
   };
 
   // Statistics calculations for played matches
@@ -727,7 +752,41 @@ export function Pool() {
               <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
             </button>
           </div>
+          <div className="pool-family-panel">
+            <div className="pool-avatar-preview">
+              {pool.avatarUrl ? <img src={pool.avatarUrl} alt={pool.playerName || 'Participante'} loading="lazy" /> : <Icon name="user" size={18} />}
+            </div>
+            <input
+              value={pool.avatarUrl}
+              onChange={(e) => pool.setAvatarUrl(e.target.value)}
+              placeholder="URL de foto/avatar"
+              aria-label="URL de foto/avatar"
+            />
+          </div>
+          <div className="pool-family-panel">
+            <label className="mono-label" htmlFor="pool-group" style={{ margin: 0 }}>
+              Grupo
+            </label>
+            <input
+              id="pool-group"
+              value={pool.groupId}
+              onChange={(e) => pool.setGroupId(normalizePoolGroupId(e.target.value))}
+              placeholder="familia-2026"
+              aria-label="Grupo privado"
+            />
+            <button type="button" className="btn ghost btn-sm" onClick={copyInviteLink}>
+              <Icon name="share" size={13} />
+              {inviteCopied ? 'Copiado' : 'Invitar'}
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div className="pool-rules-strip">
+        <span><Icon name="trophy" size={13} /> Marcador exacto +3</span>
+        <span><Icon name="check" size={13} /> Ganador/empate correcto +1</span>
+        <span><Icon name="clock" size={13} /> Pronosticos cierran al inicio del partido</span>
+        <span><Icon name="shield" size={13} /> Grupo privado: {normalizePoolGroupId(pool.groupId)}</span>
       </div>
 
       <div className="pool-tabs">
@@ -993,6 +1052,16 @@ export function Pool() {
                         <td style={{ padding: '12px 14px', fontWeight: 'bold' }}>{medal}</td>
                         <td style={{ padding: '12px 14px' }}>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            {row.avatarUrl ? (
+                              <img
+                                src={row.avatarUrl}
+                                alt={row.playerName}
+                                loading="lazy"
+                                style={{ width: 22, height: 22, borderRadius: 7, objectFit: 'cover', border: '1px solid var(--line)' }}
+                              />
+                            ) : (
+                              <span className="pool-avatar-mini">{row.playerName.slice(0, 1).toUpperCase()}</span>
+                            )}
                             {row.playerName}
                             {isCurrentUser && <span className="badge gold" style={{ fontSize: 9 }}>Tú</span>}
                           </span>
@@ -1067,7 +1136,7 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
   const setScore = usePool((s) => s.setScore);
   const clearMatch = usePool((s) => s.clearMatch);
 
-  const isLocked = match.status !== 'UPCOMING';
+  const isLocked = match.status !== 'UPCOMING' || isMatchLocked(match);
 
   const [isPlayingBrief, setIsPlayingBrief] = useState(false);
 
@@ -1150,6 +1219,25 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
     }
   }, [isLocked, outcome, homeGoals, awayGoals, match.homeGoals, match.awayGoals]);
 
+  const sharePrediction = async () => {
+    if (!outcome || homeGoals == null || awayGoals == null) {
+      alert('Primero captura ganador y marcador para compartir tu prediccion.');
+      return;
+    }
+    await shareTextCard({
+      title: `${homeName} ${homeGoals} - ${awayGoals} ${awayName}`,
+      subtitle: `Mi prediccion · ${fmtDay(match.date)} ${match.time}`,
+      lines: [
+        `Partido: ${homeName} vs ${awayName}`,
+        `Resultado elegido: ${OUTCOMES.find((o) => o.id === outcome)?.label ?? outcome}`,
+        `Marcador: ${homeGoals}-${awayGoals}`,
+        lockLabel(match),
+      ],
+      footer: 'Quiniela familiar Mundial 2026',
+      fileName: `prediccion-${match.id}.png`,
+    });
+  };
+
   return (
     <div className={`card pool-match${isLocked ? ' is-locked' : ''}`}>
       <div className="pool-match-head">
@@ -1188,9 +1276,14 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
             {pointsInfo.text}
           </span>
         ) : !isLocked ? (
-          <button type="button" className="fav-btn" onClick={() => clearMatch(match.id)} aria-label="Limpiar partido">
-            <Icon name="close" size={14} />
-          </button>
+          <span className="row gap-6" style={{ marginLeft: 'auto' }}>
+            <button type="button" className="fav-btn" onClick={sharePrediction} aria-label="Compartir prediccion" title="Compartir prediccion">
+              <Icon name="share" size={14} />
+            </button>
+            <button type="button" className="fav-btn" onClick={() => clearMatch(match.id)} aria-label="Limpiar partido">
+              <Icon name="close" size={14} />
+            </button>
+          </span>
         ) : null}
       </div>
       <div className="pool-teams">
@@ -1253,6 +1346,11 @@ function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: stri
             disabled={isLocked}
           />
         </label>
+      </div>
+
+      <div className="pool-lock-note">
+        <Icon name={isLocked ? 'shield' : 'clock'} size={12} />
+        {lockLabel(match)}
       </div>
 
       {isLocked && (

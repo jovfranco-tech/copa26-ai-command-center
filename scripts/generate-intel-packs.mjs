@@ -629,7 +629,9 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       total: venueGalleryTotal,
       source: 'Wikimedia Commons',
       note:
-        venueGalleryCount > 0
+        venueGalleryCount >= venueGalleryTotal
+          ? 'Galerias locales completas: 3 miniaturas por cada sede.'
+          : venueGalleryCount > 0
           ? 'Miniaturas locales adicionales; pausado cuando Wikimedia aplica rate-limit.'
           : 'Preparado para bajar 3 imagenes por sede cuando no haya rate-limit.',
     },

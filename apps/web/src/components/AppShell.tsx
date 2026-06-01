@@ -10,6 +10,7 @@ import { TweaksPanel } from './TweaksPanel';
 type StaticPath =
   | '/'
   | '/matches'
+  | '/tv'
   | '/bracket'
   | '/teams'
   | '/players'
@@ -35,6 +36,7 @@ const NAV: Array<{ group: string; items: NavItem[] }> = [
     items: [
       { key: 'home', label: 'Panel', icon: 'home', to: '/' },
       { key: 'matches', label: 'Partidos', icon: 'calendar', to: '/matches', live: true },
+      { key: 'tv', label: 'Modo TV', icon: 'present', to: '/tv' },
       { key: 'bracket', label: 'Eliminatorias', icon: 'bracket', to: '/bracket' },
     ],
   },
@@ -65,6 +67,7 @@ const ALL_ITEMS = NAV.flatMap((g) => g.items);
 const TITLES: Record<string, string> = {
   home: 'Panel',
   matches: 'Centro de partidos',
+  tv: 'Modo TV',
   bracket: 'Eliminatorias',
   teams: 'Selecciones',
   players: 'Jugadores',

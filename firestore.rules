@@ -9,11 +9,24 @@ service cloud.firestore {
       return value is map && value.keys().size() <= 104;
     }
 
+    function validGroupId(groupId) {
+      return groupId.matches('^[A-Za-z0-9_-]{3,40}$');
+    }
+
     function validPoolPickDoc(playerName) {
       return playerName.size() > 0
         && playerName.size() <= 30
         && request.resource.data.keys().hasOnly(['picks', 'updatedAt'])
         && validPickMap(request.resource.data.picks);
+    }
+
+    function validPoolGroupMember(playerName) {
+      return playerName.size() > 0
+        && playerName.size() <= 30
+        && request.resource.data.keys().hasOnly(['picks', 'updatedAt', 'playerName', 'avatarUrl'])
+        && validPickMap(request.resource.data.picks)
+        && (!('playerName' in request.resource.data) || validShortText(request.resource.data.playerName, 30))
+        && (!('avatarUrl' in request.resource.data) || request.resource.data.avatarUrl is string && request.resource.data.avatarUrl.size() <= 280);
     }
 
     function validSyncSession(code) {
@@ -60,6 +73,12 @@ service cloud.firestore {
     match /poolPicks/{playerName} {
       allow read: if true;
       allow create, update: if validPoolPickDoc(playerName);
+      allow delete: if false;
+    }
+
+    match /poolGroups/{groupId}/members/{playerName} {
+      allow read: if validGroupId(groupId);
+      allow create, update: if validGroupId(groupId) && validPoolGroupMember(playerName);
       allow delete: if false;
     }
 

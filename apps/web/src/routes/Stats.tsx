@@ -3,11 +3,13 @@ import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, Radar,
 import { Icon, Pill, Empty } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
 import { PlayerMini } from '@/components/cards';
+import { DataSourceBadge } from '@/components/DataSourceBadge';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useStats, useTeamsMap, useMatches } from '@/hooks';
 import { usePool } from '@/store/pool';
 import { db } from '@/lib/firebase';
+import { normalizePoolGroupId } from '@/lib/api';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 type Segment = 'players' | 'keepers' | 'teams' | 'arena';
@@ -30,13 +32,13 @@ export function Stats() {
     const teamMap = new Map(teamItems.map((t) => [t.code, t]));
 
     const unsubscribe = onSnapshot(
-      collection(db, 'poolPicks'),
+      collection(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members'),
       (snapshot) => {
         const board: Array<{ name: string; points: number }> = [];
 
         snapshot.forEach((docSnap) => {
-          const name = docSnap.id;
           const docData = docSnap.data();
+          const name = typeof docData.playerName === 'string' ? docData.playerName : docSnap.id;
           const picks = docData.picks || {};
 
           let points = 0;
@@ -120,7 +122,7 @@ export function Stats() {
     );
 
     return () => unsubscribe();
-  }, [matchData, teams]);
+  }, [matchData, teams, pool.groupId]);
 
   const radarData = [
     { subject: 'Ataque Ofensivo', optimista: 95, stats: 45, contrarian: 80, fullMark: 100 },
@@ -136,6 +138,14 @@ export function Stats() {
   return (
     <div className="page-fade">
       <MockBanner />
+      <div className="source-strip">
+        <DataSourceBadge
+          label="Estadisticas de torneo"
+          source={data.source === 'sqlite' ? 'SQLite local' : 'Dataset local'}
+          date="2026-05-31"
+          confidence={data.topScorers.length || data.teamGoals.length ? 'Alta' : 'Pendiente'}
+        />
+      </div>
 
       <div className="row gap-6 wrap" style={{ marginBottom: 16 }}>
         {(['players', 'keepers', 'teams', 'arena'] as Segment[]).map((s) => (

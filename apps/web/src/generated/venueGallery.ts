@@ -7,38 +7,324 @@ export interface VenueGalleryImage {
 }
 
 export const venueGalleryImages: Record<string, VenueGalleryImage[]> = {
-  van: [
+  "van": [
     {
-      src: '/venue-gallery/van-1.webp',
-      page: 'https://commons.wikimedia.org/wiki/Category:BC_Place',
-      source: 'Wikimedia Commons',
-      filename: 'BC Place gallery 1',
+      "src": "/venue-gallery/van-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:BC_Place_Opening_Day_2011-09-30.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "BC Place Opening Day 2011-09-30.jpg"
     },
     {
-      src: '/venue-gallery/van-2.webp',
-      page: 'https://commons.wikimedia.org/wiki/Category:BC_Place',
-      source: 'Wikimedia Commons',
-      filename: 'BC Place gallery 2',
+      "src": "/venue-gallery/van-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:B.C._Place_from_False_Creek_(cropped).jpg",
+      "source": "Wikimedia Commons",
+      "filename": "B.C. Place from False Creek (cropped).jpg"
     },
     {
-      src: '/venue-gallery/van-3.webp',
-      page: 'https://commons.wikimedia.org/wiki/Category:BC_Place',
-      source: 'Wikimedia Commons',
-      filename: 'BC Place gallery 3',
-    },
+      "src": "/venue-gallery/van-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:BCPlaceRoofApril2011.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "BCPlaceRoofApril2011.jpg"
+    }
   ],
-  sea: [
+  "sea": [
     {
-      src: '/venue-gallery/sea-1.webp',
-      page: 'https://commons.wikimedia.org/wiki/Category:Lumen_Field',
-      source: 'Wikimedia Commons',
-      filename: 'Lumen Field gallery 1',
+      "src": "/venue-gallery/sea-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Qwest_Field_North.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Qwest Field North.jpg"
     },
     {
-      src: '/venue-gallery/sea-2.webp',
-      page: 'https://commons.wikimedia.org/wiki/Category:Lumen_Field',
-      source: 'Wikimedia Commons',
-      filename: 'Lumen Field gallery 2',
+      "src": "/venue-gallery/sea-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:12th_man_qwest_field.JPG",
+      "source": "Wikimedia Commons",
+      "filename": "12th man qwest field.JPG"
     },
+    {
+      "src": "/venue-gallery/sea-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:2025_FIFA_Club_World_Cup_-_Seattle_Sounders_FC_vs._Atl%C3%A9tico_Madrid_-_05.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "2025 FIFA Club World Cup - Seattle Sounders FC vs. Atlético Madrid - 05.jpg"
+    }
   ],
+  "sf": [
+    {
+      "src": "/venue-gallery/sf-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Levi%27s_Stadium_interior_1.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Levi's Stadium interior 1.jpg"
+    },
+    {
+      "src": "/venue-gallery/sf-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:49ers_New_Stadium_2_2013-07-11.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "49ers New Stadium 2 2013-07-11.jpg"
+    },
+    {
+      "src": "/venue-gallery/sf-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Broncos_vs_49ers_preseason_game_at_Levi%27s_Stadium.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Broncos vs 49ers preseason game at Levi's Stadium.jpg"
+    }
+  ],
+  "lax": [
+    {
+      "src": "/venue-gallery/lax-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:SoFi_Stadium_(51126606022).jpg",
+      "source": "Wikimedia Commons",
+      "filename": "SoFi Stadium (51126606022).jpg"
+    },
+    {
+      "src": "/venue-gallery/lax-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:2023-0109-CFPtitlegame_Pre-Game_view_Press_Box.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "2023-0109-CFPtitlegame Pre-Game view Press Box.jpg"
+    },
+    {
+      "src": "/venue-gallery/lax-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Kiaforum.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Kiaforum.jpg"
+    }
+  ],
+  "gdl": [
+    {
+      "src": "/venue-gallery/gdl-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Estadio_Omnilife_Chivas.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Estadio Omnilife Chivas.jpg"
+    },
+    {
+      "src": "/venue-gallery/gdl-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Estadio_Akron_02-07-2022_cabecera_sur_lado_derecho_(3).jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Estadio Akron 02-07-2022 cabecera sur lado derecho (3).jpg"
+    },
+    {
+      "src": "/venue-gallery/gdl-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Estadio_Omnilife.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Estadio Omnilife.jpg"
+    }
+  ],
+  "mex": [
+    {
+      "src": "/venue-gallery/mex-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Vista_a%C3%A9rea_del_Estadio_Azteca_-_2026_-_02.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Vista aérea del Estadio Azteca - 2026 - 02.jpg"
+    },
+    {
+      "src": "/venue-gallery/mex-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Azteca_zona_de_bancas.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Azteca zona de bancas.jpg"
+    },
+    {
+      "src": "/venue-gallery/mex-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Estadio_68.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Estadio 68.jpg"
+    }
+  ],
+  "mty": [
+    {
+      "src": "/venue-gallery/mty-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG",
+      "source": "Wikimedia Commons",
+      "filename": "Mexico Guadalupe Monterrey Estadio BBVA Bancomer fifa world cup 2026 6.JPG"
+    },
+    {
+      "src": "/venue-gallery/mty-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Estadio_BBVA.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Estadio BBVA.jpg"
+    },
+    {
+      "src": "/venue-gallery/mty-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Estadio_BBVA_Bancomer_-_Diciembre_2017.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Estadio BBVA Bancomer - Diciembre 2017.jpg"
+    }
+  ],
+  "hou": [
+    {
+      "src": "/venue-gallery/hou-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Reliantstadium.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Reliantstadium.jpg"
+    },
+    {
+      "src": "/venue-gallery/hou-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:BeyonceRenaissance92423-2.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "BeyonceRenaissance92423-2.jpg"
+    },
+    {
+      "src": "/venue-gallery/hou-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:NRGStadiumnew.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "NRGStadiumnew.jpg"
+    }
+  ],
+  "dal": [
+    {
+      "src": "/venue-gallery/dal-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Cowboys_Stadium_2.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Cowboys Stadium 2.jpg"
+    },
+    {
+      "src": "/venue-gallery/dal-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:ATT_Stadium_Parking.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "ATT Stadium Parking.jpg"
+    },
+    {
+      "src": "/venue-gallery/dal-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:ATT_Stadium_Roof_Open.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "ATT Stadium Roof Open.jpg"
+    }
+  ],
+  "kc": [
+    {
+      "src": "/venue-gallery/kc-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Arrowhead_Stadium_2010.JPG",
+      "source": "Wikimedia Commons",
+      "filename": "Arrowhead Stadium 2010.JPG"
+    },
+    {
+      "src": "/venue-gallery/kc-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:25_July_2010_Kansas_City_Wizards_vs_Manchester_United_friendly.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "25 July 2010 Kansas City Wizards vs Manchester United friendly.jpg"
+    },
+    {
+      "src": "/venue-gallery/kc-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Aerial_view_of_Arrowhead_Stadium_08-31-2013.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Aerial view of Arrowhead Stadium 08-31-2013.jpg"
+    }
+  ],
+  "atl": [
+    {
+      "src": "/venue-gallery/atl-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Mercedes_Benz_Stadium_time_lapse_capture_2017-08-13.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Mercedes Benz Stadium time lapse capture 2017-08-13.jpg"
+    },
+    {
+      "src": "/venue-gallery/atl-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:2019_Peach_Bowl_LSU_vs_OU_Mercedes-Benz_Stadium_field.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "2019 Peach Bowl LSU vs OU Mercedes-Benz Stadium field.jpg"
+    },
+    {
+      "src": "/venue-gallery/atl-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Georgia_Dome_2017.JPG",
+      "source": "Wikimedia Commons",
+      "filename": "Georgia Dome 2017.JPG"
+    }
+  ],
+  "mia": [
+    {
+      "src": "/venue-gallery/mia-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Hard_Rock_Stadium_for_Super_Bowl_LIV_(49606707583).jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Hard Rock Stadium for Super Bowl LIV (49606707583).jpg"
+    },
+    {
+      "src": "/venue-gallery/mia-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:2026-0119_CFP_NCG_pregame_view_-_Indiana_sideline.jpeg",
+      "source": "Wikimedia Commons",
+      "filename": "2026-0119 CFP NCG pregame view - Indiana sideline.jpeg"
+    },
+    {
+      "src": "/venue-gallery/mia-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Baptist_Health_Training_Complex_in_July_2025_ahead_of_Miami_Dolphins_training_camp.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Baptist Health Training Complex in July 2025 ahead of Miami Dolphins training camp.jpg"
+    }
+  ],
+  "tor": [
+    {
+      "src": "/venue-gallery/tor-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:BMO_Field_in_2016.png",
+      "source": "Wikimedia Commons",
+      "filename": "BMO Field in 2016.png"
+    },
+    {
+      "src": "/venue-gallery/tor-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:2017_NHL_Centennial_Classic.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "2017 NHL Centennial Classic.jpg"
+    },
+    {
+      "src": "/venue-gallery/tor-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:BMO_Field,_104th_Grey_Cup.jpeg",
+      "source": "Wikimedia Commons",
+      "filename": "BMO Field, 104th Grey Cup.jpeg"
+    }
+  ],
+  "bos": [
+    {
+      "src": "/venue-gallery/bos-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Gillette_Stadium02.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Gillette Stadium02.jpg"
+    },
+    {
+      "src": "/venue-gallery/bos-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Fenway_from_Legend%27s_Box.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Fenway from Legend's Box.jpg"
+    },
+    {
+      "src": "/venue-gallery/bos-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Gillette_Stadium1.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Gillette Stadium1.jpg"
+    }
+  ],
+  "phi": [
+    {
+      "src": "/venue-gallery/phi-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Philly_(45).JPG",
+      "source": "Wikimedia Commons",
+      "filename": "Philly (45).JPG"
+    },
+    {
+      "src": "/venue-gallery/phi-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:2019_NHL_Stadium_Series_at_Lincoln_Financial_Field_in_Philadelphia.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "2019 NHL Stadium Series at Lincoln Financial Field in Philadelphia.jpg"
+    },
+    {
+      "src": "/venue-gallery/phi-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Defense.gov_photo_essay_101211-A-3001M-0041.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Defense.gov photo essay 101211-A-3001M-0041.jpg"
+    }
+  ],
+  "nyc": [
+    {
+      "src": "/venue-gallery/nyc-1.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:New_Meadowlands_Stadium_Mezz_Corner.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "New Meadowlands Stadium Mezz Corner.jpg"
+    },
+    {
+      "src": "/venue-gallery/nyc-2.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Barclays_Center_western_side.jpg",
+      "source": "Wikimedia Commons",
+      "filename": "Barclays Center western side.jpg"
+    },
+    {
+      "src": "/venue-gallery/nyc-3.webp",
+      "page": "https://commons.wikimedia.org/wiki/File:Citi_Field_and_Apple.JPG",
+      "source": "Wikimedia Commons",
+      "filename": "Citi Field and Apple.JPG"
+    }
+  ]
 };
