@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="World Cup ball private asset">
+  <defs>
+    <linearGradient id="gold" x1="96" y1="64" x2="416" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4c0"/>
+      <stop offset=".45" stop-color="#d8a83d"/>
+      <stop offset="1" stop-color="#8a6720"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="128" y1="96" x2="384" y2="416" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="220" fill="url(#ink)"/>
+  <circle cx="256" cy="256" r="196" fill="#f8fafc"/>
+  <path d="M256 83 365 151 337 279H175L147 151Z" fill="url(#gold)"/>
+  <path d="M147 151 75 247 135 383 175 279Z" fill="#111827"/>
+  <path d="M365 151 437 247 377 383 337 279Z" fill="#111827"/>
+  <path d="M175 279 135 383 256 436 377 383 337 279Z" fill="#e5e7eb"/>
+  <path d="M172 154 256 104 340 154 318 253H194Z" fill="#111827" opacity=".92"/>
+  <path d="M212 194h88M205 228h102M224 160h64" stroke="url(#gold)" stroke-width="16" stroke-linecap="round"/>
+</svg>

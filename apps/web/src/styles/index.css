@@ -1763,6 +1763,16 @@ body {
   grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
   margin-bottom: 18px;
 }
+@media (max-width: 600px) {
+  .data-hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 16px;
+  }
+  .data-hero .btn {
+    justify-self: stretch;
+  }
+}
 .data-tile span:last-child {
   color: var(--tx-3);
   font-size: 12px;

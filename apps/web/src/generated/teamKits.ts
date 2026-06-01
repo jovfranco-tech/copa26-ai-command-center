@@ -42,6 +42,7 @@ export const downloadedTeamKitExts: Record<string, TeamKitExt> = {
   "MEX": "png",
   "NED": "png",
   "NOR": "png",
+  "NZL": "svg",
   "PAN": "png",
   "PAR": "png",
   "POR": "png",
@@ -50,6 +51,7 @@ export const downloadedTeamKitExts: Record<string, TeamKitExt> = {
   "SCO": "png",
   "SEN": "png",
   "SUI": "png",
+  "SWE": "svg",
   "TUN": "png",
   "TUR": "png",
   "URU": "png",
@@ -59,7 +61,8 @@ export const downloadedTeamKitExts: Record<string, TeamKitExt> = {
 
 export const downloadedTeamKitVariantExts: Record<string, Partial<Record<TeamKitVariant, TeamKitExt>>> = {
   "ALG": {
-    "home": "png"
+    "home": "png",
+    "away": "svg"
   },
   "ARG": {
     "home": "png",
@@ -196,6 +199,10 @@ export const downloadedTeamKitVariantExts: Record<string, Partial<Record<TeamKit
     "away": "png",
     "third": "png"
   },
+  "NZL": {
+    "away": "svg",
+    "home": "svg"
+  },
   "PAN": {
     "home": "png",
     "away": "png",
@@ -228,6 +235,10 @@ export const downloadedTeamKitVariantExts: Record<string, Partial<Record<TeamKit
   "SUI": {
     "home": "png",
     "away": "png"
+  },
+  "SWE": {
+    "away": "svg",
+    "home": "svg"
   },
   "TUN": {
     "home": "png",

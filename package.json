@@ -32,6 +32,7 @@
     "ingest:assets": "pnpm --filter @worldcup/ingestion ingest:assets",
     "assets:intel": "node scripts/generate-intel-packs.mjs && node scripts/generate-player-photo-fallbacks.mjs",
     "assets:venues": "node scripts/generate-venue-gallery.mjs",
+    "assets:finalize": "node scripts/finalize-local-data-pack.mjs && pnpm assets:intel && node scripts/generate-team-kits.mjs",
     "ingest:all": "pnpm --filter @worldcup/ingestion ingest:all",
     "validate:data": "pnpm --filter @worldcup/ingestion validate:data",
     "report:data": "pnpm --filter @worldcup/ingestion report:data",
