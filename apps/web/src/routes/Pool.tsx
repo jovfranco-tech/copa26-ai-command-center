@@ -568,6 +568,23 @@ export function Pool() {
     }
   };
 
+  const shareFamilyTable = async () => {
+    if (!leaderboard.length) {
+      alert('Todavia no hay tabla familiar para compartir.');
+      return;
+    }
+    await shareTextCard({
+      title: 'Tabla familiar',
+      subtitle: `Grupo ${normalizePoolGroupId(pool.groupId)}`,
+      lines: leaderboard.slice(0, 6).map((row, index) => {
+        const place = index + 1;
+        return `${place}. ${row.playerName}: ${row.points} pts, ${row.exactScores} plenos, ${row.efficiency}%`;
+      }),
+      footer: 'Quiniela familiar Mundial 2026',
+      fileName: `tabla-${normalizePoolGroupId(pool.groupId)}.png`,
+    });
+  };
+
   // Statistics calculations for played matches
   const stats = useMemo(() => {
     let totalPoints = 0;
@@ -793,6 +810,16 @@ export function Pool() {
         <span><Icon name="shield" size={13} /> Grupo privado: {normalizePoolGroupId(pool.groupId)}</span>
       </div>
 
+      <FamilySetupGuide
+        playerReady={Boolean(pool.playerName.trim())}
+        groupId={normalizePoolGroupId(pool.groupId)}
+        picked={pickedPending}
+        total={upcomingMatches.length}
+        syncStatus={syncStatus}
+        inviteCopied={inviteCopied}
+        onInvite={copyInviteLink}
+      />
+
       <div className="pool-tabs">
         <button
           type="button"
@@ -1002,14 +1029,24 @@ export function Pool() {
               <span className="badge gold">Compartido</span>
             </div>
             {leaderboard.length > 0 && (
-              <button
-                type="button"
-                className="btn gold btn-sm"
-                style={{ height: 26, fontSize: 11, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 4 }}
-                onClick={shareLeaderboardLogro}
-              >
-                <Icon name="share" size={11} /> Compartir Logro
-              </button>
+              <div className="row gap-6 wrap">
+                <button
+                  type="button"
+                  className="btn gold btn-sm"
+                  style={{ height: 26, fontSize: 11, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 4 }}
+                  onClick={shareLeaderboardLogro}
+                >
+                  <Icon name="share" size={11} /> Compartir logro
+                </button>
+                <button
+                  type="button"
+                  className="btn ghost btn-sm"
+                  style={{ height: 26, fontSize: 11, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 4 }}
+                  onClick={shareFamilyTable}
+                >
+                  <Icon name="list" size={11} /> Compartir tabla
+                </button>
+              </div>
             )}
           </div>
           <p className="muted" style={{ margin: '0 0 12px 0', fontSize: 12 }}>
@@ -1098,11 +1135,16 @@ export function Pool() {
           }
         />
       ) : (
-        <div className="pool-grid">
-          {visible.map((m) => (
-            <PoolMatch key={m.id} match={m} homeName={teams[m.home]?.name ?? m.home} awayName={teams[m.away]?.name ?? m.away} />
-          ))}
-        </div>
+        <>
+          {activeTab === 'predict' && (
+            <PickHistoryPanel matches={upcomingMatches} picks={pool.picks} teams={teams} />
+          )}
+          <div className="pool-grid">
+            {visible.map((m) => (
+              <PoolMatch key={m.id} match={m} homeName={teams[m.home]?.name ?? m.home} awayName={teams[m.away]?.name ?? m.away} />
+            ))}
+          </div>
+        </>
       )}
 
       {showScanner && (
@@ -1130,6 +1172,100 @@ function SummaryTile({ icon, label, value }: { icon: IconName; label: string; va
       <Icon name={icon} size={16} style={{ color: 'var(--gold)' }} />
       <span className="mono-label">{label}</span>
       <strong className="num">{value}</strong>
+    </div>
+  );
+}
+
+function FamilySetupGuide({
+  playerReady,
+  groupId,
+  picked,
+  total,
+  syncStatus,
+  inviteCopied,
+  onInvite,
+}: {
+  playerReady: boolean;
+  groupId: string;
+  picked: number;
+  total: number;
+  syncStatus: 'synced' | 'syncing' | 'error' | null;
+  inviteCopied: boolean;
+  onInvite: () => void;
+}) {
+  const pickReady = total > 0 && picked > 0;
+  return (
+    <div className="card family-onboarding">
+      <div className="family-onboarding-head">
+        <div>
+          <span className="mono-label">Preparar grupo familiar</span>
+          <strong>Lista corta para compartir la quiniela</strong>
+        </div>
+        <button type="button" className="btn ghost btn-sm" onClick={onInvite}>
+          <Icon name="share" size={13} /> {inviteCopied ? 'Link copiado' : 'Copiar invitación'}
+        </button>
+      </div>
+      <div className="family-step-grid">
+        <SetupStep done={playerReady} icon="user" title="Alias y foto" text={playerReady ? 'Participante listo.' : 'Escribe tu alias y, si quieres, una URL de avatar.'} />
+        <SetupStep done={Boolean(groupId)} icon="shield" title="Grupo privado" text={`Grupo activo: ${groupId || 'familia-2026'}.`} />
+        <SetupStep done={pickReady} icon="target" title="Primeros picks" text={pickReady ? `${picked}/${total} partidos con pronóstico.` : 'Captura al menos un marcador para activar ranking.'} />
+        <SetupStep done={syncStatus === 'synced'} icon="cloud" title="Nube familiar" text={syncStatus === 'synced' ? 'Sincronizado en base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios...' : 'Se sincroniza al tener alias.'} />
+      </div>
+    </div>
+  );
+}
+
+function SetupStep({ done, icon, title, text }: { done: boolean; icon: IconName; title: string; text: string }) {
+  return (
+    <div className={`family-step${done ? ' done' : ''}`}>
+      <span className="family-step-icon"><Icon name={done ? 'check' : icon} size={14} /></span>
+      <div>
+        <strong>{title}</strong>
+        <p>{text}</p>
+      </div>
+    </div>
+  );
+}
+
+function PickHistoryPanel({
+  matches,
+  picks,
+  teams,
+}: {
+  matches: Match[];
+  picks: Record<string, PoolPick>;
+  teams: Record<string, { name?: string } | undefined>;
+}) {
+  const picked = matches.filter((m) => picks[m.id]?.outcome).slice(0, 5);
+  if (!picked.length) {
+    return (
+      <div className="card pick-history-panel empty">
+        <Icon name="target" size={16} />
+        <div>
+          <strong>Historial de picks</strong>
+          <p>Cuando captures pronósticos, aparecerá aquí tu resumen antes de la lista completa.</p>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="card pick-history-panel">
+      <div className="pick-history-head">
+        <span className="mono-label">Mis próximos picks</span>
+        <span className="badge gold">{picked.length} recientes</span>
+      </div>
+      <div className="pick-history-list">
+        {picked.map((m) => {
+          const pick = picks[m.id]!;
+          return (
+            <div key={m.id} className="pick-history-row">
+              <span>{teams[m.home]?.name ?? m.home} vs {teams[m.away]?.name ?? m.away}</span>
+              <strong className="num">{pick.homeGoals ?? '-'}-{pick.awayGoals ?? '-'}</strong>
+              <small>{lockLabel(m)}</small>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

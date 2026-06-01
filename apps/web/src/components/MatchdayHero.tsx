@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge } from '@worldcup/ui';
 import { fmtFull, type Match } from '@worldcup/shared';
@@ -13,10 +13,17 @@ export function MatchdayHero({ match }: { match: Match | null }) {
   const teams = useTeamsMap();
   const venues = useVenuesMap();
   const [sharing, setSharing] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
 
   const meta = useMemo(() => (match ? matchSourceInfo(match) : null), [match]);
   const weather = useMemo(() => (match ? weatherSummary(match.id) : null), [match]);
   const h2h = useMemo(() => (match ? h2hSummary(match.home, match.away) : null), [match]);
+  const countdown = useMemo(() => (match ? countdownLabel(match, now) : ''), [match, now]);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 60000);
+    return () => window.clearInterval(id);
+  }, []);
 
   if (!match) return null;
 
@@ -55,8 +62,13 @@ export function MatchdayHero({ match }: { match: Match | null }) {
             <span className="mono-label">{match.stage} · {match.round}</span>
             {meta && <DataSourceBadge {...meta} compact />}
           </div>
-          <h2>Dia de partido</h2>
+          <h2>Día de partido</h2>
           <p>{venue?.stadium ?? 'Sede por confirmar'} · {venue?.city ?? 'Ciudad por confirmar'} · {fmtFull(match.date)}</p>
+          <div className="matchday-command-strip">
+            <span><Icon name="clock" size={13} /> Cuenta regresiva <strong>{countdown}</strong></span>
+            <span><Icon name="rain" size={13} /> {weather?.label ?? 'Clima pendiente'}</span>
+            <span><Icon name="shield" size={13} /> {meta?.confidence ?? 'Confianza pendiente'}</span>
+          </div>
         </div>
 
         <div className="matchday-scoreboard">
@@ -97,6 +109,9 @@ export function MatchdayHero({ match }: { match: Match | null }) {
           <button type="button" className="btn ghost" onClick={() => navigate({ to: '/matches/$matchId', params: { matchId: match.id } })}>
             <Icon name="calendar" size={15} /> Ver partido
           </button>
+          <button type="button" className="btn ghost" onClick={() => navigate({ to: '/tv' })}>
+            <Icon name="present" size={15} /> Modo TV
+          </button>
           <button type="button" className="btn ghost" onClick={shareMatch} disabled={sharing}>
             <Icon name="share" size={15} /> {sharing ? 'Creando...' : 'Compartir'}
           </button>
@@ -104,6 +119,20 @@ export function MatchdayHero({ match }: { match: Match | null }) {
       </div>
     </section>
   );
+}
+
+function countdownLabel(match: Match, now: number): string {
+  if (match.status === 'LIVE') return 'En juego';
+  if (match.status === 'FT') return 'Finalizado';
+  const kickoff = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
+  if (!Number.isFinite(kickoff)) return 'Por confirmar';
+  const diff = kickoff - now;
+  if (diff <= 0) return 'Por iniciar';
+  const days = Math.floor(diff / 86_400_000);
+  const hours = Math.floor((diff % 86_400_000) / 3_600_000);
+  const minutes = Math.floor((diff % 3_600_000) / 60_000);
+  if (days > 0) return `${days}d ${hours}h`;
+  return `${hours}h ${minutes}m`;
 }
 
 function InfoTile({ icon, label, value, sub }: { icon: string; label: string; value: string; sub: string }) {
@@ -116,4 +145,3 @@ function InfoTile({ icon, label, value, sub }: { icon: string; label: string; va
     </div>
   );
 }
-

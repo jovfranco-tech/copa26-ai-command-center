@@ -121,6 +121,7 @@ function VenueImage({ assetId, id, city }: { assetId: string | null | undefined;
           src={src}
           alt={`Estadio en ${city}`}
           loading="lazy"
+          decoding="async"
           onError={() => setImgOk(false)}
           style={{ width: '100%', height: 132, objectFit: 'cover', display: 'block' }}
         />

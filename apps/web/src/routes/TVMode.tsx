@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge } from '@worldcup/ui';
-import { fmtFull } from '@worldcup/shared';
+import { fmtFull, type Match } from '@worldcup/shared';
 import { MatchdayHero } from '@/components/MatchdayHero';
 import { TeamCrest, TeamKit } from '@/components/identity';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
 import { focusMatch, sortMatches, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 
 export function TVMode() {
+  const navigate = useNavigate();
   const { data, isLoading } = useMatches();
   const teams = useTeamsMap();
   const venues = useVenuesMap();
@@ -37,6 +39,7 @@ export function TVMode() {
       </div>
 
       <MatchdayHero match={focus} />
+      <TVFamilyStrip match={focus} onPool={() => navigate({ to: '/pool' })} onData={() => navigate({ to: '/data' })} />
 
       <div className="tv-grid">
         {next.map((m) => {
@@ -73,3 +76,20 @@ export function TVMode() {
   );
 }
 
+function TVFamilyStrip({ match, onPool, onData }: { match: Match | null; onPool: () => void; onData: () => void }) {
+  return (
+    <div className="tv-family-strip card">
+      <div>
+        <span className="mono-label">Vista para sala</span>
+        <strong>{match ? `${match.home} vs ${match.away}` : 'Partido destacado'}</strong>
+        <p>Ideal para dejar la app abierta durante la previa: próxima sede, clima, kits y acceso a quiniela.</p>
+      </div>
+      <button type="button" className="btn gold" onClick={onPool}>
+        <Icon name="trophy" size={15} /> Abrir quiniela
+      </button>
+      <button type="button" className="btn ghost" onClick={onData}>
+        <Icon name="database" size={15} /> Salud de datos
+      </button>
+    </div>
+  );
+}

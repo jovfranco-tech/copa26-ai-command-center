@@ -184,38 +184,45 @@ function accessPage({
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mundial 2026 · Acceso privado</title>
   <style>
-    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #111827 url('/venue-photos/mex.webp') center / cover no-repeat; color: #121826; }
-    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(115deg, rgba(248,250,252,.96), rgba(248,250,252,.84) 48%, rgba(12,18,30,.44)), radial-gradient(800px 440px at 74% -10%, rgba(201,162,75,.24), transparent 62%); pointer-events: none; }
-    main { position: relative; width: min(420px, calc(100vw - 36px)); }
-    .card { border: 1px solid rgba(18,28,48,.12); border-radius: 22px; background: rgba(255,255,255,.92); backdrop-filter: blur(18px); box-shadow: 0 26px 70px -34px rgba(22,35,60,.45); overflow: hidden; }
-    .stripe { height: 6px; background: linear-gradient(90deg, #c9a24b, #111827, #c9a24b); }
-    .body { padding: 28px; }
-    .mark { width: 54px; height: 54px; border-radius: 15px; display: grid; place-items: center; background: linear-gradient(145deg, #d8b45f, #b58c32); color: #111827; box-shadow: 0 14px 30px -18px rgba(0,0,0,.45); }
-    h1 { margin: 18px 0 6px; font-size: 24px; line-height: 1.05; letter-spacing: 0; }
-    p { margin: 0 0 20px; color: #657086; font-size: 14px; line-height: 1.55; }
+	    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
+	    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0a101b url('/venue-photos/mex.webp') center / cover no-repeat; color: #101726; }
+	    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(115deg, rgba(246,249,253,.98), rgba(246,249,253,.88) 45%, rgba(10,16,27,.34)), radial-gradient(760px 420px at 78% 0%, rgba(201,162,75,.28), transparent 62%); pointer-events: none; }
+	    main { position: relative; width: min(520px, calc(100vw - 34px)); }
+	    .card { border: 1px solid rgba(18,28,48,.12); border-radius: 24px; background: rgba(255,255,255,.94); backdrop-filter: blur(20px); box-shadow: 0 28px 78px -38px rgba(22,35,60,.55); overflow: hidden; }
+	    .stripe { height: 7px; background: linear-gradient(90deg, #c9a24b, #111827 48%, #e0bd6c); }
+	    .body { padding: 30px; }
+	    .brandline { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+	    .emblem { width: 50px; height: 70px; object-fit: contain; filter: drop-shadow(0 14px 18px rgba(0,0,0,.24)); }
+	    .wordmark { width: 176px; max-width: 60vw; padding: 8px 10px; border-radius: 9px; background: #fff; border: 1px solid rgba(18,28,48,.1); box-shadow: 0 16px 30px -22px rgba(0,0,0,.42); }
+	    h1 { margin: 0 0 7px; font-size: 28px; line-height: 1.02; letter-spacing: 0; }
+	    p { margin: 0 0 20px; color: #657086; font-size: 14px; line-height: 1.55; }
     label { display: block; margin: 0 0 8px; color: #7d8799; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
     input { width: 100%; height: 46px; box-sizing: border-box; border: 1px solid rgba(18,28,48,.14); border-radius: 12px; padding: 0 14px; font: inherit; color: #121826; background: #fff; outline: none; }
     input:focus { border-color: #c9a24b; box-shadow: 0 0 0 4px rgba(201,162,75,.16); }
     button { width: 100%; height: 46px; margin-top: 14px; border: 0; border-radius: 12px; background: linear-gradient(145deg, #d8b45f, #b58c32); color: #181203; font-weight: 800; cursor: pointer; }
     .error { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: #fff3f2; color: #b42318; border: 1px solid #ffd2cc; font-size: 13px; }
-    .meta { display: flex; gap: 8px; flex-wrap: wrap; margin: -6px 0 18px; }
-    .meta span { border: 1px solid rgba(18,28,48,.12); border-radius: 999px; padding: 5px 9px; color: #657086; font-size: 11px; font-weight: 700; }
-    .foot { margin-top: 14px; text-align: center; color: #4b5565; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
-  </style>
+	    .meta { display: flex; gap: 8px; flex-wrap: wrap; margin: -4px 0 18px; }
+	    .meta span { border: 1px solid rgba(18,28,48,.12); border-radius: 999px; padding: 5px 9px; color: #657086; font-size: 11px; font-weight: 700; }
+	    .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 20px; }
+	    .mini-grid span { min-height: 54px; border: 1px solid rgba(18,28,48,.1); border-radius: 12px; background: #f8fafc; display: grid; place-items: center; text-align: center; color: #4b5870; font-size: 11px; font-weight: 800; line-height: 1.25; padding: 8px; }
+	    .foot { margin-top: 14px; text-align: center; color: #4b5565; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+	    @media (max-width: 520px) { .body { padding: 24px; } .mini-grid { grid-template-columns: 1fr; } .brandline { align-items: flex-start; } }
+	  </style>
 </head>
 <body>
   <main>
     <section class="card">
-      <div class="stripe"></div>
-      <div class="body">
-        <div class="mark" style="background: transparent; box-shadow: none; border-radius: 0; width: auto; height: 72px; display: flex; align-items: center; justify-content: flex-start; margin-bottom: 12px;">
-          <img src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" style="height: 72px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));" />
-        </div>
-        <h1>Mundial 2026</h1>
-        <p>Dashboard privado para calendario, selecciones, jugadores, quiniela familiar y analista.</p>
-        <div class="meta"><span>Quiniela familiar</span><span>Datos del torneo</span><span>Modo TV</span></div>
-        ${error ? `<div class="error">${escapeHtml(error)}</div>` : ''}
+	      <div class="stripe"></div>
+	      <div class="body">
+	        <div class="brandline">
+	          <img class="emblem" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" />
+	          <img class="wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="FIFA World Cup 26" />
+	        </div>
+	        <h1>Centro privado Mundial 2026</h1>
+	        <p>Calendario, selecciones, sedes, modo TV y quiniela familiar en un espacio protegido para compartir en casa.</p>
+	        <div class="meta"><span>Quiniela familiar</span><span>Datos del torneo</span><span>Modo TV</span></div>
+	        <div class="mini-grid"><span>Partido del día</span><span>Tabla familiar</span><span>Centro de datos</span></div>
+	        ${error ? `<div class="error">${escapeHtml(error)}</div>` : ''}
         <form method="post" action="/api/login">
           <input type="hidden" name="redirectTo" value="${escapeHtml(redirectTo)}" />
           <label for="password">Clave familiar</label>

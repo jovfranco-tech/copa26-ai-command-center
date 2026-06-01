@@ -7,8 +7,9 @@ import { TeamCrest } from '@/components/identity';
 import { MatchdayHero } from '@/components/MatchdayHero';
 import { MockBanner } from '@/components/MockBanner';
 import { TournamentTimeline } from '@/components/TournamentTimeline';
-import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt } from '@/hooks';
+import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt, useTeamsMap } from '@/hooks';
 import { focusMatch } from '@/lib/matchMeta';
+import { shareTextCard } from '@/lib/shareCards';
 import { useFavorites } from '@/store/favorites';
 import { getBrowserAudioContext, stadiumAudio } from '@/lib/audioSynth';
 
@@ -57,11 +58,12 @@ export function Dashboard() {
   }
 
   return (
-    <div className="page-fade">
-      <MockBanner />
-      <MatchdayHero match={heroMatch} />
+      <div className="page-fade">
+        <MockBanner />
+        <MatchdayHero match={heroMatch} />
+        <FamilyLaunchPanel match={heroMatch} />
 
-      <div className="stat-strip" style={{ marginBottom: 18 }}>
+        <div className="stat-strip" style={{ marginBottom: 18 }}>
         <StatTile icon="ball" label="Goles" value={goals} sub="Torneo" spark={[40, 55, 38, 70, 62, 90, 100]} />
         <StatTile icon="whistle" label="Jugados" value={played} sub={`de ${matches.length}`} />
         <StatTile icon="flame" label="Goles/partido" value={avg(goals, played)} sub="Fase de grupos" accent="var(--pos)" />
@@ -233,6 +235,53 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function FamilyLaunchPanel({ match }: { match: Match | null }) {
+  const navigate = useNavigate();
+  const teams = useTeamsMap();
+  const [sharing, setSharing] = useState(false);
+
+  const shareMatchday = async () => {
+    if (!match) return;
+    setSharing(true);
+    try {
+      await shareTextCard({
+        title: 'Partido del día',
+        subtitle: `${teams[match.home]?.name ?? match.home} vs ${teams[match.away]?.name ?? match.away}`,
+        lines: [
+          `Fecha: ${match.date} ${match.time}`,
+          `Sede: ${match.venue}`,
+          'Acceso directo a quiniela familiar, modo TV y centro de datos.',
+        ],
+        footer: 'Mundial 2026 privado',
+        fileName: `partido-del-dia-${match.id}.png`,
+      });
+    } finally {
+      setSharing(false);
+    }
+  };
+
+  return (
+    <div className="matchday-launch-strip card">
+      <div>
+        <span className="mono-label">Accesos del día</span>
+        <strong>De la previa a la quiniela en un toque</strong>
+      </div>
+      <button type="button" className="btn gold" onClick={() => navigate({ to: '/pool' })}>
+        <Icon name="trophy" size={15} /> Quiniela
+      </button>
+      <button type="button" className="btn ghost" onClick={() => navigate({ to: '/tv' })}>
+        <Icon name="present" size={15} /> Pantalla grande
+      </button>
+      <button type="button" className="btn ghost" onClick={() => navigate({ to: '/data' })}>
+        <Icon name="database" size={15} /> Estado de datos
+      </button>
+      <button type="button" className="btn ghost" onClick={shareMatchday} disabled={!match || sharing}>
+        <Icon name="share" size={15} /> {sharing ? 'Creando...' : 'Compartir'}
+      </button>
     </div>
   );
 }

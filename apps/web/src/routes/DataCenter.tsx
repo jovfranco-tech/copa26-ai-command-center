@@ -71,6 +71,47 @@ export function DataCenter() {
         <DataTile icon="venues" label="Sedes" value={venues?.count ?? 0} note="Fotos y estadios" />
       </div>
 
+      <div className="data-command-grid">
+        <div className="card card-pad data-command-card">
+          <Icon name="route" size={16} style={{ color: 'var(--gold)' }} />
+          <span className="mono-label">Pipeline de resultados</span>
+          <h3>Preparado para feed real</h3>
+          <p>
+            El cron revisa salud todos los dias. Cuando exista un feed autorizado, `RESULTS_SOURCE_URL` activa ingesta,
+            recalculo de tablas, historial y tarjetas de partido.
+          </p>
+          <div className="ops-metrics">
+            <OpsMetric label="Cron" value="12:00 UTC" />
+            <OpsMetric label="Endpoint" value="/api/data-sync" />
+            <OpsMetric label="Errores" value={String(check?.errors?.length ?? 0)} />
+          </div>
+        </div>
+        <div className="card card-pad data-command-card">
+          <Icon name="shield" size={16} style={{ color: 'var(--gold)' }} />
+          <span className="mono-label">Origen y confianza</span>
+          <h3>Fuentes visibles por módulo</h3>
+          <div className="trust-source-list">
+            <TrustSource label="Calendario" source="Dataset local verificado" confidence="Alta" />
+            <TrustSource label="Ratings" source={playerRatingMeta.source} confidence={estimatedRatings ? 'Media' : 'Alta'} />
+            <TrustSource label="Rankings" source="FIFA API · abril 2026" confidence="Alta" />
+            <TrustSource label="Clima" source="Baseline historico por sede" confidence="Media" />
+          </div>
+        </div>
+        <div className="card card-pad data-command-card">
+          <Icon name="activity" size={16} style={{ color: 'var(--gold)' }} />
+          <span className="mono-label">Admin manual</span>
+          <h3>Control de operación</h3>
+          <p>
+            Usa el botón de actualización para comprobar producción, Firestore, consumo de IA y próximos pasos antes de
+            compartir el link familiar.
+          </p>
+          <button type="button" className="btn ghost" onClick={runCheck} disabled={checking}>
+            <Icon name={checking ? 'sparkSmall' : 'cloud'} size={14} />
+            {checking ? 'Revisando...' : 'Revisar producción'}
+          </button>
+        </div>
+      </div>
+
       <div className="card data-exec">
         <div className="card-hd">
           <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
@@ -290,6 +331,29 @@ function ChangeItem({ title, date, text }: { title: string; date: string; text: 
       <span className="mono-label">{date}</span>
       <strong>{title}</strong>
       <p>{text}</p>
+    </div>
+  );
+}
+
+function OpsMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span className="mono-label">{label}</span>
+      <strong className="num">{value}</strong>
+    </div>
+  );
+}
+
+function TrustSource({ label, source, confidence }: { label: string; source: string; confidence: string }) {
+  const ok = confidence === 'Alta';
+  return (
+    <div className="trust-source-row">
+      <span className={ok ? 'dot-ok' : 'dot-warn'} />
+      <div>
+        <strong>{label}</strong>
+        <p>{source}</p>
+      </div>
+      <span className="badge">{confidence}</span>
     </div>
   );
 }

@@ -729,6 +729,21 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{parsed.text}</p>
               
               {parsed.chart && <AnalystChart chart={parsed.chart} />}
+
+              <div className="analyst-source-grid">
+                <div>
+                  <span className="mono-label">Modo</span>
+                  <strong>{usedAI ? 'Proveedor IA configurado' : 'Motor local'}</strong>
+                </div>
+                <div>
+                  <span className="mono-label">Datos enviados</span>
+                  <strong>Contexto resumido</strong>
+                </div>
+                <div>
+                  <span className="mono-label">Confianza</span>
+                  <strong>{usedAI ? 'Media' : 'Alta local'}</strong>
+                </div>
+              </div>
               
               <div className="row gap-6 wrap" style={{ marginTop: 14 }}>
                 <span className="mono-label" style={{ margin: 0 }}>

@@ -13,7 +13,7 @@ export function TournamentTimeline({ matches }: { matches: Match[] }) {
     { label: 'Octavos', date: 'Julio 2026', status: 'wait', note: 'Cruces por definir' },
     { label: 'Cuartos', date: 'Julio 2026', status: 'wait', note: 'Cruces por definir' },
     { label: 'Semifinales', date: 'Julio 2026', status: 'wait', note: 'Cruces por definir' },
-    { label: 'Final', date: '2026-07-19', status: 'cup', note: 'Copa al campeon' },
+    { label: 'Final', date: '2026-07-19', status: 'cup', note: 'Copa al campeón' },
   ] as const;
 
   return (
@@ -39,4 +39,3 @@ export function TournamentTimeline({ matches }: { matches: Match[] }) {
     </div>
   );
 }
-

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, Empty, Form, cn } from '@worldcup/ui';
-import { fmtGD } from '@worldcup/shared';
+import { fmtGD, type Match, type Player } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
 import { PlayerCard, MatchRow, StandingsTable } from '@/components/cards';
 import { coachProfiles } from '@/generated/intelPacks';
 import { downloadedTeamKitVariantExts, teamKitVariants, type TeamKitVariant } from '@/generated/teamKits';
-import { useMatches, usePlayers, useStandings, useTeam } from '@/hooks';
+import { useMatches, usePlayers, useStandings, useTeam, useVenuesMap } from '@/hooks';
 import { playerRatings } from '@/lib/ratings';
 
 type Tab = 'profile' | 'squad' | 'fixtures' | 'kits' | 'group';
@@ -80,7 +80,7 @@ export function TeamDetail({ code }: { code: string }) {
         </div>
       </div>
 
-      <div className="row gap-6" style={{ marginBottom: 14 }}>
+      <div className="row gap-6 wrap" style={{ marginBottom: 14 }}>
         {(['profile', 'squad', 'fixtures', 'kits', 'group'] as Tab[]).map((tb) => (
           <button key={tb} type="button" className={cn('pill', tab === tb && 'on')} onClick={() => setTab(tb)}>
             {tb === 'profile' ? 'Perfil' : tb === 'squad' ? 'Plantilla' : tb === 'fixtures' ? 'Partidos' : tb === 'kits' ? 'Uniformes' : 'Grupo'}
@@ -148,15 +148,22 @@ function TeamProfile({
   ranking,
 }: {
   code: string;
-  players: Array<{ id: string; name: string; pos: string; club: string; team: string; age: number | null }>;
-  fixtures: Array<{ id: string; home: string; away: string; date: string; time: string; status: string }>;
+  players: Player[];
+  fixtures: Match[];
   coach: { name: string | null; photo: string | null; summary?: string | null } | undefined;
   ranking: number | null;
 }) {
+  const venues = useVenuesMap();
   const ratings = players.map((p) => ({ player: p, rating: playerRatings(p) })).sort((a, b) => b.rating.overall - a.rating.overall);
   const avgRating = ratings.length ? Math.round(ratings.reduce((sum, row) => sum + row.rating.overall, 0) / ratings.length) : 0;
+  const realRatings = ratings.filter((row) => row.rating.source === 'fc26').length;
   const star = ratings[0];
   const next = fixtures.find((m) => m.status === 'UPCOMING');
+  const nextVenue = next ? venues[next.venue] : null;
+  const positionCounts = players.reduce<Record<string, number>>((acc, player) => {
+    acc[player.pos] = (acc[player.pos] ?? 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <div className="grid team-profile-grid">
@@ -196,10 +203,31 @@ function TeamProfile({
           <div style={{ marginTop: 10 }}>
             <strong>{next.home} vs {next.away}</strong>
             <div className="mono-label">{next.date} · {next.time}</div>
+            <p className="muted" style={{ margin: '6px 0 0', fontSize: 12.5 }}>
+              {nextVenue ? `${nextVenue.stadium}, ${nextVenue.city}` : 'Sede pendiente'}
+            </p>
           </div>
         ) : (
           <p className="muted">Sin partido pendiente.</p>
         )}
+      </div>
+      <div className="card card-pad">
+        <span className="mono-label">Plantilla por lineas</span>
+        <div className="position-stack">
+          {['GK', 'DF', 'MF', 'FW'].map((pos) => (
+            <div key={pos}>
+              <span>{pos}</span>
+              <strong className="num">{positionCounts[pos] ?? 0}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="card card-pad">
+        <span className="mono-label">Confiabilidad de ratings</span>
+        <div className="rating-trust-meter">
+          <strong>{realRatings}/{players.length || 0}</strong>
+          <span>con fuente FC 26; el resto queda estimado y reemplazable.</span>
+        </div>
       </div>
     </div>
   );
