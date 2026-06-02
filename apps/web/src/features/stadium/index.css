@@ -34,18 +34,65 @@
   --text-secondary: var(--tx-2);
   --text-muted: var(--tx-3);
 
+  /* Default Pitch CSS variables (Day mode green) */
+  --stadium-pitch-bg: linear-gradient(180deg, #e8f3eb 0%, #d8e8dc 100%);
+  --stadium-pitch-line: rgba(34, 112, 63, 0.16);
+  --stadium-pitch-line-strong: rgba(34, 112, 63, 0.3);
+  --stadium-player-text: var(--tx);
+  --stadium-toggle-bg: rgba(0, 0, 0, 0.06);
+  --stadium-toggle-border: rgba(0, 0, 0, 0.08);
+  --stadium-toggle-btn-hover: var(--tx);
+  --stadium-toggle-btn-active-bg: rgba(0, 242, 254, 0.15);
+  --stadium-toggle-btn-active-color: var(--tx);
+
+  /* Integrated mode default styling overrides */
+  &.stadium-integrated-mode {
+    --bg-deep: var(--bg);
+    --bg-surface: var(--bg-1);
+    --bg-card: var(--bg-2);
+    --bg-card-hover: var(--bg-hover);
+    --border-subtle: var(--line);
+    --border-focus: var(--line-2);
+    
+    --text-primary: var(--tx);
+    --text-secondary: var(--tx-2);
+    --text-muted: var(--tx-3);
+
+    --stadium-pitch-bg: linear-gradient(180deg, #e8f3eb 0%, #d8e8dc 100%);
+    --stadium-pitch-line: rgba(34, 112, 63, 0.16);
+    --stadium-pitch-line-strong: rgba(34, 112, 63, 0.3);
+    --stadium-player-text: var(--tx);
+    --stadium-toggle-bg: rgba(0, 0, 0, 0.06);
+    --stadium-toggle-border: rgba(0, 0, 0, 0.08);
+    --stadium-toggle-btn-hover: var(--tx);
+    --stadium-toggle-btn-active-bg: rgba(0, 242, 254, 0.15);
+    --stadium-toggle-btn-active-color: var(--tx);
+  }
+
   /* Immersive dark theme overrides */
-  .immersive {
+  &.stadium-immersive-mode {
     --bg-deep: #070913;
-    --bg-surface: rgba(13, 17, 34, 0.65);
-    --bg-card: rgba(22, 28, 54, 0.45);
-    --bg-card-hover: rgba(30, 39, 73, 0.6);
+    --bg-surface: rgba(13, 17, 34, 0.94);
+    --bg-card: rgba(22, 28, 54, 0.85);
+    --bg-card-hover: rgba(30, 39, 73, 0.9);
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-focus: rgba(0, 242, 254, 0.4);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
+
+    --stadium-pitch-bg: radial-gradient(circle at 50% 50%, #0d1530 0%, #05070e 100%);
+    --stadium-pitch-line: rgba(255, 255, 255, 0.08);
+    --stadium-pitch-line-strong: rgba(255, 255, 255, 0.2);
+    --stadium-player-text: #ffffff;
+    --stadium-toggle-bg: rgba(7, 9, 19, 0.5);
+    --stadium-toggle-border: rgba(255, 255, 255, 0.05);
+    --stadium-toggle-btn-hover: #ffffff;
+    --stadium-toggle-btn-active-bg: rgba(0, 242, 254, 0.1);
+    --stadium-toggle-btn-active-color: #ffffff;
   }
+
+
   
   /* Brand Accent Glow Colors (Tailored HSL) */
   --color-neon-cyan: hsl(182, 100%, 50%);
@@ -1102,7 +1149,7 @@
   .match-select-overlay {
     background: transparent;
     border: none;
-    color: #ffffff;
+    color: var(--text-primary);
     font-size: 0.85rem;
     font-weight: 800;
     cursor: pointer;
@@ -1202,7 +1249,7 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 12px;
-    height: 76px;
+    height: 88px;
     margin-top: 4px;
   }
   
@@ -1270,8 +1317,8 @@
   /* Toggle Group Buttons for Mentalidad and Ritmo */
   .toggle-group {
     display: flex;
-    background: rgba(7, 9, 19, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--stadium-toggle-bg, rgba(7, 9, 19, 0.5));
+    border: 1px solid var(--stadium-toggle-border, rgba(255, 255, 255, 0.05));
     border-radius: 6px;
     padding: 2.5px;
     gap: 2px;
@@ -1294,13 +1341,13 @@
   }
   
   .toggle-group .toggle-btn:hover {
-    color: #ffffff;
+    color: var(--stadium-toggle-btn-hover, #ffffff);
   }
   
   .toggle-group .toggle-btn.active {
-    background: rgba(0, 242, 254, 0.1);
-    border: 1px solid rgba(0, 242, 254, 0.15);
-    color: #ffffff;
+    background: var(--stadium-toggle-btn-active-bg, rgba(0, 242, 254, 0.1));
+    border: 1px solid var(--border-focus);
+    color: var(--stadium-toggle-btn-active-color, #ffffff);
   }
   
   .toggle-group .toggle-btn .bullet {

@@ -41,7 +41,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
       {/* Chalkboard Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <div>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: homeColor }}></span>
             Pizarrón Táctico 2D
           </h3>
@@ -63,28 +63,28 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
             width: '100%', 
             height: '100%', 
             borderRadius: '12px', 
-            background: '#090d22',
-            border: activeZone === 'field' ? '2px solid var(--accent-cyan)' : '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--stadium-pitch-bg, radial-gradient(circle at 50% 50%, #0d1530 0%, #05070e 100%))',
+            border: activeZone === 'field' ? '2px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
             boxShadow: activeZone === 'field' ? '0 0 20px rgba(0, 242, 254, 0.25)' : 'none',
             transition: 'all 0.3s'
           }}
           onClick={() => onZoneClick('field')}
         >
           {/* Pitch markings */}
-          <rect x="5" y="5" width="190" height="90" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
-          <line x1="100" y1="5" x2="100" y2="95" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
-          <circle cx="100" cy="50" r="15" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
-          <circle cx="100" cy="50" r="1.5" fill="rgba(255, 255, 255, 0.6)" />
+          <rect x="5" y="5" width="190" height="90" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
+          <line x1="100" y1="5" x2="100" y2="95" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
+          <circle cx="100" cy="50" r="15" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
+          <circle cx="100" cy="50" r="1.5" fill="var(--stadium-pitch-line-strong, rgba(255, 255, 255, 0.6))" />
 
           {/* Goal boxes */}
-          <rect x="5" y="25" width="15" height="50" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
-          <rect x="180" y="25" width="15" height="50" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
-          <rect x="5" y="38" width="5" height="24" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
-          <rect x="190" y="38" width="5" height="24" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" />
+          <rect x="5" y="25" width="15" height="50" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
+          <rect x="180" y="25" width="15" height="50" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
+          <rect x="5" y="38" width="5" height="24" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
+          <rect x="190" y="38" width="5" height="24" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.15))" strokeWidth="0.8" />
 
           {/* Penalty spots */}
-          <circle cx="16" cy="50" r="1" fill="rgba(255, 255, 255, 0.5)" />
-          <circle cx="184" cy="50" r="1" fill="rgba(255, 255, 255, 0.5)" />
+          <circle cx="16" cy="50" r="1" fill="var(--stadium-pitch-line-strong, rgba(255, 255, 255, 0.5))" />
+          <circle cx="184" cy="50" r="1" fill="var(--stadium-pitch-line-strong, rgba(255, 255, 255, 0.5))" />
 
           {/* Heatmap overlay (simulated map) */}
           {match.analytics.heatZones.map((zone, idx) => (
@@ -104,7 +104,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
               <radialGradient id={`heat-grad-2d-${idx}`} key={idx}>
                 <stop offset="0%" stopColor="#10b981" stopOpacity={zone.val} />
                 <stop offset="65%" stopColor="#00f2fe" stopOpacity={zone.val * 0.4} />
-                <stop offset="100%" stopColor="#090d22" stopOpacity="0" />
+                <stop offset="100%" stopColor="transparent" stopOpacity="0" />
               </radialGradient>
             ))}
             
@@ -184,7 +184,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                   x={svgX} 
                   y={svgY - 4.5} 
                   fontSize="2.8" 
-                  fill={isSelected ? 'var(--accent-cyan)' : '#ffffff'} 
+                  fill={isSelected ? 'var(--accent-cyan)' : 'var(--text-primary)'} 
                   fontWeight="700"
                   textAnchor="middle"
                 >
@@ -245,7 +245,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                   x={svgX} 
                   y={svgY - 4.5} 
                   fontSize="2.8" 
-                  fill={isSelected ? 'var(--accent-cyan)' : '#94a3b8'} 
+                  fill={isSelected ? 'var(--accent-cyan)' : 'var(--text-secondary)'} 
                   fontWeight="700"
                   textAnchor="middle"
                 >
@@ -260,8 +260,8 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
       {/* Squad Lineups Grid (Argentina left, France right) - Phase 6 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
         {/* Argentina Lineup Column */}
-        <div className="stadium-card" style={{ padding: '10px', background: 'rgba(116, 172, 223, 0.02)', borderColor: 'rgba(116, 172, 223, 0.12)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '6px', marginBottom: '8px' }}>
+        <div style={{ padding: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '6px', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 800, color: homeColor }}>ARGENTINA</span>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>F: {MATCH_LINEUPS.teams.home.formation}</span>
           </div>
@@ -299,7 +299,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                     }}>
                       {p.number}
                     </span>
-                    <span style={{ fontWeight: isSel ? 700 : 500, color: isSel ? 'var(--accent-cyan)' : '#fff' }}>{p.displayName}</span>
+                    <span style={{ fontWeight: isSel ? 700 : 500, color: isSel ? 'var(--accent-cyan)' : 'var(--text-primary)' }}>{p.displayName}</span>
                   </div>
                   <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{p.position}</span>
                 </div>
@@ -309,8 +309,8 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
         </div>
 
         {/* France Lineup Column */}
-        <div className="stadium-card" style={{ padding: '10px', background: 'rgba(15, 32, 66, 0.02)', borderColor: 'rgba(15, 32, 66, 0.12)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '6px', marginBottom: '8px' }}>
+        <div style={{ padding: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '6px', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 800, color: awayColor }}>FRANCIA</span>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>F: {MATCH_LINEUPS.teams.away.formation}</span>
           </div>
@@ -348,7 +348,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                     }}>
                       {p.number}
                     </span>
-                    <span style={{ fontWeight: isSel ? 700 : 500, color: isSel ? 'var(--accent-cyan)' : '#fff' }}>{p.displayName}</span>
+                    <span style={{ fontWeight: isSel ? 700 : 500, color: isSel ? 'var(--accent-cyan)' : 'var(--text-primary)' }}>{p.displayName}</span>
                   </div>
                   <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{p.position}</span>
                 </div>

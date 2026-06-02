@@ -145,6 +145,7 @@ export function mapDatabasePlayersToLineups(dbPlayers: DbPlayer[]): typeof MATCH
           pos: matchedDb.pos,
           club: matchedDb.club,
           age: matchedDb.age,
+          slotId: slot.slotId,
         };
         matchedPlayers.push(stPlayer);
       }
@@ -181,6 +182,7 @@ export function mapDatabasePlayersToLineups(dbPlayers: DbPlayer[]): typeof MATCH
           pos: bestCandidate.pos,
           club: bestCandidate.club,
           age: bestCandidate.age,
+          slotId: slot.slotId,
         };
         matchedPlayers.push(stPlayer);
       } else {
@@ -188,7 +190,8 @@ export function mapDatabasePlayersToLineups(dbPlayers: DbPlayer[]): typeof MATCH
         const mockFallback = fallbackLineup.players.find((mp) => mp.id === slot.slotId) || fallbackLineup.players[0]!;
         matchedPlayers.push({
           ...mockFallback,
-          team: teamCode
+          team: teamCode,
+          slotId: slot.slotId,
         });
       }
     }

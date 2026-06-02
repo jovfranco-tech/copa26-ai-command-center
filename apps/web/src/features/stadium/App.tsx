@@ -208,7 +208,7 @@ function App() {
     : null;
 
   return (
-    <div className={`app-container ${modoInmersivo ? 'immersive' : ''}`}>
+    <div className={`app-container ${modoInmersivo ? 'stadium-immersive-mode' : 'stadium-integrated-mode'}`}>
       {/* Premium Dashboard Header in Spanish */}
       <header className="app-header">
         <div className="brand-section">
@@ -316,7 +316,7 @@ function App() {
                     }}
                   >
                     {fixtures.map(match => (
-                      <option key={match.id} value={match.id} style={{ background: '#090d22', color: '#ffffff' }}>
+                      <option key={match.id} value={match.id} style={{ background: 'var(--bg-surface)', color: 'var(--text-primary)' }}>
                         {match.teams.home} vs {match.teams.away}
                       </option>
                     ))}

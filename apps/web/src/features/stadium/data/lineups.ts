@@ -16,6 +16,7 @@ export interface Player {
   pos?: string;
   club?: string;
   age?: number | null;
+  slotId?: string;
 }
 
 export interface TeamLineup {

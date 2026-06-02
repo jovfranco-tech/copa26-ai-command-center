@@ -56,34 +56,35 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
         style={{ 
           width: '100%', 
           borderRadius: '10px', 
-          background: 'radial-gradient(circle at 50% 50%, #0d1530 0%, #05070e 100%)',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+          background: 'var(--stadium-pitch-bg, radial-gradient(circle at 50% 50%, #0d1530 0%, #05070e 100%))',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: 'var(--glass-shadow)',
+          transition: 'all 0.3s'
         }}
       >
         {/* Pitch outer markings */}
-        <rect x="4" y="4" width="92" height="122" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
+        <rect x="4" y="4" width="92" height="122" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
         
         {/* Center circle and line */}
-        <line x1="4" y1="65" x2="96" y2="65" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <circle cx="50" cy="65" r="18" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <circle cx="50" cy="65" r="1" fill="rgba(255, 255, 255, 0.3)" />
+        <line x1="4" y1="65" x2="96" y2="65" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <circle cx="50" cy="65" r="18" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <circle cx="50" cy="65" r="1" fill="var(--stadium-pitch-line-strong, rgba(255, 255, 255, 0.3))" />
 
         {/* Penalty Area Bottom */}
-        <rect x="22" y="96" width="56" height="30" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <rect x="36" y="112" width="28" height="14" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <path d="M 38,96 A 12,12 0 0,1 62,96" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <circle cx="50" cy="106" r="0.8" fill="rgba(255, 255, 255, 0.4)" />
+        <rect x="22" y="96" width="56" height="30" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <rect x="36" y="112" width="28" height="14" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <path d="M 38,96 A 12,12 0 0,1 62,96" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <circle cx="50" cy="106" r="0.8" fill="var(--stadium-pitch-line-strong, rgba(255, 255, 255, 0.4))" />
 
         {/* Penalty Area Top */}
-        <rect x="22" y="4" width="56" height="30" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <rect x="36" y="4" width="28" height="14" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <path d="M 38,34 A 12,12 0 0,0 62,34" fill="none" stroke="rgba(255, 255, 255, 0.07)" strokeWidth="0.8" />
-        <circle cx="50" cy="24" r="0.8" fill="rgba(255, 255, 255, 0.4)" />
+        <rect x="22" y="4" width="56" height="30" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <rect x="36" y="4" width="28" height="14" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <path d="M 38,34 A 12,12 0 0,0 62,34" fill="none" stroke="var(--stadium-pitch-line, rgba(255, 255, 255, 0.07))" strokeWidth="0.8" />
+        <circle cx="50" cy="24" r="0.8" fill="var(--stadium-pitch-line-strong, rgba(255, 255, 255, 0.4))" />
 
         {/* Render Players */}
         {players.map((player) => {
-          const pt = coords[player.id];
+          const pt = coords[player.slotId || player.id];
           if (!pt) return null;
 
           const isSelected = selectedPlayerId === player.id;
@@ -93,7 +94,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
           if (player.position === 'GK') {
             markerColor = '#fbbf24'; // Yellow/Gold GK
           } else if (teamCode === 'FRA') {
-            markerColor = '#3b82f6'; // Lighter blue for France on dark pitch
+            markerColor = 'var(--accent-blue)'; // Lighter blue for France on dark pitch
           }
 
           return (
@@ -142,8 +143,8 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
                 x={pt.x} 
                 y={pt.y + 8} 
                 fontSize="2.6" 
-                fill={isSelected ? '#ffffff' : '#94a3b8'} 
-                fontWeight={isSelected ? '700' : '600'} 
+                fill={isSelected ? 'var(--text-primary)' : 'var(--text-secondary)'} 
+                fontWeight={isSelected ? '800' : '600'} 
                 textAnchor="middle"
                 fontFamily="var(--font-sans)"
               >
@@ -157,12 +158,12 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
   };
 
   return (
-    <div className="panel-container" style={{ padding: '16px', display: 'flex', flexDirection: 'column', height: '100%', gap: '14px' }}>
+    <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', height: '100%', gap: '14px' }}>
       
       {/* Sidebar Top Title Header matching Mockup */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h4 style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', margin: 0 }}>
-          Ejemplo 2 · Vista estadio 3D
+          Estadio 3D · Resumen
         </h4>
         <span 
           style={{ 
@@ -185,7 +186,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
 
       {/* Main Title & Subtitle */}
       <div>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
           Alineaciones en cancha {match.status === 'live' && `(${match.liveTime || "82'"})`}
         </h2>
         <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '4px', lineHeight: '1.3' }}>
@@ -199,7 +200,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
         {/* Team 1: Argentina */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
               <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-cyan)' }}></span>
               ARGENTINA
             </span>
@@ -213,7 +214,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
         {/* Team 2: Francia */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
               <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6' }}></span>
               FRANCIA
             </span>
@@ -227,7 +228,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
       </div>
 
       {/* Spanish Licensing Disclaimer */}
-      <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.3', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px', flexShrink: 0 }}>
+      <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.3', marginTop: '12px', borderTop: '1px solid var(--border-subtle)', paddingTop: '8px', flexShrink: 0 }}>
         Prototipo privado no oficial de análisis deportivo. No está afiliado a FIFA, organizadores del torneo, selecciones ni sedes oficiales.
       </div>
 

@@ -73,7 +73,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
       }}
     >
       {/* Panel Header */}
-      <div className="panel-header" style={{ padding: '14px 18px', borderBottom: '1px solid var(--border-subtle)', background: 'rgba(255,255,255,0.01)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="panel-header" style={{ padding: '14px 18px', borderBottom: '1px solid var(--border-subtle)', background: 'rgba(255,255,255,0.01)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
         <button 
           onClick={onClose}
           className="stadium-btn"
@@ -92,7 +92,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         </button>
       </div>
 
-      <div className="panel-content" style={{ padding: '16px', gap: '14px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="panel-content" style={{ padding: '16px', gap: '12px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Profile Hero Card */}
         <div 
           className="stadium-card" 
@@ -117,58 +117,68 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             fontSize: '5rem',
             fontWeight: 900,
             color: teamGlowColor,
-            opacity: 0.08,
+            opacity: 0.04,
             userSelect: 'none',
             pointerEvents: 'none',
-            lineHeight: 1
+            lineHeight: 1,
+            zIndex: 0
           }}>
             #{player.number}
           </div>
 
-          <div className="row gap-12" style={{ alignItems: 'center', zIndex: 1 }}>
-            <span style={{ position: 'relative', flex: 'none' }}>
-              <PlayerAvatar player={player as unknown as SharedPlayer} size={54} />
-              <span
-                className="num"
-                style={{
-                  position: 'absolute',
-                  top: -6,
-                  left: -8,
-                  background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
-                  color: '#181203',
-                  fontWeight: 800,
-                  fontSize: 13,
-                  padding: '1px 6px',
-                  borderRadius: 6,
-                  boxShadow: 'var(--shadow)',
-                }}
-              >
-                {ratings.overall}
-              </span>
-            </span>
+          <div className="row gap-12" style={{ alignItems: 'center', position: 'relative', zIndex: 1 }}>
+            <div style={{ position: 'relative', flex: 'none', width: '48px', height: '48px' }}>
+              <PlayerAvatar player={player as unknown as SharedPlayer} size={48} />
+            </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }} className="nowrap">
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {player.name}
                 </span>
                 <span className="num" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 700 }}>
-                  #{player.number ?? '—'}
+                  #{player.number}
                 </span>
               </div>
-              <div className="row gap-6" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px', flexWrap: 'wrap' }}>
-                <TeamFlag code={player.team} size={13} />
-                <span className="nowrap">{player.team === 'ARG' ? 'Argentina' : 'Francia'}</span>
-                <span>·</span>
-                <span className={`pos-tag pos-${player.position}`}>{player.position}</span>
-                <span className="nowrap" style={{ color: 'var(--text-muted)' }}>{player.club}</span>
+              
+              <div className="row gap-6" style={{ flexWrap: 'wrap', marginTop: '2px', alignItems: 'center' }}>
+                {/* Rating Small Badge */}
+                <span
+                  className="num"
+                  style={{
+                    background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
+                    color: '#181203',
+                    fontWeight: 800,
+                    fontSize: '0.7rem',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    lineHeight: 1,
+                  }}
+                  title="Valoración General"
+                >
+                  {ratings.overall} GRL
+                </span>
+                
+                <span className={`pos-tag pos-${player.position}`} style={{ fontSize: '0.65rem', padding: '1px 4px' }}>
+                  {player.position}
+                </span>
+
+                <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                  <TeamFlag code={player.team} size={11} />
+                  <span>{player.team === 'ARG' ? 'ARG' : 'FRA'}</span>
+                </span>
               </div>
             </div>
           </div>
 
+          {/* Subtext info: Club */}
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', zIndex: 1, borderTop: '1px solid var(--border-subtle)', paddingTop: '6px', marginTop: '2px' }}>
+            Club: <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{player.club || '—'}</span>
+          </div>
+
           {/* Rating Source row */}
           <div className="row gap-8" style={{ zIndex: 1, flexWrap: 'wrap' }}>
-            <span className={`rating-source ${ratings.source}`} title={ratingSourceText(ratings)}>
+            <span className={`rating-source ${ratings.source}`} style={{ fontSize: '0.65rem' }} title={ratingSourceText(ratings)}>
               {ratings.source === 'fc26' ? 'FC 26' : 'Estimado'}
             </span>
             <DataSourceBadge
@@ -180,8 +190,25 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             />
           </div>
 
-          {/* Attributes Grid (6 main attributes) */}
-          <div className="row player-attrs" style={{ zIndex: 1, borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', marginTop: '2px', zIndex: 1 }}>
+            Rol: <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span> · Zona: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player)}</span>
+          </div>
+        </div>
+
+        {/* Stats Reales Card */}
+        <div 
+          className="stadium-card" 
+          style={{ 
+            padding: '14px', 
+            background: 'var(--bg-card)', 
+            border: '1px solid var(--border-subtle)', 
+            borderRadius: '12px' 
+          }}
+        >
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>
+            Atributos Reales
+          </div>
+          <div className="row player-attrs" style={{ borderTop: 'none', paddingTop: 0, marginTop: 0, justifyContent: 'space-between', gap: '4px' }}>
             {labels.map((a) => (
               <div key={a.key} style={{ textAlign: 'center', flex: 1 }}>
                 <div className="num" style={{ fontWeight: 800, fontSize: '0.95rem', color: attrColor(ratings[a.key]) }}>
@@ -193,53 +220,45 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
               </div>
             ))}
           </div>
-
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', marginTop: '2px', zIndex: 1 }}>
-            Rol: <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span> · Zona: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player)}</span>
-          </div>
         </div>
 
-        {/* Tactical Performance Gauges */}
+        {/* Metrics Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           {/* Stamina Indicator */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Activity size={10} style={{ color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }} />
               Condición Física
             </span>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-              <span style={{ fontSize: '1.4rem', fontWeight: 800, color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }}>
-                {player.stamina}%
-              </span>
-            </div>
+            <span className="num" style={{ fontSize: '1.15rem', fontWeight: 800, color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }}>
+              {player.stamina}%
+            </span>
             <div style={{ height: '4px', background: 'var(--border-subtle)', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{ 
                 height: '100%', 
                 width: `${player.stamina}%`, 
                 background: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)',
-                borderRadius: '4px'
               }}></div>
             </div>
           </div>
 
           {/* Influence Indicator */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Award size={10} style={{ color: teamGlowColor }} />
               Influencia Táctica
             </span>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-              <span style={{ fontSize: '1.4rem', fontWeight: 800, color: teamGlowColor }}>
+              <span className="num" style={{ fontSize: '1.15rem', fontWeight: 800, color: teamGlowColor }}>
                 {player.influenceScore}
               </span>
-              <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700, marginLeft: '2px' }}>/ 100</span>
+              <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>/ 100</span>
             </div>
             <div style={{ height: '4px', background: 'var(--border-subtle)', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{ 
                 height: '100%', 
                 width: `${player.influenceScore}%`, 
                 background: teamGlowColor,
-                borderRadius: '4px'
               }}></div>
             </div>
           </div>
@@ -248,20 +267,20 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         {/* Row 2 of Metrics: Riesgo and Estado */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           {/* Riesgo Badge */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '4px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
               Riesgo de Pérdida
             </span>
             <span 
               className="brand-badge" 
               style={{ 
-                background: `rgba(${player.riskLevel === 'critico' || player.riskLevel === 'alto' ? '239, 68, 68' : '16, 185, 129'}, 0.15)`, 
+                background: `rgba(${player.riskLevel === 'critico' || player.riskLevel === 'alto' ? '239, 68, 68' : '16, 185, 129'}, 0.1)`, 
                 color: riskColor,
                 borderColor: riskColor,
                 border: '1px solid',
-                fontSize: '0.62rem',
+                fontSize: '0.58rem',
                 fontWeight: 800,
-                padding: '3px 8px',
+                padding: '2px 4px',
                 borderRadius: '4px',
                 textAlign: 'center',
                 display: 'block',
@@ -273,7 +292,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           </div>
 
           {/* Estado del Jugador */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '4px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
               Estado del Jugador
             </span>
@@ -281,10 +300,10 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
               className="brand-badge" 
               style={{ 
                 background: player.stamina < 70 
-                  ? 'rgba(239, 68, 68, 0.15)' 
+                  ? 'rgba(239, 68, 68, 0.1)' 
                   : player.influenceScore > 85 
-                  ? 'rgba(0, 242, 254, 0.15)' 
-                  : 'rgba(16, 185, 129, 0.15)', 
+                  ? 'rgba(0, 242, 254, 0.1)' 
+                  : 'rgba(16, 185, 129, 0.1)', 
                 color: player.stamina < 70 
                   ? 'var(--color-neon-red)' 
                   : player.influenceScore > 85 
@@ -296,9 +315,9 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                   ? 'var(--accent-cyan)' 
                   : 'var(--accent-emerald)',
                 border: '1px solid',
-                fontSize: '0.62rem',
+                fontSize: '0.58rem',
                 fontWeight: 800,
-                padding: '3px 8px',
+                padding: '2px 4px',
                 borderRadius: '4px',
                 textAlign: 'center',
                 display: 'block',
@@ -311,57 +330,57 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         </div>
 
         {/* Cobertura / Presión Row */}
-        <div className="stadium-card" style={{ padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+        <div className="stadium-card" style={{ padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
           <span style={{ fontSize: '0.68rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Activity size={12} style={{ color: teamGlowColor }} />
             {player.position === 'DF' || player.position === 'GK' || player.id === 'fra-dm-r' || player.id === 'arg-dm' ? 'Cobertura Táctica' : 'Presión Generada'}
           </span>
-          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             {Math.round(player.influenceScore * 0.85 + player.stamina * 0.15)}%
           </span>
         </div>
 
         {/* AI Tactical Narrative */}
-        <div className="stadium-card" style={{ padding: '14px', background: `${teamGlowColor}05`, borderColor: `${teamGlowColor}25`, border: '1px solid', borderRadius: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+        <div className="stadium-card" style={{ padding: '12px', background: `${teamGlowColor}05`, borderColor: `${teamGlowColor}25`, border: '1px solid', borderRadius: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Flame size={12} style={{ color: teamGlowColor }} />
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: teamGlowColor, letterSpacing: '0.05em' }}>
-              Análisis Táctico IA (Estimado)
+            <span style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', color: teamGlowColor, letterSpacing: '0.05em' }}>
+              Análisis Táctico IA
             </span>
           </div>
-          <p style={{ fontSize: '0.78rem', lineHeight: '1.45', color: 'var(--text-primary)', margin: 0 }}>
-            {aiInsight}
+          <p style={{ fontSize: '0.74rem', lineHeight: '1.4', color: 'var(--text-primary)', margin: 0 }}>
+            {aiInsight.length > 180 ? `${aiInsight.substring(0, 177)}...` : aiInsight}
           </p>
         </div>
 
         {/* Action controls for the player */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto', paddingTop: '10px' }}>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: 'auto', paddingTop: '6px' }}>
+          <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Acciones Contextuales
           </span>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <button 
               className="stadium-btn active"
               style={{ 
                 justifyContent: 'flex-start', 
-                fontSize: '0.75rem', 
-                padding: '10px 12px',
-                borderColor: `${teamGlowColor}40`,
-                background: `linear-gradient(90deg, ${teamGlowColor}15 0%, transparent 100%)`,
+                fontSize: '0.72rem', 
+                padding: '8px 10px',
+                borderColor: `${teamGlowColor}30`,
+                background: `linear-gradient(90deg, ${teamGlowColor}10 0%, transparent 100%)`,
                 textAlign: 'left'
               }}
             >
-              <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: teamGlowColor, marginRight: '4px' }}></span>
-              Ver Radar de Pases (Activo)
+              <span style={{ display: 'inline-block', width: '5px', height: '5px', borderRadius: '50%', background: teamGlowColor, marginRight: '4px' }}></span>
+              Ver Radar de Pases
             </button>
 
             <button 
               className="stadium-btn"
               style={{ 
                 justifyContent: 'flex-start', 
-                fontSize: '0.75rem', 
-                padding: '10px 12px',
+                fontSize: '0.72rem', 
+                padding: '8px 10px',
                 textAlign: 'left'
               }}
             >
@@ -372,8 +391,8 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
               className="stadium-btn"
               style={{ 
                 justifyContent: 'flex-start', 
-                fontSize: '0.75rem', 
-                padding: '10px 12px',
+                fontSize: '0.72rem', 
+                padding: '8px 10px',
                 textAlign: 'left'
               }}
             >
