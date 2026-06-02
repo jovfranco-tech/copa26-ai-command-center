@@ -617,7 +617,24 @@ function App() {
         
         {/* COLUMN 2: SIDEBAR - Hibrid Panel (Lineups 2D / Selected Player Panel) */}
         <section className="panel-container">
-          <div className="glass-panel" style={{ height: '100%' }}>
+          <div 
+            className="glass-panel" 
+            style={{ 
+              height: '100%',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease',
+              ...(selectedPlayerMapped ? {
+                borderColor: selectedPlayerMapped.team === 'ARG' 
+                  ? (selectedPlayerMapped.position === 'GK' ? '#fbbf24' : 'var(--accent-cyan)')
+                  : (selectedPlayerMapped.position === 'GK' ? 'var(--accent-emerald)' : 'var(--color-neon-red)'),
+                boxShadow: `0 0 24px ${
+                  (selectedPlayerMapped.team === 'ARG' 
+                    ? (selectedPlayerMapped.position === 'GK' ? '#fbbf24' : 'var(--accent-cyan)')
+                    : (selectedPlayerMapped.position === 'GK' ? 'var(--accent-emerald)' : 'var(--color-neon-red)'))
+                }20`
+              } : {})
+            }}
+          >
             {selectedPlayerMapped ? (
               <SelectedPlayerPanel 
                 player={selectedPlayerMapped}
