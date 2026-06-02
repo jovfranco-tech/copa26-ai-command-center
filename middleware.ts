@@ -187,14 +187,15 @@ function accessPage({
 	    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
 	    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0a101b url('/venue-photos/mex.webp') center / cover no-repeat; color: #101726; }
 	    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(115deg, rgba(246,249,253,.98), rgba(246,249,253,.88) 45%, rgba(10,16,27,.34)), radial-gradient(760px 420px at 78% 0%, rgba(201,162,75,.28), transparent 62%); pointer-events: none; }
-	    main { position: relative; width: min(520px, calc(100vw - 34px)); }
-	    .card { border: 1px solid rgba(18,28,48,.12); border-radius: 24px; background: rgba(255,255,255,.94); backdrop-filter: blur(20px); box-shadow: 0 28px 78px -38px rgba(22,35,60,.55); overflow: hidden; }
+	    main { position: relative; width: min(880px, calc(100vw - 34px)); }
+	    .card { border: 1px solid rgba(18,28,48,.12); border-radius: 26px; background: rgba(255,255,255,.94); backdrop-filter: blur(20px); box-shadow: 0 28px 78px -38px rgba(22,35,60,.55); overflow: hidden; }
 	    .stripe { height: 7px; background: linear-gradient(90deg, #c9a24b, #111827 48%, #e0bd6c); }
-	    .body { padding: 30px; }
+	    .body { padding: 30px; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; align-items: stretch; }
+	    .copy { display: flex; flex-direction: column; justify-content: center; }
 	    .brandline { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
 	    .emblem { width: 50px; height: 70px; object-fit: contain; filter: drop-shadow(0 14px 18px rgba(0,0,0,.24)); }
 	    .wordmark { width: 176px; max-width: 60vw; padding: 8px 10px; border-radius: 9px; background: #fff; border: 1px solid rgba(18,28,48,.1); box-shadow: 0 16px 30px -22px rgba(0,0,0,.42); }
-	    h1 { margin: 0 0 7px; font-size: 28px; line-height: 1.02; letter-spacing: 0; }
+	    h1 { margin: 0 0 7px; font-size: clamp(30px, 5vw, 52px); line-height: .98; letter-spacing: 0; }
 	    p { margin: 0 0 20px; color: #657086; font-size: 14px; line-height: 1.55; }
     label { display: block; margin: 0 0 8px; color: #7d8799; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
     input { width: 100%; height: 46px; box-sizing: border-box; border: 1px solid rgba(18,28,48,.14); border-radius: 12px; padding: 0 14px; font: inherit; color: #121826; background: #fff; outline: none; }
@@ -205,8 +206,16 @@ function accessPage({
 	    .meta span { border: 1px solid rgba(18,28,48,.12); border-radius: 999px; padding: 5px 9px; color: #657086; font-size: 11px; font-weight: 700; }
 	    .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 20px; }
 	    .mini-grid span { min-height: 54px; border: 1px solid rgba(18,28,48,.1); border-radius: 12px; background: #f8fafc; display: grid; place-items: center; text-align: center; color: #4b5870; font-size: 11px; font-weight: 800; line-height: 1.25; padding: 8px; }
+	    .access-side { border: 1px solid rgba(18,28,48,.1); border-radius: 20px; background: linear-gradient(180deg, #111827, #182235); color: #fff; padding: 18px; display: grid; gap: 12px; align-content: center; }
+	    .access-side strong { font-size: 20px; line-height: 1.05; }
+	    .access-side small { color: rgba(255,255,255,.7); line-height: 1.45; }
+	    .side-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; padding: 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; background: rgba(255,255,255,.06); }
+	    .side-row b { display: block; font-size: 12px; }
+	    .side-row span { color: rgba(255,255,255,.66); font-size: 11px; }
+	    .side-dot { width: 9px; height: 9px; border-radius: 50%; background: #d8b45f; box-shadow: 0 0 0 4px rgba(216,180,95,.15); }
 	    .foot { margin-top: 14px; text-align: center; color: #4b5565; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
-	    @media (max-width: 520px) { .body { padding: 24px; } .mini-grid { grid-template-columns: 1fr; } .brandline { align-items: flex-start; } }
+	    @media (max-width: 720px) { .body { padding: 24px; grid-template-columns: 1fr; } .access-side { order: -1; } }
+	    @media (max-width: 520px) { .mini-grid { grid-template-columns: 1fr; } .brandline { align-items: flex-start; } }
 	  </style>
 </head>
 <body>
@@ -214,21 +223,30 @@ function accessPage({
     <section class="card">
 	      <div class="stripe"></div>
 	      <div class="body">
-	        <div class="brandline">
-	          <img class="emblem" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" />
-	          <img class="wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="FIFA World Cup 26" />
-	        </div>
-	        <h1>Centro privado Mundial 2026</h1>
-	        <p>Calendario, selecciones, sedes, modo TV y quiniela familiar en un espacio protegido para compartir en casa.</p>
-	        <div class="meta"><span>Quiniela familiar</span><span>Datos del torneo</span><span>Modo TV</span></div>
-	        <div class="mini-grid"><span>Partido del día</span><span>Tabla familiar</span><span>Centro de datos</span></div>
-	        ${error ? `<div class="error">${escapeHtml(error)}</div>` : ''}
-        <form method="post" action="/api/login">
-          <input type="hidden" name="redirectTo" value="${escapeHtml(redirectTo)}" />
-          <label for="password">Clave familiar</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" autofocus required />
-          <button type="submit">Entrar</button>
-        </form>
+	        <div class="copy">
+	          <div class="brandline">
+	            <img class="emblem" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" />
+	            <img class="wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="FIFA World Cup 26" />
+	          </div>
+	          <h1>Centro privado Mundial 2026</h1>
+	          <p>Calendario, sedes, Día de partido, modo TV, quiniela familiar y analista IA en un espacio protegido para compartir en casa.</p>
+	          <div class="meta"><span>Quiniela familiar</span><span>Datos del torneo</span><span>Analista IA</span></div>
+	          <div class="mini-grid"><span>Partido del día</span><span>Tabla familiar</span><span>Centro de datos</span></div>
+	          ${error ? `<div class="error">${escapeHtml(error)}</div>` : ''}
+          <form method="post" action="/api/login">
+            <input type="hidden" name="redirectTo" value="${escapeHtml(redirectTo)}" />
+            <label for="password">Clave familiar</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" autofocus required />
+            <button type="submit">Entrar al centro de mando</button>
+          </form>
+        </div>
+        <aside class="access-side" aria-label="Resumen de la app">
+          <strong>Listo para ver el Mundial en familia</strong>
+          <small>Tu acceso conserva la app privada y reduce consumo de IA cuando se comparte el link.</small>
+          <div class="side-row"><i class="side-dot"></i><div><b>Próximo partido</b><span>Clima, sede, kits y quiniela</span></div></div>
+          <div class="side-row"><i class="side-dot"></i><div><b>Grupo familiar</b><span>Alias, avatar, picks y tabla</span></div></div>
+          <div class="side-row"><i class="side-dot"></i><div><b>Datos auditables</b><span>Fuente, fecha y confianza</span></div></div>
+        </aside>
       </div>
     </section>
     <div class="foot">Acceso privado</div>

@@ -44,6 +44,21 @@ export default async function handler(request: Request): Promise<Response> {
       nextAction: pipeline.nextAction,
       logs: [`${checkedAt} · ${isCron ? 'cron' : 'manual'} · health-check`, `${checkedAt} · results · ${pipeline.results}`],
       errors: pipeline.errors,
+      phases: [
+        { id: 'calendar', label: 'Calendario', status: 'ok', detail: 'Snapshot local disponible en producción.' },
+        {
+          id: 'results-feed',
+          label: 'Feed de resultados',
+          status: pipeline.errors.length ? 'error' : resultsSourceUrl ? 'ok' : 'wait',
+          detail: pipeline.results,
+        },
+        {
+          id: 'redeploy',
+          label: 'Snapshot redeploy',
+          status: resultsSourceUrl ? 'ok' : 'wait',
+          detail: resultsSourceUrl ? 'Listo para validar cambios y redeployar.' : 'Pendiente de fuente real autorizada.',
+        },
+      ],
     },
     {
       headers: {

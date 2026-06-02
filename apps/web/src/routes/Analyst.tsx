@@ -5,9 +5,12 @@ import { ANALYST_DISCLAIMER, type Match as WorldCupMatch } from '@worldcup/share
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
-import { clearAIMemory, entityMemory, readAIMemory, saveAIMemory, type AIMemoryRecord, type AICitation, type AIStructuredAnswer } from '@/lib/aiMemory';
+import { clearAIMemory, createAIMemoryRecord, entityMemory, readAIMemory, saveAIMemoryRecord, type AIMemoryRecord, type AICitation, type AIStructuredAnswer } from '@/lib/aiMemory';
+import { listenCloudAIInsights, saveCloudAIInsight } from '@/lib/aiCloudMemory';
 import { useFavorites } from '@/store/favorites';
 import { usePreferences } from '@/store/preferences';
+import { usePool, type PoolPick } from '@/store/pool';
+import { normalizePoolGroupId } from '@/lib/api';
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
@@ -214,13 +217,38 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [usedAI, setUsedAI] = useState(false);
   const [lastAiMeta, setLastAiMeta] = useState<AIResult['meta'] | null>(null);
   const [memory, setMemory] = useState<AIMemoryRecord[]>(() => readAIMemory());
+  const [cloudMemory, setCloudMemory] = useState<AIMemoryRecord[]>([]);
+  const [cloudMemoryStatus, setCloudMemoryStatus] = useState<'syncing' | 'synced' | 'error'>('syncing');
   const role = usePreferences((s) => s.role);
+  const pool = usePool();
+  const poolGroupId = normalizePoolGroupId(pool.groupId);
   const memoryEntityType = ctx === 'hawkeye' || ctx === 'pressroom' ? 'tournament' : ctx;
   const memoryEntityId = memoryEntityType === 'tournament' ? undefined : id;
+  const combinedMemory = useMemo(() => {
+    const byId = new Map<string, AIMemoryRecord>();
+    for (const record of [...cloudMemory, ...memory]) byId.set(record.id, record);
+    return [...byId.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }, [cloudMemory, memory]);
   const focusedMemory = useMemo(
-    () => entityMemory(memory, memoryEntityType, memoryEntityId).slice(0, 4),
-    [memory, memoryEntityType, memoryEntityId],
+    () => entityMemory(combinedMemory, memoryEntityType, memoryEntityId).slice(0, 4),
+    [combinedMemory, memoryEntityType, memoryEntityId],
   );
+
+  useEffect(() => {
+    setCloudMemoryStatus('syncing');
+    const unsubscribe = listenCloudAIInsights(
+      poolGroupId,
+      (records) => {
+        setCloudMemory(records);
+        setCloudMemoryStatus('synced');
+      },
+      (error) => {
+        console.error('AI cloud memory sync error:', error);
+        setCloudMemoryStatus('error');
+      },
+    );
+    return () => unsubscribe();
+  }, [poolGroupId]);
 
   const [attachedPdf, setAttachedPdf] = useState<{ name: string; data: string } | null>(null);
   const [attachedAudio, setAttachedAudio] = useState<{ name: string; data: string } | null>(null);
@@ -350,7 +378,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     setUsedAI(mode !== 'local');
     setLastAiMeta(meta ?? null);
     setAnswer(next);
-    setMemory(saveAIMemory({
+    const record = createAIMemoryRecord({
       question: q,
       answer: next.text,
       mode,
@@ -363,7 +391,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       entityId: memoryEntityId,
       structured: next.structured,
       citations: next.citations,
-    }));
+    });
+    setMemory(saveAIMemoryRecord(record));
+    saveCloudAIInsight(poolGroupId, record).catch((error) => {
+      console.error('Failed to save cloud AI insight:', error);
+      setCloudMemoryStatus('error');
+    });
   };
 
   const ask = async (qOverride?: string) => {
@@ -447,6 +480,130 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       chart: parsed.chart,
     });
     if ('vibrate' in navigator) navigator.vibrate([15, 5, 15]);
+  };
+
+  const runNativeAction = (action: 'conservative-pool' | 'compare-family' | 'uncertain-matches') => {
+    const matchItems = matchData?.items ?? [];
+    const teamItems = teamsData?.items ?? [];
+    const teamRanking = new Map(teamItems.map((team) => [team.code, team.ranking ?? 80]));
+    const upcomingMatches = matchItems
+      .filter((m) => m.status === 'UPCOMING')
+      .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+
+    if (action === 'conservative-pool') {
+      const picks: Record<string, PoolPick> = {};
+      for (const match of upcomingMatches.slice(0, 24)) {
+        const homeRank = teamRanking.get(match.home) ?? 80;
+        const awayRank = teamRanking.get(match.away) ?? 80;
+        const diff = awayRank - homeRank;
+        if (Math.abs(diff) <= 4) picks[match.id] = { outcome: 'draw', homeGoals: 1, awayGoals: 1 };
+        else if (diff > 0) picks[match.id] = { outcome: 'home', homeGoals: 1, awayGoals: 0 };
+        else picks[match.id] = { outcome: 'away', homeGoals: 0, awayGoals: 1 };
+      }
+      pool.importPicks(picks);
+      commitAnswer(
+        'Acción IA: rellenar quiniela conservadora',
+        {
+          text: `Rellené ${Object.keys(picks).length} partidos pendientes con una lógica conservadora: ranking más fuerte gana por margen corto; partidos parejos quedan 1-1.`,
+          sources: ['ranking local', 'calendario', 'quiniela'],
+          structured: {
+            prediction: 'Quiniela conservadora aplicada a próximos partidos.',
+            risk: 'No considera lesiones, convocatoria final ni forma reciente.',
+            confidence: 'Media',
+            dataUsed: ['Ranking de selecciones', 'Calendario pendiente'],
+            ignoredData: ['Noticias', 'lesiones', 'once inicial'],
+            rationale: 'Los picks se generan por diferencia de ranking y marcadores de baja varianza.',
+            nextAction: 'Revisar manualmente los partidos favoritos antes de compartir.',
+            quality: {
+              score: 76,
+              label: 'Acción local revisable',
+              flags: ['No usa llamada remota', 'Requiere ajuste humano antes del cierre'],
+              checkedAt: new Date().toISOString(),
+            },
+          },
+          citations: [
+            {
+              label: 'Picks aplicados',
+              value: `${Object.keys(picks).length} próximos partidos`,
+              source: 'Motor local de quiniela conservadora',
+              date: new Date().toISOString().slice(0, 10),
+              confidence: 'Media',
+            },
+          ],
+        },
+        'simulation',
+        { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'quiniela'] },
+      );
+      return;
+    }
+
+    if (action === 'compare-family') {
+      const picked = upcomingMatches.filter((match) => pool.picks[match.id]?.outcome).length;
+      const complete = upcomingMatches.filter((match) => {
+        const pick = pool.picks[match.id];
+        return pick?.homeGoals != null && pick.awayGoals != null;
+      }).length;
+      const leader = leaderName || 'sin líder todavía';
+      commitAnswer(
+        'Acción IA: comparar mi quiniela con la familia',
+        {
+          text: `${pool.playerName || 'Tu perfil'} tiene ${picked}/${upcomingMatches.length} ganadores y ${complete}/${upcomingMatches.length} marcadores completos. Líder familiar actual: ${leader}.`,
+          sources: ['quiniela local', 'tabla familiar'],
+          structured: {
+            prediction: picked ? 'Ya hay base para competir en la tabla familiar.' : 'Falta capturar picks antes de comparar rendimiento.',
+            risk: 'La comparación será más útil cuando existan resultados reales.',
+            confidence: 'Alta local',
+            dataUsed: ['Picks locales', 'grupo familiar', 'leaderboard Firestore'],
+            ignoredData: ['Picks privados de otros miembros no sincronizados'],
+            rationale: 'La acción compara cobertura de picks y líder visible sin leer datos sensibles fuera del grupo.',
+            nextAction: picked ? 'Completar marcadores faltantes y compartir tabla.' : 'Capturar primeros pronósticos.',
+            quality: {
+              score: 90,
+              label: 'Comparación local',
+              flags: ['Basado en Firestore si hay sincronización', 'Sin resultados reales aún'],
+              checkedAt: new Date().toISOString(),
+            },
+          },
+        },
+        'simulation',
+        { provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'leaderboard'] },
+      );
+      return;
+    }
+
+    const uncertain = upcomingMatches
+      .map((match) => ({
+        match,
+        diff: Math.abs((teamRanking.get(match.home) ?? 80) - (teamRanking.get(match.away) ?? 80)),
+      }))
+      .sort((a, b) => a.diff - b.diff)
+      .slice(0, 5);
+    commitAnswer(
+      'Acción IA: detectar partidos inciertos',
+      {
+        text: uncertain.length
+          ? `Partidos más inciertos por ranking cercano: ${uncertain.map(({ match, diff }) => `${match.home}-${match.away} (dif. ${diff})`).join(', ')}.`
+          : 'No hay partidos pendientes para analizar incertidumbre.',
+        sources: ['ranking local', 'calendario'],
+        structured: {
+          prediction: 'Los cruces con ranking más cercano son candidatos a empate o marcador corto.',
+          risk: 'El ranking no captura lesiones, localía real, rotaciones ni presión del grupo.',
+          confidence: 'Media',
+          dataUsed: ['Ranking de selecciones', 'partidos pendientes'],
+          ignoredData: ['Forma reciente', 'alineaciones', 'probabilidades de mercado'],
+          rationale: 'La incertidumbre se estima por cercanía de ranking; menor diferencia implica menor separación previa.',
+          nextAction: 'Revisar esos partidos antes de aceptar picks automáticos.',
+          quality: {
+            score: 74,
+            label: 'Estimación heurística',
+            flags: ['No sustituye análisis humano', 'Sin feed vivo de lesiones'],
+            checkedAt: new Date().toISOString(),
+          },
+        },
+      },
+      'simulation',
+      { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'calendario'] },
+    );
   };
 
   return (
@@ -539,6 +696,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   <strong>{role === 'guest' ? 'Bloqueado remoto' : 'Limitado por sesión'}</strong>
                 </div>
               </div>
+
+              <AIActionPanel
+                groupId={poolGroupId}
+                cloudStatus={cloudMemoryStatus}
+                onRun={runNativeAction}
+              />
 
               {ctx === 'hawkeye' && (
                 <div className="row gap-8" style={{ marginBottom: 12, maxWidth: 320 }}>
@@ -878,7 +1041,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         </div>
 
         <AIMemoryPanel
-          records={memory}
+          records={combinedMemory}
           onReuse={(record) => {
             setQuestion(record.question);
             setAnswer({ text: record.answer, sources: record.sources, structured: record.structured, citations: record.citations });
@@ -888,6 +1051,47 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           onClear={() => setMemory(clearAIMemory())}
         />
         <EntityInsightsPanel records={focusedMemory} context={CTX_ES[ctx]} />
+      </div>
+    </div>
+  );
+}
+
+function AIActionPanel({
+  groupId,
+  cloudStatus,
+  onRun,
+}: {
+  groupId: string;
+  cloudStatus: 'syncing' | 'synced' | 'error';
+  onRun: (action: 'conservative-pool' | 'compare-family' | 'uncertain-matches') => void;
+}) {
+  return (
+    <div className="ai-action-panel">
+      <div className="ai-action-head">
+        <div>
+          <span className="mono-label">Acciones AI-native</span>
+          <strong>Opera sobre quiniela y datos locales</strong>
+        </div>
+        <span className={`badge ${cloudStatus === 'synced' ? 'gold' : ''}`}>
+          {cloudStatus === 'synced' ? `Memoria compartida · ${groupId}` : cloudStatus === 'syncing' ? 'Sincronizando memoria' : 'Memoria local activa'}
+        </span>
+      </div>
+      <div className="ai-action-grid">
+        <button type="button" className="ai-action-card" onClick={() => onRun('conservative-pool')}>
+          <Icon name="target" size={15} />
+          <strong>Rellenar conservadora</strong>
+          <span>Aplica picks de baja varianza por ranking.</span>
+        </button>
+        <button type="button" className="ai-action-card" onClick={() => onRun('compare-family')}>
+          <Icon name="trophy" size={15} />
+          <strong>Comparar con familia</strong>
+          <span>Resume cobertura y tabla visible.</span>
+        </button>
+        <button type="button" className="ai-action-card" onClick={() => onRun('uncertain-matches')}>
+          <Icon name="activity" size={15} />
+          <strong>Detectar inciertos</strong>
+          <span>Encuentra cruces parejos para revisar.</span>
+        </button>
       </div>
     </div>
   );
@@ -918,6 +1122,32 @@ function StructuredAnswerPanel({ structured }: { structured?: AIStructuredAnswer
           <div className="row gap-6 wrap">
             {structured.dataUsed.map((item) => (
               <span key={item} className="cite">{item}</span>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {structured.ignoredData?.length || structured.rationale ? (
+        <div className="structured-answer-card traceability">
+          <Icon name="shield" size={14} />
+          <span className="mono-label">Trazabilidad</span>
+          {structured.rationale ? <strong>{structured.rationale}</strong> : null}
+          {structured.ignoredData?.length ? (
+            <div className="row gap-6 wrap">
+              {structured.ignoredData.map((item) => (
+                <span key={item} className="cite muted-cite">{item}</span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      {structured.quality ? (
+        <div className="structured-answer-card quality-check">
+          <Icon name="check" size={14} />
+          <span className="mono-label">Evaluación automática</span>
+          <strong>{structured.quality.score}/100 · {structured.quality.label}</strong>
+          <div className="row gap-6 wrap">
+            {structured.quality.flags.slice(0, 3).map((flag) => (
+              <span key={flag} className="cite">{flag}</span>
             ))}
           </div>
         </div>

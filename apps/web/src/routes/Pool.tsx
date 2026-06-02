@@ -747,6 +747,23 @@ export function Pool() {
     });
   };
 
+  const shareInviteCard = async () => {
+    const group = normalizePoolGroupId(pool.groupId);
+    const url = `${window.location.origin}/pool?group=${encodeURIComponent(group)}`;
+    await shareTextCard({
+      title: 'Únete a la quiniela familiar',
+      subtitle: `Grupo privado ${group}`,
+      lines: [
+        '1. Abre el link y escribe tu alias.',
+        '2. Captura tus marcadores antes de cada partido.',
+        '3. La tabla familiar se actualiza con resultados reales.',
+        url,
+      ],
+      footer: 'Mundial 2026 privado',
+      fileName: `invitacion-${group}.png`,
+    });
+  };
+
   // Statistics calculations for played matches
   const stats = useMemo(() => {
     let totalPoints = 0;
@@ -1016,6 +1033,16 @@ export function Pool() {
         syncStatus={syncStatus}
         inviteCopied={inviteCopied}
         onInvite={copyInviteLink}
+      />
+
+      <FamilyInviteKit
+        groupId={normalizePoolGroupId(pool.groupId)}
+        participantCount={leaderboard.filter((row) => !row.playerName.startsWith('🤖')).length}
+        picked={pickedPending}
+        total={upcomingMatches.length}
+        inviteCopied={inviteCopied}
+        onCopyInvite={copyInviteLink}
+        onShareInvite={shareInviteCard}
       />
 
       <PoolCommandCenter
@@ -1443,6 +1470,58 @@ function SetupStep({ done, icon, title, text }: { done: boolean; icon: IconName;
         <strong>{title}</strong>
         <p>{text}</p>
       </div>
+    </div>
+  );
+}
+
+function FamilyInviteKit({
+  groupId,
+  participantCount,
+  picked,
+  total,
+  inviteCopied,
+  onCopyInvite,
+  onShareInvite,
+}: {
+  groupId: string;
+  participantCount: number;
+  picked: number;
+  total: number;
+  inviteCopied: boolean;
+  onCopyInvite: () => void;
+  onShareInvite: () => void;
+}) {
+  return (
+    <div className="card family-invite-kit">
+      <div className="family-invite-main">
+        <span className="mono-label">Invitación familiar</span>
+        <strong>Grupo {groupId}</strong>
+        <p>Comparte el link, cada persona elige alias/foto y la tabla se arma con resultados reales cuando empiece el torneo.</p>
+      </div>
+      <div className="family-invite-metrics">
+        <InviteMetric label="Miembros" value={participantCount ? String(participantCount) : '0'} />
+        <InviteMetric label="Tus picks" value={`${picked}/${total}`} />
+        <InviteMetric label="Cierre" value="Al inicio" />
+      </div>
+      <div className="family-invite-actions">
+        <button type="button" className="btn gold" onClick={onCopyInvite}>
+          <Icon name="share" size={14} />
+          {inviteCopied ? 'Link copiado' : 'Copiar link'}
+        </button>
+        <button type="button" className="btn ghost" onClick={onShareInvite}>
+          <Icon name="download" size={14} />
+          Tarjeta WhatsApp
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InviteMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span className="mono-label">{label}</span>
+      <strong>{value}</strong>
     </div>
   );
 }

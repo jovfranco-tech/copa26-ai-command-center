@@ -164,6 +164,7 @@ export interface DataSyncCheck {
   nextAction?: string;
   logs?: string[];
   errors?: string[];
+  phases?: Array<{ id: string; label: string; status: 'ok' | 'wait' | 'error'; detail: string }>;
 }
 
 export const fetchDataSyncCheck = () =>
@@ -178,6 +179,11 @@ export const fetchDataSyncCheck = () =>
     nextAction: 'Conectar feed de resultados autorizado cuando empiece el torneo.',
     logs: [`${new Date().toISOString()} · local · fallback`],
     errors: [],
+    phases: [
+      { id: 'calendar', label: 'Calendario', status: 'ok', detail: 'Snapshot local cargado.' },
+      { id: 'results', label: 'Resultados', status: 'wait', detail: 'Feed pendiente.' },
+      { id: 'redeploy', label: 'Redeploy', status: 'wait', detail: 'Se activa tras ingesta real.' },
+    ],
   }));
 
 export interface PoolPersistenceStatus {

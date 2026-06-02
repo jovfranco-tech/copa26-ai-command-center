@@ -8,9 +8,10 @@ import { MatchdayHero } from '@/components/MatchdayHero';
 import { MockBanner } from '@/components/MockBanner';
 import { TournamentTimeline } from '@/components/TournamentTimeline';
 import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt, useTeamsMap } from '@/hooks';
-import { focusMatch } from '@/lib/matchMeta';
+import { focusMatch, lockLabel, weatherSummary } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
 import { useFavorites } from '@/store/favorites';
+import { usePool } from '@/store/pool';
 import { getBrowserAudioContext, stadiumAudio } from '@/lib/audioSynth';
 
 /** Derive the tournament "focus day": a live day, else latest played, else next up. */
@@ -32,6 +33,7 @@ export function Dashboard() {
   const favTeams = useFavorites((s) => s.teams);
   const favPlayers = useFavorites((s) => s.players);
   const favMatches = useFavorites((s) => s.matches);
+  const pool = usePool();
 
   const matches = useMemo(() => matchData?.items ?? [], [matchData]);
   const day = useMemo(() => focusDate(matches), [matches]);
@@ -62,6 +64,7 @@ export function Dashboard() {
         <MockBanner />
         <MatchdayHero match={heroMatch} />
         <FamilyLaunchPanel match={heroMatch} />
+        <ProactiveAlerts match={heroMatch} picks={pool.picks} favoritesCount={favTeams.length + favPlayers.length + favMatches.length} />
 
         <div className="stat-strip" style={{ marginBottom: 18 }}>
         <StatTile icon="ball" label="Goles" value={goals} sub="Torneo" spark={[40, 55, 38, 70, 62, 90, 100]} />
@@ -235,6 +238,62 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ProactiveAlerts({
+  match,
+  picks,
+  favoritesCount,
+}: {
+  match: Match | null;
+  picks: Record<string, { outcome?: string; homeGoals?: number; awayGoals?: number }>;
+  favoritesCount: number;
+}) {
+  const navigate = useNavigate();
+  if (!match) return null;
+  const pick = picks[match.id];
+  const weather = weatherSummary(match.id);
+  const alerts = [
+    {
+      icon: 'target' as const,
+      title: pick?.outcome ? 'Pick activo' : 'Pick pendiente',
+      text: pick?.homeGoals != null && pick.awayGoals != null ? `Tu marcador: ${pick.homeGoals}-${pick.awayGoals}` : 'Captura marcador antes del cierre.',
+      action: 'Abrir quiniela',
+      to: '/pool' as const,
+    },
+    {
+      icon: 'rain' as const,
+      title: 'Clima a vigilar',
+      text: `${weather.label} · ${weather.confidence}`,
+      action: 'Ver partido',
+      to: '/matches' as const,
+    },
+    {
+      icon: 'star' as const,
+      title: 'Seguimiento',
+      text: favoritesCount ? `${favoritesCount} favoritos activos.` : 'Marca equipos o jugadores para alertas más útiles.',
+      action: 'Favoritos',
+      to: '/favorites' as const,
+    },
+  ];
+  return (
+    <div className="proactive-alert-strip">
+      <div>
+        <span className="mono-label">Alertas proactivas</span>
+        <strong>{lockLabel(match)}</strong>
+      </div>
+      {alerts.map((alert) => (
+        <button key={alert.title} type="button" className="proactive-alert" onClick={() => navigate({ to: alert.to })}>
+          <Icon name={alert.icon} size={14} />
+          <span>
+            <strong>{alert.title}</strong>
+            <small>{alert.text}</small>
+          </span>
+          <em>{alert.action}</em>
+        </button>
+      ))}
     </div>
   );
 }

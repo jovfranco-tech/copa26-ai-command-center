@@ -62,9 +62,29 @@ function structuredReport({
   risk,
   confidence,
   dataUsed,
+  ignoredData,
+  rationale,
   nextAction,
 }: AIStructuredAnswer): AIStructuredAnswer {
-  return { prediction, risk, confidence, dataUsed, nextAction };
+  return {
+    prediction,
+    risk,
+    confidence,
+    dataUsed,
+    ignoredData,
+    rationale,
+    nextAction,
+    quality: {
+      score: confidence?.toLowerCase().includes('alta') ? 92 : confidence?.toLowerCase().includes('media') ? 78 : 64,
+      label: confidence?.toLowerCase().includes('alta') ? 'Verificado localmente' : 'Requiere revisión contextual',
+      flags: [
+        'Respuesta construida con dataset local',
+        ...(risk ? [risk] : []),
+        ...(ignoredData?.length ? [`Ignorado: ${ignoredData.join(', ')}`] : []),
+      ],
+      checkedAt: new Date().toISOString(),
+    },
+  };
 }
 
 export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
@@ -91,6 +111,8 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
         risk: 'El marcador y estadísticas se activan hasta que exista feed de resultados.',
         confidence: 'Alta para calendario; pendiente para rendimiento.',
         dataUsed: ['Fecha/hora del partido', 'Selecciones', 'Sede'],
+        ignoredData: ['Marcador', 'alineaciones', 'estadísticas en vivo'],
+        rationale: 'La pregunta pide apertura; el calendario local ya contiene equipos, sede y hora.',
         nextAction: 'Abrir quiniela y capturar pronóstico antes del inicio.',
       }),
       citations: matchCitation(opening, teams, venues),
@@ -122,6 +144,8 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
         risk: m.status === 'UPCOMING' ? 'Convocatorias finales, lesiones y forma reciente pueden mover el pick.' : 'Las métricas avanzadas dependen del feed disponible.',
         confidence: m.status === 'UPCOMING' ? 'Alta calendario / media predicción' : 'Alta si el marcador final ya está cargado.',
         dataUsed: ['Calendario', 'Grupo', 'Tabla local'],
+        ignoredData: m.status === 'UPCOMING' ? ['Lesiones no cargadas', 'alineación oficial', 'momento de forma reciente'] : ['Eventos no disponibles en el feed'],
+        rationale: 'El análisis se limita al estado del partido, grupo y tabla local; no extrapola información externa.',
         nextAction: m.status === 'UPCOMING' ? 'Definir marcador y revisar cierre de quiniela.' : 'Comparar pick familiar contra resultado real.',
       }),
       citations: [
@@ -168,6 +192,8 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
         risk: 'Ratings, convocatoria final y estado físico pueden cambiar antes del torneo.',
         confidence: row ? 'Alta para grupo/tabla; media para forma previa.' : 'Alta para grupo; pendiente para resultados.',
         dataUsed: ['Selección', 'Grupo', 'Tabla', 'Próximo partido'],
+        ignoredData: ['Convocatoria final oficial', 'lesiones', 'forma de clubes'],
+        rationale: 'La selección se resume desde grupo, tabla y calendario; la lista final puede reemplazar la plantilla actual.',
         nextAction: next ? 'Abrir el partido y revisar kits, clima y pick.' : 'Esperar actualización de calendario.',
       }),
       citations: [
@@ -212,6 +238,8 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
         risk: rating.source === 'estimate' ? 'Rating estimado por club, selección, edad y posición; conviene reemplazar si aparece fuente pública.' : 'Rating público cargado, pero la convocatoria final puede cambiar rol/minutos.',
         confidence: rating.source === 'fc26' ? 'Alta rating público / media Mundial' : 'Media estimada',
         dataUsed: ['Jugador', 'Club', 'Posición', 'Rating cercano'],
+        ignoredData: ['Minutos oficiales del Mundial', 'convocatoria final', 'estado físico actual'],
+        rationale: rating.source === 'fc26' ? 'El rating viene de fuente pública cercana y se enlaza al jugador local.' : 'El rating se estima por club, selección, edad y posición para no inventar una fuente.',
         nextAction: 'Comparar contra compañeros de selección y ajustar figura del equipo.',
       }),
       citations: [
@@ -270,6 +298,8 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
       risk: 'Resultados, plantillas finales y estadísticas se actualizan cuando exista feed confiable.',
       confidence: 'Alta para calendario; media para datos previos de rendimiento.',
       dataUsed: ['Calendario completo', 'Plantillas', 'Tablas por grupo'],
+      ignoredData: ['Resultados futuros', 'alineaciones oficiales', 'lesiones no cargadas'],
+      rationale: 'El torneo aún está en modo previa; se priorizan calendario, sedes, grupos y ratings cercanos.',
       nextAction: 'Usar Día de partido y quiniela familiar para preparar el primer juego.',
     }),
     citations: [

@@ -20,7 +20,10 @@ export interface AIStructuredAnswer {
   risk?: string;
   confidence?: string;
   dataUsed?: string[];
+  ignoredData?: string[];
+  rationale?: string;
   nextAction?: string;
+  quality?: AIQualityCheck;
 }
 
 export interface AICitation {
@@ -30,6 +33,15 @@ export interface AICitation {
   date?: string;
   confidence?: string;
 }
+
+export interface AIQualityCheck {
+  score: number;
+  label: string;
+  flags: string[];
+  checkedAt: string;
+}
+
+export type AIMemoryInput = Omit<AIMemoryRecord, 'id' | 'createdAt'>;
 
 const KEY = 'wc_ai_memory_v1';
 const MAX_RECORDS = 24;
@@ -46,13 +58,20 @@ export function readAIMemory(): AIMemoryRecord[] {
   }
 }
 
-export function saveAIMemory(record: Omit<AIMemoryRecord, 'id' | 'createdAt'>): AIMemoryRecord[] {
-  if (typeof localStorage === 'undefined') return [];
-  const item: AIMemoryRecord = {
+export function createAIMemoryRecord(record: AIMemoryInput): AIMemoryRecord {
+  return {
     ...record,
     id: `ai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
     createdAt: new Date().toISOString(),
   };
+}
+
+export function saveAIMemory(record: AIMemoryInput): AIMemoryRecord[] {
+  return saveAIMemoryRecord(createAIMemoryRecord(record));
+}
+
+export function saveAIMemoryRecord(item: AIMemoryRecord): AIMemoryRecord[] {
+  if (typeof localStorage === 'undefined') return [];
   const next = [item, ...readAIMemory()].slice(0, MAX_RECORDS);
   localStorage.setItem(KEY, JSON.stringify(next));
   return next;

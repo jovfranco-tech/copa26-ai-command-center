@@ -140,6 +140,8 @@ export function DataCenter() {
         </div>
       </div>
 
+      <AdminOpsPanel check={check} checking={checking} onRunCheck={runCheck} />
+
       <div className="card ai-native-ops">
         <div className="card-hd">
           <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
@@ -412,6 +414,54 @@ function AINativeTile({ label, value, note }: { label: string; value: string; no
       <span className="mono-label">{label}</span>
       <strong>{value}</strong>
       <p>{note}</p>
+    </div>
+  );
+}
+
+function AdminOpsPanel({
+  check,
+  checking,
+  onRunCheck,
+}: {
+  check: DataSyncCheck | null;
+  checking: boolean;
+  onRunCheck: () => void;
+}) {
+  const errors = check?.errors ?? [];
+  return (
+    <div className="card admin-ops-panel">
+      <div className="admin-ops-main">
+        <span className="mono-label">Admin de datos</span>
+        <strong>{check?.status ?? 'Sin revisión manual'}</strong>
+        <p>{check?.nextAction ?? 'Ejecuta una revisión para validar cron, feed, Firestore y límites de IA.'}</p>
+      </div>
+      <div className="admin-ops-grid">
+        <OpsMetric label="Última revisión" value={check ? new Date(check.checkedAt).toLocaleTimeString() : 'Pendiente'} />
+        <OpsMetric label="Errores" value={String(errors.length)} />
+        <OpsMetric label="Prueba smoke" value="pnpm test:e2e" />
+      </div>
+      <div className="admin-ops-actions">
+        <button type="button" className="btn gold" onClick={onRunCheck} disabled={checking}>
+          <Icon name={checking ? 'activity' : 'cloud'} size={14} />
+          {checking ? 'Revisando...' : 'Forzar revisión'}
+        </button>
+        <span className={errors.length ? 'admin-ops-error' : 'admin-ops-ok'}>
+          {errors.length ? errors.slice(0, 2).join(' · ') : 'Sin errores reportados'}
+        </span>
+      </div>
+      {check?.phases?.length ? (
+        <div className="admin-phase-grid">
+          {check.phases.map((phase) => (
+            <div key={phase.id} className={`admin-phase ${phase.status}`}>
+              <span className={phase.status === 'ok' ? 'dot-ok' : 'dot-warn'} />
+              <div>
+                <strong>{phase.label}</strong>
+                <p>{phase.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
