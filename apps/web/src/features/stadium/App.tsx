@@ -11,8 +11,6 @@ import type { Player } from './data/lineups';
 import { usePlayers } from '../../hooks';
 import { mapDatabasePlayersToLineups } from './data/stadiumDataMapper';
 import { 
-  Trophy, 
-  Map, 
   EyeOff, 
   Eye, 
   Info,
@@ -109,11 +107,6 @@ function App() {
     setTimeout(() => setShareFeedback(false), 2000);
   };
 
-  // Toggle between day and night modes
-  const toggleTimeOfDay = () => {
-    const nextTime = currentMatch.timeOfDay === 'day' ? 'night' : 'day';
-    handleTimeChange(nextTime);
-  };
 
   // Cycle through weather options for clima táctico
   const cycleWeather = () => {
@@ -209,81 +202,109 @@ function App() {
 
   return (
     <div className={`app-container ${modoInmersivo ? 'stadium-immersive-mode' : 'stadium-integrated-mode'}`}>
-      {/* Premium Dashboard Header in Spanish */}
-      <header className="app-header">
-        <div className="brand-section">
-          <div className="brand-badge">PROTOTIPO DE ANÁLISIS</div>
-          <h1 className="brand-title">
-            <Trophy size={20} style={{ color: 'var(--accent-cyan)' }} />
-            Laboratorio de Estadio 3D
-          </h1>
+      {/* Compact Stadium Toolbar */}
+      <div className="stadium-toolbar">
+        {/* Left Side: Context Label */}
+        <div className="toolbar-left" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Análisis táctico en cancha
+          </span>
         </div>
 
-        {/* Global Settings & Toggles */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Integrated / Immersive Theme Mode Toggle */}
-          <button 
-            className={`stadium-btn ${modoInmersivo ? 'active' : ''}`}
-            onClick={() => setModoInmersivo(!modoInmersivo)}
-            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-            title="Alternar entre tema integrado claro y tema inmersivo oscuro"
-          >
-            <Trophy size={14} />
-            {modoInmersivo ? 'Modo Inmersivo' : 'Modo Integrado'}
-          </button>
+        {/* Right Side: Segmented Controls & Actions */}
+        <div className="toolbar-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Theme Segmented Control */}
+          <div className="segmented-control">
+            <button 
+              type="button"
+              className={`segmented-btn ${!modoInmersivo ? 'active' : ''}`}
+              onClick={() => setModoInmersivo(false)}
+              title="Alinear con el tema claro del dashboard"
+            >
+              Tema Claro
+            </button>
+            <button 
+              type="button"
+              className={`segmented-btn ${modoInmersivo ? 'active' : ''}`}
+              onClick={() => setModoInmersivo(true)}
+              title="Modo oscuro inmersivo táctico"
+            >
+              Inmersivo
+            </button>
+          </div>
 
-          {/* WebGL Fallback Mode */}
-          <button 
-            className={`stadium-btn ${webGlFallback ? 'active' : ''}`}
-            onClick={() => setWebGlFallback(!webGlFallback)}
-            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-            title="Cambia entre la vista 3D interactiva y el respaldo vectorizado en 2D"
-          >
-            <Map size={14} />
-            {webGlFallback ? 'Forzar Vista 3D' : 'Forzar Respaldo 2D'}
-          </button>
+          {/* 3D/2D View Segmented Control */}
+          <div className="segmented-control">
+            <button 
+              type="button"
+              className={`segmented-btn ${!webGlFallback ? 'active' : ''}`}
+              onClick={() => setWebGlFallback(false)}
+              title="Activar visualización interactiva en 3D"
+            >
+              Vista 3D
+            </button>
+            <button 
+              type="button"
+              className={`segmented-btn ${webGlFallback ? 'active' : ''}`}
+              onClick={() => setWebGlFallback(true)}
+              title="Activar esquema táctico en 2D"
+            >
+              Vista 2D
+            </button>
+          </div>
 
-          {/* Day / Night Mode Toggle */}
-          <button 
-            className={`stadium-btn ${currentMatch.timeOfDay === 'day' ? 'active' : ''}`}
-            onClick={toggleTimeOfDay}
-            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-            title="Cambiar entre modo Día y modo Noche"
-          >
-            {currentMatch.timeOfDay === 'day' ? <Sun size={14} /> : <Moon size={14} />}
-            {currentMatch.timeOfDay === 'day' ? 'Entorno: Día' : 'Entorno: Noche'}
-          </button>
+          {/* Time of Day Segmented Control */}
+          <div className="segmented-control">
+            <button 
+              type="button"
+              className={`segmented-btn ${currentMatch.timeOfDay === 'day' ? 'active' : ''}`}
+              onClick={() => handleTimeChange('day')}
+              title="Visualización diurna (Día)"
+            >
+              <Sun size={12} /> Día
+            </button>
+            <button 
+              type="button"
+              className={`segmented-btn ${currentMatch.timeOfDay === 'night' ? 'active' : ''}`}
+              onClick={() => handleTimeChange('night')}
+              title="Visualización nocturna (Noche)"
+            >
+              <Moon size={12} /> Noche
+            </button>
+          </div>
 
-          {/* Reduce Effects Performance Toggle */}
-          <button 
-            className={`stadium-btn ${reduceEffects ? 'active' : ''}`}
-            onClick={() => setReduceEffects(!reduceEffects)}
-            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-            disabled={webGlFallback}
-            title="Desactiva sombras en tiempo real y partículas de clima de alta densidad para mayor fluidez"
-          >
-            {reduceEffects ? <EyeOff size={14} /> : <Eye size={14} />}
-            {reduceEffects ? 'Efectos: Reducidos' : 'Efectos: Completos'}
-          </button>
+          {/* Effects Segmented Control (Disabled in 2D) */}
+          <div className="segmented-control" style={{ opacity: webGlFallback ? 0.5 : 1, pointerEvents: webGlFallback ? 'none' : 'auto' }}>
+            <button 
+              type="button"
+              className={`segmented-btn ${!reduceEffects ? 'active' : ''}`}
+              onClick={() => setReduceEffects(false)}
+              title="Renderizar efectos visuales completos"
+            >
+              <Eye size={12} /> Full FX
+            </button>
+            <button 
+              type="button"
+              className={`segmented-btn ${reduceEffects ? 'active' : ''}`}
+              onClick={() => setReduceEffects(true)}
+              title="Reducir efectos visuales para mejor rendimiento"
+            >
+              <EyeOff size={12} /> Lite FX
+            </button>
+          </div>
 
-          {/* Share Button (Mockup visual addition) */}
+          {/* Share Action Button */}
           <button 
-            className={`stadium-btn share-btn ${shareFeedback ? 'active' : ''}`}
+            type="button"
+            className={`stadium-btn-sm ${shareFeedback ? 'active' : ''}`}
             onClick={handleShare}
-            style={{ 
-              fontSize: '0.8rem', 
-              padding: '6px 12px', 
-              color: 'var(--accent-cyan)', 
-              borderColor: 'rgba(0, 242, 254, 0.2)',
-              position: 'relative'
-            }}
             title="Compartir enlace de análisis deportivo"
           >
-            <Share2 size={14} style={{ color: 'var(--accent-cyan)' }} />
+            <Share2 size={12} />
             {shareFeedback ? '¡Copiado!' : 'Compartir'}
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Main Grid Workspace: Aligned to 2 Columns (1fr 380px) */}
       <main className="app-main">

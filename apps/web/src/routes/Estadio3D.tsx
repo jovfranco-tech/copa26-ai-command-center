@@ -7,15 +7,14 @@ export function Estadio3D() {
         style={{ 
           fontSize: '11px', 
           color: 'var(--tx-3)', 
-          background: 'var(--bg-card)', 
-          border: '1px solid var(--line)', 
-          borderRadius: '8px', 
-          padding: '8px 12px', 
-          marginBottom: '16px',
-          lineHeight: '1.4'
+          marginBottom: '12px',
+          marginLeft: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px'
         }}
       >
-        ⚠️ <strong>Aviso de exención de responsabilidad:</strong> Prototipo privado no oficial de análisis deportivo. No está afiliado a FIFA, organizadores del torneo, selecciones ni sedes oficiales.
+        <span>Visualización no oficial de análisis deportivo. Sin afiliación oficial.</span>
       </div>
       <App />
     </div>

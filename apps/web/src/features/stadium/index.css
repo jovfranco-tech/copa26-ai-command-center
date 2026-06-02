@@ -231,45 +231,79 @@
     overflow: hidden;
   }
   
-  .app-header {
-    height: 64px;
+  .stadium-toolbar {
+    height: 44px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 24px;
+    padding: 0 16px;
     border-bottom: 1px solid var(--border-subtle);
-    background: rgba(7, 9, 19, 0.8);
-    backdrop-filter: blur(8px);
+    background: var(--bg-surface);
     z-index: 100;
   }
   
-  .brand-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .brand-badge {
-    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
-    color: #000;
+  .stadium-btn-sm {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
     padding: 4px 10px;
-    font-weight: 800;
-    font-size: 0.75rem;
     border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 26px;
   }
   
-  .brand-title {
-    font-size: 1.25rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #ffffff, #94a3b8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .stadium-btn-sm:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-cyan);
+  }
+  
+  .stadium-btn-sm.active {
+    background: var(--stadium-toggle-btn-active-bg, rgba(0, 242, 254, 0.15));
+    border-color: var(--border-focus);
+    color: var(--stadium-toggle-btn-active-color, var(--accent-cyan));
+  }
+  
+  .segmented-control {
+    display: inline-flex;
+    background: var(--stadium-toggle-bg, rgba(0, 0, 0, 0.06));
+    border: 1px solid var(--stadium-toggle-border, rgba(0, 0, 0, 0.08));
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+  }
+  
+  .segmented-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+    line-height: 1;
+  }
+  
+  .segmented-btn:hover {
+    color: var(--stadium-toggle-btn-hover, var(--text-primary));
+  }
+  
+  .segmented-btn.active {
+    background: var(--stadium-toggle-btn-active-bg, var(--bg-surface));
+    color: var(--stadium-toggle-btn-active-color, var(--text-primary));
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-focus);
   }
   
   .app-main {
@@ -278,7 +312,7 @@
     grid-template-columns: 1fr 380px;
     gap: 16px;
     padding: 16px;
-    height: calc(750px - 64px);
+    height: calc(750px - 44px);
     overflow: hidden;
   }
   
@@ -320,16 +354,10 @@
       height: 400px;
       min-height: 400px;
     }
-    .app-header {
-      padding: 0 12px;
-      height: 56px;
-    }
-    .brand-title {
-      font-size: 1rem;
-    }
-    .brand-badge {
-      font-size: 0.60rem;
-      padding: 2px 6px;
+    .stadium-toolbar {
+      padding: 6px 12px;
+      height: auto;
+      min-height: 40px;
     }
   }
   
