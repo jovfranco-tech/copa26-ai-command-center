@@ -13,6 +13,9 @@ export interface Player {
   stamina: number; // 0 to 100
   riskLevel: 'bajo' | 'medio' | 'alto' | 'critico';
   notes: string;
+  pos?: string;
+  club?: string;
+  age?: number | null;
 }
 
 export interface TeamLineup {

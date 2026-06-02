@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import type { Match } from '../data/matchData';
 import * as THREE from 'three';
 import { LineupLayer } from './LineupLayer';
-import type { Player } from '../data/lineups';
+import { type Player, MATCH_LINEUPS } from '../data/lineups';
 
 // Note: Standard import for Drei
 import { OrbitControls as OrbitControlsDrei, Html as HtmlDrei, Sparkles as SparklesDrei } from '@react-three/drei';
@@ -30,6 +30,7 @@ interface StadiumSceneContentProps {
   showTacticalZones?: boolean;
   mentalidad?: 'equilibrada' | 'ofensiva';
   ritmo?: 'moderado' | 'alto';
+  lineups?: typeof MATCH_LINEUPS;
 }
 
 // A sub-component inside Canvas so we can use useFrame and useThree hooks safely
@@ -45,7 +46,8 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
   visualizationMode: visualizationMode,
   showTacticalZones = true,
   mentalidad,
-  ritmo
+  ritmo,
+  lineups = MATCH_LINEUPS
 }) => {
   const { homeColor, awayColor, homeStandsColor, awayStandsColor } = match.teams;
   const weather = match.weather;
@@ -354,6 +356,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
           showTacticalZones={showTacticalZones}
           mentalidad={mentalidad}
           ritmo={ritmo}
+          lineups={lineups}
         />
       </group>
 

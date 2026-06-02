@@ -2,6 +2,12 @@ import React, { useMemo } from 'react';
 import type { Player } from '../data/lineups';
 import { Activity, Flame, X, ChevronLeft, Award } from 'lucide-react';
 import { getTacticalZoneType } from '../data/lineups';
+import { playerRatings, attrLabelsFor, attrColor, ratingSourceText } from '../../../lib/ratings';
+import { generateDeterministicInsight } from '../data/stadiumDataMapper';
+import { PlayerAvatar, TeamFlag } from '../../../components/identity';
+import { DataSourceBadge } from '../../../components/DataSourceBadge';
+import { playerRatingMeta } from '../../../generated/playerRatings';
+import type { Player as SharedPlayer } from '@worldcup/shared';
 
 interface SelectedPlayerPanelProps {
   player: Player;
@@ -13,58 +19,22 @@ interface SelectedPlayerPanelProps {
 export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
   player,
   onClose,
-  weather,
-  status
+  weather: _weather,
+  status: _status
 }) => {
-  // Dynamic tactical insight generator (AI-native simulation - Phase 9)
+  const ratings = useMemo(() => playerRatings({
+    ...player,
+    pos: player.pos || player.position
+  }), [player]);
+  
+  const labels = useMemo(() => attrLabelsFor({
+    pos: player.pos || player.position
+  }), [player]);
+
+  // Dynamic tactical insight generator (AI-native simulation - Phase 9 & 10)
   const aiInsight = useMemo(() => {
-    const name = player.displayName;
-    
-    // Base tactical text based on role and stats
-    let text: string;
-    
-    if (status === 'pre-match') {
-      text = `Planificación Táctica: Se espera que ${player.displayName} actúe como un pilar en el esquema táctico. Su asignación principal es mantener la disciplina posicional en su rol de ${player.tacticalRole.toLowerCase()} para contrarrestar el bloque rival. `;
-      if (weather === 'rain') {
-        text += `Bajo lluvia intensa, se le instruye priorizar pases cortos y evitar conducciones largas en terreno mojado.`;
-      } else if (weather === 'fog') {
-        text += `Ante niebla densa, su comunicación y apoyos cortos serán vitales para evitar desatenciones de visibilidad.`;
-      } else {
-        text += `Las condiciones climáticas despejadas favorecerán su despliegue físico y transiciones rápidas.`;
-      }
-    } else if (status === 'post-match') {
-      text = `Análisis de Rendimiento: ${player.displayName} concluyó con una influencia de ${player.influenceScore} puntos. Su desempeño como ${player.tacticalRole.toLowerCase()} fue clave para consolidar la estrategia y distribución. `;
-      if (player.stamina < 75) {
-        text += `El desgaste físico acumulado (${player.stamina}% restante) mermó ligeramente su velocidad de repliegue, pero sus coberturas mantuvieron el orden táctico.`;
-      } else {
-        text += `Mantuvo un excelente tono físico hasta el pitazo final, facilitando coberturas amplias y duelos individuales.`;
-      }
-    } else {
-      // In-play Live Match Day Insights (82nd minute)
-      if (player.id === 'arg-ss') { // Messi
-        text = `Messi está operando de forma flotante entre líneas en la Zona 14. Atrae constantemente marcas dobles de Tchouaméni y Upamecano, lo que libera el carril exterior derecho para proyecciones de Molina o transiciones de De Paul.`;
-      } else if (player.id === 'fra-lw') { // Mbappé
-        text = `Mbappé explota la banda izquierda posicionándose de manera agresiva a la espalda de Molina. Su velocidad en ruptura vertical representa la mayor amenaza de Francia en estos últimos minutos, obligando coberturas de Romero.`;
-      } else if (player.position === 'GK') {
-        text = `${name} mantiene una alta concentración defensiva. Su rol de ${player.tacticalRole.toLowerCase()} requiere salidas rápidas ante balones filtrados y distribución rasa para saltar la primera línea de presión rival.`;
-      } else if (player.position === 'DF') {
-        text = `En la zaga central, ${name} está enfocado en contener balones al área. Con una condición del ${player.stamina}%, su capacidad de anticipación y bloqueos de remates de espaldas será el muro definitorio de este tramo final del partido.`;
-      } else if (player.position === 'MF') {
-        text = `El desgaste táctico de ${name} en el círculo central es masivo. En su rol de ${player.tacticalRole.toLowerCase()}, ejerce presión sobre el eje organizador contrario y distribuye balones con alta precisión en Zona 14.`;
-      } else {
-        text = `Posicionado en ofensiva, ${name} busca fijar a los defensores contrarios y generar desmarques de apoyo. Su influencia táctica actual de ${player.influenceScore} puntos está dinamizando las segundas jugadas de ataque.`;
-      }
-
-      // Add environmental modifiers
-      if (weather === 'rain') {
-        text += ` El terreno mojado por lluvia está acelerando la velocidad del esférico, incrementando su tasa de pases al primer toque.`;
-      } else if (weather === 'fog') {
-        text += ` La niebla densa reduce la visibilidad espacial; se le ordena mantener distancias más compactas con sus compañeros de bloque.`;
-      }
-    }
-
-    return text;
-  }, [player, weather, status]);
+    return generateDeterministicInsight(player, ratings);
+  }, [player, ratings]);
 
   // Risk badge styling
   const riskColor = useMemo(() => {
@@ -95,7 +65,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         boxShadow: `0 0 24px ${teamGlowColor}20`,
         borderRadius: '16px',
         overflow: 'hidden',
-        background: 'rgba(8, 11, 24, 0.94)',
+        background: 'var(--bg-surface)',
         backdropFilter: 'blur(16px)',
         display: 'flex',
         flexDirection: 'column',
@@ -111,7 +81,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         >
           <ChevronLeft size={12} /> Volver
         </button>
-        <h3 className="panel-title" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#ffffff' }}>
+        <h3 className="panel-title" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)' }}>
           Ficha del Jugador
         </h3>
         <button 
@@ -130,10 +100,12 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             display: 'flex', 
             position: 'relative',
             flexDirection: 'column', 
-            gap: '8px', 
+            gap: '12px', 
             padding: '16px', 
             borderLeft: `4px solid ${teamGlowColor}`,
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.0) 100%)',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '12px',
             overflow: 'hidden'
           }}
         >
@@ -145,7 +117,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             fontSize: '5rem',
             fontWeight: 900,
             color: teamGlowColor,
-            opacity: 0.12,
+            opacity: 0.08,
             userSelect: 'none',
             pointerEvents: 'none',
             lineHeight: 1
@@ -153,43 +125,84 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             #{player.number}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1 }}>
-            <span 
-              className="brand-badge" 
-              style={{ 
-                background: player.team === 'ARG' ? '#74acdf' : '#0f2042', 
-                color: player.team === 'ARG' ? '#0b1731' : '#fff', 
-                boxShadow: `0 0 10px ${player.team === 'ARG' ? 'rgba(116, 172, 223, 0.3)' : 'rgba(15, 32, 66, 0.3)'}`,
-                fontSize: '0.62rem',
-                fontWeight: 800,
-                borderRadius: '4px',
-                padding: '2px 8px'
-              }}
-            >
-              {player.team === 'ARG' ? 'ARGENTINA' : 'FRANCIA'}
+          <div className="row gap-12" style={{ alignItems: 'center', zIndex: 1 }}>
+            <span style={{ position: 'relative', flex: 'none' }}>
+              <PlayerAvatar player={player as unknown as SharedPlayer} size={54} />
+              <span
+                className="num"
+                style={{
+                  position: 'absolute',
+                  top: -6,
+                  left: -8,
+                  background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
+                  color: '#181203',
+                  fontWeight: 800,
+                  fontSize: 13,
+                  padding: '1px 6px',
+                  borderRadius: 6,
+                  boxShadow: 'var(--shadow)',
+                }}
+              >
+                {ratings.overall}
+              </span>
             </span>
-            <span style={{ fontSize: '1.4rem', fontWeight: 900, color: teamGlowColor, lineHeight: 1 }}>
-              #{player.number}
-            </span>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }} className="nowrap">
+                  {player.name}
+                </span>
+                <span className="num" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 700 }}>
+                  #{player.number ?? '—'}
+                </span>
+              </div>
+              <div className="row gap-6" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px', flexWrap: 'wrap' }}>
+                <TeamFlag code={player.team} size={13} />
+                <span className="nowrap">{player.team === 'ARG' ? 'Argentina' : 'Francia'}</span>
+                <span>·</span>
+                <span className={`pos-tag pos-${player.position}`}>{player.position}</span>
+                <span className="nowrap" style={{ color: 'var(--text-muted)' }}>{player.club}</span>
+              </div>
+            </div>
           </div>
 
-          <div style={{ zIndex: 1 }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', margin: 0 }}>
-              {player.name}
-            </h2>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', marginTop: '4px' }}>
-              {player.positionLabel} · <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span>
-            </div>
-            <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginTop: '6px', letterSpacing: '0.02em' }}>
-              Zona Táctica: <span style={{ color: '#ffffff' }}>{getTacticalZoneType(player)}</span>
-            </div>
+          {/* Rating Source row */}
+          <div className="row gap-8" style={{ zIndex: 1, flexWrap: 'wrap' }}>
+            <span className={`rating-source ${ratings.source}`} title={ratingSourceText(ratings)}>
+              {ratings.source === 'fc26' ? 'FC 26' : 'Estimado'}
+            </span>
+            <DataSourceBadge
+              label={ratings.source === 'fc26' ? 'Rating FC 26' : 'Rating estimado'}
+              source={ratings.sourceLabel}
+              date={ratings.source === 'fc26' ? playerRatingMeta.downloadedAt.slice(0, 10) : '2026-05-30'}
+              confidence={ratings.source === 'fc26' ? 'Alta' : 'Media'}
+              compact
+            />
+          </div>
+
+          {/* Attributes Grid (6 main attributes) */}
+          <div className="row player-attrs" style={{ zIndex: 1, borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+            {labels.map((a) => (
+              <div key={a.key} style={{ textAlign: 'center', flex: 1 }}>
+                <div className="num" style={{ fontWeight: 800, fontSize: '0.95rem', color: attrColor(ratings[a.key]) }}>
+                  {ratings[a.key]}
+                </div>
+                <div className="mono-label" style={{ margin: 0, fontSize: '0.62rem', color: 'var(--text-muted)' }}>
+                  {a.short}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', marginTop: '2px', zIndex: 1 }}>
+            Rol: <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span> · Zona: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player)}</span>
           </div>
         </div>
 
         {/* Tactical Performance Gauges */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           {/* Stamina Indicator */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Activity size={10} style={{ color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }} />
               Condición Física
@@ -199,7 +212,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                 {player.stamina}%
               </span>
             </div>
-            <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '4px', background: 'var(--border-subtle)', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{ 
                 height: '100%', 
                 width: `${player.stamina}%`, 
@@ -210,7 +223,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           </div>
 
           {/* Influence Indicator */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Award size={10} style={{ color: teamGlowColor }} />
               Influencia Táctica
@@ -221,7 +234,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
               </span>
               <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700, marginLeft: '2px' }}>/ 100</span>
             </div>
-            <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '4px', background: 'var(--border-subtle)', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{ 
                 height: '100%', 
                 width: `${player.influenceScore}%`, 
@@ -235,7 +248,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         {/* Row 2 of Metrics: Riesgo and Estado */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           {/* Riesgo Badge */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
               Riesgo de Pérdida
             </span>
@@ -260,7 +273,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           </div>
 
           {/* Estado del Jugador */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
               Estado del Jugador
             </span>
@@ -298,25 +311,25 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         </div>
 
         {/* Cobertura / Presión Row */}
-        <div className="stadium-card" style={{ padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="stadium-card" style={{ padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
           <span style={{ fontSize: '0.68rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Activity size={12} style={{ color: teamGlowColor }} />
             {player.position === 'DF' || player.position === 'GK' || player.id === 'fra-dm-r' || player.id === 'arg-dm' ? 'Cobertura Táctica' : 'Presión Generada'}
           </span>
-          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff' }}>
+          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             {Math.round(player.influenceScore * 0.85 + player.stamina * 0.15)}%
           </span>
         </div>
 
         {/* AI Tactical Narrative */}
-        <div className="stadium-card" style={{ padding: '14px', background: `${teamGlowColor}03`, borderColor: `${teamGlowColor}1f` }}>
+        <div className="stadium-card" style={{ padding: '14px', background: `${teamGlowColor}05`, borderColor: `${teamGlowColor}25`, border: '1px solid', borderRadius: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
             <Flame size={12} style={{ color: teamGlowColor }} />
             <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: teamGlowColor, letterSpacing: '0.05em' }}>
-              Análisis Táctico IA (Simulado)
+              Análisis Táctico IA (Estimado)
             </span>
           </div>
-          <p style={{ fontSize: '0.78rem', lineHeight: '1.45', color: '#e2e8f0', margin: 0, textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+          <p style={{ fontSize: '0.78rem', lineHeight: '1.45', color: 'var(--text-primary)', margin: 0 }}>
             {aiInsight}
           </p>
         </div>
@@ -368,7 +381,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             </button>
           </div>
 
-          <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.3, marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '6px' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.3, marginTop: '4px', borderTop: '1px solid var(--border-subtle)', paddingTop: '6px' }}>
             Prototipo privado no oficial de análisis deportivo. No está afiliado a FIFA, organizadores del torneo, selecciones ni sedes oficiales.
           </div>
         </div>

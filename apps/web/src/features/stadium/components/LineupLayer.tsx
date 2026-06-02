@@ -12,6 +12,7 @@ interface LineupLayerProps {
   showTacticalZones?: boolean;
   mentalidad?: 'equilibrada' | 'ofensiva';
   ritmo?: 'moderado' | 'alto';
+  lineups?: typeof MATCH_LINEUPS;
 }
 
 // Define passing links between players for visual lanes
@@ -33,14 +34,15 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
   visualizationMode,
   showTacticalZones = true,
   mentalidad,
-  ritmo
+  ritmo,
+  lineups = MATCH_LINEUPS
 }) => {
-  const homeColor = MATCH_LINEUPS.teams.home.color;
+  const homeColor = lineups.teams.home.color;
 
   const allPlayers = useMemo(() => {
     const baseList = [
-      ...MATCH_LINEUPS.teams.home.players,
-      ...MATCH_LINEUPS.teams.away.players
+      ...lineups.teams.home.players,
+      ...lineups.teams.away.players
     ];
     if (mentalidad === 'ofensiva') {
       return baseList.map(p => {
@@ -53,7 +55,7 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
       });
     }
     return baseList;
-  }, [mentalidad]);
+  }, [mentalidad, lineups.teams.home.players, lineups.teams.away.players]);
 
   // Canvas texture for Argentina players (Cyan/celeste)
   const argZoneTexture = useMemo(() => {

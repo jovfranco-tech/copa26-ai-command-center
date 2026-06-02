@@ -7,15 +7,17 @@ interface AIMatchBriefProps {
   match: Match;
   onSelectPlayer: (player: Player | null) => void;
   selectedPlayerId: string | null;
+  lineups?: typeof MATCH_LINEUPS;
 }
 
 export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
   match,
   onSelectPlayer,
-  selectedPlayerId
+  selectedPlayerId,
+  lineups = MATCH_LINEUPS
 }) => {
-  const argPlayers = MATCH_LINEUPS.teams.home.players;
-  const fraPlayers = MATCH_LINEUPS.teams.away.players;
+  const argPlayers = lineups.teams.home.players;
+  const fraPlayers = lineups.teams.away.players;
 
   // Exact coordinates for visual vertical layout (matches mockup layout perfectly)
   const argCoords: Record<string, { x: number, y: number }> = {

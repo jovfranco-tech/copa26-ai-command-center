@@ -9,6 +9,7 @@ interface Tactical2DMapProps {
   onZoneClick: (zone: 'field' | 'stands' | 'screens' | 'lights') => void;
   selectedPlayerId: string | null;
   onSelectPlayer: (player: Player | null) => void;
+  lineups?: typeof MATCH_LINEUPS;
 }
 
 export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
@@ -16,12 +17,13 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
   activeZone,
   onZoneClick,
   selectedPlayerId,
-  onSelectPlayer
+  onSelectPlayer,
+  lineups = MATCH_LINEUPS
 }) => {
   const { homeColor, awayColor } = match.teams;
 
-  const homePlayers = MATCH_LINEUPS.teams.home.players;
-  const awayPlayers = MATCH_LINEUPS.teams.away.players;
+  const homePlayers = lineups.teams.home.players;
+  const awayPlayers = lineups.teams.away.players;
 
   // Coordinate translation functions
   // Translate 3D x [-33, 33] -> SVG x [10, 190]

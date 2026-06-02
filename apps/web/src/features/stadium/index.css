@@ -21,18 +21,31 @@
   /* Fonts */
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Theme Colors - Sleek Midnight Sports Analytics Palette */
-  --bg-deep: #070913;
-  --bg-surface: rgba(13, 17, 34, 0.65);
-  --bg-card: rgba(22, 28, 54, 0.45);
-  --bg-card-hover: rgba(30, 39, 73, 0.6);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(0, 242, 254, 0.4);
+  /* Theme Colors - Sleek Midnight Sports Analytics Palette (Inherited from global dashboard theme) */
+  --bg-deep: var(--bg);
+  --bg-surface: var(--bg-1);
+  --bg-card: var(--bg-2);
+  --bg-card-hover: var(--bg-hover);
+  --border-subtle: var(--line);
+  --border-focus: var(--line-2);
   
   /* Text */
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: var(--tx);
+  --text-secondary: var(--tx-2);
+  --text-muted: var(--tx-3);
+
+  /* Immersive dark theme overrides */
+  .immersive {
+    --bg-deep: #070913;
+    --bg-surface: rgba(13, 17, 34, 0.65);
+    --bg-card: rgba(22, 28, 54, 0.45);
+    --bg-card-hover: rgba(30, 39, 73, 0.6);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-focus: rgba(0, 242, 254, 0.4);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+  }
   
   /* Brand Accent Glow Colors (Tailored HSL) */
   --color-neon-cyan: hsl(182, 100%, 50%);

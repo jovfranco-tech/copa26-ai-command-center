@@ -8,6 +8,8 @@ import { WebGLBoundary } from './components/WebGLBoundary';
 import { AIMatchBrief } from './components/AIMatchBrief';
 import { SelectedPlayerPanel } from './components/SelectedPlayerPanel';
 import type { Player } from './data/lineups';
+import { usePlayers } from '../../hooks';
+import { mapDatabasePlayersToLineups } from './data/stadiumDataMapper';
 import { 
   Trophy, 
   Map, 
@@ -24,6 +26,11 @@ import {
 } from 'lucide-react';
 
 function App() {
+  const { data: dbPlayersData } = usePlayers();
+  const dbPlayers = dbPlayersData?.items ?? [];
+  const mappedLineups = mapDatabasePlayersToLineups(dbPlayers);
+  const [modoInmersivo, setModoInmersivo] = useState<boolean>(false);
+
   const [fixtures, setFixtures] = useState<Match[]>(MATCH_FIXTURES);
   const [selectedMatchId, setSelectedMatchId] = useState<string>('match-1');
   const [reduceEffects, setReduceEffects] = useState<boolean>(false);
@@ -194,8 +201,14 @@ function App() {
     }
   }
 
+  const selectedPlayerMapped = selectedPlayer
+    ? mappedLineups.teams.home.players.find(p => p.id === selectedPlayer.id) ||
+      mappedLineups.teams.away.players.find(p => p.id === selectedPlayer.id) ||
+      selectedPlayer
+    : null;
+
   return (
-    <div className="app-container">
+    <div className={`app-container ${modoInmersivo ? 'immersive' : ''}`}>
       {/* Premium Dashboard Header in Spanish */}
       <header className="app-header">
         <div className="brand-section">
@@ -208,6 +221,17 @@ function App() {
 
         {/* Global Settings & Toggles */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Integrated / Immersive Theme Mode Toggle */}
+          <button 
+            className={`stadium-btn ${modoInmersivo ? 'active' : ''}`}
+            onClick={() => setModoInmersivo(!modoInmersivo)}
+            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+            title="Alternar entre tema integrado claro y tema inmersivo oscuro"
+          >
+            <Trophy size={14} />
+            {modoInmersivo ? 'Modo Inmersivo' : 'Modo Integrado'}
+          </button>
+
           {/* WebGL Fallback Mode */}
           <button 
             className={`stadium-btn ${webGlFallback ? 'active' : ''}`}
@@ -371,6 +395,7 @@ function App() {
                       onZoneClick={(zone) => setActiveZone(activeZone === zone ? 'none' : zone)}
                       selectedPlayerId={selectedPlayer ? selectedPlayer.id : null}
                       onSelectPlayer={setSelectedPlayer}
+                      lineups={mappedLineups}
                     />
                   </div>
                 }
@@ -388,6 +413,7 @@ function App() {
                   showTacticalZones={showTacticalZones}
                   mentalidad={mentalidad}
                   ritmo={ritmo}
+                  lineups={mappedLineups}
                 />
               </WebGLBoundary>
             ) : (
@@ -397,6 +423,7 @@ function App() {
                 onZoneClick={(zone) => setActiveZone(activeZone === zone ? 'none' : zone)}
                 selectedPlayerId={selectedPlayer ? selectedPlayer.id : null}
                 onSelectPlayer={setSelectedPlayer}
+                lineups={mappedLineups}
               />
             )}
 
@@ -570,9 +597,9 @@ function App() {
         {/* COLUMN 2: SIDEBAR - Hibrid Panel (Lineups 2D / Selected Player Panel) */}
         <section className="panel-container">
           <div className="glass-panel" style={{ height: '100%' }}>
-            {selectedPlayer ? (
+            {selectedPlayerMapped ? (
               <SelectedPlayerPanel 
-                player={selectedPlayer}
+                player={selectedPlayerMapped}
                 onClose={() => setSelectedPlayer(null)}
                 weather={currentMatch.weather}
                 status={currentMatch.status}
@@ -582,6 +609,7 @@ function App() {
                 match={currentMatch} 
                 onSelectPlayer={setSelectedPlayer}
                 selectedPlayerId={null}
+                lineups={mappedLineups}
               />
             )}
           </div>
