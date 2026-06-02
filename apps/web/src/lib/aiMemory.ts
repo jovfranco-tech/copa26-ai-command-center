@@ -9,6 +9,26 @@ export interface AIMemoryRecord {
   confidence: string;
   model?: string;
   tools?: string[];
+  entityType?: 'tournament' | 'match' | 'team' | 'player' | 'pool';
+  entityId?: string;
+  structured?: AIStructuredAnswer;
+  citations?: AICitation[];
+}
+
+export interface AIStructuredAnswer {
+  prediction?: string;
+  risk?: string;
+  confidence?: string;
+  dataUsed?: string[];
+  nextAction?: string;
+}
+
+export interface AICitation {
+  label: string;
+  value: string;
+  source: string;
+  date?: string;
+  confidence?: string;
 }
 
 const KEY = 'wc_ai_memory_v1';
@@ -42,4 +62,17 @@ export function clearAIMemory(): AIMemoryRecord[] {
   if (typeof localStorage === 'undefined') return [];
   localStorage.removeItem(KEY);
   return [];
+}
+
+export function entityMemory(
+  records: AIMemoryRecord[],
+  entityType: AIMemoryRecord['entityType'],
+  entityId?: string,
+): AIMemoryRecord[] {
+  if (!entityType) return [];
+  return records.filter((record) => {
+    if (record.entityType !== entityType) return false;
+    if (!entityId || entityType === 'tournament') return true;
+    return record.entityId === entityId;
+  });
 }

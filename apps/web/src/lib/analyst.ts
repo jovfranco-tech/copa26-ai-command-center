@@ -4,6 +4,8 @@
  * los números recibidos, y reporta qué tablas locales usó.
  */
 import { avg, fmtFull, type Match, type Player, type StandingRow, type Team, type Venue } from '@worldcup/shared';
+import type { AICitation, AIStructuredAnswer } from '@/lib/aiMemory';
+import { playerRatings, ratingSourceText } from '@/lib/ratings';
 
 export interface AnalystInput {
   question: string;
@@ -19,6 +21,8 @@ export interface AnalystInput {
 export interface AnalystAnswer {
   text: string;
   sources: string[];
+  structured?: AIStructuredAnswer;
+  citations?: AICitation[];
 }
 
 function teamName(teams: Team[], code: string): string {
@@ -32,6 +36,35 @@ function venueName(venues: Venue[] | undefined, id: string): string {
 
 function firstMatch(matches: Match[]): Match | undefined {
   return [...matches].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))[0];
+}
+
+function matchCitation(match: Match, teams: Team[], venues?: Venue[]): AICitation[] {
+  return [
+    {
+      label: 'Partido',
+      value: `${teamName(teams, match.home)} vs ${teamName(teams, match.away)} · ${fmtFull(match.date)} ${match.time}`,
+      source: 'Dataset local del calendario',
+      date: '2026-05-31',
+      confidence: 'Alta',
+    },
+    {
+      label: 'Sede',
+      value: venueName(venues, match.venue),
+      source: 'Sedes locales optimizadas',
+      date: '2026-05-31',
+      confidence: 'Alta',
+    },
+  ];
+}
+
+function structuredReport({
+  prediction,
+  risk,
+  confidence,
+  dataUsed,
+  nextAction,
+}: AIStructuredAnswer): AIStructuredAnswer {
+  return { prediction, risk, confidence, dataUsed, nextAction };
 }
 
 export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
@@ -53,6 +86,14 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
     return {
       text: `El primer partido confirmado en el calendario es ${teamName(teams, opening.home)} vs ${teamName(teams, opening.away)} el ${fmtFull(opening.date)} a las ${opening.time}, en ${venueName(venues, opening.venue)} (${opening.stage}).`,
       sources: ['partidos', 'sedes'],
+      structured: structuredReport({
+        prediction: 'Partido inaugural confirmado en el calendario local.',
+        risk: 'El marcador y estadísticas se activan hasta que exista feed de resultados.',
+        confidence: 'Alta para calendario; pendiente para rendimiento.',
+        dataUsed: ['Fecha/hora del partido', 'Selecciones', 'Sede'],
+        nextAction: 'Abrir quiniela y capturar pronóstico antes del inicio.',
+      }),
+      citations: matchCitation(opening, teams, venues),
     };
   }
 
@@ -73,7 +114,31 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
     const hs = standings[m.group]?.find((r) => r.team === m.home);
     const as = standings[m.group]?.find((r) => r.team === m.away);
     if (hs && as) lines.push(`En el Grupo ${m.group}, ${m.home} tiene ${hs.Pts} pts y ${m.away} ${as.Pts} pts.`);
-    return { text: lines.join(' '), sources: ['partidos', 'clasificación'] };
+    return {
+      text: lines.join(' '),
+      sources: ['partidos', 'clasificación'],
+      structured: structuredReport({
+        prediction: m.status === 'UPCOMING' ? 'Sin resultado oficial todavía; útil para quiniela previa.' : 'Resultado ya cargado en el dataset.',
+        risk: m.status === 'UPCOMING' ? 'Convocatorias finales, lesiones y forma reciente pueden mover el pick.' : 'Las métricas avanzadas dependen del feed disponible.',
+        confidence: m.status === 'UPCOMING' ? 'Alta calendario / media predicción' : 'Alta si el marcador final ya está cargado.',
+        dataUsed: ['Calendario', 'Grupo', 'Tabla local'],
+        nextAction: m.status === 'UPCOMING' ? 'Definir marcador y revisar cierre de quiniela.' : 'Comparar pick familiar contra resultado real.',
+      }),
+      citations: [
+        ...matchCitation(m, teams, venues),
+        ...(hs && as
+          ? [
+              {
+                label: `Grupo ${m.group}`,
+                value: `${m.home} ${hs.Pts} pts · ${m.away} ${as.Pts} pts`,
+                source: 'Clasificación local recalculada',
+                date: '2026-05-31',
+                confidence: 'Alta',
+              },
+            ]
+          : []),
+      ],
+    };
   }
 
   if (ctx === 'team' && id) {
@@ -95,7 +160,38 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
       const opp = next.home === t.code ? next.away : next.home;
       lines.push(`Próximo: ${teamName(teams, opp)} el ${fmtFull(next.date)}.`);
     }
-    return { text: lines.join(' '), sources: ['selecciones', 'clasificación', 'partidos'] };
+    return {
+      text: lines.join(' '),
+      sources: ['selecciones', 'clasificación', 'partidos'],
+      structured: structuredReport({
+        prediction: next ? `Siguiente lectura: ${t.name} vs ${teamName(teams, next.home === t.code ? next.away : next.home)}.` : 'Sin próximo partido pendiente.',
+        risk: 'Ratings, convocatoria final y estado físico pueden cambiar antes del torneo.',
+        confidence: row ? 'Alta para grupo/tabla; media para forma previa.' : 'Alta para grupo; pendiente para resultados.',
+        dataUsed: ['Selección', 'Grupo', 'Tabla', 'Próximo partido'],
+        nextAction: next ? 'Abrir el partido y revisar kits, clima y pick.' : 'Esperar actualización de calendario.',
+      }),
+      citations: [
+        {
+          label: 'Selección',
+          value: `${t.name} · Grupo ${t.group} · ranking ${t.ranking ?? 'pendiente'}`,
+          source: 'Dataset local de selecciones',
+          date: '2026-05-31',
+          confidence: 'Alta',
+        },
+        ...(row
+          ? [
+              {
+                label: 'Tabla',
+                value: `${row.Pts} pts · ${row.W}-${row.D}-${row.L} · DG ${row.GD}`,
+                source: 'Clasificación local recalculada',
+                date: '2026-05-31',
+                confidence: 'Alta',
+              },
+            ]
+          : []),
+        ...(next ? matchCitation(next, teams, venues).slice(0, 1) : []),
+      ],
+    };
   }
 
   if (ctx === 'player' && id) {
@@ -107,7 +203,34 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
     ];
     if (p.goals > 0) lines.push(`Eso lo ubica #${rank} entre los goleadores locales.`);
     if (p.yellow || p.red) lines.push(`Disciplina: ${p.yellow} amarillas, ${p.red} rojas.`);
-    return { text: lines.join(' '), sources: ['jugadores'] };
+    const rating = playerRatings(p);
+    return {
+      text: lines.join(' '),
+      sources: ['jugadores', 'ratings'],
+      structured: structuredReport({
+        prediction: `${p.name} proyecta ${rating.overall} OVR como referencia cercana.`,
+        risk: rating.source === 'estimate' ? 'Rating estimado por club, selección, edad y posición; conviene reemplazar si aparece fuente pública.' : 'Rating público cargado, pero la convocatoria final puede cambiar rol/minutos.',
+        confidence: rating.source === 'fc26' ? 'Alta rating público / media Mundial' : 'Media estimada',
+        dataUsed: ['Jugador', 'Club', 'Posición', 'Rating cercano'],
+        nextAction: 'Comparar contra compañeros de selección y ajustar figura del equipo.',
+      }),
+      citations: [
+        {
+          label: 'Jugador',
+          value: `${p.name} · ${teamName(teams, p.team)} · ${p.posLong ?? p.pos} · ${p.club}`,
+          source: 'Plantilla local editable',
+          date: '2026-05-31',
+          confidence: 'Media hasta convocatoria final',
+        },
+        {
+          label: 'Rating',
+          value: `${rating.overall} OVR · VEL ${rating.pace} · TIR ${rating.shooting} · PAS ${rating.passing}`,
+          source: ratingSourceText(rating),
+          date: rating.source === 'fc26' ? '2026-05-30' : '2026-05-31',
+          confidence: rating.source === 'fc26' ? 'Alta' : 'Media',
+        },
+      ],
+    };
   }
 
   // torneo (por defecto)
@@ -139,7 +262,27 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
     const live = matches.filter((m) => m.status === 'LIVE');
     lines.push(live.length ? `${live.length} partido(s) en vivo ahora.` : 'No hay partidos en vivo ahora.');
   }
-  return { text: lines.join(' '), sources: ['partidos', 'jugadores', 'clasificación'] };
+  return {
+    text: lines.join(' '),
+    sources: ['partidos', 'jugadores', 'clasificación'],
+    structured: structuredReport({
+      prediction: played.length ? 'El tablero ya refleja actividad real.' : 'Torneo listo en modo previa; la quiniela y ratings son el foco hasta el 11 de junio.',
+      risk: 'Resultados, plantillas finales y estadísticas se actualizan cuando exista feed confiable.',
+      confidence: 'Alta para calendario; media para datos previos de rendimiento.',
+      dataUsed: ['Calendario completo', 'Plantillas', 'Tablas por grupo'],
+      nextAction: 'Usar Día de partido y quiniela familiar para preparar el primer juego.',
+    }),
+    citations: [
+      {
+        label: 'Calendario',
+        value: `${matches.length} partidos · ${upcoming.length} pendientes · ${played.length} jugados`,
+        source: 'Dataset local del torneo',
+        date: '2026-05-31',
+        confidence: 'Alta',
+      },
+      ...(opening ? matchCitation(opening, teams, venues).slice(0, 1) : []),
+    ],
+  };
 }
 
 export const SUGGESTED_QUESTIONS = [

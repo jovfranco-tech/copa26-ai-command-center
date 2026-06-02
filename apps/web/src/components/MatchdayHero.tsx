@@ -4,8 +4,9 @@ import { Icon, StatusBadge } from '@worldcup/ui';
 import { fmtFull, type Match } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, TeamKit } from '@/components/identity';
 import { useTeamsMap, useVenuesMap } from '@/hooks';
-import { h2hSummary, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
+import { h2hSummary, isMatchLocked, lockLabel, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
+import { usePool } from '@/store/pool';
 import { DataSourceBadge } from './DataSourceBadge';
 
 export function MatchdayHero({ match }: { match: Match | null }) {
@@ -14,6 +15,7 @@ export function MatchdayHero({ match }: { match: Match | null }) {
   const venues = useVenuesMap();
   const [sharing, setSharing] = useState(false);
   const [now, setNow] = useState(() => Date.now());
+  const picks = usePool((s) => s.picks);
 
   const meta = useMemo(() => (match ? matchSourceInfo(match) : null), [match]);
   const weather = useMemo(() => (match ? weatherSummary(match.id) : null), [match]);
@@ -32,6 +34,22 @@ export function MatchdayHero({ match }: { match: Match | null }) {
   const venue = venues[match.venue];
   const photo = venuePhotoSrc(match.venue);
   const played = match.status !== 'UPCOMING';
+  const pick = picks[match.id];
+  const pickComplete = pick?.homeGoals != null && pick?.awayGoals != null;
+  const locked = isMatchLocked(match);
+  const pickLabel = pickComplete
+    ? `${pick.homeGoals}-${pick.awayGoals}`
+    : pick?.outcome
+      ? outcomeName(pick.outcome)
+      : 'Pendiente';
+  const nextAction = played ? 'Revisar resultado' : pickComplete ? 'Ajustar predicción' : 'Capturar pick';
+  const goNextAction = () => {
+    if (played) {
+      navigate({ to: '/matches/$matchId', params: { matchId: match.id } });
+      return;
+    }
+    navigate({ to: '/pool' });
+  };
 
   const shareMatch = async () => {
     setSharing(true);
@@ -102,6 +120,28 @@ export function MatchdayHero({ match }: { match: Match | null }) {
           <InfoTile icon="activity" label="Historial" value={h2h?.label ?? 'Pendiente'} sub={h2h?.source ?? 'Pipeline H2H'} />
         </div>
 
+        <div className="matchday-focus-panel">
+          <div>
+            <span className="mono-label">Tu quiniela</span>
+            <strong>{pickLabel}</strong>
+            <small>{pickComplete ? 'Lista para compartir' : 'Falta cerrar ganador y marcador'}</small>
+          </div>
+          <div>
+            <span className="mono-label">Cierre</span>
+            <strong>{locked || played ? 'Cerrado' : 'Abierto'}</strong>
+            <small>{lockLabel(match)}</small>
+          </div>
+          <div>
+            <span className="mono-label">Confianza datos</span>
+            <strong>{meta?.confidence ?? 'Pendiente'}</strong>
+            <small>{meta?.source ?? 'Dataset local'}</small>
+          </div>
+          <button type="button" className="btn gold" onClick={goNextAction}>
+            <Icon name={played ? 'calendar' : 'target'} size={15} />
+            {nextAction}
+          </button>
+        </div>
+
         <div className="matchday-actions">
           <button type="button" className="btn gold" onClick={() => navigate({ to: '/pool' })}>
             <Icon name="trophy" size={15} /> Ir a quiniela
@@ -119,6 +159,12 @@ export function MatchdayHero({ match }: { match: Match | null }) {
       </div>
     </section>
   );
+}
+
+function outcomeName(outcome: 'home' | 'draw' | 'away'): string {
+  if (outcome === 'home') return 'Gana local';
+  if (outcome === 'away') return 'Gana visita';
+  return 'Empate';
 }
 
 function countdownLabel(match: Match, now: number): string {

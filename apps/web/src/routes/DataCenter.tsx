@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
 import { intelDataPacks, intelGeneratedAt, weatherMeta } from '@/generated/intelPacks';
 import { playerRatingMeta } from '@/generated/playerRatings';
@@ -28,6 +28,16 @@ export function DataCenter() {
   const played = (matches?.items ?? []).filter((m) => m.status === 'FT').length;
   const upcoming = (matches?.items ?? []).filter((m) => m.status === 'UPCOMING').length;
   const estimatedRatings = playerRatingMeta.total - playerRatingMeta.resolved;
+  const aiCallsToday = monitoring?.usage.items?.['ai.analyst'] ?? 0;
+  const poolAgentCallsToday = monitoring?.usage.items?.['ai.pool-agent'] ?? 0;
+  const roleUsage = useMemo(
+    () => [
+      { role: 'Admin', access: 'IA remota + actualización manual', limit: monitoring?.limits.analyst ?? '30 / 10 min', usage: aiCallsToday },
+      { role: 'Familia', access: 'Analista limitado + quiniela', limit: monitoring?.limits.poolAgent ?? 'Protegido por endpoint', usage: poolAgentCallsToday },
+      { role: 'Invitado', access: 'Solo motor local', limit: '0 llamadas remotas', usage: 0 },
+    ],
+    [aiCallsToday, poolAgentCallsToday, monitoring?.limits.analyst, monitoring?.limits.poolAgent],
+  );
 
   const runCheck = async () => {
     setChecking(true);
@@ -114,6 +124,22 @@ export function DataCenter() {
         </div>
       </div>
 
+      <div className="card data-ops-plan">
+        <div className="card-hd">
+          <Icon name="route" size={15} style={{ color: 'var(--gold)' }} />
+          <h3>Plan de actualización real</h3>
+          <span className="spacer" />
+          <span className="mono-label">Listo para torneo en vivo</span>
+        </div>
+        <div className="card-pad data-ops-grid">
+          <OpsPlanItem status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Resultados oficiales" source={check?.resultsSource === 'configured' ? 'Feed autorizado conectado' : 'RESULTS_SOURCE_URL pendiente'} action={check?.nextAction ?? 'Conectar feed cuando exista proveedor confiable.'} />
+          <OpsPlanItem status={estimatedRatings ? 'wait' : 'ok'} title="Convocatorias finales" source="Plantillas locales editables" action="Reemplazar jugadores cuando cada selección publique lista final." />
+          <OpsPlanItem status="wait" title="H2H y árbitros" source="Pipeline preparado" action="Cargar fuente autorizada; no se inventan árbitros ni historial." />
+          <OpsPlanItem status="ok" title="Clima y sedes" source={`${weatherMeta.matchesCovered} partidos con baseline`} action="Cambiar a forecast cercano cuando falten menos días." />
+          <OpsPlanItem status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela multi-dispositivo" source={poolStatus?.label ?? 'Sin revisar'} action={poolStatus?.durable ? 'Lista para familia; monitorear reglas y consumo.' : 'Verificar persistencia antes de compartir.'} />
+        </div>
+      </div>
+
       <div className="card ai-native-ops">
         <div className="card-hd">
           <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
@@ -126,6 +152,11 @@ export function DataCenter() {
           <AINativeTile label="Limite analista" value={monitoring?.limits.analyst ?? '30 / 10 min'} note={role === 'guest' ? 'Modo invitado usa motor local.' : 'Protege consumo cuando compartes link.'} />
           <AINativeTile label="Herramientas" value="7 conectadas" note="Calendario, equipos, jugadores, sedes, tablas, adjuntos y memoria." />
           <AINativeTile label="Uso hoy" value={String(monitoring?.usage.items?.['ai.analyst'] ?? 0)} note={`Proveedor de métricas: ${monitoring?.usage.provider ?? 'memory'}.`} />
+        </div>
+        <div className="card-pad role-usage-grid">
+          {roleUsage.map((item) => (
+            <RoleUsageTile key={item.role} {...item} />
+          ))}
         </div>
       </div>
 
@@ -381,6 +412,40 @@ function AINativeTile({ label, value, note }: { label: string; value: string; no
       <span className="mono-label">{label}</span>
       <strong>{value}</strong>
       <p>{note}</p>
+    </div>
+  );
+}
+
+function RoleUsageTile({ role, access, limit, usage }: { role: string; access: string; limit: string; usage: number }) {
+  return (
+    <div className="role-usage-tile">
+      <span className="mono-label">{role}</span>
+      <strong>{usage} llamadas hoy</strong>
+      <p>{access}</p>
+      <small>{limit}</small>
+    </div>
+  );
+}
+
+function OpsPlanItem({
+  status,
+  title,
+  source,
+  action,
+}: {
+  status: 'ok' | 'wait';
+  title: string;
+  source: string;
+  action: string;
+}) {
+  return (
+    <div className="ops-plan-item">
+      <span className={status === 'ok' ? 'dot-ok' : 'dot-warn'} />
+      <div>
+        <strong>{title}</strong>
+        <p>{source}</p>
+        <small>{action}</small>
+      </div>
     </div>
   );
 }

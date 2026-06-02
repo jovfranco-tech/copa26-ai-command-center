@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { Icon, Pill } from '@worldcup/ui';
+import { Icon, Pill, type IconName } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER, type Match as WorldCupMatch } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
-import { clearAIMemory, readAIMemory, saveAIMemory, type AIMemoryRecord } from '@/lib/aiMemory';
+import { clearAIMemory, entityMemory, readAIMemory, saveAIMemory, type AIMemoryRecord, type AICitation, type AIStructuredAnswer } from '@/lib/aiMemory';
 import { useFavorites } from '@/store/favorites';
 import { usePreferences } from '@/store/preferences';
 import { db } from '@/lib/firebase';
@@ -215,6 +215,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [lastAiMeta, setLastAiMeta] = useState<AIResult['meta'] | null>(null);
   const [memory, setMemory] = useState<AIMemoryRecord[]>(() => readAIMemory());
   const role = usePreferences((s) => s.role);
+  const memoryEntityType = ctx === 'hawkeye' || ctx === 'pressroom' ? 'tournament' : ctx;
+  const memoryEntityId = memoryEntityType === 'tournament' ? undefined : id;
+  const focusedMemory = useMemo(
+    () => entityMemory(memory, memoryEntityType, memoryEntityId).slice(0, 4),
+    [memory, memoryEntityType, memoryEntityId],
+  );
 
   const [attachedPdf, setAttachedPdf] = useState<{ name: string; data: string } | null>(null);
   const [attachedAudio, setAttachedAudio] = useState<{ name: string; data: string } | null>(null);
@@ -353,6 +359,10 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       confidence: meta?.confidence ?? (mode === 'local' ? 'Alta local' : 'Media'),
       model: meta?.model,
       tools: meta?.tools,
+      entityType: memoryEntityType,
+      entityId: memoryEntityId,
+      structured: next.structured,
+      citations: next.citations,
     }));
   };
 
@@ -398,7 +408,17 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     setAttachedAudio(null);
 
     if (ai.ok && ai.answer) {
-      commitAnswer(q, { text: ai.answer, sources: ai.meta?.sources ?? ['IA', 'datos locales'] }, 'remote', ai.meta);
+      commitAnswer(
+        q,
+        {
+          text: ai.answer,
+          sources: ai.meta?.sources ?? ['IA', 'datos locales'],
+          structured: local.structured,
+          citations: local.citations,
+        },
+        'remote',
+        ai.meta,
+      );
     } else {
       const reason = ai.reason === 'rate-limit' ? `limite IA ${ai.retryAfter ?? ''}s` : 'fallback local';
       commitAnswer(q, { ...local, sources: [...local.sources, reason] }, 'local', ai.meta);
@@ -788,6 +808,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 </button>
               </div>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{parsed.text}</p>
+
+              <StructuredAnswerPanel structured={answer.structured} />
+              <CitationGrid citations={answer.citations} />
               
               {parsed.chart && <AnalystChart chart={parsed.chart} />}
 
@@ -858,12 +881,93 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           records={memory}
           onReuse={(record) => {
             setQuestion(record.question);
-            setAnswer({ text: record.answer, sources: record.sources });
+            setAnswer({ text: record.answer, sources: record.sources, structured: record.structured, citations: record.citations });
             setUsedAI(record.mode !== 'local');
             setLastAiMeta({ model: record.model, confidence: record.confidence, tools: record.tools });
           }}
           onClear={() => setMemory(clearAIMemory())}
         />
+        <EntityInsightsPanel records={focusedMemory} context={CTX_ES[ctx]} />
+      </div>
+    </div>
+  );
+}
+
+function StructuredAnswerPanel({ structured }: { structured?: AIStructuredAnswer }) {
+  if (!structured) return null;
+  const cards: Array<{ key: keyof AIStructuredAnswer; label: string; icon: IconName; value?: string }> = [
+    { key: 'prediction', label: 'Lectura', icon: 'target', value: structured.prediction },
+    { key: 'risk', label: 'Riesgo', icon: 'shield', value: structured.risk },
+    { key: 'confidence', label: 'Confianza', icon: 'activity', value: structured.confidence },
+    { key: 'nextAction', label: 'Siguiente acción', icon: 'check', value: structured.nextAction },
+  ];
+
+  return (
+    <div className="structured-answer-grid">
+      {cards.filter((card) => card.value).map((card) => (
+        <div key={card.key} className="structured-answer-card">
+          <Icon name={card.icon} size={14} />
+          <span className="mono-label">{card.label}</span>
+          <strong>{card.value}</strong>
+        </div>
+      ))}
+      {structured.dataUsed?.length ? (
+        <div className="structured-answer-card data-used">
+          <Icon name="database" size={14} />
+          <span className="mono-label">Datos usados</span>
+          <div className="row gap-6 wrap">
+            {structured.dataUsed.map((item) => (
+              <span key={item} className="cite">{item}</span>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function CitationGrid({ citations }: { citations?: AICitation[] }) {
+  if (!citations?.length) return null;
+  return (
+    <div className="citation-grid">
+      {citations.map((citation) => (
+        <div key={`${citation.label}-${citation.value}`} className="citation-card">
+          <span className="mono-label">{citation.label}</span>
+          <strong>{citation.value}</strong>
+          <p>{citation.source}</p>
+          <div className="row gap-6 wrap">
+            {citation.date ? <span className="cite">{citation.date}</span> : null}
+            {citation.confidence ? <span className="cite">{citation.confidence}</span> : null}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EntityInsightsPanel({ records, context }: { records: AIMemoryRecord[]; context: string }) {
+  return (
+    <div className="card ai-entity-panel">
+      <div className="card-hd">
+        <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
+        <h3>Insights del contexto</h3>
+      </div>
+      <div className="card-pad">
+        {!records.length ? (
+          <p className="muted" style={{ margin: 0, fontSize: 12.5 }}>
+            Pregunta sobre este {context.toLowerCase()} para guardar una lectura reutilizable.
+          </p>
+        ) : (
+          <div className="entity-insight-list">
+            {records.map((record) => (
+              <div key={record.id} className="entity-insight-row">
+                <span className="mono-label">{new Date(record.createdAt).toLocaleString()}</span>
+                <strong>{record.structured?.prediction ?? record.question}</strong>
+                <p>{record.structured?.nextAction ?? record.answer.slice(0, 120)}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -899,7 +1003,13 @@ function AIMemoryPanel({
               <button key={record.id} type="button" className="ai-memory-row" onClick={() => onReuse(record)}>
                 <span className="mono-label">{new Date(record.createdAt).toLocaleString()}</span>
                 <strong>{record.question}</strong>
-                <small>{record.mode === 'remote' ? record.model ?? 'IA remota' : record.mode === 'simulation' ? 'Simulación local' : 'Local'} · {record.confidence}</small>
+                <small>
+                  {record.mode === 'remote' ? record.model ?? 'IA remota' : record.mode === 'simulation' ? 'Simulación local' : 'Local'}
+                  {' · '}
+                  {record.entityType ?? 'global'}
+                  {' · '}
+                  {record.confidence}
+                </small>
               </button>
             ))}
           </div>

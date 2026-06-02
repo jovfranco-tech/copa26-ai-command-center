@@ -8,7 +8,7 @@ import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
 import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
-import { isMatchLocked, lockLabel } from '@/lib/matchMeta';
+import { isMatchLocked, lockLabel, weatherSummary } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
@@ -83,6 +83,159 @@ const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
   { id: 'away', label: 'Visita' },
 ];
 
+interface PoolAlert {
+  icon: IconName;
+  title: string;
+  text: string;
+  tone: 'ok' | 'warn' | 'info';
+}
+
+interface PoolAward {
+  icon: IconName;
+  title: string;
+  text: string;
+  active: boolean;
+}
+
+function outcomeText(outcome?: PoolOutcome): string {
+  if (outcome === 'home') return 'Gana local';
+  if (outcome === 'away') return 'Gana visita';
+  if (outcome === 'draw') return 'Empate';
+  return 'Sin ganador';
+}
+
+function pickScoreText(pick?: PoolPick): string {
+  if (pick?.homeGoals != null && pick.awayGoals != null) return `${pick.homeGoals}-${pick.awayGoals}`;
+  return outcomeText(pick?.outcome);
+}
+
+function timeToKickoff(match: Match): string {
+  const kickoff = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
+  if (!Number.isFinite(kickoff)) return 'Hora por confirmar';
+  const diff = kickoff - Date.now();
+  if (diff <= 0) return 'Por iniciar';
+  const days = Math.floor(diff / 86_400_000);
+  const hours = Math.floor((diff % 86_400_000) / 3_600_000);
+  const minutes = Math.floor((diff % 3_600_000) / 60_000);
+  if (days > 0) return `${days}d ${hours}h`;
+  return `${hours}h ${minutes}m`;
+}
+
+function buildPoolAlerts({
+  upcomingMatches,
+  picks,
+  teams,
+  syncStatus,
+}: {
+  upcomingMatches: Match[];
+  picks: Record<string, PoolPick>;
+  teams: Record<string, { name?: string } | undefined>;
+  syncStatus: 'synced' | 'syncing' | 'error' | null;
+}): PoolAlert[] {
+  const nextOpen = upcomingMatches.find((match) => !isMatchLocked(match));
+  const firstMissing = upcomingMatches.find((match) => !picks[match.id]?.outcome);
+  const firstMissingScore = upcomingMatches.find((match) => {
+    const pick = picks[match.id];
+    return pick?.outcome && (pick.homeGoals == null || pick.awayGoals == null);
+  });
+  const alerts: PoolAlert[] = [];
+
+  if (nextOpen) {
+    alerts.push({
+      icon: 'clock',
+      title: 'Próximo cierre',
+      text: `${teams[nextOpen.home]?.name ?? nextOpen.home} vs ${teams[nextOpen.away]?.name ?? nextOpen.away} cierra en ${timeToKickoff(nextOpen)}.`,
+      tone: firstMissing?.id === nextOpen.id ? 'warn' : 'info',
+    });
+  }
+
+  if (firstMissing) {
+    alerts.push({
+      icon: 'target',
+      title: 'Pick pendiente',
+      text: `Falta ganador para ${teams[firstMissing.home]?.name ?? firstMissing.home} vs ${teams[firstMissing.away]?.name ?? firstMissing.away}.`,
+      tone: 'warn',
+    });
+  } else if (upcomingMatches.length) {
+    alerts.push({
+      icon: 'check',
+      title: 'Ganadores completos',
+      text: 'Todos los partidos pendientes tienen ganador/empate seleccionado.',
+      tone: 'ok',
+    });
+  }
+
+  if (firstMissingScore) {
+    alerts.push({
+      icon: 'activity',
+      title: 'Marcador por cerrar',
+      text: `Completa goles para convertir ${teams[firstMissingScore.home]?.name ?? firstMissingScore.home} vs ${teams[firstMissingScore.away]?.name ?? firstMissingScore.away} en pick compartible.`,
+      tone: 'warn',
+    });
+  }
+
+  if (nextOpen) {
+    const weather = weatherSummary(nextOpen.id);
+    alerts.push({
+      icon: 'rain',
+      title: 'Clima del siguiente juego',
+      text: `${weather.label}. ${weather.confidence === 'Pendiente' ? 'Se actualizará con forecast cercano.' : weather.detail}`,
+      tone: weather.confidence === 'Pendiente' ? 'warn' : 'info',
+    });
+  }
+
+  alerts.push({
+    icon: syncStatus === 'error' ? 'close' : syncStatus === 'syncing' ? 'cloud' : 'shield',
+    title: 'Nube familiar',
+    text: syncStatus === 'synced' ? 'Tus cambios están guardados en la base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios en segundo plano.' : syncStatus === 'error' ? 'Sincronización pendiente; la app reintentará.' : 'Escribe tu alias para activar guardado.',
+    tone: syncStatus === 'error' ? 'warn' : syncStatus === 'synced' ? 'ok' : 'info',
+  });
+
+  return alerts.slice(0, 4);
+}
+
+function buildPoolAwards({
+  stats,
+  pickedPending,
+  totalPending,
+  leaderboard,
+  playerName,
+}: {
+  stats: { exactScores: number; efficiency: number; totalPoints: number };
+  pickedPending: number;
+  totalPending: number;
+  leaderboard: LeaderboardEntry[];
+  playerName: string;
+}): PoolAward[] {
+  const currentRank = leaderboard.findIndex((row) => row.playerName.trim().toLowerCase() === playerName.trim().toLowerCase()) + 1;
+  return [
+    {
+      icon: 'check',
+      title: 'Constancia',
+      text: totalPending ? `${pickedPending}/${totalPending} próximos con pick.` : 'Lista para resultados.',
+      active: totalPending > 0 && pickedPending === totalPending,
+    },
+    {
+      icon: 'target',
+      title: 'Marcador fino',
+      text: `${stats.exactScores} plenos exactos.`,
+      active: stats.exactScores > 0,
+    },
+    {
+      icon: 'trophy',
+      title: 'Puntero familiar',
+      text: currentRank > 0 ? `Puesto ${currentRank} con ${stats.totalPoints} pts.` : 'Aparece al sincronizar.',
+      active: currentRank === 1,
+    },
+    {
+      icon: 'activity',
+      title: 'Efectividad',
+      text: `${stats.efficiency}% en partidos jugados.`,
+      active: stats.efficiency >= 50,
+    },
+  ];
+}
+
 export function Pool() {
   const { data, isLoading } = useMatches();
   const teams = useTeamsMap();
@@ -152,6 +305,7 @@ export function Pool() {
   };
 
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -307,6 +461,7 @@ export function Pool() {
         const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
         if (ok) {
           setSyncStatus('synced');
+          setLastSavedAt(new Date().toISOString());
           playSuccessTick(); // Play premium tactical success chime when successfully saved to DB!
         } else {
           setSyncStatus('error');
@@ -334,6 +489,7 @@ export function Pool() {
         const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
         if (ok) {
           setSyncStatus('synced');
+          setLastSavedAt(new Date().toISOString());
           playSuccessTick();
         } else {
           setSyncStatus('error');
@@ -679,6 +835,42 @@ export function Pool() {
     const p = pool.picks[m.id];
     return p?.homeGoals != null && p?.awayGoals != null;
   }).length;
+  const poolAlerts = useMemo(
+    () => buildPoolAlerts({ upcomingMatches, picks: pool.picks, teams, syncStatus }),
+    [upcomingMatches, pool.picks, teams, syncStatus],
+  );
+  const poolAwards = useMemo(
+    () => buildPoolAwards({ stats, pickedPending, totalPending: upcomingMatches.length, leaderboard, playerName: pool.playerName }),
+    [stats, pickedPending, upcomingMatches.length, leaderboard, pool.playerName],
+  );
+
+  const shareNextPick = async () => {
+    const match = upcomingMatches.find((m) => {
+      const pick = pool.picks[m.id];
+      return pick?.homeGoals != null && pick.awayGoals != null;
+    }) ?? upcomingMatches[0];
+    if (!match) {
+      alert('No hay partidos pendientes para compartir.');
+      return;
+    }
+    const pick = pool.picks[match.id];
+    if (!pick?.outcome) {
+      alert('Primero captura al menos un ganador o empate para compartir tu predicción.');
+      return;
+    }
+    await shareTextCard({
+      title: `${teams[match.home]?.name ?? match.home} vs ${teams[match.away]?.name ?? match.away}`,
+      subtitle: `Predicción de ${pool.playerName || 'familia'} · ${fmtDay(match.date)} ${match.time}`,
+      lines: [
+        `Pick: ${pickScoreText(pick)}`,
+        `Ganador: ${outcomeText(pick.outcome)}`,
+        lockLabel(match),
+        `Grupo privado: ${normalizePoolGroupId(pool.groupId)}`,
+      ],
+      footer: 'Quiniela familiar Mundial 2026',
+      fileName: `prediccion-${match.id}-${normalizePoolGroupId(pool.groupId)}.png`,
+    });
+  };
 
   return (
     <div className="page-fade">
@@ -824,6 +1016,16 @@ export function Pool() {
         syncStatus={syncStatus}
         inviteCopied={inviteCopied}
         onInvite={copyInviteLink}
+      />
+
+      <PoolCommandCenter
+        alerts={poolAlerts}
+        awards={poolAwards}
+        picked={pickedPending}
+        total={upcomingMatches.length}
+        completeScores={completeScoresPending}
+        lastSavedAt={lastSavedAt}
+        onSharePick={shareNextPick}
       />
 
       <div className="pool-tabs">
@@ -1240,6 +1442,66 @@ function SetupStep({ done, icon, title, text }: { done: boolean; icon: IconName;
       <div>
         <strong>{title}</strong>
         <p>{text}</p>
+      </div>
+    </div>
+  );
+}
+
+function PoolCommandCenter({
+  alerts,
+  awards,
+  picked,
+  total,
+  completeScores,
+  lastSavedAt,
+  onSharePick,
+}: {
+  alerts: PoolAlert[];
+  awards: PoolAward[];
+  picked: number;
+  total: number;
+  completeScores: number;
+  lastSavedAt: string | null;
+  onSharePick: () => void;
+}) {
+  const pct = total ? Math.round((picked / total) * 100) : 0;
+  return (
+    <div className="card pool-command-center">
+      <div className="pool-command-head">
+        <div>
+          <span className="mono-label">Centro de mando familiar</span>
+          <strong>{pct}% de próximos partidos con pick</strong>
+          <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${new Date(lastSavedAt).toLocaleTimeString()}.` : 'Guardado remoto pendiente.'}</p>
+        </div>
+        <button type="button" className="btn gold" onClick={onSharePick}>
+          <Icon name="share" size={14} />
+          Compartir pick
+        </button>
+      </div>
+      <div className="pool-progress-track" aria-label={`Progreso ${pct}%`}>
+        <span style={{ width: `${pct}%` }} />
+      </div>
+      <div className="pool-alert-grid">
+        {alerts.map((alert) => (
+          <div key={`${alert.title}-${alert.text}`} className={`pool-alert ${alert.tone}`}>
+            <Icon name={alert.icon} size={15} />
+            <div>
+              <strong>{alert.title}</strong>
+              <p>{alert.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="pool-award-grid">
+        {awards.map((award) => (
+          <div key={award.title} className={`pool-award${award.active ? ' active' : ''}`}>
+            <Icon name={award.icon} size={15} />
+            <div>
+              <strong>{award.title}</strong>
+              <p>{award.text}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
