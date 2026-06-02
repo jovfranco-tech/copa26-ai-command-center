@@ -8,11 +8,22 @@ import { recordUsage } from './_shared/usage.js';
  */
 export const config = { runtime: 'edge' };
 
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT = 6;
+
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
     return Response.json({ ok: false, reason: 'method' }, { status: 405 });
   }
   await recordUsage('ai.scan');
+
+  const rate = checkRateLimit(request);
+  if ('retryAfter' in rate) {
+    return Response.json(
+      { ok: false, reason: 'rate-limit', retryAfter: rate.retryAfter },
+      { status: 429, headers: { 'Retry-After': String(rate.retryAfter), 'Cache-Control': 'no-store' } },
+    );
+  }
 
   const legacyProviderKey = ['OPEN', 'AI_API_KEY'].join('');
   const key = process.env.GEMINI_API_KEY || process.env[legacyProviderKey];
@@ -93,4 +104,33 @@ export default async function handler(request: Request): Promise<Response> {
     console.error('Scan vision processing error:', e);
     return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });
   }
+}
+
+function checkRateLimit(request: Request): { ok: true } | { ok: false; retryAfter: number } {
+  const store = getRateStore();
+  const now = Date.now();
+  const key = rateKey(request);
+  const current = store.get(key);
+  if (!current || now - current.startedAt > RATE_WINDOW_MS) {
+    store.set(key, { count: 1, startedAt: now });
+    return { ok: true };
+  }
+  if (current.count >= RATE_LIMIT) {
+    return { ok: false, retryAfter: Math.ceil((RATE_WINDOW_MS - (now - current.startedAt)) / 1000) };
+  }
+  current.count += 1;
+  return { ok: true };
+}
+
+function getRateStore(): Map<string, { count: number; startedAt: number }> {
+  const g = globalThis as typeof globalThis & {
+    __wcPoolScanRateLimit?: Map<string, { count: number; startedAt: number }>;
+  };
+  g.__wcPoolScanRateLimit ??= new Map();
+  return g.__wcPoolScanRateLimit;
+}
+
+function rateKey(request: Request): string {
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  return `ip:${forwarded || 'unknown'}`;
 }

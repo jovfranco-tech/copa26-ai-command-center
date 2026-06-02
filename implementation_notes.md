@@ -89,7 +89,7 @@ Dashboard · Match Center (filters: date/group/team/stage/venue/status) · Match
   (last run wins). Could split into per-entity report files.
 
 ## Guardrails recap (all enforced)
-Personal-use only · private Vercel deploy behind Edge access middleware · no remote
-database · raw assets gitignored · optimized static derivatives only for private deploy ·
+Personal-use only · family-shareable Vercel deploy without global password · remote AI
+rate-limited · raw assets gitignored · optimized static derivatives only for deploy ·
 scrapers polite, robots-respecting, stop-on-block, no proxies/stealth/bypass. See
 `LOCAL_ONLY_NOTICE.md` and `scraper_policy.md`.

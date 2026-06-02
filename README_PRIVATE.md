@@ -3,7 +3,8 @@
 > ⚠️ **PRIVATE · PERSONAL USE · NOT FOR PUBLIC DISTRIBUTION.**
 > Read [`LOCAL_ONLY_NOTICE.md`](./LOCAL_ONLY_NOTICE.md) and
 > [`scraper_policy.md`](./scraper_policy.md) before running anything. No official FIFA
-> affiliation. Production is a password-protected private Vercel deploy.
+> affiliation. Production is a family-shareable Vercel deploy with no global password;
+> remote AI endpoints are rate-limited.
 
 A personal "sports intelligence command center" for browsing World Cup matches, teams,
 players, standings, stats, the bracket and venues — running entirely on your machine.
@@ -28,7 +29,7 @@ packages/
   ingestion/   scrapers, asset downloader, normalizers, validators, reports
   ui/          shared presentational primitives + icon adapter
 private-assets/  raw downloaded assets (gitignored)
-apps/web/static/ optimized static derivatives for the private deploy
+apps/web/static/ optimized static derivatives for the family deploy
 local-db/        worldcup.sqlite (gitignored)
 scraped-cache/   raw html/json + downloaded asset cache (gitignored)
 reports/         generated markdown reports
@@ -136,10 +137,10 @@ per-function memory plus Vercel logs.
 - ✅ `private-assets/`, `local-db/`, `scraped-cache/`, `*.sqlite`, `*.db`,
   `reports/*.json` are gitignored. `pnpm check:local-only` verifies this.
 - ✅ Raw downloaded assets stay in `private-assets/`; optimized static derivatives in
-  `apps/web/static/` keep the private Vercel deploy reproducible and lightweight.
+  `apps/web/static/` keep the Vercel deploy reproducible and lightweight.
 - ✅ Scrapers: public pages only, robots.txt respected, 4–10s delay, concurrency 1,
   local cache, **stop on block**, no proxies/stealth/CAPTCHA bypass.
-- ✅ Private Vercel deploy is gated by the Edge middleware access screen; API routes stay
-  behind the same gate.
+- ✅ Vercel deploy has no global password for family sharing; remote AI endpoints are
+  rate-limited and data/update endpoints remain non-mutating unless explicitly configured.
 
 See [`implementation_notes.md`](./implementation_notes.md) for what's built and what's next.

@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 
 const baseUrl = (process.env.APP_BASE_URL || 'https://fifa-private-world-cup-dashboard.vercel.app').replace(/\/$/, '');
-const user = process.env.SITE_USER || 'admin';
-const pass = process.env.SITE_PASSWORD || '';
-const authHeader = pass ? `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` : null;
 
 const routes = ['/', '/data', '/pool', '/analyst'];
 const apiRoutes = ['/api/data-sync?manual=1', '/api/admin-ops'];
@@ -19,7 +16,6 @@ let failures = 0;
 for (const route of routes) {
   const url = `${baseUrl}${route}`;
   const res = await fetch(url, {
-    headers: authHeader ? { authorization: authHeader } : {},
     redirect: 'follow',
   });
   const text = await res.text();
@@ -36,10 +32,10 @@ for (const route of routes) {
 for (const route of apiRoutes) {
   const url = `${baseUrl}${route}`;
   const res = await fetch(url, {
-    headers: { accept: 'application/json', ...(authHeader ? { authorization: authHeader } : {}) },
+    headers: { accept: 'application/json' },
     redirect: 'follow',
   });
-  if (res.status === 401 && !authHeader) {
+  if (res.status === 401) {
     console.log(`ok ${route} ${res.status} ${res.url} (protected)`);
     continue;
   }

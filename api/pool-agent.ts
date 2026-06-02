@@ -10,7 +10,7 @@ export const config = { runtime: 'edge' };
 
 const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT = 30;
+const RATE_LIMIT = 8;
 
 const SYSTEM_PROMPTS = {
   optimista:

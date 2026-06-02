@@ -11,14 +11,14 @@ import { recordUsage } from './_shared/usage.js';
  *
  * Set the key with:  vercel env add GEMINI_API_KEY production   (then redeploy)
  *
- * This endpoint sits behind the Basic-Auth edge middleware, so only the
- * authenticated owner can use it (the key can't be abused by the public).
+ * The site is public, so this endpoint protects the provider key with a
+ * per-session/IP rate limit and keeps all context grounded in local data.
  */
 export const config = { runtime: 'edge' };
 
 const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT = 30;
+const RATE_LIMIT = 12;
 const ANALYST_TOOLS = ['calendario', 'partidos', 'selecciones', 'jugadores', 'sedes', 'clasificacion', 'adjuntos'];
 
 const SYSTEM_PROMPT =
