@@ -4013,8 +4013,189 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: var(--gap);
 }
+.tv-broadcast-panel {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  margin: -4px 0 18px;
+  overflow: hidden;
+  border-color: var(--gold-line);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gold-soft) 24%, transparent), transparent 62%),
+    var(--bg-card);
+}
+.tv-broadcast-main {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.18fr);
+  gap: 14px;
+  align-items: stretch;
+}
+.tv-broadcast-screen {
+  position: relative;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--gold-line) 60%, var(--line));
+  border-radius: var(--r-sm);
+  background:
+    linear-gradient(160deg, rgba(6, 10, 18, 0.92), rgba(20, 28, 45, 0.78)),
+    url('/brand/fwc26-ball.svg') center / 38% no-repeat;
+  color: #ffffff;
+  text-align: center;
+}
+.tv-broadcast-glow {
+  position: absolute;
+  inset: auto -12% -42% -12%;
+  height: 62%;
+  background: radial-gradient(closest-side, rgba(224, 189, 108, 0.34), transparent 72%);
+  pointer-events: none;
+}
+.tv-broadcast-play {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(224, 189, 108, 0.58);
+  border-radius: 50%;
+  background: rgba(224, 189, 108, 0.16);
+  box-shadow: 0 22px 52px -24px rgba(224, 189, 108, 0.9);
+  color: var(--gold-2);
+}
+.tv-broadcast-screen strong {
+  position: relative;
+  max-width: min(390px, 82%);
+  font-size: clamp(22px, 3.5vw, 38px);
+  line-height: 1.04;
+}
+.tv-broadcast-screen small {
+  position: relative;
+  max-width: 78%;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.tv-broadcast-screen .mono-label {
+  position: relative;
+  color: rgba(255, 255, 255, 0.66);
+}
+.tv-broadcast-copy {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.tv-broadcast-copy h3 {
+  margin: 0;
+  font-size: 22px;
+}
+.tv-broadcast-copy p {
+  margin: 0;
+  color: var(--tx-3);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.tv-provider-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.tv-provider-card {
+  display: grid;
+  gap: 6px;
+  min-height: 150px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--bg-2);
+  color: var(--tx);
+  text-decoration: none;
+}
+.tv-provider-card strong {
+  font-size: 15px;
+  line-height: 1.2;
+}
+.tv-provider-card small {
+  color: var(--tx-3);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+.tv-provider-card em {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: end;
+  margin-top: auto;
+  color: var(--gold-2);
+  font-size: 11.5px;
+  font-style: normal;
+  font-weight: 800;
+}
+.tv-broadcast-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tv-broadcast-source a {
+  color: var(--tx-3);
+  font-size: 10.5px;
+  text-decoration: none;
+}
+.tv-broadcast-source a:hover,
+.tv-provider-card:hover {
+  color: var(--gold-2);
+  border-color: var(--gold-line);
+}
+.tv-featured-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.tv-featured-strip strong {
+  display: block;
+  font-size: 15px;
+}
+.tv-featured-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.tv-featured-list a {
+  display: grid;
+  gap: 3px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--bg-2) 82%, transparent);
+  color: var(--tx);
+  text-decoration: none;
+}
+.tv-featured-list a:hover {
+  border-color: var(--gold-line);
+  color: var(--gold-2);
+}
+.tv-featured-list span,
+.tv-featured-list small {
+  color: var(--tx-3);
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+.tv-featured-list b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+}
 .tv-match-card {
   padding: 16px;
+}
+.tv-match-card.broadcast-priority {
+  border-color: var(--gold-line);
 }
 .tv-match-teams {
   display: grid;
@@ -4811,6 +4992,15 @@ body {
     align-items: stretch;
     flex-direction: column;
   }
+  .tv-broadcast-main,
+  .tv-featured-strip,
+  .tv-provider-grid,
+  .tv-featured-list {
+    grid-template-columns: 1fr;
+  }
+  .tv-broadcast-screen {
+    min-height: 210px;
+  }
   .timeline-track {
     grid-template-columns: repeat(6, 170px);
   }
@@ -4855,7 +5045,8 @@ body {
   .matchday-actions .btn,
   .pool-family-panel .btn,
   .matchday-launch-strip .btn,
-  .tv-family-strip .btn {
+  .tv-family-strip .btn,
+  .tv-provider-card {
     width: 100%;
     justify-content: center;
   }

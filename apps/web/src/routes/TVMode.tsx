@@ -5,6 +5,13 @@ import { fmtFull, type Match } from '@worldcup/shared';
 import { MatchdayHero } from '@/components/MatchdayHero';
 import { TeamCrest, TeamKit } from '@/components/identity';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
+import {
+  broadcastImportanceLabel,
+  broadcastImportanceScore,
+  featuredBroadcastMatches,
+  getBroadcastGuide,
+  type BroadcastProvider,
+} from '@/lib/broadcasts';
 import { focusMatch, sortMatches, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 
 export function TVMode() {
@@ -22,6 +29,7 @@ export function TVMode() {
   const matches = useMemo(() => data?.items ?? [], [data]);
   const focus = useMemo(() => focusMatch(matches), [matches]);
   const next = useMemo(() => sortMatches(matches).filter((m) => m.status === 'UPCOMING').slice(0, 6), [matches]);
+  const featuredBroadcasts = useMemo(() => featuredBroadcastMatches(matches, 6), [matches]);
 
   if (isLoading) return <p className="muted">Cargando modo TV...</p>;
 
@@ -39,16 +47,18 @@ export function TVMode() {
       </div>
 
       <MatchdayHero match={focus} />
+      <TVBroadcastPanel match={focus} featured={featuredBroadcasts} />
       <TVFamilyStrip match={focus} onPool={() => navigate({ to: '/pool' })} onData={() => navigate({ to: '/data' })} />
 
       <div className="tv-grid">
         {next.map((m) => {
           const weather = weatherSummary(m.id);
           return (
-            <div key={m.id} className="tv-match-card card">
+            <div key={m.id} className={`tv-match-card card${broadcastImportanceScore(m) >= 45 ? ' broadcast-priority' : ''}`}>
               <div className="row gap-8 wrap">
                 <StatusBadge status={m.status} minute={m.minute} time={m.time} />
                 <span className="mono-label">{fmtFull(m.date)}</span>
+                {broadcastImportanceScore(m) >= 45 && <span className="match-chip">TV destacada</span>}
               </div>
               <div className="tv-match-teams">
                 <span>
@@ -73,6 +83,75 @@ export function TVMode() {
         })}
       </div>
     </div>
+  );
+}
+
+function TVBroadcastPanel({ match, featured }: { match: Match | null; featured: Match[] }) {
+  const teams = useTeamsMap();
+  const guide = useMemo(() => getBroadcastGuide(match), [match]);
+  const matchTitle = match ? `${teams[match.home]?.name ?? match.home} vs ${teams[match.away]?.name ?? match.away}` : 'Partido destacado';
+  return (
+    <section className="tv-broadcast-panel card">
+      <div className="tv-broadcast-main">
+        <div className="tv-broadcast-screen" aria-label="Acceso a transmisión oficial">
+          <div className="tv-broadcast-glow" />
+          <div className="tv-broadcast-play">
+            <Icon name="play" size={30} />
+          </div>
+          <span className="mono-label">Transmisión oficial</span>
+          <strong>{matchTitle}</strong>
+          <small>{guide.headline} · prioridad {guide.priority}</small>
+        </div>
+
+        <div className="tv-broadcast-copy">
+          <span className="mono-label">Dónde verlo online</span>
+          <h3>{matchTitle}</h3>
+          <p>{guide.note}</p>
+          <div className="tv-provider-grid">
+            {guide.providers.map((provider) => (
+              <BroadcastProviderCard key={provider.id} provider={provider} />
+            ))}
+          </div>
+          <div className="tv-broadcast-source">
+            {guide.providers.map((provider) => (
+              <a key={provider.id} href={provider.sourceUrl} target="_blank" rel="noreferrer">
+                {provider.sourceLabel}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="tv-featured-strip">
+        <div>
+          <span className="mono-label">Juegos importantes</span>
+          <strong>Acceso rápido para ver en vivo</strong>
+        </div>
+        <div className="tv-featured-list">
+          {featured.map((item) => (
+            <a key={item.id} href={guide.providers[0]?.url} target="_blank" rel="noreferrer" title="Abrir proveedor oficial">
+              <span>{broadcastImportanceLabel(item, teams)}</span>
+              <b>{teams[item.home]?.name ?? item.home} vs {teams[item.away]?.name ?? item.away}</b>
+              <small>{item.date} · {item.time}</small>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BroadcastProviderCard({ provider }: { provider: BroadcastProvider }) {
+  return (
+    <a className="tv-provider-card" href={provider.url} target="_blank" rel="noreferrer">
+      <span className="mono-label">{provider.region} · {provider.language}</span>
+      <strong>{provider.label}</strong>
+      <small>{provider.note}</small>
+      <em>
+        Abrir {provider.platform}
+        <Icon name="arrowR" size={12} />
+      </em>
+    </a>
   );
 }
 
