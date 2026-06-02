@@ -59,6 +59,45 @@ export interface DayBrief {
   nextAction: string;
 }
 
+export type PickStrategyId = 'conservative' | 'aggressive' | 'contrarian';
+
+export interface StrategyPreview {
+  strategy: PickStrategyId;
+  label: string;
+  summary: string;
+  risk: string;
+  confidence: 'Alta' | 'Media' | 'Baja';
+  picks: Array<{
+    matchId: string;
+    matchLabel: string;
+    prediction: string;
+    rationale: string;
+  }>;
+}
+
+export interface StrategyScorecard {
+  played: number;
+  summary: string;
+  bestLabel: string;
+  strategies: Array<{
+    strategy: PickStrategyId;
+    label: string;
+    points: number;
+    exactScores: number;
+    outcomeHits: number;
+    misses: number;
+    efficiency: number;
+  }>;
+}
+
+export interface PickChangeHint {
+  matchId: string;
+  matchLabel: string;
+  current: string;
+  recommended: string;
+  rationale: string;
+}
+
 function rankOf(teams: Team[], code: string): number {
   return teams.find((team) => team.code === code)?.ranking ?? 80;
 }
@@ -67,10 +106,22 @@ function teamName(teams: Team[], code: string): string {
   return teams.find((team) => team.code === code)?.name ?? code;
 }
 
+function matchLabel(match: Match, teams: Team[]): string {
+  return `${teamName(teams, match.home)} vs ${teamName(teams, match.away)}`;
+}
+
 function sortedUpcoming(matches: Match[]): Match[] {
   return matches
     .filter((match) => match.status === 'UPCOMING')
     .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+}
+
+function pickText(pick: PoolPick): string {
+  if (pick.homeGoals != null && pick.awayGoals != null) return `${pick.homeGoals}-${pick.awayGoals}`;
+  if (pick.outcome === 'home') return 'Gana local';
+  if (pick.outcome === 'away') return 'Gana visita';
+  if (pick.outcome === 'draw') return 'Empate';
+  return 'Sin pick';
 }
 
 export function recommendPick(match: Match, teams: Team[]): RecommendedPick {
@@ -113,6 +164,185 @@ export function buildRecommendedPicks(matches: Match[], teams: Team[], limit = 2
       .slice(0, limit)
       .map((match) => [match.id, recommendPick(match, teams).pick]),
   );
+}
+
+function strategyPick(match: Match, teams: Team[], strategy: PickStrategyId): { pick: PoolPick; rationale: string } {
+  const homeRank = rankOf(teams, match.home);
+  const awayRank = rankOf(teams, match.away);
+  const diff = awayRank - homeRank;
+  const absDiff = Math.abs(diff);
+  const homeBetter = diff > 0;
+  const underdogOutcome = homeBetter ? 'away' : 'home';
+
+  if (strategy === 'conservative') {
+    const rec = recommendPick(match, teams);
+    return { pick: rec.pick, rationale: rec.rationale };
+  }
+
+  if (strategy === 'aggressive') {
+    if (absDiff <= 4) {
+      return {
+        pick: { outcome: 'draw', homeGoals: 2, awayGoals: 2 },
+        rationale: 'Partido parejo; estrategia arriesgada busca más goles para perseguir pleno.',
+      };
+    }
+    if (homeBetter) {
+      return {
+        pick: { outcome: 'home', homeGoals: absDiff >= 18 ? 3 : 2, awayGoals: 1 },
+        rationale: 'Favorito local; se sube margen para capturar marcadores más valiosos.',
+      };
+    }
+    return {
+      pick: { outcome: 'away', homeGoals: 1, awayGoals: absDiff >= 18 ? 3 : 2 },
+      rationale: 'Favorito visitante; se sube margen para capturar marcadores más valiosos.',
+    };
+  }
+
+  if (absDiff <= 6) {
+    return {
+      pick: { outcome: 'draw', homeGoals: 0, awayGoals: 0 },
+      rationale: 'Cruce cercano; la alternativa contraria protege un empate cerrado.',
+    };
+  }
+  if (underdogOutcome === 'home') {
+    return {
+      pick: { outcome: 'home', homeGoals: 1, awayGoals: 0 },
+      rationale: 'Contraria al ranking: apuesta por sorpresa local de margen mínimo.',
+    };
+  }
+  return {
+    pick: { outcome: 'away', homeGoals: 0, awayGoals: 1 },
+    rationale: 'Contraria al ranking: apuesta por sorpresa visitante de margen mínimo.',
+  };
+}
+
+export function comparePickStrategies(matches: Match[], teams: Team[], limit = 8): StrategyPreview[] {
+  const upcoming = sortedUpcoming(matches).slice(0, limit);
+  const strategies: Array<{
+    id: PickStrategyId;
+    label: string;
+    summary: string;
+    risk: string;
+    confidence: StrategyPreview['confidence'];
+  }> = [
+    {
+      id: 'conservative',
+      label: 'Conservadora',
+      summary: 'Baja varianza: favorito por ranking y empates en cruces muy cerrados.',
+      risk: 'Puede quedarse corta si el partido se rompe temprano.',
+      confidence: 'Media',
+    },
+    {
+      id: 'aggressive',
+      label: 'Agresiva',
+      summary: 'Busca plenos con marcadores más altos cuando hay favorito claro.',
+      risk: 'Más volatilidad; útil para remontar en la tabla familiar.',
+      confidence: 'Baja',
+    },
+    {
+      id: 'contrarian',
+      label: 'Contraria',
+      summary: 'Identifica empates o sorpresas para diferenciarse del consenso.',
+      risk: 'Es la más sensible a información real de alineaciones y lesiones.',
+      confidence: 'Baja',
+    },
+  ];
+
+  return strategies.map((strategy) => ({
+    strategy: strategy.id,
+    label: strategy.label,
+    summary: strategy.summary,
+    risk: strategy.risk,
+    confidence: strategy.confidence,
+    picks: upcoming.map((match) => {
+      const preview = strategyPick(match, teams, strategy.id);
+      return {
+        matchId: match.id,
+        matchLabel: matchLabel(match, teams),
+        prediction: pickText(preview.pick),
+        rationale: preview.rationale,
+      };
+    }),
+  }));
+}
+
+export function evaluateAIStrategyOutcomes(matches: Match[], teams: Team[]): StrategyScorecard {
+  const played = matches.filter(
+    (match) => match.status === 'FT' && match.homeGoals != null && match.awayGoals != null,
+  );
+  const labels: Record<PickStrategyId, string> = {
+    conservative: 'Conservadora',
+    aggressive: 'Agresiva',
+    contrarian: 'Contraria',
+  };
+  const strategies: PickStrategyId[] = ['conservative', 'aggressive', 'contrarian'];
+  const rows = strategies.map((strategy) => {
+    let points = 0;
+    let exactScores = 0;
+    let outcomeHits = 0;
+    let misses = 0;
+    for (const match of played) {
+      const { pick } = strategyPick(match, teams, strategy);
+      const realHome = match.homeGoals ?? 0;
+      const realAway = match.awayGoals ?? 0;
+      const realOutcome: PoolPick['outcome'] = realHome > realAway ? 'home' : realHome < realAway ? 'away' : 'draw';
+      const exact = pick.homeGoals === realHome && pick.awayGoals === realAway;
+      const outcome = pick.outcome === realOutcome;
+      if (exact) {
+        points += 3;
+        exactScores += 1;
+      } else if (outcome) {
+        points += 1;
+        outcomeHits += 1;
+      } else {
+        misses += 1;
+      }
+    }
+    return {
+      strategy,
+      label: labels[strategy],
+      points,
+      exactScores,
+      outcomeHits,
+      misses,
+      efficiency: played.length ? Math.round(((exactScores + outcomeHits) / played.length) * 100) : 0,
+    };
+  });
+  const best = [...rows].sort((a, b) => b.points - a.points || b.efficiency - a.efficiency)[0];
+  return {
+    played: played.length,
+    summary: played.length
+      ? `${played.length} partidos finalizados evaluados con reglas de quiniela familiar.`
+      : 'Scorecard preparado; se activará cuando existan marcadores finales reales.',
+    bestLabel: best && played.length ? `${best.label} · ${best.points} pts` : 'Esperando resultados',
+    strategies: rows,
+  };
+}
+
+export function buildPickChangeHints(
+  matches: Match[],
+  teams: Team[],
+  picks: Record<string, PoolPick>,
+  limit = 6,
+): PickChangeHint[] {
+  return sortedUpcoming(matches)
+    .map((match) => {
+      const current = picks[match.id];
+      if (!current?.outcome) return null;
+      const rec = recommendPick(match, teams);
+      const sameOutcome = current.outcome === rec.pick.outcome;
+      const sameScore = current.homeGoals === rec.pick.homeGoals && current.awayGoals === rec.pick.awayGoals;
+      if (sameOutcome && sameScore) return null;
+      return {
+        matchId: match.id,
+        matchLabel: matchLabel(match, teams),
+        current: pickText(current),
+        recommended: pickText(rec.pick),
+        rationale: rec.rationale,
+      };
+    })
+    .filter((hint): hint is PickChangeHint => Boolean(hint))
+    .slice(0, limit);
 }
 
 export function buildDayBrief(matches: Match[], teams: Team[], picks: Record<string, PoolPick>): DayBrief {

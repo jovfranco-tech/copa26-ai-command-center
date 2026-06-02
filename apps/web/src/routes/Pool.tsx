@@ -1058,6 +1058,8 @@ export function Pool() {
         completeScores={completeScoresPending}
         lastSavedAt={lastSavedAt}
         onSharePick={shareNextPick}
+        onShareTable={shareFamilyTable}
+        onShareAchievement={shareLeaderboardLogro}
       />
 
       <div className="pool-tabs">
@@ -1570,6 +1572,8 @@ function PoolCommandCenter({
   completeScores,
   lastSavedAt,
   onSharePick,
+  onShareTable,
+  onShareAchievement,
 }: {
   alerts: PoolAlert[];
   awards: PoolAward[];
@@ -1578,6 +1582,8 @@ function PoolCommandCenter({
   completeScores: number;
   lastSavedAt: string | null;
   onSharePick: () => void;
+  onShareTable: () => void;
+  onShareAchievement: () => void;
 }) {
   const pct = total ? Math.round((picked / total) * 100) : 0;
   return (
@@ -1588,10 +1594,20 @@ function PoolCommandCenter({
           <strong>{pct}% de próximos partidos con pick</strong>
           <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${new Date(lastSavedAt).toLocaleTimeString()}.` : 'Guardado remoto pendiente.'}</p>
         </div>
-        <button type="button" className="btn gold" onClick={onSharePick}>
-          <Icon name="share" size={14} />
-          Compartir pick
-        </button>
+        <div className="pool-command-actions">
+          <button type="button" className="btn gold" onClick={onSharePick}>
+            <Icon name="share" size={14} />
+            Pick
+          </button>
+          <button type="button" className="btn ghost" onClick={onShareTable}>
+            <Icon name="trophy" size={14} />
+            Tabla
+          </button>
+          <button type="button" className="btn ghost" onClick={onShareAchievement}>
+            <Icon name="sparkSmall" size={14} />
+            Logro
+          </button>
+        </div>
       </div>
       <div className="pool-progress-track" aria-label={`Progreso ${pct}%`}>
         <span style={{ width: `${pct}%` }} />

@@ -13,7 +13,15 @@ import { usePool, type PoolPick } from '@/store/pool';
 import { normalizePoolGroupId } from '@/lib/api';
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { buildDayBrief, buildPoolDiagnostics, buildRecommendedPicks, recommendPick } from '@/lib/opsIntelligence';
+import {
+  buildDayBrief,
+  buildPickChangeHints,
+  buildPoolDiagnostics,
+  buildRecommendedPicks,
+  comparePickStrategies,
+  evaluateAIStrategyOutcomes,
+  recommendPick,
+} from '@/lib/opsIntelligence';
 
 interface ParsedAnswer {
   text: string;
@@ -111,7 +119,10 @@ type NativeAIAction =
   | 'uncertain-matches'
   | 'day-brief'
   | 'audit-picks'
-  | 'family-learning';
+  | 'family-learning'
+  | 'compare-strategies'
+  | 'ai-scorecard'
+  | 'change-radar';
 
 interface PendingNativeAction {
   id: NativeAIAction;
@@ -723,6 +734,122 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       return;
     }
 
+    if (action === 'compare-strategies') {
+      const strategies = comparePickStrategies(matchItems, teamItems, 6);
+      const lines = strategies.map(
+        (strategy) =>
+          `${strategy.label}: ${strategy.picks.slice(0, 3).map((pick) => `${pick.matchLabel} ${pick.prediction}`).join('; ')}`,
+      );
+      commitAnswer(
+        'Acción IA: comparar estrategias de quiniela',
+        {
+          text: strategies.length
+            ? `Comparé tres estilos para los próximos partidos. ${lines.join(' ')}`
+            : 'No hay partidos pendientes para comparar estrategias.',
+          sources: ['ranking local', 'calendario', 'motor de estrategias'],
+          structured: {
+            prediction: 'La estrategia conservadora queda como default; agresiva y contraria sirven para remontar o diferenciarte.',
+            risk: 'Las estrategias alternativas necesitan revisar alineaciones y noticias reales antes del cierre.',
+            confidence: 'Media',
+            dataUsed: ['Ranking de selecciones', 'calendario pendiente', 'reglas de quiniela'],
+            ignoredData: ['Lesiones', 'alineaciones confirmadas', 'mercados de apuesta'],
+            rationale: 'Se comparan tres modelos locales con distinto apetito de riesgo para que el usuario elija contexto, no solo un pick único.',
+            nextAction: 'Usar conservadora como base y revisar contraria solo en cruces de baja confianza.',
+            quality: {
+              score: 82,
+              label: 'Comparador multi-estrategia',
+              flags: ['Sin llamada remota', 'No aplica cambios automáticamente'],
+              checkedAt: new Date().toISOString(),
+            },
+          },
+          citations: strategies.map((strategy) => ({
+            label: strategy.label,
+            value: `${strategy.picks.length} picks · confianza ${strategy.confidence}`,
+            source: strategy.summary,
+            date: new Date().toISOString().slice(0, 10),
+            confidence: strategy.confidence,
+          })),
+        },
+        'simulation',
+        { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'estrategias', 'quiniela'] },
+      );
+      return;
+    }
+
+    if (action === 'ai-scorecard') {
+      const scorecard = evaluateAIStrategyOutcomes(matchItems, teamItems);
+      commitAnswer(
+        'Acción IA: scorecard de estrategias',
+        {
+          text: `${scorecard.summary} Mejor lectura actual: ${scorecard.bestLabel}. ${scorecard.strategies.map((row) => `${row.label}: ${row.points} pts, ${row.efficiency}%`).join(' · ')}`,
+          sources: ['resultados reales cuando existan', 'motor local de estrategias'],
+          structured: {
+            prediction: scorecard.played ? `Estrategia líder: ${scorecard.bestLabel}.` : 'La evaluación está lista pero aún no hay resultados finales.',
+            risk: scorecard.played ? 'El tamaño de muestra inicial puede ser pequeño.' : 'No se inventan aciertos antes de partidos oficiales.',
+            confidence: scorecard.played >= 8 ? 'Alta local' : scorecard.played ? 'Media' : 'Alta local',
+            dataUsed: ['Marcadores finales', 'reglas de puntaje', 'picks simulados por estrategia'],
+            ignoredData: ['Partidos sin marcador final'],
+            rationale: 'Cada estrategia se vuelve a proyectar contra partidos finalizados y se puntúa como quiniela: pleno +3, ganador +1.',
+            nextAction: scorecard.played ? 'Revisar estrategia líder antes de rellenar nuevos picks.' : 'Esperar resultados o conectar feed real.',
+            quality: {
+              score: scorecard.played ? 86 : 78,
+              label: 'Scorecard activable',
+              flags: scorecard.played ? ['Basado en FT reales'] : ['Sin resultados oficiales todavía', 'No inventa métricas'],
+              checkedAt: new Date().toISOString(),
+            },
+          },
+          citations: scorecard.strategies.map((row) => ({
+            label: row.label,
+            value: `${row.points} pts · ${row.exactScores} plenos · ${row.outcomeHits} ganadores`,
+            source: 'Scorecard local de IA',
+            date: new Date().toISOString().slice(0, 10),
+            confidence: scorecard.played ? 'Media' : 'Alta',
+          })),
+        },
+        'simulation',
+        { provider: 'local-action', confidence: scorecard.played ? 'Media' : 'Alta local', tools: ['scorecard', 'resultados', 'estrategias'] },
+      );
+      return;
+    }
+
+    if (action === 'change-radar') {
+      const hints = buildPickChangeHints(matchItems, teamItems, pool.picks, 6);
+      commitAnswer(
+        'Acción IA: explicar cambios de recomendación',
+        {
+          text: hints.length
+            ? `Encontré ${hints.length} picks donde tu selección difiere del modelo local. ${hints.map((hint) => `${hint.matchLabel}: tienes ${hint.current}, modelo ${hint.recommended}; ${hint.rationale}`).join(' ')}`
+            : 'No detecté picks actuales que difieran de la recomendación local, o todavía faltan picks para comparar.',
+          sources: ['quiniela local', 'ranking local', 'motor de recomendación'],
+          structured: {
+            prediction: hints.length ? 'Hay diferencias revisables antes del cierre.' : 'No hay cambios de criterio pendientes.',
+            risk: 'Una diferencia no significa error; puede ser una decisión de riesgo familiar.',
+            confidence: hints.length ? 'Media' : 'Alta local',
+            dataUsed: ['Picks actuales', 'ranking', 'partidos pendientes'],
+            ignoredData: ['Noticias', 'alineaciones', 'lesiones'],
+            rationale: 'El radar compara tu pick visible contra la recomendación conservadora actual y explica el motivo del cambio.',
+            nextAction: hints.length ? 'Revisar diferencias de baja confianza antes de compartir.' : diagnostics.recommendedAction,
+            quality: {
+              score: hints.length ? 80 : 88,
+              label: 'Radar de cambios',
+              flags: ['No modifica picks', 'Explica diferencias visibles'],
+              checkedAt: new Date().toISOString(),
+            },
+          },
+          citations: hints.map((hint) => ({
+            label: hint.matchLabel,
+            value: `${hint.current} -> ${hint.recommended}`,
+            source: hint.rationale,
+            date: new Date().toISOString().slice(0, 10),
+            confidence: 'Media',
+          })),
+        },
+        'simulation',
+        { provider: 'local-action', confidence: hints.length ? 'Media' : 'Alta local', tools: ['quiniela', 'radar-cambios'] },
+      );
+      return;
+    }
+
     const uncertain = upcomingMatches
       .map((match) => ({
         match,
@@ -1236,6 +1363,9 @@ function AIActionPanel({
     { id: 'audit-picks', icon: 'check', title: 'Auditar picks', text: 'Completa marcadores sin sobrescribir.' },
     { id: 'compare-family', icon: 'trophy', title: 'Comparar familia', text: 'Resume cobertura y tabla visible.' },
     { id: 'family-learning', icon: 'database', title: 'Aprender estilo', text: 'Detecta patrón de riesgo familiar.' },
+    { id: 'compare-strategies', icon: 'stats', title: 'Comparar estrategias', text: 'Conservadora, agresiva y contraria.' },
+    { id: 'change-radar', icon: 'activity', title: 'Radar de cambios', text: 'Explica por qué difiere un pick.' },
+    { id: 'ai-scorecard', icon: 'shield', title: 'Medir IA', text: 'Puntúa estrategias cuando haya FT.' },
     { id: 'uncertain-matches', icon: 'activity', title: 'Detectar inciertos', text: 'Encuentra cruces parejos para revisar.' },
   ];
   return (

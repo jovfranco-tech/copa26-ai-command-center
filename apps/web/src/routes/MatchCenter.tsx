@@ -1,9 +1,14 @@
-import { useMemo } from 'react';
-import { Icon, Pill, Empty } from '@worldcup/ui';
-import { GROUP_LETTERS } from '@worldcup/shared';
+import { useMemo, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { Icon, Pill, Empty, StatusBadge } from '@worldcup/ui';
+import { fmtDay, fmtFull, GROUP_LETTERS, type Match } from '@worldcup/shared';
 import { MatchCard } from '@/components/cards';
+import { MatchdayHero } from '@/components/MatchdayHero';
 import { MockBanner } from '@/components/MockBanner';
-import { useMatches, useTeams, useVenues } from '@/hooks';
+import { TeamCrest, TeamFlag, TeamKit } from '@/components/identity';
+import { useMatches, useTeams, useTeamsMap, useVenues, useVenuesMap } from '@/hooks';
+import { focusMatch, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
+import { recommendPick } from '@/lib/opsIntelligence';
 import { useMatchFilters } from '@/store/filters';
 
 const STATUSES = [
@@ -15,6 +20,7 @@ const STATUSES = [
 
 export function MatchCenter() {
   const f = useMatchFilters();
+  const [compact, setCompact] = useState(true);
   const { data: teamsData } = useTeams();
   const { data: venuesData } = useVenues();
   const { data, isLoading } = useMatches({
@@ -27,6 +33,7 @@ export function MatchCenter() {
   });
 
   const matches = useMemo(() => data?.items ?? [], [data]);
+  const heroMatch = useMemo(() => focusMatch(matches), [matches]);
   const stages = useMemo(() => [...new Set(matches.map((m) => m.stage))].sort(), [matches]);
   const dates = useMemo(() => [...new Set(matches.map((m) => m.date))].sort(), [matches]);
 
@@ -44,6 +51,13 @@ export function MatchCenter() {
     <div className="page-fade">
       <MockBanner />
 
+      {!isLoading && matches.length > 0 && (
+        <>
+          <MatchdayHero match={heroMatch} />
+          <MatchCenterCommand matches={matches} compact={compact} onToggleCompact={() => setCompact((value) => !value)} />
+        </>
+      )}
+
       <div className="card card-pad filter-sticky" style={{ marginBottom: 18 }}>
         <div className="row gap-8 wrap" style={{ marginBottom: 10 }}>
           {STATUSES.map((s) => (
@@ -56,6 +70,9 @@ export function MatchCenter() {
               <Icon name="close" size={12} /> Limpiar ({activeFilters})
             </button>
           )}
+          <button type="button" className={`pill match-density-toggle${compact ? ' on' : ''}`} onClick={() => setCompact((value) => !value)}>
+            <Icon name={compact ? 'grid' : 'calendar'} size={12} /> {compact ? 'Vista compacta' : 'Vista completa'}
+          </button>
         </div>
         <div className="row gap-8 wrap">
           <Select value={f.group} onChange={(v) => f.set({ group: v })} label="Grupo">
@@ -112,15 +129,111 @@ export function MatchCenter() {
               <span className="mono-label">{date}</span>
               <h2 style={{ fontSize: 14 }}>{list.length} partidos</h2>
             </div>
-            <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
+            <div className={`grid match-center-grid${compact ? ' compact' : ''}`}>
               {list.map((m) => (
-                <MatchCard key={m.id} m={m} />
+                compact ? <CompactMatchCard key={m.id} m={m} /> : <MatchCard key={m.id} m={m} />
               ))}
             </div>
           </div>
         ))
       )}
     </div>
+  );
+}
+
+function MatchCenterCommand({
+  matches,
+  compact,
+  onToggleCompact,
+}: {
+  matches: Match[];
+  compact: boolean;
+  onToggleCompact: () => void;
+}) {
+  const upcoming = useMemo(
+    () => [...matches].filter((m) => m.status === 'UPCOMING').sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)),
+    [matches],
+  );
+  const next = upcoming[0];
+  const dayCount = next ? upcoming.filter((m) => m.date === next.date).length : 0;
+  const liveCount = matches.filter((m) => m.status === 'LIVE').length;
+  const finalCount = matches.filter((m) => m.status === 'FT').length;
+
+  return (
+    <div className="match-center-command card">
+      <div>
+        <span className="mono-label">Centro de partidos</span>
+        <strong>{next ? `${fmtFull(next.date)} · ${dayCount} partidos` : 'Calendario sin pendientes'}</strong>
+        <p>{next ? `Siguiente ventana: ${next.time} hora sede. Vista optimizada para revisar rápido y entrar a detalle.` : 'Revisa resultados y estadísticas cuando existan marcadores finales.'}</p>
+      </div>
+      <div className="match-center-metrics">
+        <span><b>{matches.length}</b><small>visibles</small></span>
+        <span><b>{liveCount}</b><small>en vivo</small></span>
+        <span><b>{finalCount}</b><small>finales</small></span>
+      </div>
+      <button type="button" className="btn ghost" onClick={onToggleCompact}>
+        <Icon name={compact ? 'list' : 'grid'} size={14} />
+        {compact ? 'Ver completa' : 'Ver compacta'}
+      </button>
+    </div>
+  );
+}
+
+function CompactMatchCard({ m }: { m: Match }) {
+  const navigate = useNavigate();
+  const teams = useTeamsMap();
+  const venues = useVenuesMap();
+  const teamItems = useMemo(() => Object.values(teams), [teams]);
+  const rec = useMemo(() => recommendPick(m, teamItems), [m, teamItems]);
+  const weather = weatherSummary(m.id);
+  const played = m.status !== 'UPCOMING';
+  const venue = venues[m.venue];
+
+  return (
+    <button
+      type="button"
+      className="compact-match-card card hoverable"
+      onClick={() => navigate({ to: '/matches/$matchId', params: { matchId: m.id } })}
+    >
+      <div className="compact-match-top">
+        <StatusBadge status={m.status} minute={m.minute} time={m.time} />
+        <span className="mono-label">{m.group ? `Grupo ${m.group}` : m.stage}</span>
+      </div>
+      <div className="compact-match-row">
+        <span className="compact-team">
+          <TeamCrest code={m.home} size={30} />
+          <TeamFlag code={m.home} size={14} />
+          <strong>{teams[m.home]?.name ?? m.home}</strong>
+        </span>
+        <span className="compact-score num">
+          {played ? (
+            <>
+              {m.homeGoals ?? 0}<b>-</b>{m.awayGoals ?? 0}
+            </>
+          ) : (
+            <>
+              {m.time}<small>{fmtDay(m.date)}</small>
+            </>
+          )}
+        </span>
+        <span className="compact-team away">
+          <TeamCrest code={m.away} size={30} />
+          <TeamFlag code={m.away} size={14} />
+          <strong>{teams[m.away]?.name ?? m.away}</strong>
+        </span>
+      </div>
+      <div className="compact-kit-line" aria-hidden="true">
+        <TeamKit code={m.home} size={28} variant="home" />
+        <span />
+        <TeamKit code={m.away} size={28} variant="away" />
+      </div>
+      <div className="compact-match-foot">
+        <span title={venueTimeLabel(m)}><Icon name="clock" size={12} /> {venueTimeLabel(m)}</span>
+        <span title={weather.detail}><Icon name="rain" size={12} /> {weather.label}</span>
+        <span title={rec.risk}><Icon name="target" size={12} /> {rec.label}</span>
+        <span><Icon name="pin" size={12} /> {venue?.city ?? m.venue}</span>
+      </div>
+    </button>
   );
 }
 
