@@ -9,6 +9,7 @@ import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
 import { isMatchLocked, lockLabel, weatherSummary } from '@/lib/matchMeta';
+import { buildPoolDiagnostics, type PoolDiagnostics } from '@/lib/opsIntelligence';
 import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
@@ -842,7 +843,7 @@ export function Pool() {
   // Determine what is visible in the active tab
   const visible = useMemo(() => {
     if (activeTab === 'predict') {
-      return view === 'next' ? upcomingMatches.slice(0, 24) : upcomingMatches;
+      return view === 'next' ? upcomingMatches.slice(0, 12) : upcomingMatches;
     }
     return playedMatches; // results shows all played matches
   }, [activeTab, view, upcomingMatches, playedMatches]);
@@ -859,6 +860,10 @@ export function Pool() {
   const poolAwards = useMemo(
     () => buildPoolAwards({ stats, pickedPending, totalPending: upcomingMatches.length, leaderboard, playerName: pool.playerName }),
     [stats, pickedPending, upcomingMatches.length, leaderboard, pool.playerName],
+  );
+  const poolDiagnostics = useMemo(
+    () => buildPoolDiagnostics(data?.items ?? [], pool.picks, leaderboard, pool.playerName),
+    [data?.items, pool.picks, leaderboard, pool.playerName],
   );
 
   const shareNextPick = async () => {
@@ -1099,6 +1104,8 @@ export function Pool() {
         </div>
       </div>
 
+      <FamilyLearningPanel diagnostics={poolDiagnostics} />
+
       {pool.playerName && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 18 }}>
           <P2PSyncPanel
@@ -1120,7 +1127,7 @@ export function Pool() {
         <div className="pool-summary">
           <SummaryTile icon="check" label="Partidos elegidos" value={`${pickedPending}/${upcomingMatches.length}`} />
           <SummaryTile icon="target" label="Marcadores" value={`${completeScoresPending}/${upcomingMatches.length}`} />
-          <SummaryTile icon="calendar" label="Vista" value={view === 'next' ? 'Próximos 24' : 'Completa'} />
+          <SummaryTile icon="calendar" label="Vista" value={view === 'next' ? 'Próximos 12' : 'Completa'} />
           <div className="card card-pad pool-actions" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button type="button" className="btn gold" onClick={() => setView(view === 'next' ? 'all' : 'next')}>
               <Icon name={view === 'next' ? 'list' : 'calendar'} size={15} />
@@ -1420,6 +1427,35 @@ function SummaryTile({ icon, label, value }: { icon: IconName; label: string; va
       <span className="mono-label">{label}</span>
       <strong className="num">{value}</strong>
     </div>
+  );
+}
+
+function FamilyLearningPanel({ diagnostics }: { diagnostics: PoolDiagnostics }) {
+  const signals = [
+    { label: 'Cobertura', value: `${diagnostics.coveragePct}%`, text: `${diagnostics.missingWinner} ganadores pendientes` },
+    { label: 'Marcadores', value: `${diagnostics.scorePct}%`, text: `${diagnostics.missingScore} por cerrar` },
+    { label: 'Estilo', value: diagnostics.styleLabel, text: diagnostics.styleDetail },
+    { label: 'Familia', value: diagnostics.leaderLabel, text: diagnostics.familySignal },
+  ];
+  return (
+    <section className="family-learning-panel">
+      <div className="family-learning-main">
+        <Icon name="ai" size={16} />
+        <div>
+          <span className="mono-label">Aprendizaje familiar</span>
+          <strong>{diagnostics.recommendedAction}</strong>
+        </div>
+      </div>
+      <div className="family-learning-grid">
+        {signals.map((signal) => (
+          <div key={signal.label} className="family-learning-card">
+            <span className="mono-label">{signal.label}</span>
+            <strong>{signal.value}</strong>
+            <small>{signal.text}</small>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 

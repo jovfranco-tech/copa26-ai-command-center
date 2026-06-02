@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Icon, Pill, type IconName } from '@worldcup/ui';
-import { ANALYST_DISCLAIMER, type Match as WorldCupMatch } from '@worldcup/shared';
+import { ANALYST_DISCLAIMER, type Match as WorldCupMatch, type Team as WorldCupTeam } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
@@ -13,6 +13,7 @@ import { usePool, type PoolPick } from '@/store/pool';
 import { normalizePoolGroupId } from '@/lib/api';
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
+import { buildDayBrief, buildPoolDiagnostics, buildRecommendedPicks, recommendPick } from '@/lib/opsIntelligence';
 
 interface ParsedAnswer {
   text: string;
@@ -104,6 +105,23 @@ function AnalystChart({ chart }: { chart: NonNullable<ParsedAnswer['chart']> }) 
 }
 
 type Ctx = 'tournament' | 'match' | 'team' | 'player' | 'hawkeye' | 'pressroom';
+type NativeAIAction =
+  | 'conservative-pool'
+  | 'compare-family'
+  | 'uncertain-matches'
+  | 'day-brief'
+  | 'audit-picks'
+  | 'family-learning';
+
+interface PendingNativeAction {
+  id: NativeAIAction;
+  title: string;
+  detail: string;
+  picks?: Record<string, PoolPick>;
+  question: string;
+  answer: AnalystAnswer;
+  meta: AIResult['meta'];
+}
 
 const CTX_ES: Record<Ctx, string> = {
   tournament: 'Torneo',
@@ -216,6 +234,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [busy, setBusy] = useState(false);
   const [usedAI, setUsedAI] = useState(false);
   const [lastAiMeta, setLastAiMeta] = useState<AIResult['meta'] | null>(null);
+  const [pendingNativeAction, setPendingNativeAction] = useState<PendingNativeAction | null>(null);
   const [memory, setMemory] = useState<AIMemoryRecord[]>(() => readAIMemory());
   const [cloudMemory, setCloudMemory] = useState<AIMemoryRecord[]>([]);
   const [cloudMemoryStatus, setCloudMemoryStatus] = useState<'syncing' | 'synced' | 'error'>('syncing');
@@ -482,81 +501,127 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     if ('vibrate' in navigator) navigator.vibrate([15, 5, 15]);
   };
 
-  const runNativeAction = (action: 'conservative-pool' | 'compare-family' | 'uncertain-matches') => {
+  const applyPendingNativeAction = () => {
+    if (!pendingNativeAction) return;
+    if (pendingNativeAction.picks && Object.keys(pendingNativeAction.picks).length) {
+      pool.importPicks(pendingNativeAction.picks);
+    }
+    commitAnswer(
+      pendingNativeAction.question,
+      pendingNativeAction.answer,
+      'simulation',
+      pendingNativeAction.meta,
+    );
+    setPendingNativeAction(null);
+  };
+
+  const runNativeAction = (action: NativeAIAction) => {
     const matchItems = matchData?.items ?? [];
     const teamItems = teamsData?.items ?? [];
     const teamRanking = new Map(teamItems.map((team) => [team.code, team.ranking ?? 80]));
     const upcomingMatches = matchItems
       .filter((m) => m.status === 'UPCOMING')
       .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+    const diagnostics = buildPoolDiagnostics(matchItems, pool.picks, [], pool.playerName);
+    const dayBrief = buildDayBrief(matchItems, teamItems, pool.picks);
 
     if (action === 'conservative-pool') {
-      const picks: Record<string, PoolPick> = {};
-      for (const match of upcomingMatches.slice(0, 24)) {
-        const homeRank = teamRanking.get(match.home) ?? 80;
-        const awayRank = teamRanking.get(match.away) ?? 80;
-        const diff = awayRank - homeRank;
-        if (Math.abs(diff) <= 4) picks[match.id] = { outcome: 'draw', homeGoals: 1, awayGoals: 1 };
-        else if (diff > 0) picks[match.id] = { outcome: 'home', homeGoals: 1, awayGoals: 0 };
-        else picks[match.id] = { outcome: 'away', homeGoals: 0, awayGoals: 1 };
-      }
-      pool.importPicks(picks);
-      commitAnswer(
-        'Acción IA: rellenar quiniela conservadora',
-        {
-          text: `Rellené ${Object.keys(picks).length} partidos pendientes con una lógica conservadora: ranking más fuerte gana por margen corto; partidos parejos quedan 1-1.`,
-          sources: ['ranking local', 'calendario', 'quiniela'],
-          structured: {
-            prediction: 'Quiniela conservadora aplicada a próximos partidos.',
-            risk: 'No considera lesiones, convocatoria final ni forma reciente.',
+      const picks = buildRecommendedPicks(matchItems, teamItems, 24);
+      const nextAnswer: AnalystAnswer = {
+        text: `Preparé ${Object.keys(picks).length} picks pendientes con una lógica conservadora: ranking más fuerte gana por margen corto; partidos parejos quedan 1-1. Revisa la previsualización antes de aplicarlos.`,
+        sources: ['ranking local', 'calendario', 'quiniela'],
+        structured: {
+          prediction: 'Quiniela conservadora preparada para próximos partidos.',
+          risk: 'No considera lesiones, convocatoria final ni forma reciente.',
+          confidence: 'Media',
+          dataUsed: ['Ranking de selecciones', 'Calendario pendiente'],
+          ignoredData: ['Noticias', 'lesiones', 'once inicial'],
+          rationale: 'Los picks se generan por diferencia de ranking y marcadores de baja varianza.',
+          nextAction: 'Aplicar solo si quieres sobrescribir/llenar picks actuales.',
+          quality: {
+            score: 76,
+            label: 'Propuesta local revisable',
+            flags: ['No usa llamada remota', 'Requiere confirmación antes de aplicar'],
+            checkedAt: new Date().toISOString(),
+          },
+        },
+        citations: [
+          {
+            label: 'Picks preparados',
+            value: `${Object.keys(picks).length} próximos partidos`,
+            source: 'Motor local de quiniela conservadora',
+            date: new Date().toISOString().slice(0, 10),
             confidence: 'Media',
-            dataUsed: ['Ranking de selecciones', 'Calendario pendiente'],
-            ignoredData: ['Noticias', 'lesiones', 'once inicial'],
-            rationale: 'Los picks se generan por diferencia de ranking y marcadores de baja varianza.',
-            nextAction: 'Revisar manualmente los partidos favoritos antes de compartir.',
+          },
+        ],
+      };
+      setPendingNativeAction({
+        id: action,
+        title: 'Previsualización de quiniela conservadora',
+        detail: `${Object.keys(picks).length} picks listos. No se aplican hasta confirmar.`,
+        picks,
+        question: 'Acción IA: rellenar quiniela conservadora',
+        answer: nextAnswer,
+        meta: { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'quiniela'] },
+      });
+      setAnswer(nextAnswer);
+      setUsedAI(true);
+      setLastAiMeta({ provider: 'local-action', confidence: 'Media', tools: ['ranking', 'quiniela'] });
+      return;
+    }
+
+    if (action === 'day-brief') {
+      const next = upcomingMatches[0];
+      const rec = next ? recommendPick(next, teamItems) : null;
+      commitAnswer(
+        'Acción IA: resumen operativo del día',
+        {
+          text: `${dayBrief.title}. ${dayBrief.highlights.join(' ')} Siguiente acción: ${dayBrief.nextAction}`,
+          sources: ['calendario', 'quiniela', 'ranking local'],
+          structured: {
+            prediction: rec ? `Pick sugerido para el siguiente juego: ${rec.label}.` : dayBrief.title,
+            risk: rec?.risk ?? 'Sin partido pendiente para proyectar.',
+            confidence: rec?.confidence ?? 'Alta local',
+            dataUsed: ['Partidos pendientes', 'picks locales', 'ranking de selecciones'],
+            ignoredData: ['Convocatorias finales', 'lesiones', 'alineaciones confirmadas'],
+            rationale: rec?.rationale ?? 'El resumen prioriza el siguiente partido y huecos de quiniela.',
+            nextAction: dayBrief.nextAction,
             quality: {
-              score: 76,
-              label: 'Acción local revisable',
-              flags: ['No usa llamada remota', 'Requiere ajuste humano antes del cierre'],
+              score: rec?.confidence === 'Alta' ? 86 : 78,
+              label: 'Brief operativo',
+              flags: ['Actualizado desde datos locales', 'No requiere llamada remota'],
               checkedAt: new Date().toISOString(),
             },
           },
-          citations: [
-            {
-              label: 'Picks aplicados',
-              value: `${Object.keys(picks).length} próximos partidos`,
-              source: 'Motor local de quiniela conservadora',
-              date: new Date().toISOString().slice(0, 10),
-              confidence: 'Media',
-            },
-          ],
+          citations: dayBrief.highlights.map((highlight, index) => ({
+            label: `Señal ${index + 1}`,
+            value: highlight,
+            source: 'Motor operativo local',
+            date: new Date().toISOString().slice(0, 10),
+            confidence: index === 0 ? 'Alta' : 'Media',
+          })),
         },
         'simulation',
-        { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'quiniela'] },
+        { provider: 'local-action', confidence: rec?.confidence ?? 'Alta local', tools: ['calendario', 'quiniela', 'ranking'] },
       );
       return;
     }
 
     if (action === 'compare-family') {
-      const picked = upcomingMatches.filter((match) => pool.picks[match.id]?.outcome).length;
-      const complete = upcomingMatches.filter((match) => {
-        const pick = pool.picks[match.id];
-        return pick?.homeGoals != null && pick.awayGoals != null;
-      }).length;
       const leader = leaderName || 'sin líder todavía';
       commitAnswer(
         'Acción IA: comparar mi quiniela con la familia',
         {
-          text: `${pool.playerName || 'Tu perfil'} tiene ${picked}/${upcomingMatches.length} ganadores y ${complete}/${upcomingMatches.length} marcadores completos. Líder familiar actual: ${leader}.`,
+          text: `${pool.playerName || 'Tu perfil'} tiene ${diagnostics.pickedPending}/${diagnostics.totalPending} ganadores y ${diagnostics.completeScores}/${diagnostics.totalPending} marcadores completos. Líder familiar actual: ${leader}. ${diagnostics.familySignal}`,
           sources: ['quiniela local', 'tabla familiar'],
           structured: {
-            prediction: picked ? 'Ya hay base para competir en la tabla familiar.' : 'Falta capturar picks antes de comparar rendimiento.',
+            prediction: diagnostics.pickedPending ? 'Ya hay base para competir en la tabla familiar.' : 'Falta capturar picks antes de comparar rendimiento.',
             risk: 'La comparación será más útil cuando existan resultados reales.',
             confidence: 'Alta local',
             dataUsed: ['Picks locales', 'grupo familiar', 'leaderboard Firestore'],
             ignoredData: ['Picks privados de otros miembros no sincronizados'],
             rationale: 'La acción compara cobertura de picks y líder visible sin leer datos sensibles fuera del grupo.',
-            nextAction: picked ? 'Completar marcadores faltantes y compartir tabla.' : 'Capturar primeros pronósticos.',
+            nextAction: diagnostics.recommendedAction,
             quality: {
               score: 90,
               label: 'Comparación local',
@@ -567,6 +632,93 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         },
         'simulation',
         { provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'leaderboard'] },
+      );
+      return;
+    }
+
+    if (action === 'audit-picks') {
+      const fixes: Record<string, PoolPick> = {};
+      for (const match of upcomingMatches.slice(0, 24)) {
+        const pick = pool.picks[match.id];
+        if (!pick?.outcome) continue;
+        if (pick.homeGoals != null && pick.awayGoals != null) continue;
+        if (pick.outcome === 'draw') fixes[match.id] = { ...pick, homeGoals: 1, awayGoals: 1 };
+        if (pick.outcome === 'home') fixes[match.id] = { ...pick, homeGoals: 1, awayGoals: 0 };
+        if (pick.outcome === 'away') fixes[match.id] = { ...pick, homeGoals: 0, awayGoals: 1 };
+      }
+      const nextAnswer: AnalystAnswer = {
+        text: Object.keys(fixes).length
+          ? `Detecté ${diagnostics.missingScore} marcadores incompletos y propuse cerrar ${Object.keys(fixes).length} con marcadores bajos coherentes con el ganador elegido.`
+          : `No encontré marcadores incompletos para reparar. Cobertura actual: ${diagnostics.coveragePct}% ganadores y ${diagnostics.scorePct}% marcadores.`,
+        sources: ['quiniela local', 'reglas de cierre'],
+        structured: {
+          prediction: Object.keys(fixes).length ? 'Picks listos para reparación con marcador mínimo.' : 'Quiniela sin reparaciones automáticas necesarias.',
+          risk: 'Los marcadores bajos son seguros pero pueden perder plenos si el partido se abre.',
+          confidence: 'Alta local',
+          dataUsed: ['Picks activos', 'partidos pendientes', 'reglas de marcador'],
+          ignoredData: ['Táctica específica del rival', 'momento competitivo del grupo'],
+          rationale: 'La auditoría no cambia ganadores existentes; solo completa goles faltantes con una regla coherente.',
+          nextAction: Object.keys(fixes).length ? 'Aplicar reparación si estás de acuerdo.' : diagnostics.recommendedAction,
+          quality: {
+            score: 88,
+            label: 'Auditoría determinística',
+            flags: ['No sobrescribe picks completos', 'Solo completa goles faltantes'],
+            checkedAt: new Date().toISOString(),
+          },
+        },
+        citations: [
+          {
+            label: 'Reparaciones propuestas',
+            value: `${Object.keys(fixes).length} marcadores`,
+            source: 'Auditor de quiniela local',
+            date: new Date().toISOString().slice(0, 10),
+            confidence: 'Alta',
+          },
+        ],
+      };
+      if (Object.keys(fixes).length) {
+        setPendingNativeAction({
+          id: action,
+          title: 'Previsualización de auditoría',
+          detail: `${Object.keys(fixes).length} marcadores se completarían sin cambiar ganadores.`,
+          picks: fixes,
+          question: 'Acción IA: auditar picks incompletos',
+          answer: nextAnswer,
+          meta: { provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'auditor'] },
+        });
+      } else {
+        setPendingNativeAction(null);
+      }
+      setAnswer(nextAnswer);
+      setUsedAI(true);
+      setLastAiMeta({ provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'auditor'] });
+      return;
+    }
+
+    if (action === 'family-learning') {
+      commitAnswer(
+        'Acción IA: aprender estilo familiar',
+        {
+          text: `Lectura de estilo: ${diagnostics.styleLabel}. ${diagnostics.styleDetail} Señal familiar: ${diagnostics.familySignal}`,
+          sources: ['picks locales', 'memoria IA', 'grupo familiar'],
+          structured: {
+            prediction: `Tu perfil operativo actual es ${diagnostics.styleLabel.toLowerCase()}.`,
+            risk: 'El aprendizaje mejora cuando haya más familiares sincronizados y resultados reales.',
+            confidence: diagnostics.pickedPending >= 8 ? 'Media' : 'Baja',
+            dataUsed: ['Patrón de marcadores', 'cobertura de picks', 'memoria compartida'],
+            ignoredData: ['Picks no sincronizados de otros dispositivos', 'sesgos personales no observados'],
+            rationale: 'La app clasifica estilo por promedio de goles, frecuencia de empates y cobertura de quiniela.',
+            nextAction: diagnostics.recommendedAction,
+            quality: {
+              score: diagnostics.pickedPending >= 8 ? 79 : 62,
+              label: 'Aprendizaje temprano',
+              flags: ['Se recalibra con cada pick', 'Más fuerte tras resultados reales'],
+              checkedAt: new Date().toISOString(),
+            },
+          },
+        },
+        'simulation',
+        { provider: 'local-action', confidence: diagnostics.pickedPending >= 8 ? 'Media' : 'Baja', tools: ['memoria', 'quiniela'] },
       );
       return;
     }
@@ -701,6 +853,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 groupId={poolGroupId}
                 cloudStatus={cloudMemoryStatus}
                 onRun={runNativeAction}
+              />
+
+              <PendingNativeActionPanel
+                pending={pendingNativeAction}
+                onApply={applyPendingNativeAction}
+                onCancel={() => setPendingNativeAction(null)}
               />
 
               {ctx === 'hawkeye' && (
@@ -1050,6 +1208,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           }}
           onClear={() => setMemory(clearAIMemory())}
         />
+        <DailyBriefPanel
+          matches={matchData?.items ?? []}
+          teams={teamsData?.items ?? []}
+          picks={pool.picks}
+          onRun={() => runNativeAction('day-brief')}
+        />
+        <AIQualityHistory records={combinedMemory} />
         <EntityInsightsPanel records={focusedMemory} context={CTX_ES[ctx]} />
       </div>
     </div>
@@ -1063,8 +1228,16 @@ function AIActionPanel({
 }: {
   groupId: string;
   cloudStatus: 'syncing' | 'synced' | 'error';
-  onRun: (action: 'conservative-pool' | 'compare-family' | 'uncertain-matches') => void;
+  onRun: (action: NativeAIAction) => void;
 }) {
+  const actions: Array<{ id: NativeAIAction; icon: IconName; title: string; text: string }> = [
+    { id: 'day-brief', icon: 'sparkSmall', title: 'Resumen del día', text: 'Prioriza partido, clima, picks y acción.' },
+    { id: 'conservative-pool', icon: 'target', title: 'Rellenar conservadora', text: 'Aplica picks de baja varianza por ranking.' },
+    { id: 'audit-picks', icon: 'check', title: 'Auditar picks', text: 'Completa marcadores sin sobrescribir.' },
+    { id: 'compare-family', icon: 'trophy', title: 'Comparar familia', text: 'Resume cobertura y tabla visible.' },
+    { id: 'family-learning', icon: 'database', title: 'Aprender estilo', text: 'Detecta patrón de riesgo familiar.' },
+    { id: 'uncertain-matches', icon: 'activity', title: 'Detectar inciertos', text: 'Encuentra cruces parejos para revisar.' },
+  ];
   return (
     <div className="ai-action-panel">
       <div className="ai-action-head">
@@ -1077,20 +1250,55 @@ function AIActionPanel({
         </span>
       </div>
       <div className="ai-action-grid">
-        <button type="button" className="ai-action-card" onClick={() => onRun('conservative-pool')}>
-          <Icon name="target" size={15} />
-          <strong>Rellenar conservadora</strong>
-          <span>Aplica picks de baja varianza por ranking.</span>
+        {actions.map((action) => (
+          <button key={action.id} type="button" className="ai-action-card" onClick={() => onRun(action.id)}>
+            <Icon name={action.icon} size={15} />
+            <strong>{action.title}</strong>
+            <span>{action.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PendingNativeActionPanel({
+  pending,
+  onApply,
+  onCancel,
+}: {
+  pending: PendingNativeAction | null;
+  onApply: () => void;
+  onCancel: () => void;
+}) {
+  if (!pending) return null;
+  const entries = Object.entries(pending.picks ?? {});
+  return (
+    <div className="pending-ai-action">
+      <div className="pending-ai-action-main">
+        <Icon name="shield" size={15} />
+        <div>
+          <span className="mono-label">Previsualización antes de aplicar</span>
+          <strong>{pending.title}</strong>
+          <p>{pending.detail}</p>
+        </div>
+      </div>
+      {entries.length ? (
+        <div className="pending-pick-strip">
+          {entries.slice(0, 5).map(([matchId, pick]) => (
+            <span key={matchId}>
+              <strong>{matchId}</strong> {pick.homeGoals ?? '-'}-{pick.awayGoals ?? '-'} · {pick.outcome ?? 'sin ganador'}
+            </span>
+          ))}
+          {entries.length > 5 ? <span>+{entries.length - 5} más</span> : null}
+        </div>
+      ) : null}
+      <div className="pending-ai-actions">
+        <button type="button" className="btn gold" onClick={onApply}>
+          <Icon name="check" size={14} /> Aplicar cambios
         </button>
-        <button type="button" className="ai-action-card" onClick={() => onRun('compare-family')}>
-          <Icon name="trophy" size={15} />
-          <strong>Comparar con familia</strong>
-          <span>Resume cobertura y tabla visible.</span>
-        </button>
-        <button type="button" className="ai-action-card" onClick={() => onRun('uncertain-matches')}>
-          <Icon name="activity" size={15} />
-          <strong>Detectar inciertos</strong>
-          <span>Encuentra cruces parejos para revisar.</span>
+        <button type="button" className="btn ghost" onClick={onCancel}>
+          <Icon name="close" size={14} /> Cancelar
         </button>
       </div>
     </div>
@@ -1171,6 +1379,70 @@ function CitationGrid({ citations }: { citations?: AICitation[] }) {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+function DailyBriefPanel({
+  matches,
+  teams,
+  picks,
+  onRun,
+}: {
+  matches: WorldCupMatch[];
+  teams: WorldCupTeam[];
+  picks: Record<string, PoolPick>;
+  onRun: () => void;
+}) {
+  const brief = buildDayBrief(matches, teams, picks);
+  return (
+    <div className="card ai-daily-brief">
+      <div className="card-hd">
+        <Icon name="sparkSmall" size={15} style={{ color: 'var(--gold)' }} />
+        <h3>Brief diario</h3>
+        <span className="spacer" />
+        <button type="button" className="card-link" onClick={onRun}>Generar</button>
+      </div>
+      <div className="card-pad">
+        <strong>{brief.title}</strong>
+        <p>{brief.subtitle}</p>
+        <div className="daily-brief-list">
+          {brief.highlights.slice(0, 3).map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+        <small>{brief.nextAction}</small>
+      </div>
+    </div>
+  );
+}
+
+function AIQualityHistory({ records }: { records: AIMemoryRecord[] }) {
+  const scored = records.filter((record) => record.structured?.quality);
+  const average = scored.length
+    ? Math.round(scored.reduce((sum, record) => sum + (record.structured?.quality?.score ?? 0), 0) / scored.length)
+    : 0;
+  const flags = scored.flatMap((record) => record.structured?.quality?.flags ?? []).slice(0, 4);
+  return (
+    <div className="card ai-quality-history">
+      <div className="card-hd">
+        <Icon name="check" size={15} style={{ color: 'var(--gold)' }} />
+        <h3>Calidad IA</h3>
+      </div>
+      <div className="card-pad">
+        <div className="ai-quality-score">
+          <span className="mono-label">Historial</span>
+          <strong>{scored.length ? `${average}/100` : 'Sin datos'}</strong>
+          <p>{scored.length ? `${scored.length} respuestas evaluadas.` : 'Se activa con acciones y respuestas estructuradas.'}</p>
+        </div>
+        {flags.length ? (
+          <div className="row gap-6 wrap" style={{ marginTop: 8 }}>
+            {flags.map((flag) => (
+              <span key={flag} className="cite">{flag}</span>
+            ))}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

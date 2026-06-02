@@ -6,7 +6,7 @@ import { TeamCrest, TeamFlag, TeamKit, FavStar, PlayerAvatar } from './identity'
 import { DataSourceBadge } from './DataSourceBadge';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
 import { playerRatingMeta } from '@/generated/playerRatings';
-import { h2hSummary, matchSourceInfo, weatherSummary } from '@/lib/matchMeta';
+import { h2hSummary, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 import { attrColor, attrLabelsFor, playerRatings, ratingSourceText } from '@/lib/ratings';
 
 export function MatchCard({ m }: { m: Match }) {
@@ -20,6 +20,7 @@ export function MatchCard({ m }: { m: Match }) {
   const source = matchSourceInfo(m);
   const weather = weatherSummary(m.id);
   const h2h = h2hSummary(m.home, m.away);
+  const venuePhoto = venuePhotoSrc(m.venue);
 
   return (
     <div
@@ -36,6 +37,23 @@ export function MatchCard({ m }: { m: Match }) {
           <Icon name="pin" size={12} />
           {city}
         </span>
+      </div>
+      <div
+        className="match-card-visual"
+        style={venuePhoto ? { backgroundImage: `linear-gradient(90deg, rgba(8,12,22,.72), rgba(8,12,22,.38)), url(${venuePhoto})` } : undefined}
+      >
+        <div className="match-card-flags">
+          <TeamFlag code={m.home} size={16} />
+          <span>{teams[m.home]?.name ?? m.home}</span>
+          <span className="mono-label">vs</span>
+          <TeamFlag code={m.away} size={16} />
+          <span>{teams[m.away]?.name ?? m.away}</span>
+        </div>
+        <div className="match-card-kits">
+          <TeamKit code={m.home} size={32} variant="home" />
+          <span className="mono-label">{m.group ? `Grupo ${m.group}` : m.stage}</span>
+          <TeamKit code={m.away} size={32} variant="away" />
+        </div>
       </div>
       <div className="match-row">
         <span className="match-team">
@@ -66,6 +84,9 @@ export function MatchCard({ m }: { m: Match }) {
       <div className="match-intel-row">
         <span title={weather.detail}>
           <Icon name="rain" size={12} /> {weather.label}
+        </span>
+        <span title={venueTimeLabel(m)}>
+          <Icon name="clock" size={12} /> {venueTimeLabel(m)}
         </span>
         <span title={`${h2h.source} · ${h2h.date}`}>
           <Icon name="activity" size={12} /> {h2h.label}

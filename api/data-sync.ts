@@ -28,7 +28,8 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   const resultsSourceUrl = process.env.RESULTS_SOURCE_URL;
-  const pipeline = await checkResultsPipeline(resultsSourceUrl);
+  const resultsAuthToken = process.env.RESULTS_AUTH_TOKEN;
+  const pipeline = await checkResultsPipeline(resultsSourceUrl, resultsAuthToken);
   const checkedAt = new Date().toISOString();
 
   return Response.json(
@@ -41,6 +42,7 @@ export default async function handler(request: Request): Promise<Response> {
       results: pipeline.results,
       calendar: 'Calendario oficial del torneo',
       resultsSource: resultsSourceUrl ? 'configured' : 'not-configured',
+      feedAuth: resultsAuthToken ? 'bearer-token-configured' : 'none',
       nextAction: pipeline.nextAction,
       logs: [`${checkedAt} · ${isCron ? 'cron' : 'manual'} · health-check`, `${checkedAt} · results · ${pipeline.results}`],
       errors: pipeline.errors,
@@ -51,6 +53,12 @@ export default async function handler(request: Request): Promise<Response> {
           label: 'Feed de resultados',
           status: pipeline.errors.length ? 'error' : resultsSourceUrl ? 'ok' : 'wait',
           detail: pipeline.results,
+        },
+        {
+          id: 'feed-auth',
+          label: 'Credenciales feed',
+          status: resultsAuthToken ? 'ok' : resultsSourceUrl ? 'wait' : 'wait',
+          detail: resultsAuthToken ? 'RESULTS_AUTH_TOKEN configurado.' : 'Sin token; solo feeds publicos.',
         },
         {
           id: 'redeploy',
@@ -68,7 +76,7 @@ export default async function handler(request: Request): Promise<Response> {
   );
 }
 
-async function checkResultsPipeline(resultsSourceUrl: string | undefined): Promise<{
+async function checkResultsPipeline(resultsSourceUrl: string | undefined, resultsAuthToken?: string): Promise<{
   status: string;
   results: string;
   nextAction: string;
@@ -95,7 +103,9 @@ async function checkResultsPipeline(resultsSourceUrl: string | undefined): Promi
   }
 
   try {
-    const res = await fetch(resultsSourceUrl, { headers: { accept: 'application/json' } });
+    const headers: Record<string, string> = { accept: 'application/json' };
+    if (resultsAuthToken) headers.authorization = `Bearer ${resultsAuthToken}`;
+    const res = await fetch(resultsSourceUrl, { headers });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const body = (await res.json()) as { matches?: unknown[]; updatedAt?: string };
     const count = Array.isArray(body.matches) ? body.matches.length : 0;

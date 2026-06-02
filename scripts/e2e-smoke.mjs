@@ -6,6 +6,7 @@ const pass = process.env.SITE_PASSWORD || '';
 const authHeader = pass ? `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` : null;
 
 const routes = ['/', '/data', '/pool', '/analyst'];
+const apiRoutes = ['/api/data-sync?manual=1', '/api/admin-ops'];
 const requiredText = {
   '/': ['Centro privado Mundial 2026', 'Panel'],
   '/data': ['Centro privado Mundial 2026', 'Centro de datos'],
@@ -29,6 +30,21 @@ for (const route of routes) {
   if (!ok) {
     failures += 1;
     console.log(`  expected one of: ${allowed.join(' | ')}`);
+  }
+}
+
+for (const route of apiRoutes) {
+  const url = `${baseUrl}${route}`;
+  const res = await fetch(url, {
+    headers: { accept: 'application/json', ...(authHeader ? { authorization: authHeader } : {}) },
+    redirect: 'follow',
+  });
+  const data = await res.json().catch(() => ({}));
+  const ok = res.status < 500 && data && data.ok !== false;
+  console.log(`${ok ? 'ok' : 'fail'} ${route} ${res.status} ${res.url}`);
+  if (!ok) {
+    failures += 1;
+    console.log(`  expected JSON ok response`);
   }
 }
 

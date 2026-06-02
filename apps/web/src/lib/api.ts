@@ -221,6 +221,29 @@ export interface MonitoringSnapshot {
   };
 }
 
+export interface AdminOpsSnapshot {
+  ok: boolean;
+  checkedAt: string;
+  summary: {
+    ready: number;
+    pending: number;
+    blocked: number;
+  };
+  actions: Array<{
+    id: string;
+    label: string;
+    status: 'ready' | 'pending' | 'blocked';
+    detail: string;
+    command?: string;
+  }>;
+  dataGaps: Array<{
+    id: string;
+    label: string;
+    status: 'pending' | 'ready' | 'blocked';
+    detail: string;
+  }>;
+}
+
 export const fetchMonitoring = () =>
   safeGet<MonitoringSnapshot>('/monitoring', () => ({
     ok: true,
@@ -240,6 +263,56 @@ export const fetchMonitoring = () =>
       poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
     },
     ai: { configured: false, model: 'local-fallback' },
+  }));
+
+export const fetchAdminOps = () =>
+  safeGet<AdminOpsSnapshot>('/admin-ops', () => ({
+    ok: true,
+    checkedAt: new Date().toISOString(),
+    summary: { ready: 2, pending: 3, blocked: 0 },
+    actions: [
+      {
+        id: 'validate-feed',
+        label: 'Validar feed real',
+        status: 'pending',
+        detail: 'Configura RESULTS_SOURCE_URL cuando tengas proveedor autorizado de marcadores.',
+        command: 'vercel env add RESULTS_SOURCE_URL production',
+      },
+      {
+        id: 'run-smoke',
+        label: 'Smoke test producción',
+        status: 'ready',
+        detail: 'Comprueba home, datos, quiniela y analista contra el dominio público.',
+        command: 'pnpm test:e2e',
+      },
+      {
+        id: 'refresh-assets',
+        label: 'Regenerar assets locales',
+        status: 'ready',
+        detail: 'Actualiza intel packs, galerías de sedes y kits generados/fallback.',
+        command: 'pnpm assets:finalize && pnpm validate:data',
+      },
+    ],
+    dataGaps: [
+      {
+        id: 'referees',
+        label: 'Árbitros oficiales',
+        status: 'pending',
+        detail: 'Cargar cuando FIFA publique designaciones por partido; no se inventan nombres.',
+      },
+      {
+        id: 'h2h',
+        label: 'Historial H2H',
+        status: 'pending',
+        detail: 'Pipeline listo para una fuente histórica autorizada o curado manual.',
+      },
+      {
+        id: 'final-squads',
+        label: 'Convocatorias finales',
+        status: 'pending',
+        detail: 'Reemplazar por listas finales oficiales cuando existan.',
+      },
+    ],
   }));
 
 export interface LeaderboardEntry {

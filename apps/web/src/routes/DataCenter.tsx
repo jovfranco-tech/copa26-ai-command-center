@@ -3,14 +3,17 @@ import { Icon, Empty, type IconName } from '@worldcup/ui';
 import { intelDataPacks, intelGeneratedAt, weatherMeta } from '@/generated/intelPacks';
 import { playerRatingMeta } from '@/generated/playerRatings';
 import {
+  fetchAdminOps,
   fetchDataSyncCheck,
   fetchMonitoring,
   fetchPoolStatus,
+  type AdminOpsSnapshot,
   type DataSyncCheck,
   type MonitoringSnapshot,
   type PoolPersistenceStatus,
 } from '@/lib/api';
 import { useMatches, usePlayers, useSyncStatus, useTeams, useVenues } from '@/hooks';
+import { buildDataReadiness, type DataReadiness } from '@/lib/opsIntelligence';
 import { usePreferences } from '@/store/preferences';
 
 export function DataCenter() {
@@ -23,6 +26,7 @@ export function DataCenter() {
   const [check, setCheck] = useState<DataSyncCheck | null>(null);
   const [poolStatus, setPoolStatus] = useState<PoolPersistenceStatus | null>(null);
   const [monitoring, setMonitoring] = useState<MonitoringSnapshot | null>(null);
+  const [adminOps, setAdminOps] = useState<AdminOpsSnapshot | null>(null);
   const [checking, setChecking] = useState(false);
 
   const played = (matches?.items ?? []).filter((m) => m.status === 'FT').length;
@@ -30,6 +34,31 @@ export function DataCenter() {
   const estimatedRatings = playerRatingMeta.total - playerRatingMeta.resolved;
   const aiCallsToday = monitoring?.usage.items?.['ai.analyst'] ?? 0;
   const poolAgentCallsToday = monitoring?.usage.items?.['ai.pool-agent'] ?? 0;
+  const readiness = useMemo(
+    () =>
+      buildDataReadiness({
+        teams: teams?.count ?? 0,
+        matches: matches?.count ?? 0,
+        players: players?.count ?? 0,
+        venues: venues?.count ?? 0,
+        estimatedRatings,
+        resultsSource: check?.resultsSource,
+        poolDurable: poolStatus?.durable,
+        aiConfigured: monitoring?.ai.configured,
+        errors: check?.errors?.length ?? 0,
+      }),
+    [
+      teams?.count,
+      matches?.count,
+      players?.count,
+      venues?.count,
+      estimatedRatings,
+      check?.resultsSource,
+      check?.errors?.length,
+      poolStatus?.durable,
+      monitoring?.ai.configured,
+    ],
+  );
   const roleUsage = useMemo(
     () => [
       { role: 'Admin', access: 'IA remota + actualización manual', limit: monitoring?.limits.analyst ?? '30 / 10 min', usage: aiCallsToday },
@@ -42,14 +71,16 @@ export function DataCenter() {
   const runCheck = async () => {
     setChecking(true);
     try {
-      const [dataCheck, pool, usage] = await Promise.all([
+      const [dataCheck, pool, usage, ops] = await Promise.all([
         fetchDataSyncCheck(),
         fetchPoolStatus(),
         fetchMonitoring(),
+        fetchAdminOps(),
       ]);
       setCheck(dataCheck);
       setPoolStatus(pool.persistence);
       setMonitoring(usage);
+      setAdminOps(ops);
     } finally {
       setChecking(false);
     }
@@ -75,6 +106,8 @@ export function DataCenter() {
           {checking ? 'Revisando…' : 'Actualizar ahora'}
         </button>
       </div>
+
+      <DataReadinessPanel readiness={readiness} checking={checking} onRunCheck={runCheck} />
 
       <div className="data-grid">
         <DataTile icon="teams" label="Selecciones" value={teams?.count ?? 0} note="Calendario 2026" />
@@ -140,7 +173,7 @@ export function DataCenter() {
         </div>
       </div>
 
-      <AdminOpsPanel check={check} checking={checking} onRunCheck={runCheck} />
+      <AdminOpsPanel check={check} adminOps={adminOps} checking={checking} onRunCheck={runCheck} />
 
       <div className="card ai-native-ops">
         <div className="card-hd">
@@ -351,6 +384,47 @@ export function DataCenter() {
   );
 }
 
+function DataReadinessPanel({
+  readiness,
+  checking,
+  onRunCheck,
+}: {
+  readiness: DataReadiness;
+  checking: boolean;
+  onRunCheck: () => void;
+}) {
+  return (
+    <section className={`data-readiness-panel ${readiness.status}`}>
+      <div className="data-readiness-score">
+        <span className="mono-label">Preparación operativa</span>
+        <strong>{readiness.score}</strong>
+        <p>{readiness.label}</p>
+        <button type="button" className="btn gold" onClick={onRunCheck} disabled={checking}>
+          <Icon name={checking ? 'activity' : 'cloud'} size={14} />
+          {checking ? 'Revisando...' : 'Revisar ahora'}
+        </button>
+      </div>
+      <div className="data-readiness-checks">
+        {readiness.checks.map((check) => (
+          <div key={check.id} className={`data-readiness-check ${check.status}`}>
+            <span className={check.status === 'ok' ? 'dot-ok' : check.status === 'warn' ? 'dot-warn' : 'dot'} />
+            <div>
+              <strong>{check.label}</strong>
+              <small>{check.detail}</small>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="data-readiness-actions">
+        <span className="mono-label">Siguientes pasos</span>
+        {readiness.nextActions.map((action) => (
+          <p key={action}>{action}</p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ExecSignal({
   status,
   title,
@@ -420,14 +494,19 @@ function AINativeTile({ label, value, note }: { label: string; value: string; no
 
 function AdminOpsPanel({
   check,
+  adminOps,
   checking,
   onRunCheck,
 }: {
   check: DataSyncCheck | null;
+  adminOps: AdminOpsSnapshot | null;
   checking: boolean;
   onRunCheck: () => void;
 }) {
   const errors = check?.errors ?? [];
+  const ready = adminOps?.summary.ready ?? 0;
+  const pending = adminOps?.summary.pending ?? 0;
+  const blocked = adminOps?.summary.blocked ?? 0;
   return (
     <div className="card admin-ops-panel">
       <div className="admin-ops-main">
@@ -437,8 +516,8 @@ function AdminOpsPanel({
       </div>
       <div className="admin-ops-grid">
         <OpsMetric label="Última revisión" value={check ? new Date(check.checkedAt).toLocaleTimeString() : 'Pendiente'} />
-        <OpsMetric label="Errores" value={String(errors.length)} />
-        <OpsMetric label="Prueba smoke" value="pnpm test:e2e" />
+        <OpsMetric label="Listas" value={String(ready)} />
+        <OpsMetric label="Pendientes" value={`${pending}/${blocked}`} />
       </div>
       <div className="admin-ops-actions">
         <button type="button" className="btn gold" onClick={onRunCheck} disabled={checking}>
@@ -458,6 +537,31 @@ function AdminOpsPanel({
                 <strong>{phase.label}</strong>
                 <p>{phase.detail}</p>
               </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      {adminOps?.actions.length ? (
+        <div className="admin-action-grid">
+          {adminOps.actions.map((action) => (
+            <div key={action.id} className={`admin-action-card ${action.status}`}>
+              <span className={action.status === 'ready' ? 'dot-ok' : action.status === 'blocked' ? 'dot-neg' : 'dot-warn'} />
+              <div>
+                <strong>{action.label}</strong>
+                <p>{action.detail}</p>
+                {action.command ? <code>{action.command}</code> : null}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      {adminOps?.dataGaps.length ? (
+        <div className="admin-gap-grid">
+          <span className="mono-label">Pendientes oficiales</span>
+          {adminOps.dataGaps.map((gap) => (
+            <div key={gap.id} className="admin-gap-row">
+              <strong>{gap.label}</strong>
+              <p>{gap.detail}</p>
             </div>
           ))}
         </div>

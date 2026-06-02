@@ -1,17 +1,18 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Icon, Section, StatTile, Skeleton } from '@worldcup/ui';
-import { avg, fmtGD, type Match } from '@worldcup/shared';
+import { Icon, Section, StatTile, Skeleton, type IconName } from '@worldcup/ui';
+import { avg, fmtGD, type Match, type Team } from '@worldcup/shared';
 import { MatchCard, MatchRow, Ticker, PlayerMini } from '@/components/cards';
 import { TeamCrest } from '@/components/identity';
 import { MatchdayHero } from '@/components/MatchdayHero';
 import { MockBanner } from '@/components/MockBanner';
 import { TournamentTimeline } from '@/components/TournamentTimeline';
-import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt, useTeamsMap } from '@/hooks';
+import { useMatches, useStandings, useStats, useSyncStatus, useHolographicTilt, useTeams, useTeamsMap } from '@/hooks';
 import { focusMatch, lockLabel, weatherSummary } from '@/lib/matchMeta';
+import { buildDayBrief, buildPoolDiagnostics } from '@/lib/opsIntelligence';
 import { shareTextCard } from '@/lib/shareCards';
 import { useFavorites } from '@/store/favorites';
-import { usePool } from '@/store/pool';
+import { usePool, type PoolPick } from '@/store/pool';
 import { getBrowserAudioContext, stadiumAudio } from '@/lib/audioSynth';
 
 /** Derive the tournament "focus day": a live day, else latest played, else next up. */
@@ -30,6 +31,7 @@ export function Dashboard() {
   const { data: stats } = useStats();
   const { data: standings } = useStandings();
   const { data: sync } = useSyncStatus();
+  const { data: teamsData } = useTeams();
   const favTeams = useFavorites((s) => s.teams);
   const favPlayers = useFavorites((s) => s.players);
   const favMatches = useFavorites((s) => s.matches);
@@ -65,6 +67,12 @@ export function Dashboard() {
         <MatchdayHero match={heroMatch} />
         <FamilyLaunchPanel match={heroMatch} />
         <ProactiveAlerts match={heroMatch} picks={pool.picks} favoritesCount={favTeams.length + favPlayers.length + favMatches.length} />
+        <OperationalPulse
+          matches={matches}
+          teams={teamsData?.items ?? []}
+          picks={pool.picks}
+          favoritesCount={favTeams.length + favPlayers.length + favMatches.length}
+        />
 
         <div className="stat-strip" style={{ marginBottom: 18 }}>
         <StatTile icon="ball" label="Goles" value={goals} sub="Torneo" spark={[40, 55, 38, 70, 62, 90, 100]} />
@@ -238,6 +246,56 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function OperationalPulse({
+  matches,
+  teams,
+  picks,
+  favoritesCount,
+}: {
+  matches: Match[];
+  teams: Team[];
+  picks: Record<string, PoolPick>;
+  favoritesCount: number;
+}) {
+  const navigate = useNavigate();
+  const brief = buildDayBrief(matches, teams, picks);
+  const diagnostics = buildPoolDiagnostics(matches, picks);
+  return (
+    <section className="ops-pulse-board">
+      <div className="ops-pulse-main">
+        <span className="mono-label">Centro operativo</span>
+        <strong>{brief.title}</strong>
+        <p>{brief.subtitle}</p>
+        <div className="ops-pulse-actions">
+          <button type="button" className="btn gold" onClick={() => navigate({ to: '/pool' })}>
+            <Icon name="trophy" size={14} /> Completar quiniela
+          </button>
+          <button type="button" className="btn ghost" onClick={() => navigate({ to: '/analyst' })}>
+            <Icon name="ai" size={14} /> Pedir plan IA
+          </button>
+        </div>
+      </div>
+      <div className="ops-pulse-grid">
+        <PulseTile icon="target" label="Picks" value={`${diagnostics.coveragePct}%`} text={diagnostics.recommendedAction} />
+        <PulseTile icon="activity" label="Marcadores" value={`${diagnostics.scorePct}%`} text={`${diagnostics.missingScore} por cerrar`} />
+        <PulseTile icon="star" label="Favoritos" value={String(favoritesCount)} text={favoritesCount ? 'Alertas personalizadas' : 'Agrega seguimiento'} />
+        <PulseTile icon="sparkSmall" label="IA siguiente" value="1 acción" text={brief.nextAction} />
+      </div>
+    </section>
+  );
+}
+
+function PulseTile({ icon, label, value, text }: { icon: IconName; label: string; value: string; text: string }) {
+  return (
+    <div className="ops-pulse-tile">
+      <Icon name={icon} size={14} />
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small>{text}</small>
     </div>
   );
 }
