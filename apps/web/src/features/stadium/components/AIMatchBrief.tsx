@@ -10,46 +10,95 @@ interface AIMatchBriefProps {
   lineups?: typeof MATCH_LINEUPS;
 }
 
+const COORD_REGISTRY: Record<string, { x: number; y: number }> = {
+  // ARG
+  'arg-gk': { x: 50, y: 112 },
+  'arg-lb': { x: 18, y: 88 },
+  'arg-cb-l': { x: 38, y: 92 },
+  'arg-cb-r': { x: 62, y: 92 },
+  'arg-rb': { x: 82, y: 88 },
+  'arg-cm-l': { x: 28, y: 65 },
+  'arg-dm': { x: 50, y: 68 },
+  'arg-cm-r': { x: 72, y: 65 },
+  'arg-rw': { x: 22, y: 38 },
+  'arg-st': { x: 50, y: 40 },
+  'arg-ss': { x: 78, y: 38 },
+  // FRA
+  'fra-gk': { x: 50, y: 112 },
+  'fra-lb': { x: 18, y: 88 },
+  'fra-cb-l': { x: 38, y: 92 },
+  'fra-cb-r': { x: 62, y: 92 },
+  'fra-rb': { x: 82, y: 88 },
+  'fra-dm-l': { x: 34, y: 68 },
+  'fra-dm-r': { x: 66, y: 68 },
+  'fra-lw': { x: 20, y: 44 },
+  'fra-cam': { x: 50, y: 46 },
+  'fra-rw': { x: 80, y: 44 },
+  'fra-st': { x: 50, y: 22 },
+  // BRA
+  'bra-gk': { x: 50, y: 112 },
+  'bra-rb': { x: 82, y: 88 },
+  'bra-cb-r': { x: 62, y: 92 },
+  'bra-cb-l': { x: 38, y: 92 },
+  'bra-lb': { x: 18, y: 88 },
+  'bra-dm': { x: 38, y: 68 },
+  'bra-cm': { x: 62, y: 68 },
+  'bra-rw': { x: 82, y: 38 },
+  'bra-st-r': { x: 60, y: 30 },
+  'bra-st-l': { x: 40, y: 30 },
+  'bra-lw': { x: 18, y: 38 },
+  // GER
+  'ger-gk': { x: 50, y: 112 },
+  'ger-rcb': { x: 65, y: 92 },
+  'ger-cb': { x: 50, y: 94 },
+  'ger-lcb': { x: 35, y: 92 },
+  'ger-rwb': { x: 82, y: 76 },
+  'ger-lwb': { x: 18, y: 76 },
+  'ger-dm': { x: 50, y: 70 },
+  'ger-am-r': { x: 65, y: 50 },
+  'ger-am-l': { x: 35, y: 50 },
+  'ger-st-r': { x: 60, y: 26 },
+  'ger-st-l': { x: 40, y: 26 },
+  // ESP
+  'esp-gk': { x: 50, y: 112 },
+  'esp-rb': { x: 82, y: 88 },
+  'esp-cb-r': { x: 62, y: 92 },
+  'esp-cb-l': { x: 38, y: 92 },
+  'esp-lb': { x: 18, y: 88 },
+  'esp-dm': { x: 50, y: 68 },
+  'esp-cm-r': { x: 72, y: 65 },
+  'esp-cm-l': { x: 28, y: 65 },
+  'esp-rw': { x: 80, y: 38 },
+  'esp-st': { x: 50, y: 30 },
+  'esp-lw': { x: 20, y: 38 },
+  // NED
+  'ned-gk': { x: 50, y: 112 },
+  'ned-rwb': { x: 82, y: 78 },
+  'ned-rcb': { x: 65, y: 92 },
+  'ned-cb': { x: 50, y: 94 },
+  'ned-lcb': { x: 35, y: 92 },
+  'ned-lwb': { x: 18, y: 78 },
+  'ned-dm': { x: 50, y: 70 },
+  'ned-cm-r': { x: 68, y: 50 },
+  'ned-cm-l': { x: 32, y: 50 },
+  'ned-st-r': { x: 60, y: 28 },
+  'ned-st-l': { x: 40, y: 28 },
+};
+
 export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
   match,
   onSelectPlayer,
   selectedPlayerId,
   lineups = MATCH_LINEUPS
 }) => {
-  const argPlayers = lineups.teams.home.players;
-  const fraPlayers = lineups.teams.away.players;
+  const homePlayers = lineups.teams.home.players;
+  const awayPlayers = lineups.teams.away.players;
 
-  // Exact coordinates for visual vertical layout (matches mockup layout perfectly)
-  const argCoords: Record<string, { x: number, y: number }> = {
-    'arg-gk': { x: 50, y: 112 },
-    'arg-lb': { x: 18, y: 88 },
-    'arg-cb-l': { x: 38, y: 92 },
-    'arg-cb-r': { x: 62, y: 92 },
-    'arg-rb': { x: 82, y: 88 },
-    'arg-cm-l': { x: 28, y: 65 },
-    'arg-dm': { x: 50, y: 68 },
-    'arg-cm-r': { x: 72, y: 65 },
-    'arg-rw': { x: 22, y: 38 },
-    'arg-st': { x: 50, y: 40 },
-    'arg-ss': { x: 78, y: 38 },
-  };
-
-  const fraCoords: Record<string, { x: number, y: number }> = {
-    'fra-gk': { x: 50, y: 112 },
-    'fra-lb': { x: 18, y: 88 },
-    'fra-cb-l': { x: 38, y: 92 },
-    'fra-cb-r': { x: 62, y: 92 },
-    'fra-rb': { x: 82, y: 88 },
-    'fra-dm-l': { x: 34, y: 68 },
-    'fra-dm-r': { x: 66, y: 68 },
-    'fra-lw': { x: 20, y: 44 },
-    'fra-cam': { x: 50, y: 46 },
-    'fra-rw': { x: 80, y: 44 },
-    'fra-st': { x: 50, y: 22 },
-  };
+  const homeColor = lineups.teams.home.color;
+  const awayColor = lineups.teams.away.color;
 
   // Helper to render a vertical pitch SVG
-  const renderVerticalPitch = (players: Player[], coords: Record<string, { x: number, y: number }>, teamCode: 'ARG' | 'FRA') => {
+  const renderVerticalPitch = (players: Player[], side: 'home' | 'away') => {
     return (
       <svg 
         viewBox="0 0 100 130" 
@@ -84,17 +133,18 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
 
         {/* Render Players */}
         {players.map((player) => {
-          const pt = coords[player.slotId || player.id];
-          if (!pt) return null;
+          const pt = COORD_REGISTRY[player.slotId || player.id] || 
+                     (player.position === 'GK' ? { x: 50, y: 112 } :
+                      player.position === 'DF' ? { x: 50, y: 90 } :
+                      player.position === 'MF' ? { x: 50, y: 68 } : { x: 50, y: 30 });
 
           const isSelected = selectedPlayerId === player.id;
           
-          // Color coding matching mockup
-          let markerColor = 'var(--accent-cyan)';
+          let markerColor = homeColor;
           if (player.position === 'GK') {
             markerColor = '#fbbf24'; // Yellow/Gold GK
-          } else if (teamCode === 'FRA') {
-            markerColor = 'var(--accent-blue)'; // Lighter blue for France on dark pitch
+          } else if (side === 'away') {
+            markerColor = awayColor === '#ffffff' ? '#94a3b8' : awayColor;
           }
 
           return (
@@ -180,7 +230,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
           }}
         >
           <span style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent-emerald)' }}></span>
-          En Vivo
+          {match.status === 'live' ? 'En Vivo' : match.status === 'pre-match' ? 'Pre-partido' : 'Finalizado'}
         </span>
       </div>
 
@@ -197,32 +247,32 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
       {/* Split Teams Row Container */}
       <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px', paddingRight: '4px' }}>
         
-        {/* Team 1: Argentina */}
+        {/* Team 1: Home Team */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
-              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-cyan)' }}></span>
-              ARGENTINA
+              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: homeColor }}></span>
+              {lineups.teams.home.teamName.toUpperCase()}
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              4-3-3
+              {lineups.teams.home.formation}
             </span>
           </div>
-          {renderVerticalPitch(argPlayers, argCoords, 'ARG')}
+          {renderVerticalPitch(homePlayers, 'home')}
         </div>
 
-        {/* Team 2: Francia */}
+        {/* Team 2: Away Team */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
-              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6' }}></span>
-              FRANCIA
+              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: awayColor === '#ffffff' ? '#94a3b8' : awayColor }}></span>
+              {lineups.teams.away.teamName.toUpperCase()}
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              4-2-3-1
+              {lineups.teams.away.formation}
             </span>
           </div>
-          {renderVerticalPitch(fraPlayers, fraCoords, 'FRA')}
+          {renderVerticalPitch(awayPlayers, 'away')}
         </div>
 
       </div>

@@ -26,7 +26,6 @@ import {
 function App() {
   const { data: dbPlayersData } = usePlayers();
   const dbPlayers = dbPlayersData?.items ?? [];
-  const mappedLineups = mapDatabasePlayersToLineups(dbPlayers);
   const [modoInmersivo, setModoInmersivo] = useState<boolean>(false);
 
   const [fixtures, setFixtures] = useState<Match[]>(MATCH_FIXTURES);
@@ -49,11 +48,38 @@ function App() {
   const currentMatchIndex = fixtures.findIndex(m => m.id === selectedMatchId);
   const currentMatch = fixtures[currentMatchIndex] || fixtures[0];
 
+  const mappedLineups = mapDatabasePlayersToLineups(
+    dbPlayers,
+    currentMatch.teams.homeShort,
+    currentMatch.teams.awayShort,
+    currentMatch.id
+  );
+
   // Handler to update selected fixture
   const handleMatchChange = (matchId: string) => {
     setSelectedMatchId(matchId);
     setActiveZone('none');
-    setSelectedPlayer(null);
+    
+    // Resolve the players for the next match to reset or update the selected player
+    const nextMatch = fixtures.find(m => m.id === matchId) || fixtures[0];
+    const nextLineups = mapDatabasePlayersToLineups(
+      dbPlayers,
+      nextMatch.teams.homeShort,
+      nextMatch.teams.awayShort,
+      nextMatch.id
+    );
+    
+    if (selectedPlayer) {
+      const isStillPresent = nextLineups.teams.home.players.some(p => p.id === selectedPlayer.id) ||
+                            nextLineups.teams.away.players.some(p => p.id === selectedPlayer.id);
+      if (!isStillPresent) {
+        // Default to the star/first player of the home team in the new match
+        const defaultPlayer = nextLineups.teams.home.players[0] || null;
+        setSelectedPlayer(defaultPlayer);
+      }
+    } else {
+      setSelectedPlayer(null);
+    }
   };
 
   // Handler to update selected match status

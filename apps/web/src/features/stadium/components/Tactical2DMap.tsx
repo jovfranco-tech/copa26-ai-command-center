@@ -259,11 +259,11 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
 
       {/* Squad Lineups Grid (Argentina left, France right) - Phase 6 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
-        {/* Argentina Lineup Column */}
+        {/* Home Team Lineup Column */}
         <div style={{ padding: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '6px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: homeColor }}>ARGENTINA</span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>F: {MATCH_LINEUPS.teams.home.formation}</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: homeColor }}>{lineups.teams.home.teamName.toUpperCase()}</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>F: {lineups.teams.home.formation}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '180px', overflowY: 'auto' }}>
             {homePlayers.map(p => {
@@ -308,11 +308,11 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
           </div>
         </div>
 
-        {/* France Lineup Column */}
+        {/* Away Team Lineup Column */}
         <div style={{ padding: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '6px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: awayColor }}>FRANCIA</span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>F: {MATCH_LINEUPS.teams.away.formation}</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: awayColor === '#ffffff' ? '#94a3b8' : awayColor }}>{lineups.teams.away.teamName.toUpperCase()}</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>F: {lineups.teams.away.formation}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '180px', overflowY: 'auto' }}>
             {awayPlayers.map(p => {
@@ -338,7 +338,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                       width: '16px', 
                       height: '16px', 
                       borderRadius: '3px', 
-                      background: p.position === 'GK' ? '#10b981' : awayColor, 
+                      background: p.position === 'GK' ? '#10b981' : awayColor === '#ffffff' ? '#94a3b8' : awayColor, 
                       color: '#fff', 
                       fontSize: '0.55rem', 
                       fontWeight: 800,

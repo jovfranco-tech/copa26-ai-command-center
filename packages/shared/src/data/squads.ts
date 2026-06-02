@@ -21,6 +21,8 @@ export const SQUADS: Record<string, SquadEntry[]> = {
     ['Nicolás Otamendi', 'DF', 'Benfica', 38, 19],
     ['Nahuel Molina', 'DF', 'Atlético Madrid', 27, 26],
     ['Emiliano Martínez', 'GK', 'Aston Villa', 33, 23],
+    ['Ángel Di María', 'FW', 'Benfica', 38, 11],
+    ['Nicolás Tagliafico', 'DF', 'Lyon', 33, 3],
   ],
   FRA: [
     ['Kylian Mbappé', 'FW', 'Real Madrid', 27, 10],
@@ -32,6 +34,9 @@ export const SQUADS: Record<string, SquadEntry[]> = {
     ['Dayot Upamecano', 'DF', 'Bayern', 27, 4],
     ['Jules Koundé', 'DF', 'Barcelona', 27, 5],
     ['Mike Maignan', 'GK', 'Milan', 30, 16],
+    ['Olivier Giroud', 'FW', 'LAFC', 39, 9],
+    ['Theo Hernández', 'DF', 'Milan', 28, 22],
+    ['Adrien Rabiot', 'MF', 'Marseille', 31, 14],
   ],
   ESP: [
     ['Lamine Yamal', 'FW', 'Barcelona', 18, 19],
@@ -43,6 +48,8 @@ export const SQUADS: Record<string, SquadEntry[]> = {
     ['Robin Le Normand', 'DF', 'Atlético Madrid', 29, 3],
     ['Marc Cucurella', 'DF', 'Chelsea', 27, 24],
     ['Unai Simón', 'GK', 'Athletic Club', 28, 23],
+    ['Dani Carvajal', 'DF', 'Real Madrid', 34, 2],
+    ['Aymeric Laporte', 'DF', 'Al-Nassr', 32, 14],
   ],
   ENG: [
     ['Jude Bellingham', 'MF', 'Real Madrid', 22, 10],
@@ -65,6 +72,8 @@ export const SQUADS: Record<string, SquadEntry[]> = {
     ['Éder Militão', 'DF', 'Real Madrid', 28, 3],
     ['Gabriel Magalhães', 'DF', 'Arsenal', 28, 6],
     ['Alisson', 'GK', 'Liverpool', 33, 1],
+    ['Danilo', 'DF', 'Juventus', 34, 2],
+    ['Lucas Paquetá', 'MF', 'West Ham', 28, 17],
   ],
   POR: [
     ['Cristiano Ronaldo', 'FW', 'Al-Nassr', 41, 7],
@@ -85,6 +94,9 @@ export const SQUADS: Record<string, SquadEntry[]> = {
     ['Virgil van Dijk', 'DF', 'Liverpool', 34, 4],
     ['Denzel Dumfries', 'DF', 'Inter', 29, 22],
     ['Bart Verbruggen', 'GK', 'Brighton', 23, 1],
+    ['Nathan Aké', 'DF', 'Manchester City', 31, 5],
+    ['Stefan de Vrij', 'DF', 'Inter', 34, 6],
+    ['Jeremie Frimpong', 'DF', 'Leverkusen', 25, 12],
   ],
   BEL: [
     ['Kevin De Bruyne', 'MF', 'Napoli', 34, 7],
@@ -103,6 +115,10 @@ export const SQUADS: Record<string, SquadEntry[]> = {
     ['Antonio Rüdiger', 'DF', 'Real Madrid', 32, 2],
     ['Jonathan Tah', 'DF', 'Bayern', 30, 4],
     ['Marc-André ter Stegen', 'GK', 'Barcelona', 33, 22],
+    ['İlkay Gündoğan', 'MF', 'Barcelona', 35, 21],
+    ['Leroy Sané', 'FW', 'Bayern', 30, 19],
+    ['David Raum', 'DF', 'RB Leipzig', 28, 3],
+    ['Nico Schlotterbeck', 'DF', 'Dortmund', 26, 15],
   ],
   CRO: [
     ['Luka Modrić', 'MF', 'Milan', 40, 10],

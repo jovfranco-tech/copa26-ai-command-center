@@ -3,7 +3,7 @@ export interface Player {
   name: string;
   displayName: string;
   number: number;
-  team: 'ARG' | 'FRA';
+  team: string;
   position: 'GK' | 'DF' | 'MF' | 'FW';
   positionLabel: string; // e.g., 'Portero', 'Defensa Central', 'Mediocampista'
   tacticalRole: string;
@@ -20,7 +20,7 @@ export interface Player {
 }
 
 export interface TeamLineup {
-  teamCode: 'ARG' | 'FRA';
+  teamCode: string;
   teamName: string;
   color: string;
   standsColor: string;

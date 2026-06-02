@@ -281,6 +281,14 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:St._Louis_City_vs_Aston_Villa_(Jul_2025)_14_(Emiliano_Mart%C3%ADnez).jpg"
   },
+  "ARG-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg",
+    "ext": "jpg"
+  },
+  "ARG-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
+    "ext": "jpg"
+  },
   "ARG-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Lautaro_Mart%C3%ADnez_%28cropped%29.jpg",
     "ext": "jpg",
@@ -750,6 +758,18 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/66/Picture_with_Mbapp%C3%A9_%28cropped_and_rotated%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Kylian_Mbapp%C3%A9"
+  },
+  "FRA-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg",
+    "ext": "jpg"
+  },
+  "FRA-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg",
+    "ext": "jpg"
+  },
+  "FRA-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Rabiot_cropped.jpg",
+    "ext": "jpg"
   },
   "FRA-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Ousmane_Demb%C3%A9l%C3%A9_2018_%28cropped%29.jpg",
@@ -1430,5 +1450,25 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Abbosbek_Fayzullaev_11_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_UECL_20250821_%285%29.jpg/3840px-Abbosbek_Fayzullaev_11_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_UECL_20250821_%285%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Abbosbek_Fayzullaev"
+  },
+  "fra-st": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg",
+    "ext": "jpg"
+  },
+  "fra-lb": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg",
+    "ext": "jpg"
+  },
+  "fra-dm-l": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Rabiot_cropped.jpg",
+    "ext": "jpg"
+  },
+  "arg-rw": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg",
+    "ext": "jpg"
+  },
+  "arg-lb": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
+    "ext": "jpg"
   }
 };
