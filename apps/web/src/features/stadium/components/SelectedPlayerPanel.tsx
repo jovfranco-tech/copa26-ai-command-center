@@ -16,6 +16,158 @@ interface SelectedPlayerPanelProps {
   status: 'pre-match' | 'live' | 'post-match';
 }
 
+// Rebuilt dedicated identity block to prevent any compression or styling bleed
+const PlayerIdentityCard: React.FC<{
+  player: Player;
+  ratings: ReturnType<typeof playerRatings>;
+  teamGlowColor: string;
+}> = ({ player, ratings, teamGlowColor }) => {
+  return (
+    <div 
+      className="player-detail-identity" 
+      style={{ 
+        display: 'flex', 
+        alignItems: 'center',
+        gap: '12px', 
+        padding: '14px 16px', 
+        minHeight: '76px', 
+        height: 'auto',
+        width: '100%', 
+        borderRadius: '16px', 
+        margin: '12px 0 14px 0', 
+        overflow: 'visible',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-subtle)',
+        borderLeft: `4px solid ${teamGlowColor}`,
+        position: 'relative',
+        boxSizing: 'border-box',
+        flexShrink: 0
+      }}
+    >
+      {/* Watermark number in background (very tenue, fits inside boundaries) */}
+      <div style={{
+        position: 'absolute',
+        right: '8px',
+        bottom: '4px',
+        fontSize: '2rem',
+        fontWeight: 900,
+        color: teamGlowColor,
+        opacity: 0.02,
+        userSelect: 'none',
+        pointerEvents: 'none',
+        lineHeight: 1,
+        zIndex: 0
+      }}>
+        #{player.number}
+      </div>
+
+      {/* Left: Avatar (fully circular wrapper) */}
+      <div style={{ 
+        position: 'relative', 
+        flex: 'none', 
+        width: '48px', 
+        height: '48px', 
+        borderRadius: '999px',
+        overflow: 'hidden',
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        background: 'rgba(255, 255, 255, 0.03)',
+        border: '1px solid var(--border-subtle)',
+        zIndex: 1,
+        flexShrink: 0
+      }}>
+        <PlayerAvatar player={player as unknown as SharedPlayer} size={48} />
+      </div>
+
+      {/* Middle: Name/Metadata Column */}
+      <div style={{ flex: 1, minWidth: 0, zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        {/* Player Name (safe ellipsis only on text) */}
+        <span style={{ 
+          fontWeight: 800, 
+          fontSize: '16px', 
+          color: 'var(--text-primary)', 
+          overflow: 'hidden', 
+          textOverflow: 'ellipsis', 
+          whiteSpace: 'nowrap', 
+          lineHeight: '1.2'
+        }} title={player.name}>
+          {player.name}
+        </span>
+
+        {/* Country · Club · Position */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.72rem', color: 'var(--text-secondary)', flexWrap: 'wrap', marginTop: '2px' }}>
+          <TeamFlag code={player.team} size={11} />
+          <span>{player.team === 'ARG' ? 'Argentina' : 'Francia'}</span>
+          <span>•</span>
+          <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '90px' }} title={player.club}>
+            {player.club || '—'}
+          </span>
+          <span>•</span>
+          <span className={`pos-tag pos-${player.position}`} style={{ fontSize: '0.62rem', padding: '0 3px', lineHeight: 1.3 }}>
+            {player.position}
+          </span>
+        </div>
+
+        {/* Badges Row (Source + Confidence) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', marginTop: '3px' }}>
+          {/* Source Tag */}
+          <span className={`rating-source ${ratings.source}`} style={{ fontSize: '0.6rem', padding: '1px 3px', borderRadius: '2px', flexShrink: 0 }} title={ratingSourceText(ratings)}>
+            {ratings.source === 'fc26' ? 'FC 26' : 'Est.'}
+          </span>
+
+          {/* Confidence Badge (DataSourceBadge) */}
+          <DataSourceBadge
+            label={ratings.source === 'fc26' ? 'Rating FC 26' : 'Rating estimado'}
+            source={ratings.sourceLabel}
+            date={ratings.source === 'fc26' ? playerRatingMeta.downloadedAt.slice(0, 10) : '2026-05-30'}
+            confidence={ratings.source === 'fc26' ? 'Alta' : 'Media'}
+            compact
+          />
+        </div>
+      </div>
+
+      {/* Right Area: Number & GRL Badge */}
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'flex-end', 
+        gap: '4px', 
+        flexShrink: 0,
+        zIndex: 1
+      }}>
+        {/* Number Badge */}
+        <span className="num" style={{ 
+          fontSize: '0.85rem', 
+          color: 'var(--text-muted)', 
+          fontWeight: 800,
+          flexShrink: 0
+        }}>
+          #{player.number}
+        </span>
+
+        {/* OVR Badge */}
+        <span
+          className="num"
+          style={{
+            background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
+            color: '#181203',
+            fontWeight: 800,
+            fontSize: '0.65rem',
+            padding: '2px 5px',
+            borderRadius: '4px',
+            lineHeight: 1,
+            flexShrink: 0
+          }}
+          title="Valoración General"
+        >
+          {ratings.overall} GRL
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
   player,
   onClose,
@@ -106,152 +258,12 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           maxHeight: 'calc(100dvh - 120px)'
         }}
       >
-        {/* Dedicated Player Identity Card (player-detail-identity) */}
-        <div 
-          className="player-detail-identity" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center',
-            gap: '12px', 
-            padding: '14px 16px', 
-            minHeight: '72px', 
-            width: '100%', 
-            borderRadius: '16px', 
-            margin: '12px 0 14px 0', 
-            overflow: 'visible',
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            borderLeft: `4px solid ${teamGlowColor}`,
-            position: 'relative',
-            boxSizing: 'border-box',
-            flexShrink: 0
-          }}
-        >
-          {/* Watermark number in background (very tenue, fits inside boundaries) */}
-          <div style={{
-            position: 'absolute',
-            right: '8px',
-            bottom: '4px',
-            fontSize: '2rem',
-            fontWeight: 900,
-            color: teamGlowColor,
-            opacity: 0.02,
-            userSelect: 'none',
-            pointerEvents: 'none',
-            lineHeight: 1,
-            zIndex: 0
-          }}>
-            #{player.number}
-          </div>
-
-          {/* Left: Avatar (fully circular wrapper) */}
-          <div style={{ 
-            position: 'relative', 
-            flex: 'none', 
-            width: '48px', 
-            height: '48px', 
-            borderRadius: '999px',
-            overflow: 'hidden',
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid var(--border-subtle)',
-            zIndex: 1
-          }}>
-            <PlayerAvatar player={player as unknown as SharedPlayer} size={48} />
-          </div>
-
-          {/* Middle: Name/Metadata Column */}
-          <div style={{ flex: 1, minWidth: 0, zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            {/* Player Name (safe ellipsis only on text) */}
-            <span style={{ 
-              fontWeight: 800, 
-              fontSize: '17px', 
-              color: 'var(--text-primary)', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis', 
-              whiteSpace: 'nowrap', 
-              lineHeight: '1.2'
-            }} title={player.name}>
-              {player.name}
-            </span>
-
-            {/* Country · Club · Position */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.72rem', color: 'var(--text-secondary)', flexWrap: 'wrap', marginTop: '2px' }}>
-              <TeamFlag code={player.team} size={11} />
-              <span>{player.team === 'ARG' ? 'Argentina' : 'Francia'}</span>
-              <span>•</span>
-              <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '90px' }} title={player.club}>
-                {player.club || '—'}
-              </span>
-              <span>•</span>
-              <span className={`pos-tag pos-${player.position}`} style={{ fontSize: '0.62rem', padding: '0 3px', lineHeight: 1.3 }}>
-                {player.position}
-              </span>
-            </div>
-
-            {/* Badges Row (Source + Confidence) */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', marginTop: '3px' }}>
-              {/* Source Tag */}
-              <span className={`rating-source ${ratings.source}`} style={{ fontSize: '0.6rem', padding: '1px 3px', borderRadius: '2px', flexShrink: 0 }} title={ratingSourceText(ratings)}>
-                {ratings.source === 'fc26' ? 'FC 26' : 'Est.'}
-              </span>
-
-              {/* Confidence Badge (DataSourceBadge) */}
-              <DataSourceBadge
-                label={ratings.source === 'fc26' ? 'Rating FC 26' : 'Rating estimado'}
-                source={ratings.sourceLabel}
-                date={ratings.source === 'fc26' ? playerRatingMeta.downloadedAt.slice(0, 10) : '2026-05-30'}
-                confidence={ratings.source === 'fc26' ? 'Alta' : 'Media'}
-                compact
-              />
-            </div>
-
-            {/* Tactical role & zone */}
-            <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginTop: '2px' }}>
-              Rol: <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span> · Zona: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player)}</span>
-            </div>
-          </div>
-
-          {/* Right Area: Number & GRL Badge */}
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'flex-end', 
-            gap: '4px', 
-            flexShrink: 0,
-            zIndex: 1
-          }}>
-            {/* Number Badge */}
-            <span className="num" style={{ 
-              fontSize: '0.85rem', 
-              color: 'var(--text-muted)', 
-              fontWeight: 800,
-              flexShrink: 0
-            }}>
-              #{player.number}
-            </span>
-
-            {/* OVR Badge */}
-            <span
-              className="num"
-              style={{
-                background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
-                color: '#181203',
-                fontWeight: 800,
-                fontSize: '0.65rem',
-                padding: '2px 5px',
-                borderRadius: '4px',
-                lineHeight: 1,
-                flexShrink: 0
-              }}
-              title="Valoración General"
-            >
-              {ratings.overall} GRL
-            </span>
-          </div>
-        </div>
+        {/* Rebuilt Dedicated Player Identity Card (FichaJugadorIdentity / PlayerIdentityCard) */}
+        <PlayerIdentityCard 
+          player={player} 
+          ratings={ratings} 
+          teamGlowColor={teamGlowColor} 
+        />
 
         {/* Stats Reales Card */}
         <div 
@@ -454,6 +466,11 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Acciones Contextuales
           </span>
+          
+          {/* Tactical role & zone */}
+          <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginTop: '1px', marginBottom: '6px' }}>
+            Rol: <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span> · Zona: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player)}</span>
+          </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <button 

@@ -1409,4 +1409,12 @@
       gap: 8px;
     }
   }
+
+  /* Ensure the player detail identity avatar is fully circular and not overridden */
+  .player-detail-identity .player-avatar-wrapper,
+  .player-detail-identity .player-avatar-wrapper img,
+  .player-detail-identity .player-photo {
+    border-radius: 999px !important;
+    overflow: hidden !important;
+  }
 }
