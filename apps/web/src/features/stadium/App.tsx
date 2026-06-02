@@ -4,6 +4,7 @@ import { MATCH_FIXTURES } from './data/matchData';
 import type { Match } from './data/matchData';
 import { StadiumScene } from './components/StadiumScene';
 import { Tactical2DMap } from './components/Tactical2DMap';
+import { WebGLBoundary } from './components/WebGLBoundary';
 import { AIMatchBrief } from './components/AIMatchBrief';
 import { SelectedPlayerPanel } from './components/SelectedPlayerPanel';
 import type { Player } from './data/lineups';
@@ -345,20 +346,50 @@ function App() {
 
             {/* 3D R3F Viewport or 2D Chalkboard Fallback */}
             {!webGlFallback ? (
-              <StadiumScene 
-                match={currentMatch}
-                reduceEffects={reduceEffects}
-                activeZone={activeZone}
-                onZoneClick={(zone) => setActiveZone(activeZone === zone ? 'none' : zone)}
-                cameraView={cameraView}
-                cameraResetTrigger={cameraResetTrigger}
-                selectedPlayerId={selectedPlayer ? selectedPlayer.id : null}
-                onSelectPlayer={setSelectedPlayer}
-                visualizationMode={visualizationMode}
-                showTacticalZones={showTacticalZones}
-                mentalidad={mentalidad}
-                ritmo={ritmo}
-              />
+              <WebGLBoundary
+                fallback={
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      right: '12px',
+                      zIndex: 20,
+                      background: 'rgba(220, 38, 38, 0.9)',
+                      border: '1px solid rgba(239, 68, 68, 0.4)',
+                      color: '#ffffff',
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.75rem',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                    }}>
+                      ⚠️ <strong>Fallo de Gráficos 3D:</strong> WebGL no se pudo inicializar en este navegador/dispositivo. Se ha activado la vista de mapa táctico 2D como alternativa.
+                    </div>
+                    <Tactical2DMap 
+                      match={currentMatch}
+                      activeZone={activeZone}
+                      onZoneClick={(zone) => setActiveZone(activeZone === zone ? 'none' : zone)}
+                      selectedPlayerId={selectedPlayer ? selectedPlayer.id : null}
+                      onSelectPlayer={setSelectedPlayer}
+                    />
+                  </div>
+                }
+              >
+                <StadiumScene 
+                  match={currentMatch}
+                  reduceEffects={reduceEffects}
+                  activeZone={activeZone}
+                  onZoneClick={(zone) => setActiveZone(activeZone === zone ? 'none' : zone)}
+                  cameraView={cameraView}
+                  cameraResetTrigger={cameraResetTrigger}
+                  selectedPlayerId={selectedPlayer ? selectedPlayer.id : null}
+                  onSelectPlayer={setSelectedPlayer}
+                  visualizationMode={visualizationMode}
+                  showTacticalZones={showTacticalZones}
+                  mentalidad={mentalidad}
+                  ritmo={ritmo}
+                />
+              </WebGLBoundary>
             ) : (
               <Tactical2DMap 
                 match={currentMatch}
