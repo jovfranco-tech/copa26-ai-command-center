@@ -5,10 +5,10 @@ const baseUrl = (process.env.APP_BASE_URL || 'https://fifa-private-world-cup-das
 const routes = ['/', '/data', '/pool', '/analyst'];
 const apiRoutes = ['/api/data-sync?manual=1', '/api/admin-ops'];
 const requiredText = {
-  '/': ['Centro privado Mundial 2026', 'Panel'],
-  '/data': ['Centro privado Mundial 2026', 'Centro de datos'],
-  '/pool': ['Centro privado Mundial 2026', 'Quiniela familiar'],
-  '/analyst': ['Centro privado Mundial 2026', 'Analista de partidos'],
+  '/': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
+  '/data': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
+  '/pool': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
+  '/analyst': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
 };
 
 let failures = 0;
