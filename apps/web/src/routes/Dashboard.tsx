@@ -373,7 +373,7 @@ function FamilyLaunchPanel({ match }: { match: Match | null }) {
           `Sede: ${match.venue}`,
           'Acceso directo a quiniela familiar, modo TV y centro de datos.',
         ],
-        footer: 'Mundial 2026 privado',
+        footer: 'Mundial 2026 familiar',
         fileName: `partido-del-dia-${match.id}.png`,
       });
     } finally {
@@ -468,7 +468,7 @@ function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: numb
     playPodcastChime();
 
     const sentences = [
-      "¡Bienvenidos a El Minuto Táctico de la Copa del Mundo de Gala!",
+      "Bienvenidos a El Minuto Táctico del Mundial familiar.",
       `Hoy es el día destacado del torneo, ${day || 'de hoy'}. Contamos con ${todayCount} partidos de altísimo nivel programados.`,
       liveCount > 0 
         ? `Y ojo, ¡tenemos ${liveCount} partidos disputándose en vivo en este preciso instante en la cima!` 
@@ -536,7 +536,7 @@ function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: numb
             style={{ padding: '4px 10px', fontSize: 11.5 }}
           >
             <Icon name={isPlaying ? 'pause' : 'play'} size={11} />
-            {isPlaying ? 'Parar Minuto' : 'Minuto Táctico 🎙️'}
+            {isPlaying ? 'Parar Minuto' : 'Minuto Táctico'}
           </button>
           <button type="button" className="btn ghost btn-sm" onClick={() => navigate({ to: '/analyst' })} style={{ padding: '4px 10px', fontSize: 11.5 }}>
             <Icon name="sparkSmall" size={13} /> Analista
@@ -552,7 +552,7 @@ function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: numb
               <div style={{ width: 2, height: 6, background: 'var(--gold)', animation: 'pulse-briefing 0.6s infinite alternate 0.4s' }} />
               <div style={{ width: 2, height: 10, background: 'var(--gold)', animation: 'pulse-briefing 0.8s infinite alternate 0.1s' }} />
             </div>
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--gold-2)' }}>Transmitiendo Boletín de Gala en Vivo...</span>
+            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--gold-2)' }}>Transmitiendo boletín táctico...</span>
           </div>
         )}
         <div className="brief-pt">
@@ -719,9 +719,9 @@ function LiveActivityWidget() {
   const liveLeaderboard = useMemo(() => {
     const players = [
       { name: 'Jovan (Tú)', pickHome: 2, pickAway: 1, isUser: true },
-      { name: '🤖 Optimista', pickHome: 3, pickAway: 1, isUser: false },
-      { name: '🤖 Estadístico', pickHome: 1, pickAway: 1, isUser: false },
-      { name: '🤖 Contrarian', pickHome: 0, pickAway: 2, isUser: false },
+      { name: 'IA · Optimista', pickHome: 3, pickAway: 1, isUser: false },
+      { name: 'IA · Estadístico', pickHome: 1, pickAway: 1, isUser: false },
+      { name: 'IA · Contrarian', pickHome: 0, pickAway: 2, isUser: false },
     ];
 
     const mapped = players.map((p) => {

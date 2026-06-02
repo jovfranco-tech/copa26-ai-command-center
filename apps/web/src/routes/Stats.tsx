@@ -66,9 +66,9 @@ export function Stats() {
         // Inject the 3 AI Agents
         const agents: Array<'optimista' | 'stats' | 'contrarian'> = ['optimista', 'stats', 'contrarian'];
         const agentNames = {
-          optimista: '🤖 El Analista Optimista',
-          stats: '🤖 El Simulador Estadístico',
-          contrarian: '🤖 El Agente Contrarian',
+          optimista: 'IA · Optimista',
+          stats: 'IA · Estadístico',
+          contrarian: 'IA · Contrarian',
         };
 
         for (const agent of agents) {
@@ -271,7 +271,7 @@ export function Stats() {
                     />
                     <Bar dataKey="points" name="Puntos" radius={[0, 6, 6, 0]}>
                       {leaderboard.slice(0, 5).map((d) => {
-                        const isAi = d.name.startsWith('🤖');
+                        const isAi = d.name.startsWith('IA ·');
                         const isUser = d.name.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
                         const color = isUser ? 'var(--gold)' : isAi ? 'var(--tx-3)' : '#4f46e5';
                         return <Cell key={d.name} fill={color} />;

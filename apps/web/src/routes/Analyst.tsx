@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Icon, Pill, type IconName } from '@worldcup/ui';
-import { ANALYST_DISCLAIMER, type Match as WorldCupMatch, type Team as WorldCupTeam } from '@worldcup/shared';
+import { ANALYST_DISCLAIMER, fmtDateTime, type Match as WorldCupMatch, type Team as WorldCupTeam } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
@@ -326,7 +326,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           const base64Data = (reader.result as string).split(',')[1];
           if (base64Data) {
             setAttachedAudio({
-              name: `Nota_voz_${new Date().toLocaleTimeString('es-ES').replace(/:/g, '-')}.webm`,
+              name: `Nota_voz_${new Date().toLocaleTimeString('es-MX').replace(/:/g, '-')}.webm`,
               data: base64Data,
             });
           }
@@ -630,7 +630,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             risk: 'La comparación será más útil cuando existan resultados reales.',
             confidence: 'Alta local',
             dataUsed: ['Picks locales', 'grupo familiar', 'leaderboard Firestore'],
-            ignoredData: ['Picks privados de otros miembros no sincronizados'],
+            ignoredData: ['Picks de otros miembros no sincronizados'],
             rationale: 'La acción compara cobertura de picks y líder visible sin leer datos sensibles fuera del grupo.',
             nextAction: diagnostics.recommendedAction,
             quality: {
@@ -1593,7 +1593,7 @@ function EntityInsightsPanel({ records, context }: { records: AIMemoryRecord[]; 
           <div className="entity-insight-list">
             {records.map((record) => (
               <div key={record.id} className="entity-insight-row">
-                <span className="mono-label">{new Date(record.createdAt).toLocaleString()}</span>
+                <span className="mono-label">{fmtDateTime(record.createdAt)}</span>
                 <strong>{record.structured?.prediction ?? record.question}</strong>
                 <p>{record.structured?.nextAction ?? record.answer.slice(0, 120)}</p>
               </div>
@@ -1633,7 +1633,7 @@ function AIMemoryPanel({
           <div className="ai-memory-list">
             {records.slice(0, 6).map((record) => (
               <button key={record.id} type="button" className="ai-memory-row" onClick={() => onReuse(record)}>
-                <span className="mono-label">{new Date(record.createdAt).toLocaleString()}</span>
+                <span className="mono-label">{fmtDateTime(record.createdAt)}</span>
                 <strong>{record.question}</strong>
                 <small>
                   {record.mode === 'remote' ? record.model ?? 'IA remota' : record.mode === 'simulation' ? 'Simulación local' : 'Local'}

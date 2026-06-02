@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { fmtDateTime, fmtTime } from '@worldcup/shared';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
 import { intelDataPacks, intelGeneratedAt, weatherMeta } from '@/generated/intelPacks';
 import { playerRatingMeta } from '@/generated/playerRatings';
@@ -61,8 +62,8 @@ export function DataCenter() {
   );
   const roleUsage = useMemo(
     () => [
-      { role: 'Admin', access: 'IA remota + actualización manual', limit: monitoring?.limits.analyst ?? '30 / 10 min', usage: aiCallsToday },
-      { role: 'Familia', access: 'Analista limitado + quiniela', limit: monitoring?.limits.poolAgent ?? 'Protegido por endpoint', usage: poolAgentCallsToday },
+      { role: 'Admin', access: 'IA remota + revisión manual', limit: monitoring?.limits.analyst ?? '12 / 10 min', usage: aiCallsToday },
+      { role: 'Familia', access: 'Co-piloto limitado + quiniela', limit: monitoring?.limits.poolAgent ?? '8 / 10 min', usage: poolAgentCallsToday },
       { role: 'Invitado', access: 'Solo motor local', limit: '0 llamadas remotas', usage: 0 },
     ],
     [aiCallsToday, poolAgentCallsToday, monitoring?.limits.analyst, monitoring?.limits.poolAgent],
@@ -144,16 +145,17 @@ export function DataCenter() {
         </div>
         <div className="card card-pad data-command-card">
           <Icon name="activity" size={16} style={{ color: 'var(--gold)' }} />
-          <span className="mono-label">Admin manual</span>
-          <h3>Control de operación</h3>
+          <span className="mono-label">Acceso público familiar</span>
+          <h3>Guardrails visibles</h3>
           <p>
-            Usa el botón de actualización para comprobar producción, Firestore, consumo de IA y próximos pasos antes de
-            compartir el link familiar.
+            La app ya no usa password. Los endpoints de IA quedan limitados por sesión/IP y el modo invitado fuerza
+            respuestas locales para proteger consumo.
           </p>
-          <button type="button" className="btn ghost" onClick={runCheck} disabled={checking}>
-            <Icon name={checking ? 'sparkSmall' : 'cloud'} size={14} />
-            {checking ? 'Revisando...' : 'Revisar producción'}
-          </button>
+          <div className="ops-metrics">
+            <OpsMetric label="Analista" value={monitoring?.limits.analyst ?? '12 / 10 min'} />
+            <OpsMetric label="Co-piloto" value={monitoring?.limits.poolAgent ?? '8 / 10 min'} />
+            <OpsMetric label="Scanner" value={monitoring?.limits.poolScan ?? '6 / 10 min'} />
+          </div>
         </div>
       </div>
 
@@ -186,6 +188,7 @@ export function DataCenter() {
           <AINativeTile label="Modelo" value={monitoring?.ai.configured ? monitoring.ai.model : 'Local fallback'} note={monitoring?.ai.configured ? 'Proveedor remoto configurado.' : 'Responde con analista local si falta clave.'} />
           <AINativeTile label="Limite analista" value={monitoring?.limits.analyst ?? '30 / 10 min'} note={role === 'guest' ? 'Modo invitado usa motor local.' : 'Protege consumo cuando compartes link.'} />
           <AINativeTile label="Herramientas" value="7 conectadas" note="Calendario, equipos, jugadores, sedes, tablas, adjuntos y memoria." />
+          <AINativeTile label="Guardrail" value="Sin noticias simuladas" note="Co-pilotos declaran datos usados, ignorados y confianza." />
           <AINativeTile label="Uso hoy" value={String(monitoring?.usage.items?.['ai.analyst'] ?? 0)} note={`Proveedor de métricas: ${monitoring?.usage.provider ?? 'memory'}.`} />
         </div>
         <div className="card-pad role-usage-grid">
@@ -265,7 +268,7 @@ export function DataCenter() {
           <Icon name="download" size={15} style={{ color: 'var(--gold)' }} />
           <h3>Descargas y datos preparados</h3>
           <span className="spacer" />
-          <span className="mono-label">{new Date(intelGeneratedAt).toLocaleString()}</span>
+          <span className="mono-label">{fmtDateTime(intelGeneratedAt)}</span>
         </div>
         <div className="card-pad pack-grid">
           {intelDataPacks.map((pack) => (
@@ -324,7 +327,7 @@ export function DataCenter() {
             <Icon name="check" size={15} style={{ color: 'var(--pos)' }} />
             <h3>Última revisión manual</h3>
             <span className="spacer" />
-            <span className="mono-label">{new Date(check.checkedAt).toLocaleString()}</span>
+            <span className="mono-label">{fmtDateTime(check.checkedAt)}</span>
           </div>
           <div className="card-pad data-result-grid">
             <div>
@@ -515,7 +518,7 @@ function AdminOpsPanel({
         <p>{check?.nextAction ?? 'Ejecuta una revisión para validar cron, feed, Firestore y límites de IA.'}</p>
       </div>
       <div className="admin-ops-grid">
-        <OpsMetric label="Última revisión" value={check ? new Date(check.checkedAt).toLocaleTimeString() : 'Pendiente'} />
+        <OpsMetric label="Última revisión" value={check ? fmtTime(check.checkedAt) : 'Pendiente'} />
         <OpsMetric label="Listas" value={String(ready)} />
         <OpsMetric label="Pendientes" value={`${pending}/${blocked}`} />
       </div>

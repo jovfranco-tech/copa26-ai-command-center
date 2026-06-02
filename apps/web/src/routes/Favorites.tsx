@@ -145,7 +145,7 @@ export function Favorites() {
           {/* AI saved notes */}
           <div className="row spread" style={{ marginTop: 10 }}>
             <span className="mono-label" style={{ fontSize: 13, fontWeight: 700, color: 'var(--gold)' }}>
-              Notas Tácticas de Gala (IA)
+              Notas tácticas IA
             </span>
           </div>
 

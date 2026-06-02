@@ -119,11 +119,30 @@ export interface AIPoolAgentResult {
   brief?: string;
   predictions?: Record<string, { homeGoals: number; awayGoals: number; outcome: 'home' | 'draw' | 'away' }>;
   reason?: string;
+  meta?: {
+    confidence?: string;
+    dataUsed?: string[];
+    ignoredData?: string[];
+    warning?: string;
+  };
 }
 
 export async function askPoolAgent(
   agent: 'optimista' | 'stats' | 'contrarian',
-  matches: Array<{ id: string; home: string; away: string; homeName: string; awayName: string }>,
+  matches: Array<{
+    id: string;
+    home: string;
+    away: string;
+    homeName: string;
+    awayName: string;
+    date?: string;
+    time?: string;
+    stage?: string;
+    venueName?: string;
+    weatherLabel?: string;
+    weatherConfidence?: string;
+    dataConfidence?: string;
+  }>,
 ): Promise<AIPoolAgentResult> {
   try {
     const res = await fetch('/api/pool-agent', {

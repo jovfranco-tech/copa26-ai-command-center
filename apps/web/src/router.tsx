@@ -96,6 +96,7 @@ const LazyPool = lazyWithRetry(() => import('./routes/Pool').then((m) => ({ defa
 const LazyDataCenter = lazyWithRetry(() => import('./routes/DataCenter').then((m) => ({ default: m.DataCenter })));
 const LazyAnalyst = lazyWithRetry(() => import('./routes/Analyst').then((m) => ({ default: m.Analyst })));
 const LazyTVMode = lazyWithRetry(() => import('./routes/TVMode').then((m) => ({ default: m.TVMode })));
+const LazyEstadio3D = lazyWithRetry(() => import('./routes/Estadio3D').then((m) => ({ default: m.Estadio3D })));
 
 const playersRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -184,6 +185,18 @@ const tvRoute = createRoute({
   },
 });
 
+const estadio3DRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/estadio-3d',
+  component: function Estadio3DRoute() {
+    return (
+      <Suspense fallback={<div className="muted" style={{ padding: 24 }}>Cargando Estadio 3D...</div>}>
+        <LazyEstadio3D />
+      </Suspense>
+    );
+  },
+});
+
 const analystRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/analyst',
@@ -221,6 +234,7 @@ const routeTree = rootRoute.addChildren([
   poolRoute,
   dataRoute,
   tvRoute,
+  estadio3DRoute,
   analystRoute,
 ]);
 

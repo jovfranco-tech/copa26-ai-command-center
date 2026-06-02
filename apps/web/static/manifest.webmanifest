@@ -1,7 +1,7 @@
 {
   "name": "FIFA World Cup 26 · Quiniela y Control",
   "short_name": "Quiniela FIFA 26",
-  "description": "Dashboard privado para calendario, selecciones, jugadores, quiniela familiar y analista táctico IA.",
+  "description": "Dashboard familiar para calendario, selecciones, jugadores, quiniela y analista táctico IA.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",

@@ -685,9 +685,9 @@ function buildDataPacks(playerPhotos, venuePhotos, coaches, weather, venueExtras
       source: 'Carga manual con permiso/licencia',
       note:
         brandAssetCount >= officialManualItems.length
-          ? 'Paquete de marca privado completo en static/brand; se puede sustituir por archivos oficiales con permiso/licencia.'
+          ? 'Paquete de marca familiar completo en static/brand; se puede sustituir por archivos oficiales con permiso/licencia.'
           : brandAssetCount > 0
-          ? 'Marca privada cargada en static/brand; balon/trofeo/badges quedan como carga manual si hay permiso.'
+          ? 'Marca familiar cargada en static/brand; balon/trofeo/badges quedan como carga manual si hay permiso.'
           : `No se descargan automaticamente: ${officialManualItems.join('; ')}.`,
     },
   ];

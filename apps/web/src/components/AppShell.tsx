@@ -20,7 +20,8 @@ type StaticPath =
   | '/favorites'
   | '/pool'
   | '/data'
-  | '/analyst';
+  | '/analyst'
+  | '/estadio-3d';
 
 interface NavItem {
   key: string;
@@ -47,6 +48,7 @@ const NAV: Array<{ group: string; items: NavItem[] }> = [
       { key: 'players', label: 'Jugadores', icon: 'players', to: '/players' },
       { key: 'standings', label: 'Grupos y tabla', icon: 'standings', to: '/standings' },
       { key: 'stats', label: 'Estadísticas', icon: 'stats', to: '/stats' },
+      { key: 'estadio-3d', label: 'Estadio 3D', icon: 'route', to: '/estadio-3d' },
       { key: 'venues', label: 'Sedes', icon: 'venues', to: '/venues' },
     ],
   },
@@ -78,6 +80,7 @@ const TITLES: Record<string, string> = {
   pool: 'Quiniela familiar',
   data: 'Centro de datos',
   analyst: 'Analista de partidos IA',
+  'estadio-3d': 'Estadio 3D',
 };
 
 function activeKeyFromPath(pathname: string): string {
@@ -144,7 +147,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <img className="brand-wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="FIFA World Cup 26" />
         <div className="brand-sub">
           <span>Centro de mando</span>
-          <span>Privado</span>
+          <span>Familiar</span>
         </div>
       </div>
     </div>
@@ -238,7 +241,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavList />
           </nav>
           <div className="sidebar-foot">
-            FIFA World Cup 26 · datos abiertos.
+            FIFA World Cup 26 · acceso familiar.
             <br />
             No oficial · sin afiliación FIFA.
           </div>
@@ -318,7 +321,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 }}
               >
                 <span className="mono-label" style={{ fontSize: 8.5, color: 'var(--gold)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                  Socios de Gala FIFA 2026
+                  Socios FIFA 2026
                 </span>
                 <div
                   style={{

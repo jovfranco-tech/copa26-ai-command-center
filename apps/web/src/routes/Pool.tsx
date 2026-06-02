@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
-import { fmtDay, type Match } from '@worldcup/shared';
+import { fmtDay, fmtTime, type Match } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
-import { useMatches, useTeamsMap } from '@/hooks';
+import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
 import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
 import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
@@ -83,6 +83,7 @@ const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
   { id: 'draw', label: 'Empate' },
   { id: 'away', label: 'Visita' },
 ];
+const AI_AGENT_PREFIX = 'IA ·';
 
 interface PoolAlert {
   icon: IconName;
@@ -240,6 +241,7 @@ function buildPoolAwards({
 export function Pool() {
   const { data, isLoading } = useMatches();
   const teams = useTeamsMap();
+  const venues = useVenuesMap();
   const pool = usePool();
   const role = usePreferences((s) => s.role);
   const [view, setView] = useState<'next' | 'all'>('next');
@@ -265,6 +267,12 @@ export function Pool() {
 
   const [activeAgent, setActiveAgent] = useState<'optimista' | 'stats' | 'contrarian' | null>(null);
   const [agentBrief, setAgentBrief] = useState<string | null>(null);
+  const [agentMeta, setAgentMeta] = useState<{
+    confidence?: string;
+    dataUsed?: string[];
+    ignoredData?: string[];
+    warning?: string;
+  } | null>(null);
   const [loadingAgent, setLoadingAgent] = useState(false);
   const [agentError, setAgentError] = useState<string | null>(null);
 
@@ -272,10 +280,12 @@ export function Pool() {
     if (loadingAgent) return;
     if (role === 'guest') {
       setAgentError('Modo invitado: los co-pilotos remotos están desactivados para proteger consumo.');
+      setAgentMeta(null);
       return;
     }
     setLoadingAgent(true);
     setAgentError(null);
+    setAgentMeta(null);
 
     const matchesToPredict = upcomingMatches.map((m) => ({
       id: m.id,
@@ -283,6 +293,13 @@ export function Pool() {
       away: m.away,
       homeName: teams[m.home]?.name ?? m.home,
       awayName: teams[m.away]?.name ?? m.away,
+      date: m.date,
+      time: m.time,
+      stage: m.stage,
+      venueName: venues[m.venue] ? `${venues[m.venue]?.stadium}, ${venues[m.venue]?.city}` : m.venue,
+      weatherLabel: weatherSummary(m.id).label,
+      weatherConfidence: weatherSummary(m.id).confidence,
+      dataConfidence: 'Calendario local confirmado',
     }));
 
     try {
@@ -291,12 +308,19 @@ export function Pool() {
         pool.importPicks(res.predictions);
         setActiveAgent(agentName);
         setAgentBrief(res.brief ?? null);
+        setAgentMeta(res.meta ?? {
+          confidence: 'Media',
+          dataUsed: ['calendario', 'selecciones'],
+          ignoredData: ['noticias externas', 'lesiones', 'alineaciones'],
+          warning: 'Pronóstico previo sin noticias externas ni alineaciones confirmadas.',
+        });
       } else {
         setAgentError(
           res.reason === 'no-key'
             ? 'No se ha configurado la clave del proveedor IA para habilitar co-pilotos.'
             : 'Error al conectar con el co-piloto.',
         );
+        setAgentMeta(null);
       }
     } catch {
       setAgentError('Error de red al invocar al co-piloto.');
@@ -320,7 +344,7 @@ export function Pool() {
 
     const rankIndex = leaderboard.findIndex((row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase());
     const rankNum = rankIndex + 1;
-    const medal = rankNum === 1 ? '🥇' : rankNum === 2 ? '🥈' : rankNum === 3 ? '🥉' : '';
+    const medal = rankNum <= 3 ? `Top ${rankNum}` : '';
 
     const canvas = document.createElement('canvas');
     canvas.width = 600;
@@ -398,7 +422,7 @@ export function Pool() {
           await navigator.share({
             files: [file],
             title: 'Mi Logro en la Quiniela FIFA 2026',
-            text: `¡Voy en el puesto ${rankNum}º con ${userRow.points} puntos en la quiniela familiar! ¿Quién me supera? ⚽🏆`,
+            text: `Voy en el puesto ${rankNum} con ${userRow.points} puntos en la quiniela familiar. ¿Quién me supera?`,
           });
           if ('vibrate' in navigator) navigator.vibrate([15]);
         } catch (err) {
@@ -573,9 +597,9 @@ export function Pool() {
         // 2. Inject the 3 virtual AI agents to compete in the leaderboard
         const agents: Array<'optimista' | 'stats' | 'contrarian'> = ['optimista', 'stats', 'contrarian'];
         const agentNames = {
-          optimista: '🤖 El Analista Optimista',
-          stats: '🤖 El Simulador Estadístico',
-          contrarian: '🤖 El Agente Contrarian',
+          optimista: 'IA · Optimista',
+          stats: 'IA · Estadístico',
+          contrarian: 'IA · Contrarian',
         };
 
         for (const agent of agents) {
@@ -753,14 +777,14 @@ export function Pool() {
     const url = `${window.location.origin}/pool?group=${encodeURIComponent(group)}`;
     await shareTextCard({
       title: 'Únete a la quiniela familiar',
-      subtitle: `Grupo privado ${group}`,
+      subtitle: `Grupo familiar ${group}`,
       lines: [
         '1. Abre el link y escribe tu alias.',
         '2. Captura tus marcadores antes de cada partido.',
         '3. La tabla familiar se actualiza con resultados reales.',
         url,
       ],
-      footer: 'Mundial 2026 privado',
+      footer: 'Mundial 2026 familiar',
       fileName: `invitacion-${group}.png`,
     });
   };
@@ -812,32 +836,30 @@ export function Pool() {
   // Compute live AI Trend Alerts based on the Leaderboard
   const trendAlert = useMemo(() => {
     if (!leaderboard || leaderboard.length === 0) {
-      return "🤖 Analista IA: 'Comienza a registrar y guardar tus pronósticos para comparar tu rendimiento en tiempo real con la familia y nuestros co-pilotos tácticos.'";
+      return "Analista IA: registra tus pronósticos para comparar rendimiento con la familia y con los co-pilotos tácticos.";
     }
 
     const leader = leaderboard[0];
     const userRow = leaderboard.find(
       (row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase()
     );
-    const aiRows = leaderboard.filter(
-      (row) => row.playerName.includes('🤖')
-    );
+    const aiRows = leaderboard.filter((row) => row.playerName.startsWith(AI_AGENT_PREFIX));
 
     const leaderName = leader.playerName;
     const leaderPoints = leader.points ?? 0;
     const leaderEfficiency = leader.efficiency ?? 0;
 
-    if (leaderName.includes('🤖')) {
-      return `🤖 Tendencia IA: ${leaderName} lidera el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. ¡La inteligencia artificial está dominando la quiniela familiar!`;
+    if (leaderName.startsWith(AI_AGENT_PREFIX)) {
+      return `Tendencia IA: ${leaderName} lidera el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Revisa sus picks antes de seguir esa estrategia.`;
     }
 
     if (userRow && userRow.playerName === leaderName) {
       const nextAi = aiRows[0];
       const aiText = nextAi ? `, pero ${nextAi.playerName} te pisa los talones en la tabla` : '';
-      return `👑 ¡Vas liderando el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad! Excelente consistencia táctica${aiText}.`;
+      return `Vas liderando el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Excelente consistencia táctica${aiText}.`;
     }
 
-    return `📈 Tendencia del Líder: ${leaderName} lidera la tabla con ${leaderPoints} pts. Te recomendamos invocar al Simulador Estadístico para afinar tu puntería defensiva.`;
+    return `Tendencia del líder: ${leaderName} lidera la tabla con ${leaderPoints} pts. Te recomendamos invocar al Simulador Estadístico para afinar tu puntería defensiva.`;
   }, [leaderboard, pool.playerName]);
 
   // Determine what is visible in the active tab
@@ -887,7 +909,7 @@ export function Pool() {
         `Pick: ${pickScoreText(pick)}`,
         `Ganador: ${outcomeText(pick.outcome)}`,
         lockLabel(match),
-        `Grupo privado: ${normalizePoolGroupId(pool.groupId)}`,
+        `Grupo familiar: ${normalizePoolGroupId(pool.groupId)}`,
       ],
       footer: 'Quiniela familiar Mundial 2026',
       fileName: `prediccion-${match.id}-${normalizePoolGroupId(pool.groupId)}.png`,
@@ -988,7 +1010,7 @@ export function Pool() {
                 padding: 0,
                 flexShrink: 0
               }}
-              title={theme === 'dark' ? 'Activar paleta crema oficial' : 'Activar paleta noche dorada'}
+              title={theme === 'dark' ? 'Activar tema claro' : 'Activar tema oscuro'}
             >
               <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
             </button>
@@ -1013,7 +1035,7 @@ export function Pool() {
               value={pool.groupId}
               onChange={(e) => pool.setGroupId(normalizePoolGroupId(e.target.value))}
               placeholder="familia-2026"
-              aria-label="Grupo privado"
+              aria-label="Grupo familiar"
             />
             <button type="button" className="btn ghost btn-sm" onClick={copyInviteLink}>
               <Icon name="share" size={13} />
@@ -1027,7 +1049,7 @@ export function Pool() {
         <span><Icon name="trophy" size={13} /> Marcador exacto +3</span>
         <span><Icon name="check" size={13} /> Ganador/empate correcto +1</span>
         <span><Icon name="clock" size={13} /> Pronosticos cierran al inicio del partido</span>
-        <span><Icon name="shield" size={13} /> Grupo privado: {normalizePoolGroupId(pool.groupId)}</span>
+        <span><Icon name="shield" size={13} /> Grupo familiar: {normalizePoolGroupId(pool.groupId)}</span>
       </div>
 
       <FamilySetupGuide
@@ -1042,7 +1064,7 @@ export function Pool() {
 
       <FamilyInviteKit
         groupId={normalizePoolGroupId(pool.groupId)}
-        participantCount={leaderboard.filter((row) => !row.playerName.startsWith('🤖')).length}
+        participantCount={leaderboard.filter((row) => !row.playerName.startsWith(AI_AGENT_PREFIX)).length}
         picked={pickedPending}
         total={upcomingMatches.length}
         inviteCopied={inviteCopied}
@@ -1143,7 +1165,7 @@ export function Pool() {
               <Icon name="download" size={15} />
               Exportar CSV
             </button>
-            <button type="button" className="btn ghost" onClick={() => window.print()} title="Imprimir reporte oficial de gala en PDF">
+            <button type="button" className="btn ghost" onClick={() => window.print()} title="Imprimir reporte de quiniela en PDF">
               <Icon name="print" size={15} />
               Imprimir PDF
             </button>
@@ -1178,6 +1200,10 @@ export function Pool() {
           <p className="muted" style={{ margin: '0 0 4px 0', fontSize: 12 }}>
             Invoca a un asistente de IA táctico para que rellene automáticamente tu quiniela con su filosofía de juego y te dé su justificación.
           </p>
+          <div className="ai-guard-note">
+            <Icon name="shield" size={13} />
+            Co-pilotos basados en calendario, sede y clima base; no usan noticias externas, lesiones ni alineaciones no verificadas.
+          </div>
           {role === 'guest' && (
             <div className="ai-guard-note">
               <Icon name="shield" size={13} />
@@ -1206,7 +1232,7 @@ export function Pool() {
           <div className="copilot-grid">
             <div className={`copilot-card${activeAgent === 'optimista' ? ' active' : ''}`}>
               <div className="row gap-12" style={{ alignItems: 'center' }}>
-                <div className="copilot-avatar">⚡️</div>
+                <div className="copilot-avatar">GO</div>
                 <div className="copilot-meta">
                   <h3>El Analista Optimista</h3>
                   <p>"El fútbol se gana metiendo goles." Predice goleadas, partidos abiertos y confía en superpotencias.</p>
@@ -1225,7 +1251,7 @@ export function Pool() {
 
             <div className={`copilot-card${activeAgent === 'stats' ? ' active' : ''}`}>
               <div className="row gap-12" style={{ alignItems: 'center' }}>
-                <div className="copilot-avatar">📊</div>
+                <div className="copilot-avatar">ES</div>
                 <div className="copilot-meta">
                   <h3>El Simulador Estadístico</h3>
                   <p>"Las defensas ganan campeonatos." Predice marcadores cerrados y orden táctico estricto.</p>
@@ -1244,7 +1270,7 @@ export function Pool() {
 
             <div className={`copilot-card${activeAgent === 'contrarian' ? ' active' : ''}`}>
               <div className="row gap-12" style={{ alignItems: 'center' }}>
-                <div className="copilot-avatar">🔥</div>
+                <div className="copilot-avatar">UP</div>
                 <div className="copilot-meta">
                   <h3>El Agente Contrarian</h3>
                   <p>"Épica de David contra Goliat." Predice sorpresas de selecciones débiles y resultados atrevidos.</p>
@@ -1264,12 +1290,18 @@ export function Pool() {
 
           {activeAgent && agentBrief && (
             <div className="copilot-brief">
-              <span style={{ fontSize: 24 }}>💬</span>
+              <Icon name="ai" size={18} style={{ color: 'var(--gold)' }} />
               <div>
                 <span className="mono-label" style={{ display: 'block', marginBottom: 4, color: 'var(--gold)' }}>
                   Informe Táctico del Co-piloto ({activeAgent === 'optimista' ? 'Optimista' : activeAgent === 'stats' ? 'Estadístico' : 'Contrarian'})
                 </span>
                 <p className="copilot-brief-text">{agentBrief}</p>
+                <div className="copilot-trace">
+                  <span><strong>Confianza:</strong> {agentMeta?.confidence ?? 'Media'}</span>
+                  <span><strong>Usó:</strong> {(agentMeta?.dataUsed ?? ['calendario', 'selecciones']).join(', ')}</span>
+                  <span><strong>No usó:</strong> {(agentMeta?.ignoredData ?? ['noticias externas', 'lesiones', 'alineaciones']).join(', ')}</span>
+                  {agentMeta?.warning ? <span><strong>Nota:</strong> {agentMeta.warning}</span> : null}
+                </div>
               </div>
             </div>
           )}
@@ -1331,9 +1363,9 @@ export function Pool() {
                 </thead>
                 <tbody>
                   {leaderboard.map((row, index) => {
-                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}º`;
+                    const medal = index < 3 ? `Top ${index + 1}` : `${index + 1}º`;
                     const isCurrentUser = row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
-                    const isAiAgent = row.playerName.startsWith('🤖');
+                    const isAiAgent = row.playerName.startsWith(AI_AGENT_PREFIX);
 
                     return (
                       <tr
@@ -1492,7 +1524,7 @@ function FamilySetupGuide({
       </div>
       <div className="family-step-grid">
         <SetupStep done={playerReady} icon="user" title="Alias y foto" text={playerReady ? 'Participante listo.' : 'Escribe tu alias y, si quieres, una URL de avatar.'} />
-        <SetupStep done={Boolean(groupId)} icon="shield" title="Grupo privado" text={`Grupo activo: ${groupId || 'familia-2026'}.`} />
+        <SetupStep done={Boolean(groupId)} icon="shield" title="Grupo familiar" text={`Grupo activo: ${groupId || 'familia-2026'}.`} />
         <SetupStep done={pickReady} icon="target" title="Primeros picks" text={pickReady ? `${picked}/${total} partidos con pronóstico.` : 'Captura al menos un marcador para activar ranking.'} />
         <SetupStep done={syncStatus === 'synced'} icon="cloud" title="Nube familiar" text={syncStatus === 'synced' ? 'Sincronizado en base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios...' : 'Se sincroniza al tener alias.'} />
       </div>
@@ -1592,7 +1624,7 @@ function PoolCommandCenter({
         <div>
           <span className="mono-label">Centro de mando familiar</span>
           <strong>{pct}% de próximos partidos con pick</strong>
-          <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${new Date(lastSavedAt).toLocaleTimeString()}.` : 'Guardado remoto pendiente.'}</p>
+          <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${fmtTime(lastSavedAt)}.` : 'Guardado remoto pendiente.'}</p>
         </div>
         <div className="pool-command-actions">
           <button type="button" className="btn gold" onClick={onSharePick}>

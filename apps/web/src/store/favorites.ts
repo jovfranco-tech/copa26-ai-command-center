@@ -55,7 +55,7 @@ export const useFavorites = create<FavoritesState>()(
             {
               ...note,
               id: `note-${Date.now()}`,
-              timestamp: new Date().toLocaleDateString('es-ES', {
+              timestamp: new Date().toLocaleDateString('es-MX', {
                 hour: '2-digit',
                 minute: '2-digit',
               }),

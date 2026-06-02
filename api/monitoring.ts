@@ -18,8 +18,9 @@ export async function GET(request: Request): Promise<Response> {
       usage,
       pool,
       limits: {
-        analyst: '30 requests / 10 min por sesion o IP',
-        poolAgent: '30 requests / 10 min por sesion o IP',
+        analyst: '12 requests / 10 min por sesion o IP',
+        poolAgent: '8 requests / 10 min por sesion o IP',
+        poolScan: '6 requests / 10 min por sesion o IP',
         poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
       },
       ai: {

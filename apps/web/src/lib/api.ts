@@ -260,6 +260,9 @@ export const fetchMonitoring = () =>
       detail: 'Sin snapshot remoto disponible; Firestore esta configurado en el cliente.',
     },
     limits: {
+      analyst: '12 requests / 10 min por sesion o IP',
+      poolAgent: '8 requests / 10 min por sesion o IP',
+      poolScan: '6 requests / 10 min por sesion o IP',
       poolStorage: 'persistente en Cloud Firestore para familia multi-dispositivo',
     },
     ai: { configured: false, model: 'local-fallback' },

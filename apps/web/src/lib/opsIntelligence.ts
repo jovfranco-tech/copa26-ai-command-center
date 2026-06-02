@@ -3,6 +3,7 @@ import type { LeaderboardEntry } from '@/lib/api';
 import type { PoolPick } from '@/store/pool';
 
 export type OpsTone = 'ok' | 'warn' | 'info';
+const AI_AGENT_PREFIX = 'IA ·';
 
 export interface RecommendedPick {
   pick: PoolPick;
@@ -399,12 +400,12 @@ export function buildPoolDiagnostics(
   const drawShare = Object.keys(picks).length ? drawCount / Object.keys(picks).length : 0;
   const coveragePct = upcoming.length ? Math.round((pickedPending / upcoming.length) * 100) : 100;
   const scorePct = upcoming.length ? Math.round((completeScores / upcoming.length) * 100) : 100;
-  const humanRows = leaderboard.filter((row) => !row.playerName.startsWith('🤖'));
+  const humanRows = leaderboard.filter((row) => !row.playerName.startsWith(AI_AGENT_PREFIX));
   const leader = humanRows[0] ?? leaderboard[0];
   const userRow = playerName
     ? leaderboard.find((row) => row.playerName.trim().toLowerCase() === playerName.trim().toLowerCase())
     : undefined;
-  const aiLeader = Boolean(leaderboard[0]?.playerName.startsWith('🤖'));
+  const aiLeader = Boolean(leaderboard[0]?.playerName.startsWith(AI_AGENT_PREFIX));
 
   let styleLabel = 'Perfil por definir';
   let styleDetail = 'Captura más picks para que la app aprenda tu patrón.';

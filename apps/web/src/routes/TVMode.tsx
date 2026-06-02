@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge } from '@worldcup/ui';
-import { fmtFull, type Match } from '@worldcup/shared';
+import { fmtFull, fmtLongDate, fmtTime, type Match } from '@worldcup/shared';
 import { MatchdayHero } from '@/components/MatchdayHero';
 import { TeamCrest, TeamKit } from '@/components/identity';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
@@ -41,13 +41,13 @@ export function TVMode() {
           <h2>Centro de partido en pantalla grande</h2>
         </div>
         <div className="tv-clock">
-          <span className="num">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-          <small>{now.toLocaleDateString([], { weekday: 'long', day: '2-digit', month: 'long' })}</small>
+          <span className="num">{fmtTime(now)}</span>
+          <small>{fmtLongDate(now.toISOString().slice(0, 10))}</small>
         </div>
       </div>
 
-      <MatchdayHero match={focus} />
       <TVBroadcastPanel match={focus} featured={featuredBroadcasts} />
+      <MatchdayHero match={focus} />
       <TVFamilyStrip match={focus} onPool={() => navigate({ to: '/pool' })} onData={() => navigate({ to: '/data' })} />
 
       <div className="tv-grid">
@@ -100,19 +100,28 @@ function TVBroadcastPanel({ match, featured }: { match: Match | null; featured: 
           </div>
           <span className="mono-label">Transmisión oficial</span>
           <strong>{matchTitle}</strong>
-          <small>{guide.headline} · prioridad {guide.priority}</small>
+          <small>{guide.headline} · prioridad {guide.priority} · hubs autorizados</small>
         </div>
 
         <div className="tv-broadcast-copy">
           <span className="mono-label">Dónde verlo online</span>
           <h3>{matchTitle}</h3>
           <p>{guide.note}</p>
+          <div className="tv-broadcast-actions">
+            {guide.providers.slice(0, 3).map((provider, index) => (
+              <a key={provider.id} className={`btn ${index === 0 ? 'gold' : 'ghost'}`} href={provider.url} target="_blank" rel="noreferrer">
+                <Icon name={index === 0 ? 'play' : 'arrowR'} size={14} />
+                {provider.label}
+              </a>
+            ))}
+          </div>
           <div className="tv-provider-grid">
             {guide.providers.map((provider) => (
               <BroadcastProviderCard key={provider.id} provider={provider} />
             ))}
           </div>
           <div className="tv-broadcast-source">
+            <span>Fuentes revisables:</span>
             {guide.providers.map((provider) => (
               <a key={provider.id} href={provider.sourceUrl} target="_blank" rel="noreferrer">
                 {provider.sourceLabel}
@@ -132,7 +141,7 @@ function TVBroadcastPanel({ match, featured }: { match: Match | null; featured: 
             <a key={item.id} href={guide.providers[0]?.url} target="_blank" rel="noreferrer" title="Abrir proveedor oficial">
               <span>{broadcastImportanceLabel(item, teams)}</span>
               <b>{teams[item.home]?.name ?? item.home} vs {teams[item.away]?.name ?? item.away}</b>
-              <small>{item.date} · {item.time}</small>
+              <small>{fmtFull(item.date)} · {item.time}</small>
             </a>
           ))}
         </div>

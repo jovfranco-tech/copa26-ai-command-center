@@ -159,7 +159,7 @@ export const intelDataPacks: IntelDataPack[] = [
     "count": 4,
     "total": 4,
     "source": "Carga manual con permiso/licencia",
-    "note": "Paquete de marca privado completo en static/brand; se puede sustituir por archivos oficiales con permiso/licencia."
+    "note": "Paquete de marca familiar completo en static/brand; se puede sustituir por archivos oficiales con permiso/licencia."
   }
 ];
 
