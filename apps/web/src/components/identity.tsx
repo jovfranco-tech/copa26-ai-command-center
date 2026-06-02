@@ -120,6 +120,10 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
       style={{
         display: 'inline-flex',
         flex: 'none',
+        width: `${size}px`,
+        height: `${size}px`,
+        minWidth: `${size}px`,
+        minHeight: `${size}px`,
         viewTransitionName: `player-photo-${player.id}`,
       } as React.CSSProperties}
     >
@@ -133,7 +137,15 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
           decoding="async"
           draggable={false}
           className="asset-img player-photo"
-          style={{ borderRadius: 12, objectFit: 'cover', flex: 'none' }}
+          style={{
+            width: `${size}px`,
+            height: `${size}px`,
+            minWidth: `${size}px`,
+            minHeight: `${size}px`,
+            borderRadius: 12,
+            objectFit: 'cover',
+            flex: 'none',
+          }}
           onError={() => setCandidateIndex((i) => i + 1)}
         />
       ) : (
