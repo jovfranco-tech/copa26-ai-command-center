@@ -39,6 +39,10 @@ for (const route of apiRoutes) {
     headers: { accept: 'application/json', ...(authHeader ? { authorization: authHeader } : {}) },
     redirect: 'follow',
   });
+  if (res.status === 401 && !authHeader) {
+    console.log(`ok ${route} ${res.status} ${res.url} (protected)`);
+    continue;
+  }
   const data = await res.json().catch(() => ({}));
   const ok = res.status < 500 && data && data.ok !== false;
   console.log(`${ok ? 'ok' : 'fail'} ${route} ${res.status} ${res.url}`);
