@@ -26,6 +26,11 @@ export const config = { runtime: 'edge' };
 const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 12;
+// Best-effort global ceiling (per warm instance) so a runaway loop or spike
+// can't quietly rack up provider cost. Hard budget caps live in the provider
+// dashboards; tune GLOBAL_CAP via env if needed.
+const GLOBAL_WINDOW_MS = 60 * 60 * 1000;
+const GLOBAL_CAP = Number(process.env.AI_GLOBAL_HOURLY_CAP ?? 300);
 const ANALYST_TOOLS = ['calendario', 'partidos', 'selecciones', 'jugadores', 'sedes', 'clasificacion', 'adjuntos'];
 
 // Security: server-side upload limits and allowed MIME types
@@ -381,6 +386,17 @@ function toTextStream(
 function checkRateLimit(request: Request): { ok: true } | { ok: false; retryAfter: number } {
   const store = getRateStore();
   const now = Date.now();
+
+  // Global hourly ceiling across all callers (best-effort, per warm instance).
+  const g = store.get('__global__');
+  if (!g || now - g.startedAt > GLOBAL_WINDOW_MS) {
+    store.set('__global__', { count: 1, startedAt: now });
+  } else if (g.count >= GLOBAL_CAP) {
+    return { ok: false, retryAfter: Math.ceil((GLOBAL_WINDOW_MS - (now - g.startedAt)) / 1000) };
+  } else {
+    g.count += 1;
+  }
+
   const key = rateKey(request);
   const current = store.get(key);
   if (!current || now - current.startedAt > RATE_WINDOW_MS) {

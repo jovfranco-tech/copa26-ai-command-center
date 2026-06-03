@@ -397,7 +397,9 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    max-height: clamp(400px, 55vh, 650px);
+    /* Definite height (not just max-height) so the inner height:100% / flex:1
+       scroll area resolves and BOTH team lineups become scrollable. */
+    height: clamp(400px, 55vh, 650px);
     transition: border-color var(--transition-normal);
   }
 

@@ -20,8 +20,8 @@ import {
   type Venue,
 } from '@worldcup/shared';
 import type { PoolPick } from '@/store/pool';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from './firebase';
+// firebase is imported dynamically inside the two pool functions below so the
+// ~400KB SDK stays out of the main app shell and only loads on pool features.
 
 
 const BASE = '/api';
@@ -342,6 +342,7 @@ export const poolMembersCollectionPath = (groupId: string) => ['poolGroups', nor
 
 export const fetchPoolPicks = async (playerName: string, groupId = 'familia-2026') => {
   try {
+    const [{ doc, getDoc }, { db }] = await Promise.all([import('firebase/firestore'), import('./firebase')]);
     const cleanGroup = normalizePoolGroupId(groupId);
     const docRef = cleanGroup
       ? doc(db, 'poolGroups', cleanGroup, 'members', playerName.trim())
@@ -369,6 +370,7 @@ export async function syncPoolPicks(
   avatarUrl = '',
 ): Promise<boolean> {
   try {
+    const [{ doc, setDoc }, { db }] = await Promise.all([import('firebase/firestore'), import('./firebase')]);
     const cleanGroup = normalizePoolGroupId(groupId);
     const cleanName = playerName.trim();
     const docRef = cleanGroup ? doc(db, 'poolGroups', cleanGroup, 'members', cleanName) : doc(db, 'poolPicks', cleanName);

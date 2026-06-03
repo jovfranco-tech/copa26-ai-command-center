@@ -90,7 +90,11 @@ function App() {
 
   const [modoInmersivo, setModoInmersivo] = useState<boolean>(false);
   const [selectedMatchId, setSelectedMatchId] = useState<string>('M001');
-  const [reduceEffects, setReduceEffects] = useState<boolean>(false);
+  // Default the 3D scene to "Lite" (reduced effects) on small / touch screens so
+  // the WebGL stadium stays smooth on phones; users can flip to full FX anytime.
+  const [reduceEffects, setReduceEffects] = useState<boolean>(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches,
+  );
   const [webGlFallback, setWebGlFallback] = useState<boolean>(false);
   const [activeZone, setActiveZone] = useState<'none' | 'field' | 'stands' | 'screens' | 'lights'>('none');
   const [cameraView, setCameraView] = useState<'general' | 'transmision' | 'tactica' | 'porteria' | 'alineaciones'>('alineaciones');
