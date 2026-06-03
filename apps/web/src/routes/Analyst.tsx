@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
+import { useVoiceInput, useAudioRecording, usePdfUpload } from '@/hooks/useAnalystInput';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
 import { clearAIMemory, createAIMemoryRecord, entityMemory, readAIMemory, saveAIMemoryRecord, type AIMemoryRecord } from '@/lib/aiMemory';
@@ -37,29 +38,6 @@ import {
   type NativeAIAction,
   type PendingNativeAction,
 } from '@/components/analyst';
-
-interface BrowserSpeechRecognitionEvent extends Event {
-  results: ArrayLike<ArrayLike<{ transcript: string }>>;
-}
-
-interface BrowserSpeechRecognition {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  onstart: (() => void) | null;
-  onend: (() => void) | null;
-  onerror: ((event: Event) => void) | null;
-  onresult: ((event: BrowserSpeechRecognitionEvent) => void) | null;
-  start: () => void;
-  stop: () => void;
-}
-
-type BrowserSpeechRecognitionConstructor = new () => BrowserSpeechRecognition;
-type WindowWithSpeechRecognition = Window &
-  typeof globalThis & {
-    SpeechRecognition?: BrowserSpeechRecognitionConstructor;
-    webkitSpeechRecognition?: BrowserSpeechRecognitionConstructor;
-  };
 
 type Ctx = 'tournament' | 'match' | 'team' | 'player' | 'hawkeye' | 'pressroom';
 
@@ -212,122 +190,34 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
   const [attachedPdf, setAttachedPdf] = useState<{ name: string; data: string } | null>(null);
   const [attachedAudio, setAttachedAudio] = useState<{ name: string; data: string } | null>(null);
-  const [recordingAudio, setRecordingAudio] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
-  const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Voice/Audio/PDF input via extracted hooks
+  const pdfUpload = usePdfUpload();
+  const audioRecording = useAudioRecording();
+  const voiceInput = useVoiceInput((transcript) => setQuestion(transcript));
 
-    if (file.type !== 'application/pdf') {
-      alert('Por favor, selecciona un archivo PDF de gala válido.');
-      return;
+  // Sync hook state with local aliases for compatibility
+  const handlePdfUpload = pdfUpload.handleUpload;
+  const recordingAudio = audioRecording.recording;
+  const startAudioRecording = audioRecording.startRecording;
+  const stopAudioRecording = audioRecording.stopRecording;
+  const listening = voiceInput.listening;
+  const toggleSpeech = voiceInput.toggleSpeech;
+
+  // Sync hook attachments into local state (maintains existing data flow)
+  useEffect(() => {
+    if (pdfUpload.attachment) {
+      setAttachedPdf(pdfUpload.attachment);
+      pdfUpload.clearAttachment();
     }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64Data = (reader.result as string).split(',')[1];
-      if (base64Data) {
-        setAttachedPdf({
-          name: file.name,
-          data: base64Data,
-        });
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const startAudioRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-      const chunks: Blob[] = [];
-
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunks.push(e.data);
-        }
-      };
-
-      recorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64Data = (reader.result as string).split(',')[1];
-          if (base64Data) {
-            setAttachedAudio({
-              name: `Nota_voz_${new Date().toLocaleTimeString('es-MX').replace(/:/g, '-')}.webm`,
-              data: base64Data,
-            });
-          }
-        };
-        reader.readAsDataURL(audioBlob);
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
-      setMediaRecorder(recorder);
-      recorder.start();
-      setRecordingAudio(true);
-      if ('vibrate' in navigator) navigator.vibrate([20]);
-    } catch (err) {
-      console.error('Failed to start audio recording:', err);
-      alert('No se pudo acceder al micrófono. Asegúrate de dar los permisos necesarios.');
-    }
-  };
-
-  const stopAudioRecording = () => {
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-      mediaRecorder.stop();
-      setRecordingAudio(false);
-      if ('vibrate' in navigator) navigator.vibrate([10, 5, 10]);
-    }
-  };
-
-  const [listening, setListening] = useState(false);
-  const [recognition, setRecognition] = useState<BrowserSpeechRecognition | null>(null);
+  }, [pdfUpload.attachment]);
 
   useEffect(() => {
-    const SpeechRec =
-      (window as WindowWithSpeechRecognition).SpeechRecognition ??
-      (window as WindowWithSpeechRecognition).webkitSpeechRecognition;
-    if (SpeechRec) {
-      const rec = new SpeechRec();
-      rec.continuous = false;
-      rec.interimResults = false;
-      rec.lang = 'es-ES';
-
-      rec.onstart = () => {
-        setListening(true);
-      };
-
-      rec.onend = () => {
-        setListening(false);
-      };
-
-      rec.onerror = (e: Event) => {
-        console.error('Speech recognition error', e);
-        setListening(false);
-      };
-
-      rec.onresult = (event: BrowserSpeechRecognitionEvent) => {
-        const result = event.results[0]?.[0]?.transcript;
-        if (result) {
-          setQuestion(result);
-        }
-      };
-
-      setRecognition(rec);
+    if (audioRecording.attachment) {
+      setAttachedAudio(audioRecording.attachment);
+      audioRecording.clearAttachment();
     }
-  }, []);
-
-  const toggleSpeech = () => {
-    if (!recognition) return;
-    if (listening) {
-      recognition.stop();
-    } else {
-      recognition.start();
-    }
-  };
+  }, [audioRecording.attachment]);
 
   const commitAnswer = (
     q: string,
@@ -1074,7 +964,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
                       <input
                         className="searchbox"
-                        style={{ flex: 1, marginLeft: 0, paddingRight: recognition ? '94px' : '68px' }}
+                        style={{ flex: 1, marginLeft: 0, paddingRight: voiceInput.supported ? '94px' : '68px' }}
                         placeholder={recordingAudio ? "Grabando tu voz táctica... Presiona el micrófono para finalizar" : "Escribe una pregunta táctica..."}
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
@@ -1086,7 +976,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                         onClick={recordingAudio ? stopAudioRecording : startAudioRecording}
                         style={{
                           position: 'absolute',
-                          right: recognition ? '64px' : '36px',
+                          right: voiceInput.supported ? '64px' : '36px',
                           background: 'transparent',
                           border: 'none',
                           color: recordingAudio ? '#ef4444' : attachedAudio ? 'var(--gold)' : 'var(--tx-3)',
@@ -1107,7 +997,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                       <label
                         style={{
                           position: 'absolute',
-                          right: recognition ? '36px' : '8px',
+                          right: voiceInput.supported ? '36px' : '8px',
                           background: 'transparent',
                           border: 'none',
                           color: 'var(--tx-3)',
@@ -1130,7 +1020,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                         <Icon name="stats" size={14} style={{ color: attachedPdf ? 'var(--gold)' : 'var(--tx-3)' }} />
                       </label>
 
-                      {recognition && (
+                      {voiceInput.supported && (
                         <button
                           type="button"
                           onClick={toggleSpeech}

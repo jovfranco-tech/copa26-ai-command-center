@@ -98,7 +98,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         }
       });
     } catch (err) {
-      console.error(err);
+      console.error('[P2PSync] Failed to create host session:', err instanceof Error ? err.message : err);
       setMode('error');
       setStatusMessage('Error al iniciar el canal local. Intenta nuevamente.');
     }
@@ -159,7 +159,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
       }, 1500);
 
     } catch (err) {
-      console.error(err);
+      console.error('[P2PSync] Failed to join session:', err instanceof Error ? err.message : err);
       setMode('error');
       setStatusMessage('Error al unirse a la sesión táctica.');
     }

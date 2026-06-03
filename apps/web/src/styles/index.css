@@ -8,6 +8,18 @@
    (ported from the approved prototype; tokens are the source of truth)
    ============================================================ */
 
+/* ─── RESPONSIVE BREAKPOINT INDEX ─────────────────────────────
+   All @media queries co-located with their component styles.
+   Breakpoints used:
+     • max-width: 1180px — Layout shift (sidebar collapse)    → ~L1440
+     • max-width: 960px  — Tablet (grid simplification)       → ~L1251, L3268, L4989, L5263
+     • max-width: 640px  — Mobile-holographic disable         → ~L3497
+     • max-width: 600px  — Phone (stack, hide, resize)        → ~L1320, L2540, L3282, L5062, L5270
+     • min-width: 768px  — Desktop-only enhancements          → ~L5302
+     • hover: none        — Touch devices (disable tilt)       → ~L3497
+     • @media print       — Print/PDF export                  → ~L3193
+   ──────────────────────────────────────────────────────────── */
+
 /* ---------- Tokens ---------- */
 :root {
   --gold: #c9a24b;
@@ -2004,9 +2016,9 @@ body {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: rgb(239, 68, 68);
-  animation: pulse 2s infinite;
+  animation: pulse-fade 2s infinite;
 }
-@keyframes pulse {
+@keyframes pulse-fade {
   0% { opacity: 1; }
   50% { opacity: 0.6; }
   100% { opacity: 1; }

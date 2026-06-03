@@ -430,7 +430,8 @@ export function Pool() {
           });
           if ('vibrate' in navigator) navigator.vibrate([15]);
         } catch (err) {
-          console.log('Share canceled or failed', err);
+          // Share canceled or user dismissed — no action needed
+          void err;
         }
       } else {
         const url = URL.createObjectURL(blob);
@@ -497,8 +498,7 @@ export function Pool() {
           setSyncStatus('error');
           // Offline fallback: attempt to register Background Sync
           registerPoolBackgroundSync()
-            .then(() => console.log('[Pool] Registered background sync tag "sync-pool-picks"'))
-            .catch((err) => console.error('[Pool] Background sync registration failed:', err));
+            .catch(() => {});
           notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
         }
       } catch {
@@ -515,7 +515,6 @@ export function Pool() {
   useEffect(() => {
     const handleOnline = async () => {
       if (!pool.playerName.trim()) return;
-      console.log('[Pool] Browser detected online, triggering manual sync...');
       setSyncStatus('syncing');
       try {
         const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
