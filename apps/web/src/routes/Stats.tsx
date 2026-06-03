@@ -6,6 +6,7 @@ import { PlayerMini } from '@/components/cards';
 import { DataSourceBadge } from '@/components/DataSourceBadge';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
+import { PreTournamentNotice } from '@/components/PreTournamentNotice';
 import { useStats, useTeamsMap, useMatches } from '@/hooks';
 import { usePool } from '@/store/pool';
 import { db } from '@/lib/firebase';
@@ -138,6 +139,7 @@ export function Stats() {
   return (
     <div className="page-fade">
       <MockBanner />
+      <PreTournamentNotice context="Las estadísticas y la tabla" />
       <div className="source-strip">
         <DataSourceBadge
           label="Estadisticas de torneo"

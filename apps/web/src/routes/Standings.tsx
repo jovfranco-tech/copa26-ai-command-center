@@ -2,6 +2,7 @@ import { Empty } from '@worldcup/ui';
 import { DataSourceBadge } from '@/components/DataSourceBadge';
 import { StandingsTable } from '@/components/cards';
 import { MockBanner } from '@/components/MockBanner';
+import { PreTournamentNotice } from '@/components/PreTournamentNotice';
 import { useStandings } from '@/hooks';
 
 export function Standings({ group }: { group?: string }) {
@@ -16,6 +17,7 @@ export function Standings({ group }: { group?: string }) {
   return (
     <div className="page-fade">
       <MockBanner />
+      <PreTournamentNotice context="Los puntos y la clasificación" />
 
       <div className="card card-pad" style={{ marginBottom: 16 }}>
         <div className="zone-key">
