@@ -209,24 +209,99 @@ function normalizeName(name: string): string {
 }
 
 /**
- * Generate slots for teams not in key templates (mirrors generic coordinate system).
+ * Characteristic formation (and manager when known) for every qualified team.
+ * Teams with a hand-authored SLOT_TEMPLATE above ignore this; everyone else gets
+ * a formation-shaped lineup generated from this string + their real DB players.
  */
-function generateGenericSlots(teamCode: string, side: 'home' | 'away'): SlotDefinition[] {
+const TEAM_FORMATIONS: Record<string, { formation: string; manager?: string }> = {
+  ALG: { formation: '4-3-3' }, ARG: { formation: '4-3-3' }, AUS: { formation: '4-2-3-1' },
+  AUT: { formation: '4-2-3-1' }, BEL: { formation: '4-2-3-1' }, BIH: { formation: '4-2-3-1' },
+  BRA: { formation: '4-2-3-1' }, CAN: { formation: '4-3-3' }, CIV: { formation: '4-3-3' },
+  COD: { formation: '4-2-3-1' }, COL: { formation: '4-2-3-1' }, CPV: { formation: '4-4-2' },
+  CRO: { formation: '4-3-3' }, CUW: { formation: '4-3-3' }, CZE: { formation: '4-2-3-1' },
+  ECU: { formation: '4-4-2' }, EGY: { formation: '4-2-3-1' }, ENG: { formation: '4-2-3-1' },
+  ESP: { formation: '4-3-3' }, FRA: { formation: '4-2-3-1' }, GER: { formation: '4-2-3-1' },
+  GHA: { formation: '4-2-3-1' }, HAI: { formation: '4-4-2' }, IRN: { formation: '4-3-3' },
+  IRQ: { formation: '4-2-3-1' }, JOR: { formation: '4-2-3-1' }, JPN: { formation: '4-2-3-1' },
+  KOR: { formation: '4-2-3-1' }, KSA: { formation: '4-2-3-1' }, MAR: { formation: '4-3-3' },
+  MEX: { formation: '4-3-3' }, NED: { formation: '4-3-3' }, NOR: { formation: '4-3-3' },
+  NZL: { formation: '5-3-2' }, PAN: { formation: '4-4-2' }, PAR: { formation: '4-4-2' },
+  POR: { formation: '4-3-3' }, QAT: { formation: '3-5-2' }, RSA: { formation: '4-3-3' },
+  SCO: { formation: '3-5-2' }, SEN: { formation: '4-3-3' }, SUI: { formation: '4-2-3-1' },
+  SWE: { formation: '4-4-2' }, TUN: { formation: '4-3-3' }, TUR: { formation: '4-2-3-1' },
+  URU: { formation: '4-3-3' }, USA: { formation: '4-3-3' }, UZB: { formation: '4-2-3-1' },
+};
+
+// x-depth (own-goal -> midfield) for each line, keyed by number of outfield lines.
+const FORMATION_DEPTHS: Record<number, number[]> = {
+  2: [18, 4],
+  3: [19, 8, 3],
+  4: [19, 11, 6, 2.5],
+  5: [19, 13, 8, 4, 2],
+};
+
+function describeSlot(band: 'DF' | 'MF' | 'FW', i: number, count: number): { key: string; role: string; label: string } {
+  const first = i === 0;
+  const last = i === count - 1;
+  if (band === 'DF') {
+    if (count >= 5) {
+      if (first) return { key: 'rwb', role: 'Carrilero de Proyección', label: 'Carrilero Derecho' };
+      if (last) return { key: 'lwb', role: 'Carrilero de Proyección', label: 'Carrilero Izquierdo' };
+      return { key: 'cb', role: 'Defensa Central', label: 'Defensa Central' };
+    }
+    if (count === 3) return { key: 'cb', role: 'Defensa Central de Bloque', label: 'Defensa Central' };
+    if (first) return { key: 'rb', role: 'Lateral de Proyección', label: 'Lateral Derecho' };
+    if (last) return { key: 'lb', role: 'Lateral de Apoyo', label: 'Lateral Izquierdo' };
+    return { key: 'cb', role: 'Defensa Central', label: 'Defensa Central' };
+  }
+  if (band === 'FW') {
+    if (count === 1) return { key: 'st', role: 'Delantero Centro de Referencia', label: 'Delantero Centro' };
+    if (count === 2) return { key: 'st', role: 'Delantero de Área', label: 'Delantero' };
+    if (first) return { key: 'rw', role: 'Extremo de Desborde', label: 'Extremo Derecho' };
+    if (last) return { key: 'lw', role: 'Extremo de Desborde', label: 'Extremo Izquierdo' };
+    return { key: 'st', role: 'Delantero Centro', label: 'Delantero Centro' };
+  }
+  if (count === 1) return { key: 'dm', role: 'Pivote de Contención', label: 'Mediocentro Defensivo' };
+  if (count === 2) return { key: 'dm', role: 'Doble Pivote', label: 'Mediocentro' };
+  if (first) return { key: 'rm', role: 'Interior de Enlace', label: 'Interior Derecho' };
+  if (last) return { key: 'lm', role: 'Interior de Enlace', label: 'Interior Izquierdo' };
+  return { key: 'cm', role: 'Mediocentro Organizador', label: 'Mediocampista' };
+}
+
+/**
+ * Generate a full 11-slot lineup from a formation string (e.g. "4-2-3-1") for any
+ * team without a bespoke template. Real DB players are mapped onto these by position.
+ */
+function generateSlotsFromFormation(teamCode: string, side: 'home' | 'away', formation: string): SlotDefinition[] {
   const sign = side === 'home' ? -1 : 1;
   const tShort = teamCode.toLowerCase();
-  return [
+  let lines = formation.split('-').map((n) => parseInt(n, 10)).filter((n) => Number.isFinite(n) && n > 0);
+  if (lines.length < 2 || lines.length > 5 || lines.reduce((a, b) => a + b, 0) !== 10) {
+    lines = [4, 3, 3];
+  }
+  const depths = FORMATION_DEPTHS[lines.length] ?? FORMATION_DEPTHS[3];
+  const slots: SlotDefinition[] = [
     { slotId: `${tShort}-gk`, pos: 'GK', x: sign * 28, z: 0, defaultRole: 'Portero de Bloque', defaultLabel: 'Portero', defaultName: 'Arquero' },
-    { slotId: `${tShort}-rb`, pos: 'DF', x: sign * 15, z: sign * -13, defaultRole: 'Defensa Lateral', defaultLabel: 'Lateral Derecho', defaultName: 'Lateral' },
-    { slotId: `${tShort}-cb-r`, pos: 'DF', x: sign * 20, z: sign * -6, defaultRole: 'Defensa Central', defaultLabel: 'Defensa Central', defaultName: 'Central' },
-    { slotId: `${tShort}-cb-l`, pos: 'DF', x: sign * 20, z: sign * 6, defaultRole: 'Defensa Central', defaultLabel: 'Defensa Central', defaultName: 'Central' },
-    { slotId: `${tShort}-lb`, pos: 'DF', x: sign * 15, z: sign * 13, defaultRole: 'Defensa Lateral', defaultLabel: 'Lateral Izquierdo', defaultName: 'Lateral' },
-    { slotId: `${tShort}-cm-r`, pos: 'MF', x: sign * 7, z: sign * -6, defaultRole: 'Mediocampista Mixto', defaultLabel: 'Mediocampista', defaultName: 'Interior' },
-    { slotId: `${tShort}-dm`, pos: 'MF', x: sign * 11, z: 0, defaultRole: 'Mediocentro Posicional', defaultLabel: 'Mediocentro', defaultName: 'Pivote' },
-    { slotId: `${tShort}-cm-l`, pos: 'MF', x: sign * 7, z: sign * 6, defaultRole: 'Mediocampista Creador', defaultLabel: 'Mediocampista', defaultName: 'Interior' },
-    { slotId: `${tShort}-rw`, pos: 'FW', x: sign * 4, z: sign * -16, defaultRole: 'Atacante de Banda', defaultLabel: 'Extremo Derecho', defaultName: 'Extremo' },
-    { slotId: `${tShort}-st`, pos: 'FW', x: sign * 4, z: sign * -2, defaultRole: 'Finalizador de Área', defaultLabel: 'Delantero Centro', defaultName: 'Delantero' },
-    { slotId: `${tShort}-ss`, pos: 'FW', x: sign * 2, z: sign * 9, defaultRole: 'Mediapunta de Enlace', defaultLabel: 'Mediapunta', defaultName: 'Mediapunta' },
   ];
+  lines.forEach((count, lineIdx) => {
+    const band: 'DF' | 'MF' | 'FW' = lineIdx === 0 ? 'DF' : lineIdx === lines.length - 1 ? 'FW' : 'MF';
+    const x = sign * depths[lineIdx];
+    const width = band === 'FW' ? (count >= 3 ? 16 : count === 2 ? 8 : 0) : 13.5;
+    for (let i = 0; i < count; i++) {
+      const z = count === 1 ? 0 : -width + (i * (2 * width)) / (count - 1);
+      const { key, role, label } = describeSlot(band, i, count);
+      slots.push({
+        slotId: `${tShort}-${key}-${lineIdx}-${i}`,
+        pos: band,
+        x,
+        z,
+        defaultRole: role,
+        defaultLabel: label,
+        defaultName: label,
+      });
+    }
+  });
+  return slots;
 }
 
 /**
@@ -248,7 +323,10 @@ export function mapDatabasePlayersToLineups(
   matchMinute: number = 0,
 ): MatchLineups {
   const getTeamSlots = (teamCode: string, side: 'home' | 'away'): SlotDefinition[] => {
-    return SLOT_TEMPLATES[teamCode] || generateGenericSlots(teamCode, side);
+    return (
+      SLOT_TEMPLATES[teamCode] ||
+      generateSlotsFromFormation(teamCode, side, TEAM_FORMATIONS[teamCode]?.formation ?? '4-3-3')
+    );
   };
 
 
@@ -260,8 +338,8 @@ export function mapDatabasePlayersToLineups(
       name: info?.name || visual.teamName,
       color: visual.primaryColor,
       standsColor: info?.standsColor || visual.secondaryColor,
-      formation: info?.formation || '4-3-3',
-      manager: info?.manager || 'Director Técnico',
+      formation: info?.formation || TEAM_FORMATIONS[teamCode]?.formation || '4-3-3',
+      manager: info?.manager || TEAM_FORMATIONS[teamCode]?.manager || 'Director Técnico',
     };
   };
 
