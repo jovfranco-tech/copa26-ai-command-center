@@ -30,19 +30,14 @@ export default defineConfig(({ mode }) => {
           manualChunks(id) {
             if (!id.includes('node_modules')) return undefined;
             if (id.includes('firebase') || id.includes('@firebase')) return 'vendor-firebase';
-            // 3D stack — only pulled in by the Estadio 3D route.
+            // 3D stack — only pulled in by the lazy Estadio 3D route, so isolating it
+            // shrinks that route's chunk massively without touching the app shell.
             if (id.includes('/three/') || id.includes('@react-three') || id.includes('/three-')) {
               return 'vendor-three';
             }
-            // Charting stack — only pulled in by the analyst / stats views.
-            if (id.includes('recharts') || id.includes('/d3-') || id.includes('victory-vendor')) {
-              return 'vendor-charts';
-            }
-            if (id.includes('lucide-react')) return 'vendor-icons';
-            if (id.includes('react-dom') || id.includes('/scheduler/') || id.includes('/react/')) {
-              return 'vendor-react';
-            }
             if (id.includes('@tanstack') || id.includes('zustand')) return 'vendor-state';
+            // NOTE: do NOT split React / react-dom / charts into their own chunks —
+            // doing so reordered chunk init and broke React.createContext at boot.
             return undefined;
           },
         },
