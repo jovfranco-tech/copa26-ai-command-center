@@ -48,9 +48,9 @@ export const MATCH_FIXTURES: Match[] = [
       homeShort: 'MEX',
       awayShort: 'RSA',
       homeColor: '#006341', // Verde Bandera
-      awayColor: '#007a4d', // Verde Sudafricano
+      awayColor: '#ffb612', // Amarillo Oro
       homeStandsColor: '#006341',
-      awayStandsColor: '#ffb612', // Amarillo Oro
+      awayStandsColor: '#007a4d', // Verde Sudafricano
     },
     stadiumName: 'Estadio Azteca',
     group: 'Grupo A - Inauguración',

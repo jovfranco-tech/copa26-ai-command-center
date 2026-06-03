@@ -23,12 +23,12 @@ export const TEAM_VISUAL_IDENTITIES: Record<string, TeamVisualIdentity> = {
   RSA: {
     teamCode: 'RSA',
     teamName: 'Sudáfrica',
-    primaryColor: '#007a4d',
-    secondaryColor: '#ffb612',
-    accentColor: '#de3831',
-    textContrastColor: '#ffffff',
-    borderColor: 'rgba(0, 122, 77, 0.25)',
-    jerseyColor: '#007a4d',
+    primaryColor: '#ffb612',
+    secondaryColor: '#007a4d',
+    accentColor: '#007a4d',
+    textContrastColor: '#0f2042',
+    borderColor: 'rgba(255, 182, 18, 0.25)',
+    jerseyColor: '#ffb612',
   },
   ARG: {
     teamCode: 'ARG',

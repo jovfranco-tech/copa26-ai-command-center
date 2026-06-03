@@ -509,7 +509,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
                 style={{
                   background: player.position === 'GK'
                     ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
-                    : `linear-gradient(135deg, ${visual.primaryColor} 0%, ${visual.secondaryColor === '#ffffff' ? '#ffffff' : visual.primaryColor} 55%, ${visual.primaryColor} 100%)`,
+                    : `linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%), ${visual.primaryColor}`,
                   color: player.position === 'GK' ? '#0b1731' : visual.textContrastColor,
                   borderColor: isSelected || hovered ? '#ffffff' : visual.primaryColor,
                   boxShadow: isSelected || hovered 

@@ -404,8 +404,8 @@ function App() {
               </span>
             </div>
 
-            {/* OVERLAY: Top-Middle Help Pill */}
-            <div className="canvas-overlay-top-middle">
+            {/* OVERLAY: Bottom-Middle Help Pill */}
+            <div className="canvas-overlay-bottom-middle">
               Arrastra para orbitar | Rueda para zoom | Clic derecho para desplazar
             </div>
 

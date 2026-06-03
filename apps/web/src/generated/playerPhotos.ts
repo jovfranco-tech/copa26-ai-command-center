@@ -1056,6 +1056,26 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Guillermo_Ochoa"
   },
+  "MEX-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Johan_V%C3%A1squez.jpg",
+    "ext": "jpg"
+  },
+  "MEX-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Jorge_S%C3%A1nchez.png",
+    "ext": "png"
+  },
+  "MEX-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Luis_Ch%C3%A1vez_WC2022.jpg",
+    "ext": "jpg"
+  },
+  "MEX-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Luis_Romo.png",
+    "ext": "png"
+  },
+  "MEX-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Jes%C3%BAs_Gallardo.jpg",
+    "ext": "jpg"
+  },
   "NED-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Cody_Gakpo_06042025_%282%29_%28cropped%29.jpg",
     "ext": "jpg",
@@ -1221,10 +1241,46 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Percy_Tau"
   },
+  "RSA-2": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
+  },
   "RSA-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/Ronwen_Williams_AFCON2025Q_35.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Ronwen_Williams_AFCON2025Q_35.jpg"
+  },
+  "RSA-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Aubrey_Modiba_%28cropped%29.jpg",
+    "ext": "jpg"
+  },
+  "RSA-5": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
+  },
+  "RSA-6": {
+    "src": "/avatars/jeanluc.png",
+    "ext": "png"
+  },
+  "RSA-7": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
+  },
+  "RSA-8": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
+  },
+  "RSA-9": {
+    "src": "/avatars/jeanluc.png",
+    "ext": "png"
+  },
+  "RSA-10": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
+  },
+  "RSA-11": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
   },
   "SCO-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/72/Manchester_United_v_Liverpool%2C_22_August_2022_%2821%29_%28Scott_McTominay%29.jpg",

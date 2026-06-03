@@ -147,7 +147,7 @@ interface TeamInfo {
 
 const TEAM_INFO: Record<string, TeamInfo> = {
   MEX: { name: 'México', color: '#006341', standsColor: '#006341', formation: '4-3-3', manager: 'Javier Aguirre' },
-  RSA: { name: 'Sudáfrica', color: '#007a4d', standsColor: '#ffb612', formation: '4-3-3', manager: 'Hugo Broos' },
+  RSA: { name: 'Sudáfrica', color: '#ffb612', standsColor: '#007a4d', formation: '4-3-3', manager: 'Hugo Broos' },
   ARG: { name: 'Argentina', color: '#74acdf', standsColor: '#74acdf', formation: '4-3-3', manager: 'Lionel Scaloni' },
   FRA: { name: 'Francia', color: '#0f2042', standsColor: '#0f2042', formation: '4-2-3-1', manager: 'Didier Deschamps' },
   BRA: { name: 'Brasil', color: '#fed103', standsColor: '#009b3a', formation: '4-2-4', manager: 'Dorival Júnior' },
