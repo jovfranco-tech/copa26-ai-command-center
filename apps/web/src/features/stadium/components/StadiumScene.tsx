@@ -219,6 +219,37 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
   const trophyRef = useRef<THREE.Group>(null);
   const ballVelocityRef = useRef({ x: 0.03, z: 0.02 });
 
+  // Confetti system for goal celebrations
+  const confettiRef = useRef<THREE.Points>(null);
+  const confettiStartRef = useRef<number>(0);
+  const lastGoalCountRef = useRef<number>(match.score.home + match.score.away);
+  const confettiActive = useRef<boolean>(false);
+
+  // Confetti particle positions and colors (generated once)
+  const confettiData = useMemo(() => {
+    const random = createPureRandom(77777);
+    const count = 200;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const confettiColors = [
+      [1, 0.84, 0],    // gold
+      [1, 1, 1],       // white
+      [0.78, 0.08, 0.15], // red
+      [0.06, 0.42, 0.25], // green
+      [0.1, 0.24, 0.56],  // blue
+    ];
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (random() - 0.5) * 30;
+      positions[i * 3 + 1] = random() * 25 + 5;
+      positions[i * 3 + 2] = (random() - 0.5) * 20;
+      const c = confettiColors[Math.floor(random() * confettiColors.length)];
+      colors[i * 3] = c[0];
+      colors[i * 3 + 1] = c[1];
+      colors[i * 3 + 2] = c[2];
+    }
+    return { positions, colors, count };
+  }, []);
+
   // Camera Presets Vector Lookup Table (Perfect interior coordinates)
   const presets = useMemo(() => ({
     alineaciones: { pos: new THREE.Vector3(0, 28, 48), target: new THREE.Vector3(0, 0, 0) }, // Vista Alineaciones elevated 3/4
@@ -307,6 +338,32 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
       // Clamp speed to prevent runaway acceleration
       bv.x = Math.max(-0.06, Math.min(0.06, bv.x));
       bv.z = Math.max(-0.06, Math.min(0.06, bv.z));
+    }
+
+    // Confetti goal celebration — detect new goals during live
+    const totalGoals = match.score.home + match.score.away;
+    if (match.status === 'live' && totalGoals > lastGoalCountRef.current) {
+      lastGoalCountRef.current = totalGoals;
+      confettiActive.current = true;
+      confettiStartRef.current = elapsed;
+    }
+
+    // Animate confetti falling (active for 4 seconds after a goal)
+    if (confettiActive.current && confettiRef.current) {
+      const confettiAge = elapsed - confettiStartRef.current;
+      if (confettiAge > 4) {
+        confettiActive.current = false;
+        confettiRef.current.visible = false;
+      } else {
+        confettiRef.current.visible = true;
+        const positions = confettiRef.current.geometry.attributes.position.array as Float32Array;
+        for (let i = 0; i < positions.length; i += 3) {
+          positions[i + 1] -= 0.15 + Math.sin(i) * 0.05; // Fall with slight variation
+          positions[i] += Math.sin(elapsed * 2 + i) * 0.02; // Gentle sway
+          if (positions[i + 1] < -1) positions[i + 1] = 25; // Reset to top
+        }
+        confettiRef.current.geometry.attributes.position.needsUpdate = true;
+      }
     }
   });
 
@@ -462,6 +519,15 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
             </mesh>
           </group>
         )}
+
+        {/* Confetti particles — visible during goal celebrations */}
+        <points ref={confettiRef} visible={false}>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[confettiData.positions, 3]} count={confettiData.count} itemSize={3} />
+            <bufferAttribute attach="attributes-color" args={[confettiData.colors, 3]} count={confettiData.count} itemSize={3} />
+          </bufferGeometry>
+          <pointsMaterial size={0.3} vertexColors transparent opacity={0.9} sizeAttenuation />
+        </points>
 
         {/* 3D Goals */}
         <SoccerGoal position={[-30, 0.2, 0]} facing="inward-right" />

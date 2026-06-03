@@ -24,8 +24,7 @@ createRoot(el).render(
 
 if ('serviceWorker' in navigator) {
   // When an updated service worker takes control, reload once so the freshest
-  // build is shown immediately — no manual hard-refresh needed. This is what makes
-  // newly deployed fixes actually reach returning visitors.
+  // build is shown immediately — no manual hard-refresh needed.
   let swRefreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (swRefreshing) return;
@@ -39,6 +38,26 @@ if ('serviceWorker' in navigator) {
       .then((reg) => {
         // Proactively check for a newer worker on every load.
         reg.update();
+
+        // Listen for waiting service worker (new version available)
+        const onUpdateFound = () => {
+          const newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New version available — show toast before reload
+              const toast = document.createElement('div');
+              toast.setAttribute('role', 'alert');
+              toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a1a2e;border:1px solid rgba(201,162,75,0.4);color:#f4efe2;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4);backdrop-filter:blur(8px)';
+              toast.innerHTML = '<span style="color:#c9a24b">●</span> Nueva versión disponible <button style="background:#c9a24b;color:#0a0a0a;border:none;padding:4px 12px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;margin-left:8px" id="sw-reload">Actualizar</button>';
+              document.body.appendChild(toast);
+              document.getElementById('sw-reload')?.addEventListener('click', () => {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+              });
+            }
+          });
+        };
+        reg.addEventListener('updatefound', onUpdateFound);
       })
       .catch((err) => {
         console.error('Service Worker registration failed:', err);

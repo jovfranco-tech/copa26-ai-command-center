@@ -4048,3 +4048,39 @@ textarea:focus-visible {
     display: none;
   }
 }
+
+/* ── Accessibility: High Contrast ──────────────────────────────── */
+@media (prefers-contrast: more) {
+  :root {
+    --line: rgba(255, 255, 255, 0.3);
+    --tx-2: #e2e2e2;
+    --tx-3: #cccccc;
+    --gold: #ffd700;
+    --gold-line: rgba(255, 215, 0, 0.5);
+  }
+  .card {
+    border-width: 2px;
+    border-color: var(--line);
+  }
+  .btn {
+    border: 2px solid currentColor;
+    font-weight: 800;
+  }
+  .badge, .pill {
+    border: 1px solid currentColor;
+  }
+  .mono-label {
+    color: var(--tx-2);
+    font-weight: 700;
+  }
+  input, select, textarea {
+    border-width: 2px;
+    border-color: var(--tx-3);
+  }
+  .nav-item {
+    border: 1px solid transparent;
+  }
+  .nav-item.active, .nav-item:focus-visible {
+    border-color: var(--gold);
+  }
+}
