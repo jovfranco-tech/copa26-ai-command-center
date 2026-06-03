@@ -190,6 +190,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app-bg">
+      <a href="#main-content" className="skip-to-content">Ir al contenido principal</a>
       {isRouterLoading && (
         <div
           className="global-progress-bar"
@@ -308,7 +309,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             )}
           </header>
 
-          <div className="content">
+          <div className="content" id="main-content">
             {children}
             <footer
               style={{

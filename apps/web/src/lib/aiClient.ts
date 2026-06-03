@@ -87,6 +87,36 @@ export interface AIResult {
   };
 }
 
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries = 2,
+): Promise<Response> {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      // Don't retry client errors
+      if (res.status < 500 && res.status !== 429) return res;
+      // Retry on 429, 502, 503
+      if (attempt < maxRetries) {
+        const delay = Math.pow(2, attempt) * 1000; // 1s, 2s
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      lastError = err as Error;
+      if (attempt < maxRetries) {
+        const delay = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+    }
+  }
+  throw lastError ?? new Error('Fetch failed after retries');
+}
+
 export async function askAI(
   question: string,
   context: string,
@@ -96,7 +126,7 @@ export async function askAI(
   onMeta?: (meta: AIResult['meta']) => void,
 ): Promise<AIResult> {
   try {
-    const res = await fetch('/api/analyst', {
+    const res = await fetchWithRetry('/api/analyst', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // Ask for a streamed answer only when the caller wants progressive tokens.

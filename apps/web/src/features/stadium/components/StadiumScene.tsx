@@ -216,6 +216,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
   // References for light cones / spinning elements
   const weatherParticlesRef = useRef<THREE.Points>(null);
   const ballRef = useRef<THREE.Mesh>(null);
+  const trophyRef = useRef<THREE.Group>(null);
   const ballVelocityRef = useRef({ x: 0.03, z: 0.02 });
 
   // Camera Presets Vector Lookup Table (Perfect interior coordinates)
@@ -279,6 +280,11 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
         }
         weatherParticlesRef.current.geometry.attributes.position.needsUpdate = true;
       }
+    }
+
+    // Slowly rotate trophy in pre-match
+    if (trophyRef.current) {
+      trophyRef.current.rotation.y += 0.005;
     }
 
     // Animate soccer ball rolling on pitch
@@ -426,7 +432,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
         <PitchGeometry />
 
         {match.status === 'pre-match' ? (
-          <group>
+          <group ref={trophyRef}>
             {/* Golden trophy at center */}
             <mesh position={[0, 0.6, 0]} castShadow>
               <cylinderGeometry args={[0.12, 0.2, 0.5, 8]} />
