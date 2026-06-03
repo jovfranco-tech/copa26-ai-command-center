@@ -109,6 +109,19 @@ const COORD_REGISTRY: Record<string, { x: number; y: number }> = {
   'ned-st-l': { x: 40, y: 28 },
 };
 
+/**
+ * Teams without a hand-authored 2D map (everyone outside the 8 templates) derive
+ * their pitch dot from the player's real 3D coordinates (x = depth ±28, z = width
+ * ±16), so the formation spreads out instead of collapsing every defender /
+ * midfielder onto a single point.
+ */
+function derive2DCoord(player: Player): { x: number; y: number } {
+  const depth = Math.min(28, Math.abs(player.x ?? 0));
+  const y = Math.max(22, Math.min(114, 21.5 + depth * 3.23)); // GK (|x|≈28) bottom → FW top
+  const x = Math.max(13, Math.min(87, 50 - ((player.z ?? 0) / 16) * 32));
+  return { x, y };
+}
+
 export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
   match,
   onSelectPlayer,
@@ -136,9 +149,12 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
     return (
       <svg 
         viewBox="0 0 100 130" 
-        style={{ 
-          width: '100%', 
-          borderRadius: '10px', 
+        style={{
+          width: '100%',
+          maxWidth: '270px',
+          margin: '0 auto',
+          display: 'block',
+          borderRadius: '10px',
           background: 'var(--stadium-pitch-bg, radial-gradient(circle at 50% 50%, #0d1530 0%, #05070e 100%))',
           border: '1px solid var(--border-subtle)',
           boxShadow: 'var(--glass-shadow)',
@@ -167,10 +183,7 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
 
         {/* Render Players */}
         {players.map((player) => {
-          const pt = COORD_REGISTRY[player.slotId || player.id] || 
-                     (player.position === 'GK' ? { x: 50, y: 112 } :
-                      player.position === 'DF' ? { x: 50, y: 90 } :
-                      player.position === 'MF' ? { x: 50, y: 68 } : { x: 50, y: 30 });
+          const pt = COORD_REGISTRY[player.slotId || player.id] ?? derive2DCoord(player);
 
           const isSelected = selectedPlayerId === player.id;
           
