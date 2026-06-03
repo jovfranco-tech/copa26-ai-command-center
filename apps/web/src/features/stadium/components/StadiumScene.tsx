@@ -61,6 +61,44 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
     return window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
   }, []);
 
+  // Procedural starry sky texture for night mode
+  const skyTexture = useMemo(() => {
+    if (timeOfDay !== 'night') return null;
+    const random = createPureRandom(33333);
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      // Dark gradient sky
+      const grad = ctx.createLinearGradient(0, 0, 0, 256);
+      grad.addColorStop(0, '#020510');
+      grad.addColorStop(0.6, '#060a1f');
+      grad.addColorStop(1, '#0a1030');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 512, 256);
+      // Stars
+      for (let i = 0; i < 200; i++) {
+        const x = random() * 512;
+        const y = random() * 180; // Only upper portion
+        const size = random() * 1.5 + 0.5;
+        const brightness = 0.4 + random() * 0.6;
+        ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Moon
+      ctx.fillStyle = 'rgba(255, 252, 230, 0.9)';
+      ctx.beginPath();
+      ctx.arc(380, 50, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    return texture;
+  }, [timeOfDay]);
+
   // Procedural grass strips texture generated on-the-fly
   const grassTexture = useMemo(() => {
     const random = createPureRandom(12345);
@@ -434,7 +472,11 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
       {/* Giant Environmental Sky Dome Sphere */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[70, 32, 32]} />
-        <meshBasicMaterial color={lighting.domeColor} side={THREE.BackSide} />
+        {skyTexture ? (
+          <meshBasicMaterial map={skyTexture} side={THREE.BackSide} />
+        ) : (
+          <meshBasicMaterial color={lighting.domeColor} side={THREE.BackSide} />
+        )}
       </mesh>
 
       {/* Dynamic Fog */}
@@ -559,6 +601,19 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
           activeZone={activeZone}
           reduceEffects={reduceEffects}
         />
+
+        {/* Stadium wave sparkles in the stands during live matches */}
+        {!reduceEffects && match.status === 'live' && (
+          <SparklesDrei
+            count={60}
+            scale={[70, 8, 50]}
+            position={[0, 8, 0]}
+            size={0.4}
+            speed={0.3}
+            color={homeColor}
+            opacity={0.5}
+          />
+        )}
 
         {/* Scrolling LED Ribbon Board */}
         <mesh position={[0, 3.65, 0]}>
@@ -969,6 +1024,7 @@ export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
           maxAzimuthAngle={Infinity}
           minAzimuthAngle={-Infinity}
           target={[0, 0, 0]}
+          touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
         />
       </Canvas>
 

@@ -56,6 +56,21 @@
   --gap: 16px;
   --pad: 18px;
   --row-h: 44px;
+
+  /* Motion tokens */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Semantic colors */
+  --color-success: #38d39a;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #5ea3b8;
+  --color-ai: var(--gold);
 }
 
 [data-theme='light'] {
@@ -1215,19 +1230,16 @@ body {
   height: 170px;
   right: 18px;
 }
+/* Skeleton with gold shimmer */
 .skel {
-  background: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
+  background: linear-gradient(90deg, var(--bg-2) 25%, var(--gold-soft) 50%, var(--bg-2) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.3s infinite;
-  border-radius: 8px;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
 }
-@keyframes shimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ---------- Bars / mini viz ---------- */
@@ -4025,6 +4037,78 @@ textarea:focus-visible {
 }
 .skip-to-content:focus {
   top: 8px;
+}
+
+/* Stagger animation for list items */
+.stagger-list > * {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: stagger-fade-in var(--duration-slow) var(--ease-out) forwards;
+}
+.stagger-list > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-list > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-list > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-list > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-list > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-list > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-list > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-list > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-list > *:nth-child(n+9) { animation-delay: 400ms; }
+@keyframes stagger-fade-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fluid typography */
+h1, .h1 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
+h2, .h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
+
+/* Glassmorphism panel */
+.glass-card {
+  background: rgba(8, 12, 20, 0.6);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(201, 162, 75, 0.12);
+  border-radius: 14px;
+}
+[data-theme='light'] .glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* OLED true-black mode */
+[data-density='oled'] {
+  --bg: #000000;
+  --bg-1: #050505;
+  --bg-2: #0a0a0a;
+  --bg-3: #111111;
+  --shadow: 0 0 0 transparent;
+}
+
+/* AI Copilot identity badges */
+.copilot-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.copilot-card:nth-child(1) .copilot-avatar {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a1a;
+}
+.copilot-card:nth-child(2) .copilot-avatar {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: #ffffff;
+}
+.copilot-card:nth-child(3) .copilot-avatar {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #ffffff;
 }
 
 /* ── Accessibility: Reduced Motion ─────────────────────────────── */

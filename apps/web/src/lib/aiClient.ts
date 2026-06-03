@@ -91,11 +91,12 @@ async function fetchWithRetry(
   url: string,
   options: RequestInit,
   maxRetries = 2,
+  signal?: AbortSignal,
 ): Promise<Response> {
   let lastError: Error | null = null;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const res = await fetch(url, options);
+      const res = await fetch(url, { ...options, signal });
       // Don't retry client errors
       if (res.status < 500 && res.status !== 429) return res;
       // Retry on 429, 502, 503
@@ -106,6 +107,8 @@ async function fetchWithRetry(
       }
       return res;
     } catch (err) {
+      // Don't retry aborted requests
+      if (signal?.aborted) throw err;
       lastError = err as Error;
       if (attempt < maxRetries) {
         const delay = Math.pow(2, attempt) * 1000;
@@ -124,14 +127,17 @@ export async function askAI(
   audio?: { name: string; data: string },
   onToken?: (partial: string) => void,
   onMeta?: (meta: AIResult['meta']) => void,
+  signal?: AbortSignal,
+  memory?: Array<{ question: string; answer: string }>,
 ): Promise<AIResult> {
   try {
+    const history = memory?.slice(0, 3).map((r) => ({ role: 'user', content: r.question, assistant: r.answer }));
     const res = await fetchWithRetry('/api/analyst', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // Ask for a streamed answer only when the caller wants progressive tokens.
-      body: JSON.stringify({ question, context, pdf, audio, stream: !!onToken }),
-    });
+      body: JSON.stringify({ question, context, pdf, audio, stream: !!onToken, history }),
+    }, 2, signal);
 
     // Streaming response: a plain-text token stream with meta in the x-ai-meta header.
     const contentType = res.headers.get('content-type') ?? '';
@@ -181,7 +187,10 @@ export async function askAI(
       };
     }
     return data;
-  } catch {
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      return { ok: false, reason: 'aborted' };
+    }
     return { ok: false, reason: 'network' };
   }
 }

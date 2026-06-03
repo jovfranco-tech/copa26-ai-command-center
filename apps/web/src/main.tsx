@@ -5,11 +5,15 @@ import { RouterProvider } from '@tanstack/react-router';
 import { queryClient } from '@/lib/query';
 import { router } from '@/router';
 import { summarizeOldMemory } from '@/lib/aiMemory';
+import { reportWebVitals } from '@/lib/webVitals';
 import './styles/index.css';
 import './styles/pool.css';
 
 // Compress AI memory records older than 7 days to prevent localStorage overflow
 summarizeOldMemory();
+
+// Report Core Web Vitals (console in dev, Vercel Analytics in prod)
+reportWebVitals();
 
 const el = document.getElementById('root');
 if (!el) throw new Error('Root element #root not found');

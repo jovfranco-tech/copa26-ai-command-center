@@ -244,6 +244,7 @@ const routeTree = rootRoute.addChildren([
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  defaultPreloadStaleTime: 30_000,
   scrollRestoration: true,
   defaultViewTransition: true,
   defaultErrorComponent: ({ error }) => {

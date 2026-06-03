@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Icon, Pill } from '@worldcup/ui';
 import { ANALYST_DISCLAIMER } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
@@ -174,6 +174,12 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   );
   const memStats = useMemo(() => getMemoryStats(), [memory]);
 
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => { abortRef.current?.abort(); };
+  }, []);
+
   useEffect(() => {
     setCloudMemoryStatus('syncing');
     const unsubscribe = listenCloudAIInsights(
@@ -289,6 +295,8 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     setBusy(true);
     setStreamingText('');
     setStreamingProvider(null);
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
     const ai = await askAI(
       q,
       contextText,
@@ -298,6 +306,8 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       (meta) => {
         if (meta?.provider) setStreamingProvider(meta.provider);
       },
+      abortRef.current.signal,
+      memory.map((r) => ({ question: r.question, answer: r.answer })),
     );
     setBusy(false);
     setStreamingText('');
@@ -1090,6 +1100,11 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     {usedAI ? 'Analista IA' : 'Analista local'}
                   </span>
                   {usedAI && <span className="badge gold">IA</span>}
+                  {lastAiMeta?.confidence && (
+                    <span className={`badge ${lastAiMeta.confidence === 'Alta' || lastAiMeta.confidence === 'Alta local' ? 'gold' : ''}`} style={{ fontSize: 10 }}>
+                      {lastAiMeta.confidence}
+                    </span>
+                  )}
                 </div>
                 
                 <button
@@ -1108,6 +1123,32 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 >
                   <Icon name="star" size={11} style={{ color: isNoteSaved ? 'var(--gold)' : 'var(--tx-3)' }} />
                   {isNoteSaved ? 'Guardada' : 'Guardar en Notas'}
+                </button>
+                <button
+                  type="button"
+                  className="btn ghost btn-sm"
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: 11,
+                    border: '1px solid var(--line)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                  }}
+                  onClick={() => {
+                    if (!answer) return;
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(answer.text.slice(0, 500));
+                    utterance.lang = 'es-ES';
+                    const voices = window.speechSynthesis.getVoices();
+                    const esVoice = voices.find(v => v.lang.startsWith('es'));
+                    if (esVoice) utterance.voice = esVoice;
+                    window.speechSynthesis.speak(utterance);
+                  }}
+                  title="Escuchar respuesta"
+                >
+                  <Icon name="ai" size={13} />
+                  Escuchar
                 </button>
               </div>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{parsed.text}</p>

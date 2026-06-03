@@ -1,19 +1,24 @@
 {
-  "name": "FIFA World Cup 26 · Quiniela y Control",
-  "short_name": "Quiniela FIFA 26",
-  "description": "Dashboard familiar para calendario, selecciones, jugadores, quiniela y analista táctico IA.",
+  "name": "FIFA World Cup 2026 — Dashboard Familiar",
+  "short_name": "Mundial 2026",
+  "description": "Dashboard privado familiar para el Mundial FIFA 2026 con quiniela, analista IA, y estadio 3D.",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#121826",
+  "background_color": "#080c14",
   "theme_color": "#c9a24b",
-  "categories": ["sports", "entertainment"],
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/brand/fwc26-emblem.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
-  ]
+  ],
+  "shortcuts": [
+    { "name": "Quiniela", "url": "/pool", "description": "Abrir quiniela familiar" },
+    { "name": "Analista IA", "url": "/analyst", "description": "Consultar al analista de IA" },
+    { "name": "Estadio 3D", "url": "/estadio-3d", "description": "Ver estadio interactivo" }
+  ],
+  "categories": ["sports", "entertainment"]
 }

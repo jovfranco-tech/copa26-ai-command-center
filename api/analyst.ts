@@ -58,9 +58,9 @@ export default async function handler(request: Request): Promise<Response> {
     });
   }
 
-  let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean; provider?: 'openai' | 'gemini' };
+  let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean; provider?: 'openai' | 'gemini'; history?: Array<{ role: string; content: string; assistant: string }> };
   try {
-    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean; provider?: 'openai' | 'gemini' };
+    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean; provider?: 'openai' | 'gemini'; history?: Array<{ role: string; content: string; assistant: string }> };
   } catch {
     return Response.json({ ok: false, reason: 'bad-request' }, { status: 400 });
   }
@@ -83,6 +83,7 @@ export default async function handler(request: Request): Promise<Response> {
 
   const question = (body.question ?? '').slice(0, 500);
   const context = (body.context ?? '').slice(0, 6000);
+  const history = (body.history ?? []).slice(0, 3);
   if (!question) return Response.json({ ok: false, reason: 'empty' }, { status: 400 });
 
   const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -125,8 +126,8 @@ export default async function handler(request: Request): Promise<Response> {
     };
     try {
       const upstream = isOpenAI
-        ? await callOpenAI(openaiBase, openaiKey as string, openaiModel, context, question, Boolean(body.stream))
-        : await callGemini(geminiBase, geminiKey as string, geminiModel, context, question, body.pdf, body.audio, Boolean(body.stream));
+        ? await callOpenAI(openaiBase, openaiKey as string, openaiModel, context, question, Boolean(body.stream), history)
+        : await callGemini(geminiBase, geminiKey as string, geminiModel, context, question, body.pdf, body.audio, Boolean(body.stream), history);
 
       if (!upstream.ok || !upstream.body) {
         const detail = upstream.ok ? 'no-body' : (await upstream.text().catch(() => '')).slice(0, 160);
@@ -167,7 +168,15 @@ export default async function handler(request: Request): Promise<Response> {
           }
         }
       } else {
-        answer = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
+        const parts = data.candidates?.[0]?.content?.parts ?? [];
+        answer = '';
+        for (const part of parts) {
+          if (part.text) answer += part.text;
+          if (part.functionCall && part.functionCall.name === 'render_chart') {
+            answer += '\n\n```json\n' + JSON.stringify({ chart: part.functionCall.args }, null, 2) + '\n```';
+          }
+        }
+        answer = answer.trim();
       }
       if (!answer) {
         errors.push(`${provider}:empty-answer`);
@@ -205,10 +214,16 @@ async function callGemini(
   pdf: { name: string; data: string } | undefined,
   audio: { name: string; data: string } | undefined,
   stream: boolean,
+  history: Array<{ role: string; content: string; assistant: string }>,
 ): Promise<Response> {
+  const historyContents = history.flatMap((h) => [
+    { role: 'user', parts: [{ text: h.content }] },
+    { role: 'model', parts: [{ text: h.assistant }] },
+  ]);
   const payload = {
     systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
     contents: [
+      ...historyContents,
       {
         role: 'user',
         parts: [
@@ -219,6 +234,31 @@ async function callGemini(
       },
     ],
     generationConfig: { temperature: 0.3, maxOutputTokens: 600 },
+    tools: [{
+      functionDeclarations: [{
+        name: 'render_chart',
+        description: 'Renders a comparison chart when the user asks to compare numeric stats between teams or players. Only call this when there is actual numeric data to compare.',
+        parameters: {
+          type: 'OBJECT',
+          properties: {
+            type: { type: 'STRING', enum: ['bar', 'line'], description: 'Chart type' },
+            title: { type: 'STRING', description: 'Descriptive chart title in Spanish' },
+            keys: { type: 'ARRAY', items: { type: 'STRING' }, description: 'Metric keys (no accents, no special chars)' },
+            data: {
+              type: 'ARRAY',
+              items: {
+                type: 'OBJECT',
+                properties: {
+                  name: { type: 'STRING' },
+                },
+              },
+              description: 'Array of data points with name and numeric metric values',
+            },
+          },
+          required: ['type', 'title', 'keys', 'data'],
+        },
+      }],
+    }],
   };
   const op = stream ? 'streamGenerateContent?alt=sse&' : 'generateContent?';
   return fetch(`${base}/v1beta/models/${model}:${op}key=${key}`, {
@@ -235,7 +275,12 @@ async function callOpenAI(
   context: string,
   question: string,
   stream: boolean,
+  history: Array<{ role: string; content: string; assistant: string }>,
 ): Promise<Response> {
+  const historyMessages = history.flatMap((h) => [
+    { role: 'user' as const, content: h.content },
+    { role: 'assistant' as const, content: h.assistant },
+  ]);
   return fetch(`${base}/v1/chat/completions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
@@ -246,6 +291,7 @@ async function callOpenAI(
       stream,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
+        ...historyMessages,
         { role: 'user', content: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
       ],
       tools: [
