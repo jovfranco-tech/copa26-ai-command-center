@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import type { Match } from '../data/matchData';
 import * as THREE from 'three';
 import { LineupLayer } from './LineupLayer';
+import { PitchGeometry } from './PitchGeometry';
 import { type Player, MATCH_LINEUPS } from '../data/lineups';
 
 // Note: Standard import for Drei
@@ -159,6 +160,55 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(2, 1); // Repeat it around the stadium
+    return texture;
+  }, []);
+
+  // Procedural soccer ball texture with pentagon pattern
+  const ballTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      // White base
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 128, 128);
+      // Draw pentagon pattern (simplified — evenly spaced black pentagons)
+      ctx.fillStyle = '#1a1a1a';
+      const drawPentagon = (cx: number, cy: number, r: number) => {
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+          const x = cx + r * Math.cos(angle);
+          const y = cy + r * Math.sin(angle);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+      };
+      // Center pentagon
+      drawPentagon(64, 64, 18);
+      // Surrounding pentagons
+      drawPentagon(64, 20, 12);
+      drawPentagon(64, 108, 12);
+      drawPentagon(20, 44, 12);
+      drawPentagon(108, 44, 12);
+      drawPentagon(20, 84, 12);
+      drawPentagon(108, 84, 12);
+      // Seam lines
+      ctx.strokeStyle = '#333333';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(64, 20); ctx.lineTo(64, 46);
+      ctx.moveTo(64, 82); ctx.lineTo(64, 108);
+      ctx.moveTo(20, 44); ctx.lineTo(46, 56);
+      ctx.moveTo(82, 56); ctx.lineTo(108, 44);
+      ctx.moveTo(20, 84); ctx.lineTo(46, 72);
+      ctx.moveTo(82, 72); ctx.lineTo(108, 84);
+      ctx.stroke();
+    }
+    const texture = new THREE.CanvasTexture(canvas);
     return texture;
   }, []);
 
@@ -363,18 +413,39 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
         )}
 
         {/* Football Field Pitch Line Markings */}
-        <PitchMarkings />
+        <PitchGeometry />
 
-        {/* Animated Soccer Ball */}
-        <mesh ref={ballRef} position={[0, 0.22, 0]} castShadow>
-          <sphereGeometry args={[0.22, 16, 16]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.3} metalness={0.1} />
-        </mesh>
-        {/* Ball shadow */}
-        <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[0.18, 16]} />
-          <meshBasicMaterial color="#000000" transparent opacity={0.18} />
-        </mesh>
+        {match.status === 'pre-match' ? (
+          <group>
+            {/* Golden trophy at center */}
+            <mesh position={[0, 0.6, 0]} castShadow>
+              <cylinderGeometry args={[0.12, 0.2, 0.5, 8]} />
+              <meshStandardMaterial color="#c9a24b" roughness={0.2} metalness={0.8} />
+            </mesh>
+            <mesh position={[0, 0.9, 0]} castShadow>
+              <sphereGeometry args={[0.2, 16, 16]} />
+              <meshStandardMaterial color="#c9a24b" roughness={0.2} metalness={0.8} />
+            </mesh>
+            {/* Base */}
+            <mesh position={[0, 0.3, 0]} castShadow>
+              <cylinderGeometry args={[0.25, 0.3, 0.15, 8]} />
+              <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.3} />
+            </mesh>
+          </group>
+        ) : (
+          <group>
+            {/* Animated Soccer Ball */}
+            <mesh ref={ballRef} position={[0, 0.22, 0]} castShadow>
+              <sphereGeometry args={[0.22, 24, 24]} />
+              <meshStandardMaterial map={ballTexture} roughness={0.4} metalness={0.05} />
+            </mesh>
+            {/* Ball shadow */}
+            <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <circleGeometry args={[0.18, 16]} />
+              <meshBasicMaterial color="#000000" transparent opacity={0.18} />
+            </mesh>
+          </group>
+        )}
 
         {/* 3D Goals */}
         <SoccerGoal position={[-30, 0.2, 0]} facing="inward-right" />
@@ -916,135 +987,7 @@ const SoccerGoal: React.FC<SoccerGoalProps> = ({ position, facing }) => {
   );
 };
 
-// Pitch standard line markings (professional precise soccer markings)
-const PitchMarkings: React.FC = () => {
-  return (
-    <group position={[0, 0.21, 0]}>
-      {/* Outer Border Lines (Consistent thick meshes instead of 1px wireframe) */}
-      <mesh position={[-30, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 40]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[30, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 40]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[0, 0.005, -20]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[60.15, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[0, 0.005, 20]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[60.15, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
 
-      {/* Halfway Line */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 40]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Center Circle */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[5.85, 6.0, 48]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Center Spot */}
-      <mesh position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.3, 16]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* --- LEFT END MARKINGS --- */}
-      {/* Penalty Box Front (16.5m line) */}
-      <mesh position={[-20, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 24]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      {/* Penalty Box Sides */}
-      <mesh position={[-25, 0.005, 12]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[-25, 0.005, -12]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      
-      {/* Goal Box Front (5.5m line) */}
-      <mesh position={[-26.5, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 10]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      {/* Goal Box Sides */}
-      <mesh position={[-28.25, 0.005, 5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.5, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[-28.25, 0.005, -5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.5, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Penalty Spot */}
-      <mesh position={[-21, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.2, 16]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Penalty Arc (D-Arc) */}
-      <mesh position={[-21, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[4.9, 5.0, 32, 1, -Math.PI / 3.4, Math.PI / 1.7]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-
-      {/* --- RIGHT END MARKINGS --- */}
-      {/* Penalty Box Front (16.5m line) */}
-      <mesh position={[20, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 24]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      {/* Penalty Box Sides */}
-      <mesh position={[25, 0.005, 12]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[25, 0.005, -12]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Goal Box Front (5.5m line) */}
-      <mesh position={[26.5, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 10]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      {/* Goal Box Sides */}
-      <mesh position={[28.25, 0.005, 5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.5, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[28.25, 0.005, -5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.5, 0.15]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Penalty Spot */}
-      <mesh position={[21, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.2, 16]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-
-      {/* Penalty Arc (D-Arc) */}
-      <mesh position={[21, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[4.9, 5.0, 32, 1, Math.PI - Math.PI / 3.4, Math.PI / 1.7]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
-      </mesh>
-    </group>
-  );
-};
 
 // Main Export Component exposing the Canvas and Controls
 export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {

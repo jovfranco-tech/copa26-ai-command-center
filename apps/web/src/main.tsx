@@ -6,6 +6,7 @@ import { queryClient } from '@/lib/query';
 import { router } from '@/router';
 import { summarizeOldMemory } from '@/lib/aiMemory';
 import './styles/index.css';
+import './styles/pool.css';
 
 // Compress AI memory records older than 7 days to prevent localStorage overflow
 summarizeOldMemory();

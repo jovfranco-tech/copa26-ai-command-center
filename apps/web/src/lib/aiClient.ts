@@ -115,10 +115,22 @@ export async function askAI(
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let full = '';
+      let buffer = '';
+      let lastFlush = Date.now();
       for (;;) {
         const { done, value } = await reader.read();
         if (done) break;
-        full += decoder.decode(value, { stream: true });
+        buffer += decoder.decode(value, { stream: true });
+        const now = Date.now();
+        if (buffer.length >= 4 || now - lastFlush > 50) {
+          full += buffer;
+          onToken(full);
+          buffer = '';
+          lastFlush = now;
+        }
+      }
+      if (buffer) {
+        full += buffer;
         onToken(full);
       }
       full += decoder.decode();

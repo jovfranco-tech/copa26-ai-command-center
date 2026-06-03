@@ -5,7 +5,7 @@ import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hoo
 import { useVoiceInput, useAudioRecording, usePdfUpload } from '@/hooks/useAnalystInput';
 import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
-import { clearAIMemory, createAIMemoryRecord, entityMemory, readAIMemory, saveAIMemoryRecord, type AIMemoryRecord } from '@/lib/aiMemory';
+import { clearAIMemory, createAIMemoryRecord, entityMemory, getMemoryStats, readAIMemory, saveAIMemoryRecord, type AIMemoryRecord } from '@/lib/aiMemory';
 import { listenCloudAIInsights, saveCloudAIInsight } from '@/lib/aiCloudMemory';
 import { useFavorites } from '@/store/favorites';
 import { usePreferences } from '@/store/preferences';
@@ -171,6 +171,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     () => entityMemory(combinedMemory, memoryEntityType, memoryEntityId).slice(0, 4),
     [combinedMemory, memoryEntityType, memoryEntityId],
   );
+  const memStats = useMemo(() => getMemoryStats(), [memory]);
 
   useEffect(() => {
     setCloudMemoryStatus('syncing');
@@ -1169,6 +1170,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           </div>
         </div>
 
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 11 }}>
+          <span className="mono-label">Memoria IA</span>
+          <div style={{ flex: 1, maxWidth: 120, height: 4, background: 'var(--bg-3)', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ width: `${memStats.percentFull}%`, height: '100%', background: memStats.percentFull > 80 ? '#ef4444' : 'var(--gold)', borderRadius: 2, transition: 'width 0.3s' }} />
+          </div>
+          <span style={{ color: 'var(--tx-3)' }}>{memStats.total}/{60}</span>
+        </div>
         <AIMemoryPanel
           records={combinedMemory}
           onReuse={(record) => {
