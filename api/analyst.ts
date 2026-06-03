@@ -1,4 +1,5 @@
 import { recordUsage } from './_shared/usage.js';
+import { getAnalystSystemPrompt, PROMPT_META } from './_shared/systemPrompts.js';
 
 /**
  * Vercel Edge Function — AI analyst relay.
@@ -31,27 +32,7 @@ const ANALYST_TOOLS = ['calendario', 'partidos', 'selecciones', 'jugadores', 'se
 const MAX_FILE_BYTES_B64 = 5_600_000;  // ~4MB raw (base64 overhead ~33%)
 const ALLOWED_MIME_TYPES = new Set(['application/pdf', 'audio/webm', 'audio/ogg', 'audio/mp4']);
 
-const SYSTEM_PROMPT =
-  'Eres un analista del Mundial 2026. Responde SIEMPRE en español, de forma concisa y analítica. ' +
-  'Usa ÚNICAMENTE los datos proporcionados en el contexto; no inventes resultados, estadísticas ni ' +
-  'jugadores. Si algo no está en los datos (por ejemplo, el torneo aún no se ha jugado), dilo con ' +
-  'claridad. Si el contexto incluye "Partido inaugural confirmado", úsalo para preguntas sobre el ' +
-  'primer partido, apertura o arranque. No añadas avisos legales ni disclaimers. ' +
-  'Si el usuario te pide comparar estadísticas numéricas entre selecciones o jugadores (por ejemplo, goles, disparos, posesión o ranking), ' +
-  'además de tu respuesta narrativa en texto, genera al final de tu respuesta un bloque de código JSON con un gráfico estructurado ' +
-  'delimitado exactamente por ```json y ```. ' +
-  'El formato del JSON debe ser exactamente el siguiente, sin textos adicionales dentro del bloque de código:\n' +
-  '{\n' +
-  '  "chart": {\n' +
-  '    "type": "bar" | "line",\n' +
-  '    "title": "Título descriptivo del gráfico",\n' +
-  '    "keys": ["NombreDeLaMetrica"],\n' +
-  '    "data": [\n' +
-  '      { "name": "NombreElemento", "NombreDeLaMetrica": valorNumerico }\n' +
-  '    ]\n' +
-  '  }\n' +
-  '}\n' +
-  'No uses tildes ni caracteres especiales en las llaves del JSON o en "keys". Si no hay datos numéricos suficientes, responde únicamente en texto plano y no incluyas el bloque JSON.';
+const SYSTEM_PROMPT = getAnalystSystemPrompt();
 
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
@@ -179,9 +160,18 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   // Every configured provider failed → the client falls back to the local analyst.
+  const providersTried = errors.map((e) => e.split(':')[0]).join(' y ');
   return Response.json(
-    { ok: false, reason: 'api-error', detail: errors.join(' | ').slice(0, 300) },
-    { status: 502 },
+    {
+      ok: false,
+      reason: 'api-error',
+      detail: errors.join(' | ').slice(0, 300),
+      providerErrors: errors.slice(0, 3),
+      userMessage: `Los proveedores de IA (${providersTried}) no están disponibles en este momento. El analista local está activo como respaldo.`,
+      retryAfter: 30,
+      meta: { provider: 'local-fallback', confidence: 'Alta local', tools: ANALYST_TOOLS.slice(0, 6) },
+    },
+    { status: 502, headers: { 'Retry-After': '30', 'Cache-Control': 'no-store' } },
   );
 }
 

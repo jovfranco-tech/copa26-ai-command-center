@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
-import { fmtDay, fmtTime, type Match } from '@worldcup/shared';
-import { TeamCrest } from '@/components/identity';
+import { fmtDay, type Match } from '@worldcup/shared';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
 import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
@@ -9,7 +8,7 @@ import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
 import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
 import { isMatchLocked, lockLabel, weatherSummary } from '@/lib/matchMeta';
-import { buildPoolDiagnostics, type PoolDiagnostics } from '@/lib/opsIntelligence';
+import { buildPoolDiagnostics } from '@/lib/opsIntelligence';
 import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
 import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
@@ -17,6 +16,16 @@ import { db } from '@/lib/firebase';
 import { QuinielaScanner } from '@/components/QuinielaScanner';
 import { P2PSyncPanel } from '@/components/P2PSyncPanel';
 import { RetoRelampago } from '@/components/RetoRelampago';
+import {
+  PoolMatch,
+  FamilySetupGuide,
+  FamilyInviteKit,
+  PoolCommandCenter,
+  FamilyLearningPanel,
+  SummaryTile,
+  PickHistoryPanel,
+} from '@/components/pool';
+import { notifySuccess, notifyWarning } from '@/store/notifications';
 
 const playTick = () => {
   try {
@@ -78,11 +87,6 @@ const registerPoolBackgroundSync = async () => {
   await registration.sync?.register('sync-pool-picks');
 };
 
-const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
-  { id: 'home', label: 'Local' },
-  { id: 'draw', label: 'Empate' },
-  { id: 'away', label: 'Visita' },
-];
 const AI_AGENT_PREFIX = 'IA ·';
 
 interface PoolAlert {
@@ -488,16 +492,19 @@ export function Pool() {
           setSyncStatus('synced');
           setLastSavedAt(new Date().toISOString());
           playSuccessTick(); // Play premium tactical success chime when successfully saved to DB!
+          notifySuccess('Quiniela guardada', 'Tus picks se sincronizaron en la nube familiar.');
         } else {
           setSyncStatus('error');
           // Offline fallback: attempt to register Background Sync
           registerPoolBackgroundSync()
             .then(() => console.log('[Pool] Registered background sync tag "sync-pool-picks"'))
             .catch((err) => console.error('[Pool] Background sync registration failed:', err));
+          notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
         }
       } catch {
         setSyncStatus('error');
         registerPoolBackgroundSync().catch(() => {});
+        notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
       }
     }, 1000);
 
@@ -1454,494 +1461,4 @@ export function Pool() {
   );
 }
 
-function SummaryTile({ icon, label, value }: { icon: IconName; label: string; value: string }) {
-  return (
-    <div className="card card-pad pool-stat">
-      <Icon name={icon} size={16} style={{ color: 'var(--gold)' }} />
-      <span className="mono-label">{label}</span>
-      <strong className="num">{value}</strong>
-    </div>
-  );
-}
 
-function FamilyLearningPanel({ diagnostics }: { diagnostics: PoolDiagnostics }) {
-  const signals = [
-    { label: 'Cobertura', value: `${diagnostics.coveragePct}%`, text: `${diagnostics.missingWinner} ganadores pendientes` },
-    { label: 'Marcadores', value: `${diagnostics.scorePct}%`, text: `${diagnostics.missingScore} por cerrar` },
-    { label: 'Estilo', value: diagnostics.styleLabel, text: diagnostics.styleDetail },
-    { label: 'Familia', value: diagnostics.leaderLabel, text: diagnostics.familySignal },
-  ];
-  return (
-    <section className="family-learning-panel">
-      <div className="family-learning-main">
-        <Icon name="ai" size={16} />
-        <div>
-          <span className="mono-label">Aprendizaje familiar</span>
-          <strong>{diagnostics.recommendedAction}</strong>
-        </div>
-      </div>
-      <div className="family-learning-grid">
-        {signals.map((signal) => (
-          <div key={signal.label} className="family-learning-card">
-            <span className="mono-label">{signal.label}</span>
-            <strong>{signal.value}</strong>
-            <small>{signal.text}</small>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function FamilySetupGuide({
-  playerReady,
-  groupId,
-  picked,
-  total,
-  syncStatus,
-  inviteCopied,
-  onInvite,
-}: {
-  playerReady: boolean;
-  groupId: string;
-  picked: number;
-  total: number;
-  syncStatus: 'synced' | 'syncing' | 'error' | null;
-  inviteCopied: boolean;
-  onInvite: () => void;
-}) {
-  const pickReady = total > 0 && picked > 0;
-  return (
-    <div className="card family-onboarding">
-      <div className="family-onboarding-head">
-        <div>
-          <span className="mono-label">Preparar grupo familiar</span>
-          <strong>Lista corta para compartir la quiniela</strong>
-        </div>
-        <button type="button" className="btn ghost btn-sm" onClick={onInvite}>
-          <Icon name="share" size={13} /> {inviteCopied ? 'Link copiado' : 'Copiar invitación'}
-        </button>
-      </div>
-      <div className="family-step-grid">
-        <SetupStep done={playerReady} icon="user" title="Alias y foto" text={playerReady ? 'Participante listo.' : 'Escribe tu alias y, si quieres, una URL de avatar.'} />
-        <SetupStep done={Boolean(groupId)} icon="shield" title="Grupo familiar" text={`Grupo activo: ${groupId || 'familia-2026'}.`} />
-        <SetupStep done={pickReady} icon="target" title="Primeros picks" text={pickReady ? `${picked}/${total} partidos con pronóstico.` : 'Captura al menos un marcador para activar ranking.'} />
-        <SetupStep done={syncStatus === 'synced'} icon="cloud" title="Nube familiar" text={syncStatus === 'synced' ? 'Sincronizado en base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios...' : 'Se sincroniza al tener alias.'} />
-      </div>
-    </div>
-  );
-}
-
-function SetupStep({ done, icon, title, text }: { done: boolean; icon: IconName; title: string; text: string }) {
-  return (
-    <div className={`family-step${done ? ' done' : ''}`}>
-      <span className="family-step-icon"><Icon name={done ? 'check' : icon} size={14} /></span>
-      <div>
-        <strong>{title}</strong>
-        <p>{text}</p>
-      </div>
-    </div>
-  );
-}
-
-function FamilyInviteKit({
-  groupId,
-  participantCount,
-  picked,
-  total,
-  inviteCopied,
-  onCopyInvite,
-  onShareInvite,
-}: {
-  groupId: string;
-  participantCount: number;
-  picked: number;
-  total: number;
-  inviteCopied: boolean;
-  onCopyInvite: () => void;
-  onShareInvite: () => void;
-}) {
-  return (
-    <div className="card family-invite-kit">
-      <div className="family-invite-main">
-        <span className="mono-label">Invitación familiar</span>
-        <strong>Grupo {groupId}</strong>
-        <p>Comparte el link, cada persona elige alias/foto y la tabla se arma con resultados reales cuando empiece el torneo.</p>
-      </div>
-      <div className="family-invite-metrics">
-        <InviteMetric label="Miembros" value={participantCount ? String(participantCount) : '0'} />
-        <InviteMetric label="Tus picks" value={`${picked}/${total}`} />
-        <InviteMetric label="Cierre" value="Al inicio" />
-      </div>
-      <div className="family-invite-actions">
-        <button type="button" className="btn gold" onClick={onCopyInvite}>
-          <Icon name="share" size={14} />
-          {inviteCopied ? 'Link copiado' : 'Copiar link'}
-        </button>
-        <button type="button" className="btn ghost" onClick={onShareInvite}>
-          <Icon name="download" size={14} />
-          Tarjeta WhatsApp
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function InviteMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <span className="mono-label">{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function PoolCommandCenter({
-  alerts,
-  awards,
-  picked,
-  total,
-  completeScores,
-  lastSavedAt,
-  onSharePick,
-  onShareTable,
-  onShareAchievement,
-}: {
-  alerts: PoolAlert[];
-  awards: PoolAward[];
-  picked: number;
-  total: number;
-  completeScores: number;
-  lastSavedAt: string | null;
-  onSharePick: () => void;
-  onShareTable: () => void;
-  onShareAchievement: () => void;
-}) {
-  const pct = total ? Math.round((picked / total) * 100) : 0;
-  return (
-    <div className="card pool-command-center">
-      <div className="pool-command-head">
-        <div>
-          <span className="mono-label">Centro de mando familiar</span>
-          <strong>{pct}% de próximos partidos con pick</strong>
-          <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${fmtTime(lastSavedAt)}.` : 'Guardado remoto pendiente.'}</p>
-        </div>
-        <div className="pool-command-actions">
-          <button type="button" className="btn gold" onClick={onSharePick}>
-            <Icon name="share" size={14} />
-            Pick
-          </button>
-          <button type="button" className="btn ghost" onClick={onShareTable}>
-            <Icon name="trophy" size={14} />
-            Tabla
-          </button>
-          <button type="button" className="btn ghost" onClick={onShareAchievement}>
-            <Icon name="sparkSmall" size={14} />
-            Logro
-          </button>
-        </div>
-      </div>
-      <div className="pool-progress-track" aria-label={`Progreso ${pct}%`}>
-        <span style={{ width: `${pct}%` }} />
-      </div>
-      <div className="pool-alert-grid">
-        {alerts.map((alert) => (
-          <div key={`${alert.title}-${alert.text}`} className={`pool-alert ${alert.tone}`}>
-            <Icon name={alert.icon} size={15} />
-            <div>
-              <strong>{alert.title}</strong>
-              <p>{alert.text}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="pool-award-grid">
-        {awards.map((award) => (
-          <div key={award.title} className={`pool-award${award.active ? ' active' : ''}`}>
-            <Icon name={award.icon} size={15} />
-            <div>
-              <strong>{award.title}</strong>
-              <p>{award.text}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PickHistoryPanel({
-  matches,
-  picks,
-  teams,
-}: {
-  matches: Match[];
-  picks: Record<string, PoolPick>;
-  teams: Record<string, { name?: string } | undefined>;
-}) {
-  const picked = matches.filter((m) => picks[m.id]?.outcome).slice(0, 5);
-  if (!picked.length) {
-    return (
-      <div className="card pick-history-panel empty">
-        <Icon name="target" size={16} />
-        <div>
-          <strong>Historial de picks</strong>
-          <p>Cuando captures pronósticos, aparecerá aquí tu resumen antes de la lista completa.</p>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="card pick-history-panel">
-      <div className="pick-history-head">
-        <span className="mono-label">Mis próximos picks</span>
-        <span className="badge gold">{picked.length} recientes</span>
-      </div>
-      <div className="pick-history-list">
-        {picked.map((m) => {
-          const pick = picks[m.id]!;
-          return (
-            <div key={m.id} className="pick-history-row">
-              <span>{teams[m.home]?.name ?? m.home} vs {teams[m.away]?.name ?? m.away}</span>
-              <strong className="num">{pick.homeGoals ?? '-'}-{pick.awayGoals ?? '-'}</strong>
-              <small>{lockLabel(m)}</small>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: string; awayName: string }) {
-  const pick = usePool((s) => s.picks[match.id]);
-  const setOutcome = usePool((s) => s.setOutcome);
-  const setScore = usePool((s) => s.setScore);
-  const clearMatch = usePool((s) => s.clearMatch);
-
-  const isLocked = match.status !== 'UPCOMING' || isMatchLocked(match);
-
-  const [isPlayingBrief, setIsPlayingBrief] = useState(false);
-
-  const tacticalBriefingText = useMemo(() => {
-    let text = `Bienvenidos a El Minuto Táctico. Se enfrentan las selecciones de ${homeName} y ${awayName}. `;
-    const textOptions = [
-      `La pizarra táctica sugiere un duelo sumamente equilibrado en el mediocampo, donde la posesión y las transiciones rápidas por las bandas serán determinantes para inclinar la balanza.`,
-      `El analista deportivo de gala destaca que la solidez defensiva del conjunto visitante pondrá a prueba la creatividad e intensidad del ataque de los locales.`,
-      `Las alertas de tendencias indican una alta probabilidad de contragolpes de gala y jugadas a balón parado que podrían romper la paridad en cualquier minuto.`
-    ];
-    const hash = match.id.charCodeAt(0) + (match.id.charCodeAt(1) || 0);
-    text += textOptions[hash % textOptions.length] + " ";
-    const ragOptions = [
-      `Atención: los últimos reportes deportivos reportan un clima severo lluvioso en la sede del encuentro, lo que beneficiará el juego de pases rasos rápidos.`,
-      `Reportes de scouts señalan que la posible baja por acumulación de tarjetas en la defensa obligará a replantear el parado táctico inicial.`,
-      `El inyector RAG deportivo destaca que la motivación es máxima y se espera una asistencia récord que jugará un rol psicológico clave.`
-    ];
-    text += ragOptions[hash % ragOptions.length] + " ";
-    text += `¿Qué resultado colocarás en tu quiniela premium de gala?`;
-    return text;
-  }, [homeName, awayName, match.id]);
-
-  useEffect(() => {
-    return () => {
-      if (isPlayingBrief) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, [isPlayingBrief]);
-
-  const togglePlayBriefing = () => {
-    if (isPlayingBrief) {
-      window.speechSynthesis.cancel();
-      setIsPlayingBrief(false);
-    } else {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(tacticalBriefingText);
-      utterance.lang = 'es-ES';
-      const voices = window.speechSynthesis.getVoices();
-      const spanishVoice = voices.find((v) => v.lang.startsWith('es'));
-      if (spanishVoice) {
-        utterance.voice = spanishVoice;
-      }
-      utterance.onend = () => setIsPlayingBrief(false);
-      utterance.onerror = () => setIsPlayingBrief(false);
-      setIsPlayingBrief(true);
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  const scoreValue = (v: number | undefined) => (v == null ? '' : String(v));
-  const parseScore = (value: string) => {
-    if (value === '') return undefined;
-    const n = Number(value);
-    return Number.isFinite(n) ? Math.max(0, Math.min(30, Math.round(n))) : undefined;
-  };
-
-  const outcome = pick?.outcome;
-  const homeGoals = pick?.homeGoals;
-  const awayGoals = pick?.awayGoals;
-
-  const pointsInfo = useMemo(() => {
-    if (!isLocked || !outcome) return null;
-    const realHome = match.homeGoals ?? 0;
-    const realAway = match.awayGoals ?? 0;
-
-    let realOutcome: 'home' | 'draw' | 'away' = 'draw';
-    if (realHome > realAway) realOutcome = 'home';
-    else if (realHome < realAway) realOutcome = 'away';
-
-    const isExact = homeGoals === realHome && awayGoals === realAway;
-    const isOutcomeCorrect = outcome === realOutcome;
-
-    if (isExact) {
-      return { text: '+3 PTS', className: 'gold-badge', label: 'Marcador Exacto', icon: 'trophy' };
-    } else if (isOutcomeCorrect) {
-      return { text: '+1 PT', className: 'green-badge', label: 'Resultado Correcto', icon: 'check' };
-    } else {
-      return { text: '0 PTS', className: 'gray-badge', label: 'Predicción Incorrecta', icon: 'close' };
-    }
-  }, [isLocked, outcome, homeGoals, awayGoals, match.homeGoals, match.awayGoals]);
-
-  const sharePrediction = async () => {
-    if (!outcome || homeGoals == null || awayGoals == null) {
-      alert('Primero captura ganador y marcador para compartir tu prediccion.');
-      return;
-    }
-    await shareTextCard({
-      title: `${homeName} ${homeGoals} - ${awayGoals} ${awayName}`,
-      subtitle: `Mi prediccion · ${fmtDay(match.date)} ${match.time}`,
-      lines: [
-        `Partido: ${homeName} vs ${awayName}`,
-        `Resultado elegido: ${OUTCOMES.find((o) => o.id === outcome)?.label ?? outcome}`,
-        `Marcador: ${homeGoals}-${awayGoals}`,
-        lockLabel(match),
-      ],
-      footer: 'Quiniela familiar Mundial 2026',
-      fileName: `prediccion-${match.id}.png`,
-    });
-  };
-
-  return (
-    <div className={`card pool-match${isLocked ? ' is-locked' : ''}`}>
-      <div className="pool-match-head">
-        {match.status === 'LIVE' ? (
-          <span className="pool-match-status-pill live">En vivo</span>
-        ) : isLocked ? (
-          <span className="pool-match-status-pill ft">Finalizado</span>
-        ) : (
-          <span className="badge up">{match.time}</span>
-        )}
-        <span className="mono-label">{fmtDay(match.date)}</span>
-
-        {!isLocked && (
-          <button
-            type="button"
-            className="fav-btn"
-            style={{
-              marginRight: 6,
-              color: isPlayingBrief ? 'var(--gold)' : 'var(--tx-3)',
-              animation: isPlayingBrief ? 'pulse-briefing 1s infinite alternate' : 'none',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onClick={togglePlayBriefing}
-            title={isPlayingBrief ? "Detener Minuto Táctico" : "Escuchar Minuto Táctico (IA)"}
-            aria-label="Minuto Táctico"
-          >
-            <Icon name={isPlayingBrief ? "sparkSmall" : "ai"} size={14} />
-          </button>
-        )}
-        {pointsInfo ? (
-          <span className={`badge-points ${pointsInfo.className}`} title={pointsInfo.label}>
-            <Icon name={pointsInfo.icon} size={11} />
-            {pointsInfo.text}
-          </span>
-        ) : !isLocked ? (
-          <span className="row gap-6" style={{ marginLeft: 'auto' }}>
-            <button type="button" className="fav-btn" onClick={sharePrediction} aria-label="Compartir prediccion" title="Compartir prediccion">
-              <Icon name="share" size={14} />
-            </button>
-            <button type="button" className="fav-btn" onClick={() => clearMatch(match.id)} aria-label="Limpiar partido">
-              <Icon name="close" size={14} />
-            </button>
-          </span>
-        ) : null}
-      </div>
-      <div className="pool-teams">
-        <TeamCrest code={match.home} size={34} />
-        <div>
-          <strong>{homeName}</strong>
-          <span className="mono-label">{match.home}</span>
-        </div>
-        <span className="pool-vs">vs</span>
-        <div className="pool-away">
-          <strong>{awayName}</strong>
-          <span className="mono-label">{match.away}</span>
-        </div>
-        <TeamCrest code={match.away} size={34} />
-      </div>
-      <div className="pool-picks" role="group" aria-label={`Pronóstico ${homeName} vs ${awayName}`}>
-        {OUTCOMES.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            className={`pool-pick${outcome === o.id ? ' on' : ''}`}
-            onClick={() => {
-              setOutcome(match.id, o.id);
-              playTick();
-              if ('vibrate' in navigator) navigator.vibrate(10);
-            }}
-            disabled={isLocked}
-          >
-            {o.label}
-          </button>
-        ))}
-      </div>
-      <div className="pool-score">
-        <label>
-          <span className="mono-label">{match.home}</span>
-          <input
-            inputMode="numeric"
-            value={scoreValue(homeGoals)}
-            onChange={(e) => {
-              setScore(match.id, 'homeGoals', parseScore(e.target.value));
-              playTick();
-              if ('vibrate' in navigator) navigator.vibrate(6);
-            }}
-            aria-label={`Goles ${homeName}`}
-            disabled={isLocked}
-          />
-        </label>
-        <span className="mono-label">Predicho</span>
-        <label>
-          <span className="mono-label">{match.away}</span>
-          <input
-            inputMode="numeric"
-            value={scoreValue(awayGoals)}
-            onChange={(e) => {
-              setScore(match.id, 'awayGoals', parseScore(e.target.value));
-              playTick();
-              if ('vibrate' in navigator) navigator.vibrate(6);
-            }}
-            aria-label={`Goles ${awayName}`}
-            disabled={isLocked}
-          />
-        </label>
-      </div>
-
-      <div className="pool-lock-note">
-        <Icon name={isLocked ? 'shield' : 'clock'} size={12} />
-        {lockLabel(match)}
-      </div>
-
-      {isLocked && (
-        <div className="pool-match-real-score">
-          <span>Resultado Real</span>
-          <strong>{match.homeGoals ?? 0} - {match.awayGoals ?? 0}</strong>
-        </div>
-      )}
-    </div>
-  );
-}

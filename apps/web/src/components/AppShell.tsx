@@ -6,6 +6,7 @@ import { useMatches } from '@/hooks';
 import { usePreferences, applyPreferences, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
+import { NotificationToastStack } from './NotificationToast';
 
 type StaticPath =
   | '/'
@@ -362,6 +363,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       )}
 
       <TweaksPanel />
+      <NotificationToastStack />
     </div>
   );
 }

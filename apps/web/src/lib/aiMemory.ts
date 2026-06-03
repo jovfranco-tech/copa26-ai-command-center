@@ -44,7 +44,7 @@ export interface AIQualityCheck {
 export type AIMemoryInput = Omit<AIMemoryRecord, 'id' | 'createdAt'>;
 
 const KEY = 'wc_ai_memory_v1';
-const MAX_RECORDS = 24;
+const MAX_RECORDS = 60;
 
 export function readAIMemory(): AIMemoryRecord[] {
   if (typeof localStorage === 'undefined') return [];
@@ -94,4 +94,68 @@ export function entityMemory(
     if (!entityId || entityType === 'tournament') return true;
     return record.entityId === entityId;
   });
+}
+
+export const MAX_RECORDS_EXPORT = MAX_RECORDS;
+
+/**
+ * Compresses AI memory records older than `daysThreshold` into a single summary record.
+ * Call this periodically (e.g., on app start) to prevent localStorage overflow.
+ * Returns the new memory array after summarization.
+ */
+export function summarizeOldMemory(daysThreshold = 7): AIMemoryRecord[] {
+  const records = readAIMemory();
+  const cutoff = Date.now() - daysThreshold * 24 * 60 * 60 * 1000;
+  const recent = records.filter((r) => Date.parse(r.createdAt) >= cutoff);
+  const old = records.filter((r) => Date.parse(r.createdAt) < cutoff);
+
+  if (old.length < 3) return records; // Not enough old records to summarize
+
+  const topics = [...new Set(old.map((r) => r.entityType ?? 'tournament'))].join(', ');
+  const summary: AIMemoryRecord = {
+    id: `ai-summary-${Date.now().toString(36)}`,
+    createdAt: new Date().toISOString(),
+    question: `[Resumen automático de ${old.length} consultas anteriores]`,
+    answer: `Historial comprimido: ${old.length} consultas sobre ${topics}. Temas: ${old.slice(0, 5).map((r) => r.question.slice(0, 40)).join(' | ')}.`,
+    mode: 'local',
+    context: 'summary',
+    sources: ['historial-local'],
+    confidence: 'Alta',
+    entityType: 'tournament',
+    structured: {
+      rationale: `Resumen automático de ${old.length} registros más de ${daysThreshold} días.`,
+      dataUsed: ['historial-local'],
+    },
+  };
+
+  const next = [summary, ...recent].slice(0, MAX_RECORDS);
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(KEY, JSON.stringify(next));
+  }
+  return next;
+}
+
+/**
+ * Returns usage statistics about the current AI memory store.
+ */
+export function getMemoryStats(): {
+  total: number;
+  byEntity: Record<string, number>;
+  oldestDate: string | null;
+  newestDate: string | null;
+  percentFull: number;
+} {
+  const records = readAIMemory();
+  const byEntity: Record<string, number> = {};
+  for (const r of records) {
+    const key = r.entityType ?? 'unknown';
+    byEntity[key] = (byEntity[key] ?? 0) + 1;
+  }
+  return {
+    total: records.length,
+    byEntity,
+    oldestDate: records.length ? records[records.length - 1]!.createdAt : null,
+    newestDate: records.length ? records[0]!.createdAt : null,
+    percentFull: Math.round((records.length / MAX_RECORDS) * 100),
+  };
 }

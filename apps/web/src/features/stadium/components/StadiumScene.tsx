@@ -53,6 +53,12 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
   const weather = match.weather;
   const timeOfDay = match.timeOfDay;
 
+  // Detect mobile to disable expensive Html-in-canvas jumbotrons
+  const isMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+  }, []);
+
   // Procedural grass strips texture generated on-the-fly
   const grassTexture = useMemo(() => {
     const random = createPureRandom(12345);
@@ -158,6 +164,8 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
 
   // References for light cones / spinning elements
   const weatherParticlesRef = useRef<THREE.Points>(null);
+  const ballRef = useRef<THREE.Mesh>(null);
+  const ballVelocityRef = useRef({ x: 0.03, z: 0.02 });
 
   // Camera Presets Vector Lookup Table (Perfect interior coordinates)
   const presets = useMemo(() => ({
@@ -220,6 +228,19 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
         }
         weatherParticlesRef.current.geometry.attributes.position.needsUpdate = true;
       }
+    }
+
+    // Animate soccer ball rolling on pitch
+    if (ballRef.current) {
+      const bv = ballVelocityRef.current;
+      ballRef.current.position.x += bv.x;
+      ballRef.current.position.z += bv.z;
+      // Rotate ball based on movement direction
+      ballRef.current.rotation.z -= bv.x * 0.4;
+      ballRef.current.rotation.x -= bv.z * 0.4;
+      // Bounce off pitch boundaries
+      if (ballRef.current.position.x > 29 || ballRef.current.position.x < -29) bv.x *= -1;
+      if (ballRef.current.position.z > 19 || ballRef.current.position.z < -19) bv.z *= -1;
     }
   });
 
@@ -343,6 +364,17 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
 
         {/* Football Field Pitch Line Markings */}
         <PitchMarkings />
+
+        {/* Animated Soccer Ball */}
+        <mesh ref={ballRef} position={[0, 0.22, 0]} castShadow>
+          <sphereGeometry args={[0.22, 16, 16]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.3} metalness={0.1} />
+        </mesh>
+        {/* Ball shadow */}
+        <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.18, 16]} />
+          <meshBasicMaterial color="#000000" transparent opacity={0.18} />
+        </mesh>
 
         {/* 3D Goals */}
         <SoccerGoal position={[-30, 0.2, 0]} facing="inward-right" />
@@ -548,6 +580,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
             <boxGeometry args={[22, 6.5, 0.4]} />
             <meshStandardMaterial color="#070a14" roughness={0.15} />
             
+            {!reduceEffects && !isMobile && (
             <HtmlDrei 
               transform 
               distanceFactor={12} 
@@ -588,6 +621,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
                 </div>
               </div>
             </HtmlDrei>
+            )}
           </mesh>
         </group>
 
@@ -603,6 +637,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
             <boxGeometry args={[22, 6.5, 0.4]} />
             <meshStandardMaterial color="#070a14" roughness={0.15} />
 
+            {!reduceEffects && !isMobile && (
             <HtmlDrei 
               transform 
               distanceFactor={12} 
@@ -648,6 +683,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
                 </div>
               </div>
             </HtmlDrei>
+            )}
           </mesh>
         </group>
       </group>
@@ -1025,10 +1061,18 @@ export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
         <OrbitControlsDrei
           makeDefault
           enableDamping
-          dampingFactor={0.05}
-          maxPolarAngle={Math.PI / 2 - 0.05} // Don't let camera go below ground
-          minDistance={10}
-          maxDistance={70}
+          dampingFactor={0.06}
+          rotateSpeed={0.6}
+          zoomSpeed={0.8}
+          panSpeed={0.5}
+          maxPolarAngle={Math.PI / 2.1}
+          minPolarAngle={0.15}
+          minDistance={8}
+          maxDistance={65}
+          enablePan={true}
+          maxAzimuthAngle={Infinity}
+          minAzimuthAngle={-Infinity}
+          target={[0, 0, 0]}
         />
       </Canvas>
 

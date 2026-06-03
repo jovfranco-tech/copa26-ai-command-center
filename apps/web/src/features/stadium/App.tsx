@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import './index.css';
 import { MATCH_FIXTURES, getDemoAnalytics, PLACEHOLDER_INSIGHTS, PLACEHOLDER_ANALYTICS } from './data/matchData';
 import type { Match } from './data/matchData';
@@ -209,6 +209,34 @@ function App() {
     setTimeout(() => setShareFeedback(false), 2000);
   };
 
+  const stadiumCanvasRef = useRef<HTMLDivElement>(null);
+
+  const handleScreenshot = async () => {
+    // Find the canvas element inside the stadium and export it as PNG
+    const canvasEl = stadiumCanvasRef.current?.querySelector('canvas');
+    if (!canvasEl) {
+      // Fallback: copy URL
+      navigator.clipboard.writeText(window.location.href);
+      setShareFeedback(true);
+      setTimeout(() => setShareFeedback(false), 2000);
+      return;
+    }
+    try {
+      const dataUrl = canvasEl.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `estadio-${currentMatch.teams.homeShort}-vs-${currentMatch.teams.awayShort}.png`;
+      link.click();
+      setShareFeedback(true);
+      setTimeout(() => setShareFeedback(false), 2500);
+    } catch {
+      // Canvas may be tainted — fallback to URL copy
+      navigator.clipboard.writeText(window.location.href).catch(() => {});
+      setShareFeedback(true);
+      setTimeout(() => setShareFeedback(false), 2000);
+    }
+  };
+
   // ── Zone overlay ────────────────────────────────────────────────────────────
   function getZoneTitleAndInfo() {
     switch (activeZone) {
@@ -291,6 +319,9 @@ function App() {
             <button type="button" className={`stadium-btn-sm ${shareFeedback ? 'active' : ''}`} onClick={handleShare}>
               <Share2 size={11} />{shareFeedback ? '¡Copiado!' : 'Compartir'}
             </button>
+            <button type="button" className={`stadium-btn-sm ${shareFeedback ? 'active' : ''}`} onClick={handleScreenshot} title="Descargar captura del estadio">
+              <Share2 size={11} />Captura
+            </button>
           </div>
         </div>
 
@@ -346,7 +377,7 @@ function App() {
 
           {/* Left: 3D/2D Visualization */}
           <div className="stadium-visual-card">
-            <div className="stadium-canvas-shell">
+            <div className="stadium-canvas-shell" ref={stadiumCanvasRef}>
               {/* Only tiny overlay hints inside canvas — no major UI */}
               <div className="canvas-hint-pill">
                 Arrastra para orbitar · Rueda para zoom

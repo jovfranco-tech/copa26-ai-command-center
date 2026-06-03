@@ -1,4 +1,5 @@
 import { recordUsage } from './_shared/usage.js';
+import { getPoolAgentSystemPrompt, PROMPT_META } from './_shared/systemPrompts.js';
 
 /**
  * Vercel Edge Function — AI pool co-pilot.
@@ -11,44 +12,11 @@ export const config = { runtime: 'edge' };
 const LEGACY_PROVIDER_KEY = ['OPEN', 'AI_API_KEY'].join('');
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 8;
-const OUTPUT_SCHEMA =
-  "Debes responder estrictamente con un objeto JSON en español que tenga esta estructura exacta, sin texto adicional antes o después del JSON:\n" +
-  "{\n" +
-  "  \"brief\": \"Justificación táctica breve, honesta y sin datos inventados (máximo 3 frases).\",\n" +
-  "  \"predictions\": {\n" +
-  "    \"match-id-1\": { \"homeGoals\": 1, \"awayGoals\": 0, \"outcome\": \"home\" }\n" +
-  "  },\n" +
-  "  \"meta\": {\n" +
-  "    \"confidence\": \"Alta\" | \"Media\" | \"Baja\",\n" +
-  "    \"dataUsed\": [\"calendario\", \"selecciones\", \"sede\", \"clima base\"],\n" +
-  "    \"ignoredData\": [\"lesiones\", \"alineaciones\", \"noticias externas\"],\n" +
-  "    \"warning\": \"Texto corto si faltan datos decisivos\"\n" +
-  "  }\n" +
-  "}\n" +
-  "Donde cada llave en 'predictions' es el ID de partido enviado, y el valor contiene homeGoals, awayGoals y outcome ('home' | 'draw' | 'away') de forma consistente. " +
-  "Nunca inventes lesiones, sanciones, árbitros, alineaciones ni noticias. Si faltan, dilo en meta.ignoredData y baja la confianza.";
 
 const SYSTEM_PROMPTS = {
-  optimista:
-    "Eres 'El Analista Optimista', un co-piloto de quiniela de fútbol sumamente emocionante, alegre y amante del juego ultra ofensivo. " +
-    "Tu filosofía es: 'el fútbol se gana metiendo goles'. Predices marcadores altos (partidos con 3 o más goles totales, marcadores como 3-1, 3-2, 2-2) " +
-    "y confías plenamente en las potencias tradicionales del fútbol (como Argentina, Brasil, Francia, España, etc.) para que ganen cómodamente. " +
-    "Nunca predices empates aburridos de 0-0. " +
-    OUTPUT_SCHEMA,
-
-  stats:
-    "Eres 'El Simulador Estadístico', un co-piloto táctico, analítico, pragmático y sumamente racional. " +
-    "Tu filosofía es: 'las defensas ganan campeonatos'. Analizas solidez defensiva, orden táctico y orden en el campo. " +
-    "Predices marcadores de pocos goles, empates estratégicos o victorias muy ajustadas por la mínima diferencia (ej. 1-0, 0-1, 1-1, 2-1). " +
-    "Valoras enormemente el pragmatismo táctico y consideras que los equipos arriesgan poco en un Mundial. " +
-    OUTPUT_SCHEMA,
-
-  contrarian:
-    "Eres 'El Agente Contrarian', un rebelde del análisis táctico que vive para las sorpresas y la épica deportiva. " +
-    "Tu filosofía es: 'el Mundial es el escenario ideal de David contra Goliat'. Predices sistemáticamente sorpresas audaces " +
-    "(empates inesperados o victorias de selecciones teóricamente desfavorecidas frente a gigantes, y marcadores atípicos como 1-2, 0-1 a favor del débil, o 2-3). " +
-    "Argumentas que las potencias sufrirán por exceso de confianza y que el fútbol moderno se ha nivelado mucho. " +
-    OUTPUT_SCHEMA
+  optimista: getPoolAgentSystemPrompt('optimista'),
+  stats: getPoolAgentSystemPrompt('stats'),
+  contrarian: getPoolAgentSystemPrompt('contrarian'),
 };
 
 interface MatchInput {
