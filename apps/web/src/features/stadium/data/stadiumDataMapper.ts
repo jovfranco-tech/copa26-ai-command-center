@@ -389,9 +389,24 @@ export function mapDatabasePlayersToLineups(
     const remainingSlots = slots.filter((slot) => !matchedPlayers.some((mp) => mp.slotId === slot.slotId));
     
     for (const slot of remainingSlots) {
-      const candidates = teamDbPlayers
+      let candidates = teamDbPlayers
         .filter((p) => !usedDbPlayerIds.has(p.id) && p.pos === slot.pos)
         .sort((a, b) => playerRatings(b).overall - playerRatings(a).overall);
+
+      // If no real player of the exact position remains, fall back to the best
+      // remaining outfield player (closest position first). This keeps a full
+      // squad from ever leaving a slot as a generic placeholder when the squad's
+      // position mix doesn't perfectly match the formation's slot mix.
+      if (candidates.length === 0 && slot.pos !== 'GK') {
+        const posRank: Record<string, number> = { GK: 0, DF: 1, MF: 2, FW: 3 };
+        candidates = teamDbPlayers
+          .filter((p) => !usedDbPlayerIds.has(p.id) && p.pos !== 'GK')
+          .sort((a, b) => {
+            const da = Math.abs((posRank[a.pos] ?? 2) - (posRank[slot.pos] ?? 2));
+            const db = Math.abs((posRank[b.pos] ?? 2) - (posRank[slot.pos] ?? 2));
+            return da - db || playerRatings(b).overall - playerRatings(a).overall;
+          });
+      }
 
       if (candidates.length > 0) {
         const bestCandidate = candidates[0];
