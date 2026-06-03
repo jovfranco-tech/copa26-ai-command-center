@@ -146,9 +146,29 @@ export default async function handler(request: Request): Promise<Response> {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = (await upstream.json()) as any;
-      const answer = (
-        isOpenAI ? data.choices?.[0]?.message?.content : data.candidates?.[0]?.content?.parts?.[0]?.text
-      )?.trim() ?? '';
+      let answer: string;
+      if (isOpenAI) {
+        const message = data.choices?.[0]?.message;
+        answer = message?.content?.trim() ?? '';
+
+        // Check if the model used the render_chart tool
+        const toolCalls = message?.tool_calls;
+        if (toolCalls && toolCalls.length > 0) {
+          for (const tc of toolCalls) {
+            if (tc.function?.name === 'render_chart') {
+              try {
+                const chartData = JSON.parse(tc.function.arguments);
+                // Append the chart JSON block so the client can render it (same format as before)
+                answer += '\n\n```json\n' + JSON.stringify({ chart: chartData }, null, 2) + '\n```';
+              } catch {
+                // Malformed tool args — skip chart, answer text is still valid
+              }
+            }
+          }
+        }
+      } else {
+        answer = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
+      }
       if (!answer) {
         errors.push(`${provider}:empty-answer`);
         continue;
@@ -228,6 +248,36 @@ async function callOpenAI(
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
       ],
+      tools: [
+        {
+          type: 'function',
+          function: {
+            name: 'render_chart',
+            description: 'Renders a comparison chart when the user asks to compare numeric stats between teams or players. Only call this when there is actual numeric data to compare.',
+            parameters: {
+              type: 'object',
+              properties: {
+                type: { type: 'string', enum: ['bar', 'line'], description: 'Chart type' },
+                title: { type: 'string', description: 'Descriptive chart title in Spanish' },
+                keys: { type: 'array', items: { type: 'string' }, description: 'Metric keys (no accents, no special chars)' },
+                data: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      name: { type: 'string' },
+                    },
+                    additionalProperties: true,
+                  },
+                  description: 'Array of data points with name and numeric metric values',
+                },
+              },
+              required: ['type', 'title', 'keys', 'data'],
+            },
+          },
+        },
+      ],
+      tool_choice: 'auto',
     }),
   });
 }

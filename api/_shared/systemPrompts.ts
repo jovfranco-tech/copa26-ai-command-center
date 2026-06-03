@@ -11,7 +11,7 @@
  * env vars in Vercel dashboard (vercel env add ANALYST_SYSTEM_PROMPT production).
  */
 
-export const PROMPT_VERSION = '1.2.0';
+export const PROMPT_VERSION = '1.3.0';
 
 // ── Analyst Prompt ────────────────────────────────────────────────────────────
 
@@ -21,21 +21,8 @@ const ANALYST_PROMPT_V1_2 =
   'jugadores. Si algo no está en los datos (por ejemplo, el torneo aún no se ha jugado), dilo con ' +
   'claridad. Si el contexto incluye "Partido inaugural confirmado", úsalo para preguntas sobre el ' +
   'primer partido, apertura o arranque. No añadas avisos legales ni disclaimers. ' +
-  'Si el usuario te pide comparar estadísticas numéricas entre selecciones o jugadores (por ejemplo, goles, disparos, posesión o ranking), ' +
-  'además de tu respuesta narrativa en texto, genera al final de tu respuesta un bloque de código JSON con un gráfico estructurado ' +
-  'delimitado exactamente por ```json y ```. ' +
-  'El formato del JSON debe ser exactamente el siguiente, sin textos adicionales dentro del bloque de código:\n' +
-  '{\n' +
-  '  "chart": {\n' +
-  '    "type": "bar" | "line",\n' +
-  '    "title": "Título descriptivo del gráfico",\n' +
-  '    "keys": ["NombreDeLaMetrica"],\n' +
-  '    "data": [\n' +
-  '      { "name": "NombreElemento", "NombreDeLaMetrica": valorNumerico }\n' +
-  '    ]\n' +
-  '  }\n' +
-  '}\n' +
-  'No uses tildes ni caracteres especiales en las llaves del JSON o en "keys". Si no hay datos numéricos suficientes, responde únicamente en texto plano y no incluyas el bloque JSON.';
+  'Si el usuario te pide comparar estadísticas numéricas entre selecciones o jugadores, usa la herramienta render_chart para generar el gráfico. ' +
+  'Si no hay datos numéricos suficientes, responde únicamente en texto plano.';
 
 // ── Pool Agent Prompts ────────────────────────────────────────────────────────
 
@@ -96,7 +83,7 @@ export function getPoolAgentSystemPrompt(agent: 'optimista' | 'stats' | 'contrar
 /** Metadata about the active prompt versions (for diagnostics/logging). */
 export const PROMPT_META = {
   version: PROMPT_VERSION,
-  analyst: 'v1.2 — Generative UI + grounded context',
+  analyst: 'v1.3 — Function calling + Generative UI',
   poolOptimista: 'v1.2 — High-scoring, open game predictions',
   poolStats: 'v1.2 — Defensive, low-scoring predictions',
   poolContrarian: 'v1.2 — Upset and underdog predictions',
