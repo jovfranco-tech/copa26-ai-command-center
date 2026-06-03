@@ -86,7 +86,7 @@ function App() {
   const teamsMap = useTeamsMap();
   const venuesMap = useVenuesMap();
 
-  const dbPlayers = dbPlayersData?.items ?? [];
+  const dbPlayers = useMemo(() => dbPlayersData?.items ?? [], [dbPlayersData]);
 
   const [modoInmersivo, setModoInmersivo] = useState<boolean>(false);
   const [selectedMatchId, setSelectedMatchId] = useState<string>('M001');
@@ -258,7 +258,10 @@ function App() {
   const statusColor = currentMatch.status === 'live' ? 'var(--accent-emerald)' : 'var(--tx-2)';
 
   return (
-    <div className={`stadium-feature-root ${modoInmersivo ? 'stadium-immersive-mode' : 'stadium-integrated-mode'}`}>
+    <div
+      className={`stadium-feature-root ${modoInmersivo ? 'stadium-immersive-mode' : 'stadium-integrated-mode'}`}
+      data-stadium-version="v0.2.2-opus-stadium-layout-reset"
+    >
       <div className="stadium-page">
 
         {/* ═══════════ ZONE 1: Header + Toolbar ═══════════ */}

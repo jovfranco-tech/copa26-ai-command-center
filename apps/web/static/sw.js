@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wc-pwa-cache-v2';
+const CACHE_NAME = 'wc-pwa-cache-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -10,9 +10,10 @@ const ASSETS_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      // Resilient precache: a single missing asset must not abort installation.
+      Promise.allSettled(ASSETS_TO_CACHE.map((url) => cache.add(url)))
+    )
   );
   self.skipWaiting();
 });
@@ -33,45 +34,52 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only intercept same-origin HTTP/S requests
-  if (!event.request.url.startsWith(self.location.origin)) return;
-  
-  // Skip API calls since they shouldn't be cached statically
-  if (event.request.url.includes('/api/')) return;
+  const req = event.request;
 
+  // Only intercept same-origin GET requests; never cache API calls.
+  if (req.method !== 'GET') return;
+  if (!req.url.startsWith(self.location.origin)) return;
+  if (req.url.includes('/api/')) return;
+
+  // ── Navigations (HTML documents) → NETWORK-FIRST ─────────────────────────────
+  // The document is the one URL whose CONTENT changes but path stays "/". Serving
+  // it from cache (stale-while-revalidate) made every new deploy invisible because
+  // the cached index.html still referenced the OLD hashed JS/CSS. Always fetch the
+  // freshest document; fall back to the cached shell only when offline.
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      (async () => {
+        try {
+          const networkResponse = await fetch(req);
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put('/index.html', copy));
+          }
+          return networkResponse;
+        } catch {
+          const cached = (await caches.match(req)) || (await caches.match('/index.html')) || (await caches.match('/'));
+          return cached || new Response('Sin conexión a Internet', { status: 503, statusText: 'Offline' });
+        }
+      })()
+    );
+    return;
+  }
+
+  // ── Static assets (content-hashed JS/CSS, images, fonts) → stale-while-revalidate ─
+  // Hashed filenames change per build, so this is safe: a new build = new URL =
+  // cache miss = fresh fetch. Images/photos update in the background.
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Fetch in background to update cache (Stale-While-Revalidate)
-        fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, networkResponse);
-              });
-            }
-          })
-          .catch(() => { /* offline */ });
-        return cachedResponse;
-      }
-
-      return fetch(event.request)
+    caches.match(req).then((cachedResponse) => {
+      const networkFetch = fetch(req)
         .then((networkResponse) => {
-          if (networkResponse.status === 200 && !event.request.url.includes('/api/')) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           }
           return networkResponse;
         })
-        .catch(() => {
-          // If offline and request is navigation, serve cached index.html
-          if (event.request.mode === 'navigate') {
-            return caches.match('/');
-          }
-          return new Response('Sin conexión a Internet', { status: 503, statusText: 'Offline' });
-        });
+        .catch(() => cachedResponse || new Response('', { status: 504 }));
+      return cachedResponse || networkFetch;
     })
   );
 });
