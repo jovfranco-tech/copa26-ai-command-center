@@ -322,7 +322,7 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
           </span>
         )}
         <span style={{ position: 'relative', flex: 'none' }}>
-          <PlayerAvatar player={p} size={46} />
+          <PlayerAvatar player={p} size={56} />
           <span
             className="num"
             style={{

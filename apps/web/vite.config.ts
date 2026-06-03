@@ -21,17 +21,29 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      // The biggest chunk is the lazy-loaded 3D stadium (three.js). Splitting the
+      // heavy vendors into their own cacheable chunks keeps the shared app shell
+      // small and lets the browser load 3D / charts only on the routes that need them.
+      chunkSizeWarningLimit: 1100,
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('firebase') || id.includes('@firebase')) {
-                return 'vendor-firebase';
-              }
-              if (id.includes('@tanstack') || id.includes('zustand')) {
-                return 'vendor-state';
-              }
+            if (!id.includes('node_modules')) return undefined;
+            if (id.includes('firebase') || id.includes('@firebase')) return 'vendor-firebase';
+            // 3D stack — only pulled in by the Estadio 3D route.
+            if (id.includes('/three/') || id.includes('@react-three') || id.includes('/three-')) {
+              return 'vendor-three';
             }
+            // Charting stack — only pulled in by the analyst / stats views.
+            if (id.includes('recharts') || id.includes('/d3-') || id.includes('victory-vendor')) {
+              return 'vendor-charts';
+            }
+            if (id.includes('lucide-react')) return 'vendor-icons';
+            if (id.includes('react-dom') || id.includes('/scheduler/') || id.includes('/react/')) {
+              return 'vendor-react';
+            }
+            if (id.includes('@tanstack') || id.includes('zustand')) return 'vendor-state';
+            return undefined;
           },
         },
       },
