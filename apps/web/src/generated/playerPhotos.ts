@@ -469,6 +469,14 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:20180610_FIFA_Friendly_Match_Austria_vs._Brazil_850_1625.jpg"
   },
+  "BRA-10": {
+    "src": "/avatars/jeanluc.png",
+    "ext": "png"
+  },
+  "BRA-11": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
+  },
   "CAN-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/48/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3286_by_Stepro.jpg",
     "ext": "jpg",
@@ -754,6 +762,14 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Unai_Sim%C3%B3n"
   },
+  "ESP-10": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
+  },
+  "ESP-11": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
+  },
   "FRA-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/66/Picture_with_Mbapp%C3%A9_%28cropped_and_rotated%29.jpg",
     "ext": "jpg",
@@ -845,6 +861,22 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/97/Marc-Andre_Ter_Stegen_ACCI_FCBARCELONA_Turisme_Catalunya_gira_pretemporada_CATPRESS.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Marc-Andr%C3%A9_ter_Stegen"
+  },
+  "GER-8": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
+  },
+  "GER-9": {
+    "src": "/avatars/jeanluc.png",
+    "ext": "png"
+  },
+  "GER-10": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
+  },
+  "GER-11": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
   },
   "GHA-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Mohammed_Kudus_of_West_Ham_United.jpeg",
@@ -1057,24 +1089,24 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Guillermo_Ochoa"
   },
   "MEX-8": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Johan_V%C3%A1squez.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Johan_V%C3%A1squez.jpg",
     "ext": "jpg"
   },
   "MEX-9": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Jorge_S%C3%A1nchez.png",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/30/Jorge_S%C3%A1nchez.png",
     "ext": "png"
   },
   "MEX-10": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Luis_Ch%C3%A1vez_WC2022.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Luis_Ch%C3%A1vez_WC_2022_-_01.jpg",
     "ext": "jpg"
   },
   "MEX-11": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Luis_Romo.png",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/73/Luis_Romo.png",
     "ext": "png"
   },
   "MEX-12": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Jes%C3%BAs_Gallardo.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Jes%C3%BAs_Gallardo.png",
+    "ext": "png"
   },
   "NED-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Cody_Gakpo_06042025_%282%29_%28cropped%29.jpg",
@@ -1115,6 +1147,18 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Bart_Verbruggen.png",
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/Bart_Verbruggen"
+  },
+  "NED-9": {
+    "src": "/avatars/gary.png",
+    "ext": "png"
+  },
+  "NED-10": {
+    "src": "/avatars/jeanluc.png",
+    "ext": "png"
+  },
+  "NED-11": {
+    "src": "/avatars/diego.png",
+    "ext": "png"
   },
   "NOR-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/71/Erling_Haaland_June_2025.jpg",
@@ -1251,7 +1295,7 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://commons.wikimedia.org/wiki/File:Ronwen_Williams_AFCON2025Q_35.jpg"
   },
   "RSA-4": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Aubrey_Modiba_%28cropped%29.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Aubrey_Modiba_(cropped).jpg",
     "ext": "jpg"
   },
   "RSA-5": {
