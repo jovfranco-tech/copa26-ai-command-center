@@ -1176,6 +1176,29 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             <div style={{ width: `${memStats.percentFull}%`, height: '100%', background: memStats.percentFull > 80 ? '#ef4444' : 'var(--gold)', borderRadius: 2, transition: 'width 0.3s' }} />
           </div>
           <span style={{ color: 'var(--tx-3)' }}>{memStats.total}/{60}</span>
+          {combinedMemory.length > 0 && (
+            <button
+              type="button"
+              className="btn ghost btn-sm"
+              onClick={() => {
+                const lines = combinedMemory.map((r) =>
+                  `[${r.createdAt}] (${r.mode}) Q: ${r.question}\nA: ${r.answer}\n---`
+                ).join('\n');
+                const header = `Historial IA — Mundial 2026\nExportado: ${new Date().toLocaleString('es-MX')}\nTotal: ${combinedMemory.length} consultas\n${'='.repeat(50)}\n\n`;
+                const blob = new Blob([header + lines], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `historial-ia-mundial-2026-${new Date().toISOString().slice(0, 10)}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              title="Exportar historial de conversación IA"
+            >
+              <Icon name="download" size={13} />
+              Exportar
+            </button>
+          )}
         </div>
         <AIMemoryPanel
           records={combinedMemory}

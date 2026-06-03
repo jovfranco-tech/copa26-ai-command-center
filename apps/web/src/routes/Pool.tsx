@@ -1,17 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Icon, Empty, type IconName } from '@worldcup/ui';
 import { fmtDay, type Match } from '@worldcup/shared';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
+import { usePoolSync } from '@/hooks/usePoolSync';
 import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
 import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
-import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEntry } from '@/lib/api';
+import { normalizePoolGroupId, type LeaderboardEntry } from '@/lib/api';
 import { isMatchLocked, lockLabel, weatherSummary } from '@/lib/matchMeta';
 import { buildPoolDiagnostics } from '@/lib/opsIntelligence';
 import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
-import { collection, onSnapshot, doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { QuinielaScanner } from '@/components/QuinielaScanner';
 import { P2PSyncPanel } from '@/components/P2PSyncPanel';
@@ -25,7 +26,6 @@ import {
   SummaryTile,
   PickHistoryPanel,
 } from '@/components/pool';
-import { notifySuccess, notifyWarning } from '@/store/notifications';
 
 const playTick = () => {
   try {
@@ -73,18 +73,6 @@ const playSuccessTick = () => {
   } catch {
     // AudioContext blocked
   }
-};
-
-interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
-  sync?: {
-    register: (tag: string) => Promise<void>;
-  };
-}
-
-const registerPoolBackgroundSync = async () => {
-  if (!('serviceWorker' in navigator) || !('SyncManager' in window)) return;
-  const registration = (await navigator.serviceWorker.ready) as ServiceWorkerRegistrationWithSync;
-  await registration.sync?.register('sync-pool-picks');
 };
 
 const AI_AGENT_PREFIX = 'IA ·';
@@ -333,10 +321,36 @@ export function Pool() {
     }
   };
 
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | null>(null);
-  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+  const onSyncSuccess = useCallback(() => {
+    playSuccessTick();
+  }, []);
+
+  const { syncStatus, lastSavedAt, leaderboard, loadingLeaderboard, importedPicks, importedAvatarUrl } = usePoolSync({
+    playerName: pool.playerName,
+    picks: pool.picks,
+    groupId: pool.groupId,
+    avatarUrl: pool.avatarUrl,
+    matches: (data?.items ?? []).map((m) => ({ id: m.id, status: m.status, home: m.home, away: m.away, homeGoals: m.homeGoals ?? null, awayGoals: m.awayGoals ?? null })),
+    teams,
+    isLoading,
+    onSyncSuccess,
+  });
+
+  // Apply imported picks from the hook
+  useEffect(() => {
+    if (importedPicks && Object.keys(importedPicks).length > 0) {
+      pool.importPicks(importedPicks);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importedPicks]);
+
+  useEffect(() => {
+    if (importedAvatarUrl && !pool.avatarUrl) {
+      pool.setAvatarUrl(importedAvatarUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importedAvatarUrl]);
+
   const [showScanner, setShowScanner] = useState(false);
 
   const shareLeaderboardLogro = async () => {
@@ -460,235 +474,6 @@ export function Pool() {
       console.error('Failed to save peer picks to Firestore:', e);
     }
   };
-
-  // Load existing picks from DB when the participant name changes
-  useEffect(() => {
-    if (!pool.playerName.trim()) return;
-
-    const loadPicks = async () => {
-      try {
-        const res = await fetchPoolPicks(pool.playerName, pool.groupId);
-        if (res.ok && res.picks && Object.keys(res.picks).length > 0) {
-          pool.importPicks(res.picks);
-          if (res.avatarUrl && !pool.avatarUrl) pool.setAvatarUrl(res.avatarUrl);
-          setSyncStatus('synced');
-        }
-      } catch (e) {
-        console.error('Failed to load picks from Firestore', e);
-      }
-    };
-    loadPicks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.playerName, pool.groupId]);
-
-  // Sync picks to Firestore (debounced to avoid spamming the connection)
-  useEffect(() => {
-    if (!pool.playerName.trim()) return;
-
-    setSyncStatus('syncing');
-    const timer = setTimeout(async () => {
-      try {
-        const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
-        if (ok) {
-          setSyncStatus('synced');
-          setLastSavedAt(new Date().toISOString());
-          playSuccessTick(); // Play premium tactical success chime when successfully saved to DB!
-          notifySuccess('Quiniela guardada', 'Tus picks se sincronizaron en la nube familiar.');
-        } else {
-          setSyncStatus('error');
-          // Offline fallback: attempt to register Background Sync
-          registerPoolBackgroundSync()
-            .catch(() => {});
-          notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
-        }
-      } catch {
-        setSyncStatus('error');
-        registerPoolBackgroundSync().catch(() => {});
-        notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [pool.playerName, pool.picks, pool.groupId, pool.avatarUrl]);
-
-  // Fallback listener for online window event
-  useEffect(() => {
-    const handleOnline = async () => {
-      if (!pool.playerName.trim()) return;
-      setSyncStatus('syncing');
-      try {
-        const ok = await syncPoolPicks(pool.playerName, pool.picks, pool.groupId, pool.avatarUrl);
-        if (ok) {
-          setSyncStatus('synced');
-          setLastSavedAt(new Date().toISOString());
-          playSuccessTick();
-        } else {
-          setSyncStatus('error');
-        }
-      } catch {
-        setSyncStatus('error');
-      }
-    };
-
-    window.addEventListener('online', handleOnline);
-    return () => window.removeEventListener('online', handleOnline);
-  }, [pool.playerName, pool.picks, pool.groupId, pool.avatarUrl]);
-
-  // Load Leaderboard in real-time from Firestore onSnapshot
-  useEffect(() => {
-    const matchItems = data?.items ?? [];
-    const teamItems = Object.values(teams);
-    const teamMap = new Map(teamItems.map((t) => [t.code, t]));
-
-    if (isLoading || !matchItems.length) return;
-
-    setLoadingLeaderboard(true);
-
-    const unsubscribe = onSnapshot(
-      collection(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members'),
-      (snapshot) => {
-        const board: LeaderboardEntry[] = [];
-        const playedMatches = matchItems.filter((m) => m.status === 'FT');
-
-        // 1. Process all participant predictions from Firestore documents
-        snapshot.forEach((docSnap) => {
-          const docData = docSnap.data();
-          const name = typeof docData.playerName === 'string' ? docData.playerName : docSnap.id;
-          const picks = docData.picks || {};
-
-          let points = 0;
-          let exactScores = 0;
-          let outcomeHits = 0;
-          let predictedPlayedCount = 0;
-
-          for (const m of playedMatches) {
-            const pick = picks[m.id];
-            if (!pick || !pick.outcome) continue;
-
-            predictedPlayedCount++;
-            const realHome = m.homeGoals ?? 0;
-            const realAway = m.awayGoals ?? 0;
-
-            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
-            if (realHome > realAway) realOutcome = 'home';
-            else if (realHome < realAway) realOutcome = 'away';
-
-            const isExact = pick.homeGoals === realHome && pick.awayGoals === realAway;
-            const isOutcomeCorrect = pick.outcome === realOutcome;
-
-            if (isExact) {
-              points += 3;
-              exactScores++;
-            } else if (isOutcomeCorrect) {
-              points += 1;
-              outcomeHits++;
-            }
-          }
-
-          const efficiency = predictedPlayedCount > 0
-            ? Math.round(((exactScores + outcomeHits) / predictedPlayedCount) * 100)
-            : 0;
-
-          board.push({
-            playerName: name,
-            avatarUrl: typeof docData.avatarUrl === 'string' ? docData.avatarUrl : '',
-            points,
-            exactScores,
-            outcomeHits,
-            efficiency,
-            predictedCount: Object.keys(picks).length,
-          });
-        });
-
-        // 2. Inject the 3 virtual AI agents to compete in the leaderboard
-        const agents: Array<'optimista' | 'stats' | 'contrarian'> = ['optimista', 'stats', 'contrarian'];
-        const agentNames = {
-          optimista: 'IA · Optimista',
-          stats: 'IA · Estadístico',
-          contrarian: 'IA · Contrarian',
-        };
-
-        for (const agent of agents) {
-          let points = 0;
-          let exactScores = 0;
-          let outcomeHits = 0;
-          let predictedPlayedCount = 0;
-
-          for (const m of playedMatches) {
-            const homeTeam = teamMap.get(m.home);
-            const awayTeam = teamMap.get(m.away);
-
-            const homeRank = homeTeam?.ranking ?? 50;
-            const awayRank = awayTeam?.ranking ?? 50;
-            const rankDiff = awayRank - homeRank;
-
-            let pred: { homeGoals: number; awayGoals: number; outcome: 'home' | 'draw' | 'away' };
-            if (agent === 'optimista') {
-              if (rankDiff > 10) pred = { homeGoals: 3, awayGoals: 1, outcome: 'home' };
-              else if (rankDiff < -10) pred = { homeGoals: 1, awayGoals: 3, outcome: 'away' };
-              else pred = { homeGoals: 2, awayGoals: 2, outcome: 'draw' };
-            } else if (agent === 'stats') {
-              if (rankDiff > 5) pred = { homeGoals: 1, awayGoals: 0, outcome: 'home' };
-              else if (rankDiff < -5) pred = { homeGoals: 0, awayGoals: 1, outcome: 'away' };
-              else pred = { homeGoals: 1, awayGoals: 1, outcome: 'draw' };
-            } else {
-              if (rankDiff > 15) pred = { homeGoals: 1, awayGoals: 2, outcome: 'away' };
-              else if (rankDiff < -15) pred = { homeGoals: 2, awayGoals: 1, outcome: 'home' };
-              else pred = { homeGoals: 0, awayGoals: 0, outcome: 'draw' };
-            }
-
-            predictedPlayedCount++;
-            const realHome = m.homeGoals ?? 0;
-            const realAway = m.awayGoals ?? 0;
-
-            let realOutcome: 'home' | 'draw' | 'away' = 'draw';
-            if (realHome > realAway) realOutcome = 'home';
-            else if (realHome < realAway) realOutcome = 'away';
-
-            const isExact = pred.homeGoals === realHome && pred.awayGoals === realAway;
-            const isOutcomeCorrect = pred.outcome === realOutcome;
-
-            if (isExact) {
-              points += 3;
-              exactScores++;
-            } else if (isOutcomeCorrect) {
-              points += 1;
-              outcomeHits++;
-            }
-          }
-
-          const efficiency = predictedPlayedCount > 0
-            ? Math.round(((exactScores + outcomeHits) / predictedPlayedCount) * 100)
-            : 0;
-
-          board.push({
-            playerName: agentNames[agent],
-            points,
-            exactScores,
-            outcomeHits,
-            efficiency,
-            predictedCount: playedMatches.length,
-          });
-        }
-
-        // 3. Sort leaderboard by points, then exact scores, then efficiency
-        board.sort((a, b) => {
-          if (b.points !== a.points) return b.points - a.points;
-          if (b.exactScores !== a.exactScores) return b.exactScores - a.exactScores;
-          return b.efficiency - a.efficiency;
-        });
-
-        setLeaderboard(board);
-        setLoadingLeaderboard(false);
-      },
-      (error) => {
-        console.error('Firestore onSnapshot error:', error);
-        setLoadingLeaderboard(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [data, teams, isLoading, pool.groupId]);
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('wc_theme') as 'dark' | 'light') ?? 'dark';
