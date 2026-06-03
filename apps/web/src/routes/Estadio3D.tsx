@@ -2,12 +2,12 @@ import App from '../features/stadium/App';
 
 export function Estadio3D() {
   return (
-    <div className="stadium-feature-root" style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
       <div 
         style={{ 
           fontSize: '11px', 
           color: 'var(--tx-3)', 
-          marginBottom: '12px',
+          marginBottom: '8px',
           marginLeft: '4px',
           display: 'flex',
           alignItems: 'center',

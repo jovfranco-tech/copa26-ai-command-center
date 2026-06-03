@@ -254,11 +254,11 @@ function App() {
   const matchGroupLabel = (m: Match) => m.group;
 
   return (
-    <div className={`app-container ${modoInmersivo ? 'stadium-immersive-mode' : 'stadium-integrated-mode'}`}>
+    <div className={`stadium-feature-root app-container ${modoInmersivo ? 'stadium-immersive-mode' : 'stadium-integrated-mode'}`}>
       {/* Compact Stadium Toolbar */}
       <div className="stadium-toolbar">
         {/* Left: Context label + data status */}
-        <div className="toolbar-left" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div className="toolbar-left">
           <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Análisis táctico en cancha
           </span>
@@ -275,7 +275,7 @@ function App() {
         </div>
 
         {/* Right: Controls */}
-        <div className="toolbar-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="toolbar-controls">
           {/* Theme */}
           <div className="segmented-control">
             <button type="button" className={`segmented-btn ${!modoInmersivo ? 'active' : ''}`} onClick={() => setModoInmersivo(false)} title="Alinear con el tema claro del dashboard">
@@ -328,13 +328,13 @@ function App() {
       <main className="app-main">
 
         {/* COLUMN 1: Visualization + Tactical Bottom Bar */}
-        <section className="left-viewport-container" style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', overflow: 'hidden' }}>
+        <section className="left-viewport-container">
 
           {/* Canvas Container */}
-          <div className="canvas-wrapper" style={{ flex: 1, position: 'relative', borderRadius: '16px', overflow: 'hidden' }}>
+          <div className="canvas-wrapper">
 
             {/* OVERLAY: Top-Left Match Selector */}
-            <div className="canvas-overlay-top-left" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '12px', border: '1px solid var(--border-subtle)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', background: 'var(--bg-card)', backdropFilter: 'blur(8px)' }}>
+            <div className="canvas-overlay-top-left">
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <TeamCrest code={currentMatch.teams.homeShort} size={24} />
                 <TeamFlag code={currentMatch.teams.homeShort} size={13} />
@@ -349,15 +349,15 @@ function App() {
                     style={{
                       background: 'none',
                       border: 'none',
-                      color: '#ffffff',
-                      fontSize: '0.85rem',
+                      color: 'var(--text-primary)',
+                      fontSize: '0.78rem',
                       fontWeight: 800,
                       cursor: 'pointer',
                       paddingRight: '12px',
                       appearance: 'none',
                       outline: 'none',
                       fontFamily: 'var(--font-sans)',
-                      maxWidth: '220px',
+                      maxWidth: '180px',
                     }}
                   >
                     {fixturesWithOverrides.map((match) => (
