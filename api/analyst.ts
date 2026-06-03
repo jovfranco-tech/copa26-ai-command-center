@@ -77,9 +77,9 @@ export default async function handler(request: Request): Promise<Response> {
     });
   }
 
-  let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean };
+  let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean; provider?: 'openai' | 'gemini' };
   try {
-    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean };
+    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean; provider?: 'openai' | 'gemini' };
   } catch {
     return Response.json({ ok: false, reason: 'bad-request' }, { status: 400 });
   }
@@ -115,8 +115,13 @@ export default async function handler(request: Request): Promise<Response> {
   // otherwise honor AI_PROVIDER (default openai) with the other as automatic failover.
   const isMultimodal = Boolean(body.pdf || body.audio);
   const pref = (process.env.AI_PROVIDER || 'openai').toLowerCase();
-  const order: Array<'openai' | 'gemini'> =
-    isMultimodal || pref === 'gemini' ? ['gemini', 'openai'] : ['openai', 'gemini'];
+  // Optional per-request override (diagnostics / power users): pin to one provider.
+  const forced = body.provider === 'openai' || body.provider === 'gemini' ? body.provider : null;
+  const order: Array<'openai' | 'gemini'> = forced
+    ? [forced]
+    : isMultimodal || pref === 'gemini'
+      ? ['gemini', 'openai']
+      : ['openai', 'gemini'];
   const candidates = order.filter((p) => (p === 'openai' ? openaiKey : geminiKey));
 
   const sources = [
