@@ -88,12 +88,12 @@ function writeGeneratedFile(downloadedPhotoExts, playerPhotoFallbacks) {
       "ext": "jpg"
     },
     "arg-rw": {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg",
+      "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/NIG-ARG_%285%29.jpg",
       "ext": "jpg"
     },
     "arg-lb": {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
-      "ext": "jpg"
+      "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Tagliafico_asse_ol_2425.png",
+      "ext": "png"
     }
   };
 

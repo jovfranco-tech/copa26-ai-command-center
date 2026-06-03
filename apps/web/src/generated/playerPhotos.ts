@@ -282,12 +282,12 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://commons.wikimedia.org/wiki/File:St._Louis_City_vs_Aston_Villa_(Jul_2025)_14_(Emiliano_Mart%C3%ADnez).jpg"
   },
   "ARG-11": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/NIG-ARG_%285%29.jpg",
     "ext": "jpg"
   },
   "ARG-12": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Tagliafico_asse_ol_2425.png",
+    "ext": "png"
   },
   "ARG-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Lautaro_Mart%C3%ADnez_%28cropped%29.jpg",
@@ -470,12 +470,14 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://commons.wikimedia.org/wiki/File:20180610_FIFA_Friendly_Match_Austria_vs._Brazil_850_1625.jpg"
   },
   "BRA-10": {
-    "src": "/avatars/jeanluc.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f8/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Danilo_Luiz_850_1591_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Danilo_Luiz_850_1591_(cropped).jpg"
   },
   "BRA-11": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Lucas_Paquet%C3%A1_of_West_Ham.jpeg",
+    "ext": "jpeg",
+    "page": "https://en.wikipedia.org/wiki/Lucas_Paquet%C3%A1"
   },
   "CAN-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/48/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3286_by_Stepro.jpg",
@@ -763,12 +765,14 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Unai_Sim%C3%B3n"
   },
   "ESP-10": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b6/UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_Dani_Carvajal_10_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dani_Carvajal"
   },
   "ESP-11": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Aymeric_Laporte_2023_%28cropped%29_2.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Aymeric_Laporte"
   },
   "FRA-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/66/Picture_with_Mbapp%C3%A9_%28cropped_and_rotated%29.jpg",
@@ -863,20 +867,24 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Marc-Andr%C3%A9_ter_Stegen"
   },
   "GER-8": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c7/20180602_FIFA_Friendly_Match_Austria_vs._Germany_%C4%B0lkay_G%C3%BCndo%C4%9Fan_850_0728.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/%C4%B0lkay_G%C3%BCndo%C4%9Fan"
   },
   "GER-9": {
-    "src": "/avatars/jeanluc.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bf/FC_Red_Bull_Salzburg_gegen_Bayern_M%C3%BCnchen_%282025-01-06_Testspiel%29_22.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Leroy_San%C3%A9"
   },
   "GER-10": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a8/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2658_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/David_Raum"
   },
   "GER-11": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/ba/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93069.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nico_Schlotterbeck"
   },
   "GHA-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Mohammed_Kudus_of_West_Ham_United.jpeg",
@@ -1149,16 +1157,19 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Bart_Verbruggen"
   },
   "NED-9": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/34/Yokohama_F._Marinos_-_Manchester_City_%283-5%29_-_53075276224_%28Nathan_Ake%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nathan_Ak%C3%A9"
   },
   "NED-10": {
-    "src": "/avatars/jeanluc.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/64/FC_Salzburg_gegen_Inter_Mailand_%28Testspiel_2023-08-09%29_67_-_Stefan_de_Vrij_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Stefan_de_Vrij"
   },
   "NED-11": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Jeremie_Frimpong_04012026_%283%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jeremie_Frimpong"
   },
   "NOR-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/71/Erling_Haaland_June_2025.jpg",
@@ -1285,10 +1296,6 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Percy_Tau"
   },
-  "RSA-2": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
-  },
   "RSA-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/Ronwen_Williams_AFCON2025Q_35.jpg",
     "ext": "jpg",
@@ -1298,33 +1305,15 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Aubrey_Modiba_(cropped).jpg",
     "ext": "jpg"
   },
-  "RSA-5": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
-  },
   "RSA-6": {
-    "src": "/avatars/jeanluc.png",
-    "ext": "png"
-  },
-  "RSA-7": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mothobi_Mvala_%282023%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mothobi_Mvala"
   },
   "RSA-8": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
-  },
-  "RSA-9": {
-    "src": "/avatars/jeanluc.png",
-    "ext": "png"
-  },
-  "RSA-10": {
-    "src": "/avatars/diego.png",
-    "ext": "png"
-  },
-  "RSA-11": {
-    "src": "/avatars/gary.png",
-    "ext": "png"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Go_Ahead_Eagles_-_Mamelodi_Sundowns_FC_-_53066348125.jpg/3840px-Go_Ahead_Eagles_-_Mamelodi_Sundowns_FC_-_53066348125.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Grant_Kekana"
   },
   "SCO-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/72/Manchester_United_v_Liverpool%2C_22_August_2022_%2821%29_%28Scott_McTominay%29.jpg",
@@ -1564,11 +1553,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg"
   },
   "arg-rw": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/NIG-ARG_%285%29.jpg",
     "ext": "jpg"
   },
   "arg-lb": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Tagliafico_asse_ol_2425.png",
+    "ext": "png"
   }
 };
