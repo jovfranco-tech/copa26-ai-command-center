@@ -14,6 +14,8 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "ALG-4": "webp",
   "ARG-1": "webp",
   "ARG-10": "webp",
+  "ARG-11": "jpg",
+  "ARG-12": "png",
   "ARG-2": "webp",
   "ARG-3": "webp",
   "ARG-4": "webp",
@@ -42,6 +44,8 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "BIH-2": "webp",
   "BIH-3": "webp",
   "BRA-1": "webp",
+  "BRA-10": "jpg",
+  "BRA-11": "jpg",
   "BRA-2": "webp",
   "BRA-3": "webp",
   "BRA-4": "webp",
@@ -100,6 +104,8 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "ENG-8": "webp",
   "ENG-9": "webp",
   "ESP-1": "webp",
+  "ESP-10": "jpg",
+  "ESP-11": "jpg",
   "ESP-2": "webp",
   "ESP-3": "webp",
   "ESP-4": "webp",
@@ -109,6 +115,9 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "ESP-8": "webp",
   "ESP-9": "webp",
   "FRA-1": "webp",
+  "FRA-10": "png",
+  "FRA-11": "jpg",
+  "FRA-12": "png",
   "FRA-2": "webp",
   "FRA-3": "webp",
   "FRA-4": "webp",
@@ -124,6 +133,7 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "GER-5": "webp",
   "GER-6": "webp",
   "GER-7": "webp",
+  "GER-9": "jpg",
   "GHA-1": "webp",
   "GHA-2": "webp",
   "GHA-3": "webp",
@@ -161,6 +171,9 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "MAR-6": "webp",
   "MAR-7": "webp",
   "MEX-1": "webp",
+  "MEX-10": "jpg",
+  "MEX-11": "png",
+  "MEX-12": "png",
   "MEX-2": "webp",
   "MEX-3": "webp",
   "MEX-4": "webp",
@@ -168,6 +181,7 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "MEX-6": "webp",
   "MEX-7": "webp",
   "NED-1": "webp",
+  "NED-10": "jpg",
   "NED-2": "webp",
   "NED-3": "webp",
   "NED-4": "webp",
@@ -175,6 +189,7 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "NED-6": "webp",
   "NED-7": "webp",
   "NED-8": "webp",
+  "NED-9": "jpg",
   "NOR-1": "webp",
   "NOR-2": "webp",
   "NOR-3": "webp",
@@ -203,6 +218,8 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "RSA-1": "webp",
   "RSA-2": "webp",
   "RSA-3": "webp",
+  "RSA-4": "jpg",
+  "RSA-8": "jpg",
   "SCO-1": "webp",
   "SCO-2": "webp",
   "SCO-3": "webp",
@@ -247,7 +264,8 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "USA-6": "webp",
   "USA-7": "webp",
   "UZB-1": "webp",
-  "UZB-2": "webp"
+  "UZB-2": "webp",
+  "arg-rw": "jpg",
 };
 
 export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
@@ -780,16 +798,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Kylian_Mbapp%C3%A9"
   },
   "FRA-10": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Olivier_Giroud_December_2024.png",
+    "ext": "png"
   },
   "FRA-11": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/39/FC_Salzburg_vs._AC_Mailand_%28UEFA_Championsleague_2022-09-06%29_Th%C3%A9o_Hernandez.jpg",
     "ext": "jpg"
   },
   "FRA-12": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Rabiot_cropped.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rabiot_asse_om_2425.png",
+    "ext": "png"
   },
   "FRA-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Ousmane_Demb%C3%A9l%C3%A9_2018_%28cropped%29.jpg",
@@ -1541,16 +1559,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Abbosbek_Fayzullaev"
   },
   "fra-st": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Olivier_Giroud_December_2024.png",
+    "ext": "png"
   },
   "fra-lb": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/39/FC_Salzburg_vs._AC_Mailand_%28UEFA_Championsleague_2022-09-06%29_Th%C3%A9o_Hernandez.jpg",
     "ext": "jpg"
   },
   "fra-dm-l": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Rabiot_cropped.jpg",
-    "ext": "jpg"
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rabiot_asse_om_2425.png",
+    "ext": "png"
   },
   "arg-rw": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/NIG-ARG_%285%29.jpg",

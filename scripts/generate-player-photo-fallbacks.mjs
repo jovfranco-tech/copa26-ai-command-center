@@ -76,16 +76,16 @@ function writeGeneratedFile(downloadedPhotoExts, playerPhotoFallbacks) {
 
   const customFallbacks = {
     "fra-st": {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg",
-      "ext": "jpg"
+      "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Olivier_Giroud_December_2024.png",
+      "ext": "png"
     },
     "fra-lb": {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg",
+      "src": "https://upload.wikimedia.org/wikipedia/commons/3/39/FC_Salzburg_vs._AC_Mailand_%28UEFA_Championsleague_2022-09-06%29_Th%C3%A9o_Hernandez.jpg",
       "ext": "jpg"
     },
     "fra-dm-l": {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Rabiot_cropped.jpg",
-      "ext": "jpg"
+      "src": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rabiot_asse_om_2425.png",
+      "ext": "png"
     },
     "arg-rw": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/NIG-ARG_%285%29.jpg",
