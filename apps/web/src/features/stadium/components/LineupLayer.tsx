@@ -4,6 +4,7 @@ import { Html as HtmlDrei } from '@react-three/drei';
 import * as THREE from 'three';
 import { MATCH_LINEUPS, getTacticalZoneType } from '../data/lineups';
 import type { Player } from '../data/lineups';
+import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
 
 interface LineupLayerProps {
   selectedPlayerId: string | null;
@@ -28,6 +29,37 @@ const PASS_LINKS: Record<string, string[]> = {
   'fra-st': ['fra-lw', 'fra-cam'], // Giroud -> Mbappé, Griezmann
 };
 
+// Helper to convert hex to rgba
+const hexToRgba = (hex: string, alpha: number) => {
+  const cleanHex = hex.replace('#', '');
+  const r = parseInt(cleanHex.substring(0, 2), 16) || 0;
+  const g = parseInt(cleanHex.substring(cleanHex.length === 3 ? 1 : 2, 4), 16) || 0;
+  const b = parseInt(cleanHex.substring(cleanHex.length === 3 ? 2 : 4, 6), 16) || 0;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+const createZoneTexture = (primaryColor: string, accentColor: string, isGk: boolean) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    if (isGk) {
+      gradient.addColorStop(0, 'rgba(251, 191, 36, 1.0)');   // Amber yellow center
+      gradient.addColorStop(0.5, 'rgba(245, 158, 11, 0.5)');  // Warm gold mid
+      gradient.addColorStop(1.0, 'rgba(245, 158, 11, 0)');
+    } else {
+      gradient.addColorStop(0, hexToRgba(primaryColor, 1.0)); // Primary color center
+      gradient.addColorStop(0.5, hexToRgba(accentColor, 0.6)); // Accent color mid-ring
+      gradient.addColorStop(1.0, hexToRgba(accentColor, 0));
+    }
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 128, 128);
+  }
+  return new THREE.CanvasTexture(canvas);
+};
+
 export const LineupLayer: React.FC<LineupLayerProps> = ({
   selectedPlayerId,
   onSelectPlayer,
@@ -37,8 +69,6 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
   ritmo,
   lineups = MATCH_LINEUPS
 }) => {
-  const homeColor = lineups.teams.home.color;
-
   const allPlayers = useMemo(() => {
     const baseList = [
       ...lineups.teams.home.players,
@@ -47,7 +77,7 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
     if (mentalidad === 'ofensiva') {
       return baseList.map(p => {
         if (p.position === 'GK') return p;
-        const shiftX = p.team === 'ARG' ? 4.5 : -4.5;
+        const shiftX = p.team === lineups.teams.home.teamCode ? 4.5 : -4.5;
         return {
           ...p,
           x: p.x + shiftX
@@ -55,102 +85,57 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
       });
     }
     return baseList;
-  }, [mentalidad, lineups.teams.home.players, lineups.teams.away.players]);
+  }, [mentalidad, lineups.teams.home.players, lineups.teams.away.players, lineups.teams.home.teamCode]);
 
-  // Canvas texture for Argentina players (Cyan/celeste)
-  const argZoneTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 128;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      gradient.addColorStop(0, 'rgba(0, 242, 254, 1.0)');     // Neon cyan center
-      gradient.addColorStop(0.4, 'rgba(0, 180, 254, 0.7)');    // Celeste middle
-      gradient.addColorStop(0.8, 'rgba(116, 172, 223, 0.2)');  // Soft light blue outer
-      gradient.addColorStop(1.0, 'rgba(116, 172, 223, 0)');    // Fade out
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 128, 128);
-    }
-    return new THREE.CanvasTexture(canvas);
-  }, []);
+  const homeZoneTexture = useMemo(() => {
+    const visual = getTeamVisualIdentity(lineups.teams.home.teamCode);
+    return createZoneTexture(visual.primaryColor, visual.accentColor, false);
+  }, [lineups.teams.home.teamCode]);
 
-  // Canvas texture for France players (Blue/violet with red accent)
-  const fraZoneTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 128;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      gradient.addColorStop(0, 'rgba(37, 99, 235, 1.0)');     // Royal blue center
-      gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.6)');   // Violet mid-ring
-      gradient.addColorStop(0.85, 'rgba(255, 77, 109, 0.35)'); // Coral red ring accent
-      gradient.addColorStop(1.0, 'rgba(255, 77, 109, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 128, 128);
-    }
-    return new THREE.CanvasTexture(canvas);
-  }, []);
+  const homeGkZoneTexture = useMemo(() => {
+    const visual = getTeamVisualIdentity(lineups.teams.home.teamCode);
+    return createZoneTexture(visual.primaryColor, visual.accentColor, true);
+  }, [lineups.teams.home.teamCode]);
 
-  // Canvas texture for Argentina GK (Warm amber yellow)
-  const argGkZoneTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 128;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      gradient.addColorStop(0, 'rgba(251, 191, 36, 1.0)');   // Amber yellow center
-      gradient.addColorStop(0.5, 'rgba(245, 158, 11, 0.5)');  // Warm gold mid
-      gradient.addColorStop(1.0, 'rgba(245, 158, 11, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 128, 128);
-    }
-    return new THREE.CanvasTexture(canvas);
-  }, []);
+  const awayZoneTexture = useMemo(() => {
+    const visual = getTeamVisualIdentity(lineups.teams.away.teamCode);
+    return createZoneTexture(visual.primaryColor, visual.accentColor, false);
+  }, [lineups.teams.away.teamCode]);
 
-  // Canvas texture for France GK (Emerald green)
-  const fraGkZoneTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 128;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      gradient.addColorStop(0, 'rgba(16, 185, 129, 1.0)');   // Emerald center
-      gradient.addColorStop(0.5, 'rgba(5, 150, 105, 0.5)');   // Deep green mid
-      gradient.addColorStop(1.0, 'rgba(5, 150, 105, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 128, 128);
-    }
-    return new THREE.CanvasTexture(canvas);
-  }, []);
+  const awayGkZoneTexture = useMemo(() => {
+    const visual = getTeamVisualIdentity(lineups.teams.away.teamCode);
+    return createZoneTexture(visual.primaryColor, visual.accentColor, true);
+  }, [lineups.teams.away.teamCode]);
 
   const selectedPlayer = useMemo(() => {
     if (!selectedPlayerId) return null;
     return allPlayers.find(p => p.id === selectedPlayerId) || null;
   }, [selectedPlayerId, allPlayers]);
 
-  // Compute closest opponents (up to 3) within 12 meters for the selected player (Phase 2 & 5)
   const closestOpponentIds = useMemo(() => {
     if (!selectedPlayer) return [];
-    return allPlayers
-      .filter(p => p.team !== selectedPlayer.team)
+    
+    // Find closest players from opposing team
+    const opponentTeam = selectedPlayer.team === lineups.teams.home.teamCode 
+      ? lineups.teams.away.players 
+      : lineups.teams.home.players;
+
+    return opponentTeam
       .map(p => {
         const dx = p.x - selectedPlayer.x;
         const dz = p.z - selectedPlayer.z;
-        return { id: p.id, dist: Math.sqrt(dx * dx + dz * dz) };
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        return { id: p.id, dist };
       })
-      .filter(p => p.dist < 12)
       .sort((a, b) => a.dist - b.dist)
       .slice(0, 3)
       .map(p => p.id);
-  }, [selectedPlayer, allPlayers]);
+  }, [selectedPlayer, lineups.teams.home.players, lineups.teams.away.players, lineups.teams.home.teamCode]);
 
-  // Compute active passing lane vectors
   const activePassingLanes = useMemo(() => {
     if (!selectedPlayer) return [];
+    
+    // Determine target nodes for passing lanes
     const targets = PASS_LINKS[selectedPlayer.id] || [];
     return targets.map(targetId => {
       const targetPlayer = allPlayers.find(p => p.id === targetId);
@@ -158,11 +143,11 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
       return {
         from: [selectedPlayer.x, selectedPlayer.z] as [number, number],
         to: [targetPlayer.x, targetPlayer.z] as [number, number],
-        color: selectedPlayer.team === 'ARG' ? 'var(--accent-cyan)' : 'var(--color-neon-red)',
+        color: selectedPlayer.team === lineups.teams.home.teamCode ? 'var(--accent-cyan)' : 'var(--color-neon-red)',
         id: `${selectedPlayer.id}-to-${targetId}`
       };
     }).filter((lane): lane is { from: [number, number], to: [number, number], color: string, id: string } => lane !== null);
-  }, [selectedPlayer, allPlayers]);
+  }, [selectedPlayer, allPlayers, lineups.teams.home.teamCode]);
 
   const isLimpia = visualizationMode === 'limpia';
   const isNombres = visualizationMode === 'nombres';
@@ -214,8 +199,8 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
         const influenceRadius = 1.8 + (player.influenceScore / 100) * 4.2;
 
         const zoneTexture = player.position === 'GK'
-          ? (player.team === 'ARG' ? argGkZoneTexture : fraGkZoneTexture)
-          : (player.team === 'ARG' ? argZoneTexture : fraZoneTexture);
+          ? (player.team === lineups.teams.home.teamCode ? homeGkZoneTexture : awayGkZoneTexture)
+          : (player.team === lineups.teams.home.teamCode ? homeZoneTexture : awayZoneTexture);
 
         return (
           <PlayerMarker3D
@@ -224,7 +209,7 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
             isSelected={isSelected}
             onSelect={() => onSelectPlayer(selectedPlayerId === player.id ? null : player)}
             visualizationMode={visualizationMode}
-            homeColor={homeColor}
+            isHome={player.team === lineups.teams.home.teamCode}
             showInfluenceZone={showZone}
             influenceRadius={influenceRadius}
             influenceOpacity={opacity}
@@ -286,7 +271,7 @@ interface PlayerMarker3DProps {
   isSelected: boolean;
   onSelect: () => void;
   visualizationMode: 'nombres' | 'compactas' | 'seleccionar' | 'limpia';
-  homeColor: string;
+  isHome: boolean;
   showInfluenceZone: boolean;
   influenceRadius: number;
   influenceOpacity: number;
@@ -299,7 +284,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
   isSelected,
   onSelect,
   visualizationMode,
-  homeColor,
+  isHome,
   showInfluenceZone,
   influenceRadius,
   influenceOpacity,
@@ -307,30 +292,37 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
   ritmo
 }) => {
   const [hovered, setHovered] = useState(false);
-  const teamColor = player.team === 'ARG' ? homeColor : '#2563eb'; // Vibrant royal blue for France to improve contrast
+  const visual = getTeamVisualIdentity(player.team);
+  const teamColor = visual.primaryColor;
 
   // Colors for Goalkeepers
   const playerColor = useMemo(() => {
     if (player.position === 'GK') {
-      return player.team === 'ARG' ? '#fbbf24' : '#10b981'; // Warm Amber for ARG GK, Emerald for FRA GK
+      return '#fbbf24'; // standard gold for goalkeepers
     }
     return teamColor;
   }, [player, teamColor]);
 
   // Accent and shadows for selected player detail card
   const teamAccent = useMemo(() => {
-    if (player.position === 'GK') {
-      return player.team === 'ARG' ? '#fbbf24' : '#10b981'; // Yellow/Amber for ARG GK, Emerald/Green for FRA GK
-    }
-    return player.team === 'ARG' ? 'var(--accent-cyan)' : '#ff4d6d';
-  }, [player]);
+    return visual.accentColor;
+  }, [visual]);
+
+  const primaryRgb = useMemo(() => {
+    const hex = visual.primaryColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(hex.length === 3 ? 1 : 2, 4), 16) || 0;
+    const b = parseInt(hex.substring(hex.length === 3 ? 2 : 4, 6), 16) || 0;
+    return `${r}, ${g}, ${b}`;
+  }, [visual]);
 
   const shadowGlow = useMemo(() => {
-    const colorHex = player.position === 'GK'
-      ? (player.team === 'ARG' ? '251, 191, 36' : '16, 185, 129')
-      : (player.team === 'ARG' ? '0, 242, 254' : '255, 77, 109');
-    return `0 12px 32px rgba(${colorHex}, 0.22), 0 0 15px rgba(${colorHex}, 0.1)`;
-  }, [player]);
+    const hex = visual.accentColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(hex.length === 3 ? 1 : 2, 4), 16) || 0;
+    const b = parseInt(hex.substring(hex.length === 3 ? 2 : 4, 6), 16) || 0;
+    return `0 12px 32px rgba(${r}, ${g}, ${b}, 0.22), 0 0 15px rgba(${r}, ${g}, ${b}, 0.1)`;
+  }, [visual]);
 
   // Handle animations of selection ring and floating group
   const ringRef = React.useRef<THREE.Mesh>(null);
@@ -359,14 +351,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
     }
   });
 
-  // Badge mapping class
-  const badgeClass = useMemo(() => {
-    if (player.team === 'ARG') {
-      return player.position === 'GK' ? 'team-arg-gk' : 'team-arg';
-    } else {
-      return player.position === 'GK' ? 'team-fra-gk' : 'team-fra';
-    }
-  }, [player]);
+
 
   // Visual modes flags
   const isLimpia = visualizationMode === 'limpia';
@@ -481,8 +466,8 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
         >
           <cylinderGeometry args={[0.35, 0.35, 0.05, 32]} />
           <meshStandardMaterial 
-            color={isSelected ? 'var(--accent-cyan)' : (player.team === 'ARG' ? '#00f2fe' : '#ff4d6d')} 
-            roughness={0.1}
+            color={isSelected ? 'var(--accent-cyan)' : visual.accentColor} 
+            depthWrite={false}
             metalness={0.9}
             emissive={isSelected ? 'var(--accent-cyan)' : '#000000'}
             emissiveIntensity={isSelected ? 0.6 : 0}
@@ -513,17 +498,39 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
             position={[0, 0.5, 0]}
           >
             <div 
-              className={`player-badge-marker ${badgeClass} ${isSelected ? 'selected' : ''}`}
+              className={`player-badge-marker ${isSelected ? 'selected' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect();
               }}
             >
-              <div className="player-badge-disc">
+              <div 
+                className="player-badge-disc"
+                style={{
+                  background: player.position === 'GK'
+                    ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
+                    : `linear-gradient(135deg, ${visual.primaryColor} 0%, ${visual.secondaryColor === '#ffffff' ? '#ffffff' : visual.primaryColor} 55%, ${visual.primaryColor} 100%)`,
+                  color: player.position === 'GK' ? '#0b1731' : visual.textContrastColor,
+                  borderColor: isSelected || hovered ? '#ffffff' : visual.primaryColor,
+                  boxShadow: isSelected || hovered 
+                    ? `0 0 15px ${visual.accentColor}` 
+                    : `0 4px 10px rgba(${primaryRgb}, 0.35)`,
+                }}
+              >
                 {player.number}
               </div>
               {!isLimpia && (
-                <div className="player-badge-name">
+                <div 
+                  className="player-badge-name"
+                  style={{
+                    borderLeft: `2px solid ${player.position === 'GK' ? '#fbbf24' : visual.primaryColor}`,
+                    ...(isSelected ? {
+                      borderColor: 'var(--accent-cyan)',
+                      color: 'var(--accent-cyan)',
+                      boxShadow: '0 0 10px rgba(0, 242, 254, 0.2)',
+                    } : {})
+                  }}
+                >
                   {isNombres ? `${player.number}. ${player.displayName}` : player.displayName}
                 </div>
               )}
@@ -570,13 +577,13 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
             }}>
               <div className="detail-header" style={{ 
                 borderBottom: `1px solid var(--border-subtle)`,
-                background: player.team === 'ARG' ? 'rgba(0, 242, 254, 0.06)' : 'rgba(255, 77, 109, 0.04)',
+                background: `${visual.primaryColor}15`,
                 padding: '10px 12px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
                   <span className="detail-num" style={{ 
                     background: playerColor, 
-                    color: player.position === 'GK' || player.team === 'ARG' ? '#0b1731' : '#ffffff',
+                    color: player.position === 'GK' ? '#0b1731' : visual.textContrastColor,
                     fontWeight: 900,
                     borderRadius: '4px',
                     padding: '2px 6px',
@@ -587,7 +594,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
                   <div style={{ flex: 1 }}>
                     <div className="detail-fullname" style={{ fontSize: '0.85rem', fontWeight: 800 }}>{player.name}</div>
                     <div className="detail-team-pos" style={{ fontSize: '0.62rem', color: 'var(--text-secondary)' }}>
-                      {player.team === 'ARG' ? 'Argentina' : 'Francia'} · {player.positionLabel}
+                      {visual.teamName} · {player.positionLabel}
                     </div>
                   </div>
                   <button 
@@ -627,18 +634,14 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
 
                   {/* Risk Level Chip */}
                   <div className={`detail-chip risk ${player.riskLevel}`}>
-                    🎯 {player.team === 'ARG' ? 'Riesgo' : 'Riesgo rival'}: {player.riskLevel.toUpperCase()}
+                    🎯 {isHome ? 'Riesgo' : 'Riesgo rival'}: {player.riskLevel.toUpperCase()}
                   </div>
                 </div>
 
                 <div className="detail-insight-box">
                   <span className="insight-title" style={{ fontSize: '0.52rem', color: teamAccent, fontWeight: 800, textTransform: 'uppercase' }}>💡 ANALÍTICA IA</span>
                   <p className="insight-text" style={{ fontSize: '0.65rem', color: '#cbd5e1', lineHeight: '1.35', margin: 0 }}>
-                    {player.id === 'arg-ss' 
-                      ? 'Atrae marcas interiores y libera el carril derecho para progresiones ofensivas.' 
-                      : player.id === 'fra-lw' 
-                      ? 'Ataca la espalda del lateral y acelera transiciones verticales.'
-                      : player.notes.length > 65 ? player.notes.substring(0, 62) + '...' : player.notes}
+                    {player.notes.length > 65 ? player.notes.substring(0, 62) + '...' : player.notes}
                   </p>
                 </div>
               </div>

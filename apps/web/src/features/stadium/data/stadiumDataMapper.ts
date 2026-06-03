@@ -1,6 +1,8 @@
 import { playerRatings, type PlayerRatings } from '@/lib/ratings';
 import type { Player as DbPlayer } from '@worldcup/shared';
 import { type Player as StadiumPlayer, type TeamLineup, type MatchLineups } from './lineups';
+import { getTeamVisualIdentity } from './teamVisualIdentity';
+import { MATCH_FIXTURES } from './matchData';
 
 interface SlotDefinition {
   slotId: string;
@@ -96,7 +98,37 @@ const NED_SLOTS: SlotDefinition[] = [
   { slotId: 'ned-st-l', pos: 'FW', x: 3, z: -4, defaultRole: 'Delantero de Área Definidor', defaultLabel: 'Delantero Centro', defaultName: 'Memphis Depay' },
 ];
 
+const MEX_SLOTS: SlotDefinition[] = [
+  { slotId: 'mex-gk', pos: 'GK', x: -28, z: 0, defaultRole: 'Portero de Línea y Cierre', defaultLabel: 'Portero', defaultName: 'Guillermo Ochoa' },
+  { slotId: 'mex-rb', pos: 'DF', x: -15, z: -13, defaultRole: 'Lateral de Proyección', defaultLabel: 'Lateral Derecho', defaultName: 'Jorge Sánchez' },
+  { slotId: 'mex-cb-r', pos: 'DF', x: -20, z: -6, defaultRole: 'Defensa Central de Choque', defaultLabel: 'Defensa Central', defaultName: 'César Montes' },
+  { slotId: 'mex-cb-l', pos: 'DF', x: -20, z: 6, defaultRole: 'Defensa de Salida y Cobertura', defaultLabel: 'Defensa Central', defaultName: 'Johan Vásquez' },
+  { slotId: 'mex-lb', pos: 'DF', x: -15, z: 13, defaultRole: 'Lateral de Apoyo Defensivo', defaultLabel: 'Lateral Izquierdo', defaultName: 'Jesús Gallardo' },
+  { slotId: 'mex-cm-r', pos: 'MF', x: -7, z: -6, defaultRole: 'Interior de Enlace y Presión', defaultLabel: 'Mediocampista', defaultName: 'Luis Romo' },
+  { slotId: 'mex-dm', pos: 'MF', x: -11, z: 0, defaultRole: 'Pivote de Contención y Salida', defaultLabel: 'Mediocentro Defensivo', defaultName: 'Edson Álvarez' },
+  { slotId: 'mex-cm-l', pos: 'MF', x: -7, z: 6, defaultRole: 'Interior Box-to-Box Pasador', defaultLabel: 'Mediocampista', defaultName: 'Luis Chávez' },
+  { slotId: 'mex-rw', pos: 'FW', x: -4, z: -16, defaultRole: 'Extremo de Velocidad y Desborde', defaultLabel: 'Extremo Derecho', defaultName: 'Orbelín Pineda' },
+  { slotId: 'mex-st', pos: 'FW', x: -4, z: -2, defaultRole: 'Delantero Centro de Presión', defaultLabel: 'Delantero Centro', defaultName: 'Santiago Giménez' },
+  { slotId: 'mex-lw', pos: 'FW', x: -4, z: 16, defaultRole: 'Delantero Interior Rápido', defaultLabel: 'Extremo Izquierdo', defaultName: 'Hirving Lozano' },
+];
+
+const RSA_SLOTS: SlotDefinition[] = [
+  { slotId: 'rsa-gk', pos: 'GK', x: 28, z: 0, defaultRole: 'Portero Cierre de Área', defaultLabel: 'Portero', defaultName: 'Ronwen Williams' },
+  { slotId: 'rsa-rb', pos: 'DF', x: 15, z: 13, defaultRole: 'Lateral de Proyección Veloz', defaultLabel: 'Lateral Derecho', defaultName: 'Khuliso Mudau' },
+  { slotId: 'rsa-cb-r', pos: 'DF', x: 20, z: 6, defaultRole: 'Defensa Central de Choque', defaultLabel: 'Defensa Central', defaultName: 'Grant Kekana' },
+  { slotId: 'rsa-cb-l', pos: 'DF', x: 20, z: -6, defaultRole: 'Defensa de Cobertura Física', defaultLabel: 'Defensa Central', defaultName: 'Mothobi Mvala' },
+  { slotId: 'rsa-lb', pos: 'DF', x: 15, z: -13, defaultRole: 'Lateral Defensivo de Apoyo', defaultLabel: 'Lateral Izquierdo', defaultName: 'Aubrey Modiba' },
+  { slotId: 'rsa-dm', pos: 'MF', x: 11, z: 0, defaultRole: 'Pivote Organizador y Recuperador', defaultLabel: 'Mediocentro Defensivo', defaultName: 'Teboho Mokoena' },
+  { slotId: 'rsa-cm-r', pos: 'MF', x: 7, z: 6, defaultRole: 'Mediocentro Creador Dinámico', defaultLabel: 'Mediocampista', defaultName: 'Themba Zwane' },
+  { slotId: 'rsa-cm-l', pos: 'MF', x: 7, z: -5, defaultRole: 'Interior Mixto de Salida', defaultLabel: 'Mediocampista', defaultName: 'Sphephelo Sithole' },
+  { slotId: 'rsa-rw', pos: 'FW', x: 4, z: 16, defaultRole: 'Extremo Rápido de Desborde', defaultLabel: 'Extremo Derecho', defaultName: 'Elias Mokwana' },
+  { slotId: 'rsa-st', pos: 'FW', x: 4, z: 2, defaultRole: 'Delantero Centro de Presión', defaultLabel: 'Delantero Centro', defaultName: 'Evidence Makgopa' },
+  { slotId: 'rsa-lw', pos: 'FW', x: 4, z: -16, defaultRole: 'Delantero Interior de Velocidad', defaultLabel: 'Extremo Izquierdo', defaultName: 'Percy Tau' },
+];
+
 const SLOT_TEMPLATES: Record<string, SlotDefinition[]> = {
+  MEX: MEX_SLOTS,
+  RSA: RSA_SLOTS,
   ARG: ARG_SLOTS,
   FRA: FRA_SLOTS,
   BRA: BRA_SLOTS,
@@ -114,6 +146,8 @@ interface TeamInfo {
 }
 
 const TEAM_INFO: Record<string, TeamInfo> = {
+  MEX: { name: 'México', color: '#006341', standsColor: '#006341', formation: '4-3-3', manager: 'Javier Aguirre' },
+  RSA: { name: 'Sudáfrica', color: '#007a4d', standsColor: '#ffb612', formation: '4-3-3', manager: 'Hugo Broos' },
   ARG: { name: 'Argentina', color: '#74acdf', standsColor: '#74acdf', formation: '4-3-3', manager: 'Lionel Scaloni' },
   FRA: { name: 'Francia', color: '#0f2042', standsColor: '#0f2042', formation: '4-2-3-1', manager: 'Didier Deschamps' },
   BRA: { name: 'Brasil', color: '#fed103', standsColor: '#009b3a', formation: '4-2-4', manager: 'Dorival Júnior' },
@@ -209,23 +243,17 @@ export function mapDatabasePlayersToLineups(
     return SLOT_TEMPLATES[teamCode] || generateGenericSlots(teamCode, side);
   };
 
-  const sideColor = (teamCode: string, side: 'home' | 'away'): string => {
-    if (teamCode === 'ARG') return '#74acdf';
-    if (teamCode === 'FRA') return '#0f2042';
-    if (teamCode === 'BRA') return '#fed103';
-    if (teamCode === 'GER') return '#ffffff';
-    if (teamCode === 'ESP') return '#c60b1e';
-    if (teamCode === 'NED') return '#ff4f00';
-    return side === 'home' ? '#3b82f6' : '#ef4444';
-  };
+
 
   const getTeamDetails = (teamCode: string, side: 'home' | 'away'): TeamInfo => {
-    return TEAM_INFO[teamCode] || {
-      name: teamCode,
-      color: sideColor(teamCode, side),
-      standsColor: sideColor(teamCode, side),
-      formation: '4-3-3',
-      manager: 'Director Técnico',
+    const info = TEAM_INFO[teamCode];
+    const visual = getTeamVisualIdentity(teamCode, side === 'home');
+    return {
+      name: info?.name || visual.teamName,
+      color: visual.primaryColor,
+      standsColor: info?.standsColor || visual.secondaryColor,
+      formation: info?.formation || '4-3-3',
+      manager: info?.manager || 'Director Técnico',
     };
   };
 
@@ -342,10 +370,14 @@ export function mapDatabasePlayersToLineups(
   const homeSlots = getTeamSlots(homeCode, 'home');
   const awaySlots = getTeamSlots(awayCode, 'away');
 
+  const fixture = MATCH_FIXTURES.find(f => f.id === matchId);
+  const minuteVal = fixture?.liveTime ? parseInt(fixture.liveTime) : (fixture?.status === 'post-match' ? 90 : 0);
+  const statusVal = fixture?.status || 'pre-match';
+
   return {
     matchId,
-    minute: matchId === 'match-1' ? 82 : matchId === 'match-2' ? 0 : 90,
-    status: matchId === 'match-1' ? 'live' : matchId === 'match-2' ? 'pre-match' : 'post-match',
+    minute: minuteVal,
+    status: statusVal,
     teams: {
       home: mapTeam(homeCode, homeSlots, 'home'),
       away: mapTeam(awayCode, awaySlots, 'away'),

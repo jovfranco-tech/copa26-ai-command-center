@@ -19,15 +19,15 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 
   /* Fonts */
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-ui, 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 
   /* Theme Colors - Sleek Midnight Sports Analytics Palette (Inherited from global dashboard theme) */
   --bg-deep: var(--bg);
   --bg-surface: var(--bg-1);
   --bg-card: var(--bg-2);
   --bg-card-hover: var(--bg-hover);
-  --border-subtle: var(--line);
-  --border-focus: var(--line-2);
+  --border-subtle: var(--line, rgba(255, 255, 255, 0.12));
+  --border-focus: var(--line-2, rgba(255, 255, 255, 0.25));
   
   /* Text */
   --text-primary: var(--tx);
@@ -45,14 +45,14 @@
   --stadium-toggle-btn-active-bg: rgba(0, 242, 254, 0.15);
   --stadium-toggle-btn-active-color: var(--tx);
 
-  /* Integrated mode default styling overrides */
+  /* Integrated mode default styling overrides (Light Theme) */
   &.stadium-integrated-mode {
     --bg-deep: var(--bg);
     --bg-surface: var(--bg-1);
     --bg-card: var(--bg-2);
     --bg-card-hover: var(--bg-hover);
-    --border-subtle: var(--line);
-    --border-focus: var(--line-2);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+    --border-focus: rgba(0, 0, 0, 0.16);
     
     --text-primary: var(--tx);
     --text-secondary: var(--tx-2);
@@ -69,14 +69,14 @@
     --stadium-toggle-btn-active-color: var(--tx);
   }
 
-  /* Immersive dark theme overrides */
+  /* Immersive dark theme overrides (Dark Theme) */
   &.stadium-immersive-mode {
     --bg-deep: #070913;
     --bg-surface: rgba(13, 17, 34, 0.94);
     --bg-card: rgba(22, 28, 54, 0.85);
     --bg-card-hover: rgba(30, 39, 73, 0.9);
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-focus: rgba(0, 242, 254, 0.4);
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    --border-focus: rgba(0, 242, 254, 0.35);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
@@ -176,6 +176,14 @@
     color: #ffffff;
   }
   
+  .num {
+    font-family: var(--font-num, sans-serif) !important;
+  }
+
+  .mono-label {
+    font-family: var(--font-num, monospace) !important;
+  }
+
   /* Interactive elements */
     & button, & select, & input {
     font-family: inherit;

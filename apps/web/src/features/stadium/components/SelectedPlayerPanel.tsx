@@ -4,7 +4,8 @@ import { Activity, Flame, X, ChevronLeft, Award } from 'lucide-react';
 import { getTacticalZoneType } from '../data/lineups';
 import { playerRatings, attrLabelsFor, attrColor, ratingSourceText } from '../../../lib/ratings';
 import { generateDeterministicInsight } from '../data/stadiumDataMapper';
-import { PlayerAvatar, TeamFlag } from '../../../components/identity';
+import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
+import { PlayerAvatar, TeamFlag, TeamCrest } from '../../../components/identity';
 import { DataSourceBadge } from '../../../components/DataSourceBadge';
 import { playerRatingMeta } from '../../../generated/playerRatings';
 import type { Player as SharedPlayer } from '@worldcup/shared';
@@ -22,6 +23,17 @@ const PlayerIdentityCard: React.FC<{
   ratings: ReturnType<typeof playerRatings>;
   teamGlowColor: string;
 }> = ({ player, ratings, teamGlowColor }) => {
+  const teamIdentity = getTeamVisualIdentity(player.team);
+  
+  // Dynamic gradient based on team uniform colors
+  const bgGradient = `linear-gradient(135deg, ${teamIdentity.primaryColor}16 0%, ${
+    teamIdentity.secondaryColor === '#ffffff' 
+      ? 'rgba(255, 255, 255, 0.02)' 
+      : teamIdentity.secondaryColor + '08'
+  } 100%)`;
+  
+  const borderStyle = `1px solid ${teamIdentity.primaryColor}30`;
+
   return (
     <div 
       className="player-detail-identity" 
@@ -36,9 +48,9 @@ const PlayerIdentityCard: React.FC<{
         borderRadius: '16px', 
         margin: '12px 0 14px 0', 
         overflow: 'visible',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
-        borderLeft: `4px solid ${teamGlowColor}`,
+        background: bgGradient,
+        border: borderStyle,
+        borderLeft: `4px solid ${teamIdentity.primaryColor}`,
         position: 'relative',
         boxSizing: 'border-box',
         flexShrink: 0
@@ -98,7 +110,7 @@ const PlayerIdentityCard: React.FC<{
         {/* Country · Club · Position */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.72rem', color: 'var(--text-secondary)', flexWrap: 'wrap', marginTop: '2px' }}>
           <TeamFlag code={player.team} size={11} />
-          <span>{player.team === 'ARG' ? 'Argentina' : 'Francia'}</span>
+          <span>{getTeamVisualIdentity(player.team).teamName}</span>
           <span>•</span>
           <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '90px' }} title={player.club}>
             {player.club || '—'}
@@ -136,6 +148,8 @@ const PlayerIdentityCard: React.FC<{
         flexShrink: 0,
         zIndex: 1
       }}>
+        <TeamCrest code={player.team} size={20} />
+
         {/* Number Badge */}
         <span className="num" style={{ 
           fontSize: '0.85rem', 
@@ -199,12 +213,8 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
   }, [player.riskLevel]);
 
   const teamGlowColor = useMemo(() => {
-    if (player.team === 'ARG') {
-      return player.position === 'GK' ? '#fbbf24' : 'var(--accent-cyan)';
-    } else {
-      return player.position === 'GK' ? 'var(--accent-emerald)' : 'var(--color-neon-red)';
-    }
-  }, [player]);
+    return getTeamVisualIdentity(player.team).primaryColor;
+  }, [player.team]);
 
   return (
     <div 
@@ -235,9 +245,12 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         >
           <ChevronLeft size={10} /> Volver
         </button>
-        <h3 className="panel-title" style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', margin: 0 }}>
-          Ficha del Jugador
-        </h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <TeamCrest code={player.team} size={18} />
+          <h3 className="panel-title" style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', margin: 0 }}>
+            Ficha del Jugador
+          </h3>
+        </div>
         <button 
           onClick={onClose}
           style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
@@ -271,7 +284,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           style={{ 
             padding: '12px', 
             background: 'var(--bg-card)', 
-            border: '1px solid var(--border-subtle)', 
+            border: `1px solid ${getTeamVisualIdentity(player.team).primaryColor}22`, 
             borderRadius: '12px',
             position: 'relative',
             marginTop: 0,
@@ -299,7 +312,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         {/* Metrics Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', flexShrink: 0, marginBottom: '12px' }}>
           {/* Stamina Indicator */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}15`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Activity size={10} style={{ color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }} />
               Condición
@@ -317,7 +330,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           </div>
 
           {/* Influence Indicator */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}20`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Award size={10} style={{ color: teamGlowColor }} />
               Influencia
@@ -338,7 +351,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           </div>
 
           {/* Riesgo Badge */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}15`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
               Riesgo
             </span>
@@ -363,7 +376,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           </div>
 
           {/* Estado del Jugador */}
-          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+          <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}15`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
               Estado
             </span>
@@ -409,7 +422,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             justifyContent: 'space-between', 
             alignItems: 'center', 
             background: 'var(--bg-card)', 
-            border: '1px solid var(--border-subtle)', 
+            border: `1px solid ${teamGlowColor}25`, 
             borderRadius: '8px',
             flexShrink: 0,
             marginBottom: '12px'
@@ -429,8 +442,8 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           className="stadium-card" 
           style={{ 
             padding: '12px', 
-            background: `${teamGlowColor}03`, 
-            borderColor: `${teamGlowColor}20`, 
+            background: `${teamGlowColor}06`, 
+            borderColor: `${teamGlowColor}25`, 
             border: '1px solid', 
             borderRadius: '8px',
             flexShrink: 0,
@@ -456,7 +469,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
             flexDirection: 'column', 
             gap: '8px', 
             background: 'var(--bg-card)', 
-            border: '1px solid var(--border-subtle)', 
+            border: `1px solid ${teamGlowColor}25`, 
             borderRadius: '12px',
             padding: '12px',
             flexShrink: 0,

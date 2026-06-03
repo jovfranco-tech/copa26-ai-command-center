@@ -2,6 +2,7 @@ import React from 'react';
 import type { Match } from '../data/matchData';
 import { MATCH_LINEUPS } from '../data/lineups';
 import type { Player } from '../data/lineups';
+import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
 
 interface Tactical2DMapProps {
   match: Match;
@@ -45,7 +46,9 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
             <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: homeColor }}></span>
             Pizarrón Táctico 2D
           </h3>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Esquema de formaciones y alineación en vivo (Min 82)</p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            Esquema de formaciones y alineación en {match.status === 'live' ? `vivo (Min ${match.liveTime || '0\''})` : match.status === 'pre-match' ? 'pre-partido' : 'finalizado'}
+          </p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <span className="status-indicator status-live" style={{ fontSize: '0.7rem' }}>
@@ -137,8 +140,10 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
           {homePlayers.map((player) => {
             const svgX = translate3DX(player.x);
             const svgY = translate3DZ(player.z);
+            const visual = getTeamVisualIdentity(player.team);
+            const markerColor = player.position === 'GK' ? '#f59e0b' : visual.primaryColor;
+            const numColor = player.position === 'GK' ? '#000000' : visual.textContrastColor;
             const isSelected = selectedPlayerId === player.id;
-            const markerColor = player.position === 'GK' ? '#f59e0b' : homeColor;
 
             return (
               <g 
@@ -174,7 +179,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                   x={svgX}
                   y={svgY + 0.8}
                   fontSize="2.4"
-                  fill="#000"
+                  fill={numColor}
                   fontWeight="900"
                   textAnchor="middle"
                 >
@@ -198,8 +203,10 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
           {awayPlayers.map((player) => {
             const svgX = translate3DX(player.x);
             const svgY = translate3DZ(player.z);
+            const visual = getTeamVisualIdentity(player.team);
+            const markerColor = player.position === 'GK' ? '#10b981' : visual.primaryColor;
+            const numColor = player.position === 'GK' ? '#000000' : visual.textContrastColor;
             const isSelected = selectedPlayerId === player.id;
-            const markerColor = player.position === 'GK' ? '#10b981' : awayColor;
 
             return (
               <g 
@@ -235,7 +242,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                   x={svgX}
                   y={svgY + 0.8}
                   fontSize="2.4"
-                  fill="#fff"
+                  fill={numColor}
                   fontWeight="900"
                   textAnchor="middle"
                 >
@@ -289,8 +296,8 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                       width: '16px', 
                       height: '16px', 
                       borderRadius: '3px', 
-                      background: p.position === 'GK' ? '#f59e0b' : homeColor, 
-                      color: '#000', 
+                      background: p.position === 'GK' ? '#f59e0b' : getTeamVisualIdentity(p.team).primaryColor, 
+                      color: p.position === 'GK' ? '#000' : getTeamVisualIdentity(p.team).textContrastColor, 
                       fontSize: '0.55rem', 
                       fontWeight: 800,
                       display: 'flex', 
@@ -338,8 +345,8 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                       width: '16px', 
                       height: '16px', 
                       borderRadius: '3px', 
-                      background: p.position === 'GK' ? '#10b981' : awayColor === '#ffffff' ? '#94a3b8' : awayColor, 
-                      color: '#fff', 
+                      background: p.position === 'GK' ? '#10b981' : getTeamVisualIdentity(p.team).primaryColor, 
+                      color: p.position === 'GK' ? '#000' : getTeamVisualIdentity(p.team).textContrastColor, 
                       fontSize: '0.55rem', 
                       fontWeight: 800,
                       display: 'flex', 

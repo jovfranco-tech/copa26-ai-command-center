@@ -43,6 +43,53 @@ export const MATCH_FIXTURES: Match[] = [
   {
     id: 'match-1',
     teams: {
+      home: 'México',
+      away: 'Sudáfrica',
+      homeShort: 'MEX',
+      awayShort: 'RSA',
+      homeColor: '#006341', // Verde Bandera
+      awayColor: '#007a4d', // Verde Sudafricano
+      homeStandsColor: '#006341',
+      awayStandsColor: '#ffb612', // Amarillo Oro
+    },
+    stadiumName: 'Estadio Azteca',
+    group: 'Grupo A - Inauguración',
+    timeOfDay: 'day',
+    weather: 'clear',
+    status: 'live',
+    score: { home: 1, away: 0 },
+    liveTime: "24'",
+    spectators: '83,264 (100% de capacidad)',
+    pitchZoneInsights: {
+      stands: 'El coloso de Santa Úrsula retumba con el grito de México y el vibrar de las vuvuzelas sudafricanas en las cabeceras. Mosaico tricolor espectacular en la tribuna este.',
+      field: 'México presiona alto buscando asfixiar la salida. Sudáfrica explota la velocidad por las bandas aprovechando el césped rápido tras la llovizna.',
+      screens: 'Mostrando repetición: gran remate de cabeza de Santiago Giménez a centro preciso desde la banda derecha.',
+      lights: 'Atmósfera electrizante bajo el cielo nublado de la capital mexicana. La iluminación LED resalta el verde intenso del terreno de juego.',
+    },
+    analytics: {
+      confidence: 82,
+      tacticalRisk: 65,
+      momentum: [10, 15, 30, 45, 20, -5, -15, 10, 35, 55, 60, 40, 20, -10, 15, 45, 50, 25, 35, 40],
+      storyline: 'Partido inaugural histórico. México domina la posesión y se pone al frente con gol de Santiago Giménez, pero Sudáfrica muestra peligro latente con sus descolgadas verticales y velocidad.',
+      whatToWatch: [
+        'Edson Álvarez controlando el ritmo y la recuperación en el mediocampo.',
+        'Las descolgadas veloces de Percy Tau a las espaldas de los laterales mexicanos.',
+        'Luis Chávez buscando disparos de media distancia ante el bloque compacto rival.'
+      ],
+      strategyHome: '4-3-3 Presión Alta, Posesión en Campo Rival y Laterales Ofensivos',
+      strategyAway: '4-3-3 Bloque Medio-Bajo, Transición Rápida y Extremos Explosivos',
+      heatZones: [
+        { x: -5, y: -10, r: 8, val: 0.8 },
+        { x: -12, y: 12, r: 7, val: 0.7 },
+        { x: 15, y: 5, r: 9, val: 0.85 },
+        { x: -25, y: 0, r: 6, val: 0.9 },
+        { x: 5, y: -15, r: 8, val: 0.75 }
+      ]
+    }
+  },
+  {
+    id: 'match-2',
+    teams: {
       home: 'Argentina',
       away: 'Francia',
       homeShort: 'ARG',
@@ -88,7 +135,7 @@ export const MATCH_FIXTURES: Match[] = [
     }
   },
   {
-    id: 'match-2',
+    id: 'match-3',
     teams: {
       home: 'Brasil',
       away: 'Alemania',
@@ -132,7 +179,7 @@ export const MATCH_FIXTURES: Match[] = [
     }
   },
   {
-    id: 'match-3',
+    id: 'match-4',
     teams: {
       home: 'España',
       away: 'Países Bajos',

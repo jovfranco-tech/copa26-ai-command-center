@@ -11,6 +11,30 @@ interface AIMatchBriefProps {
 }
 
 const COORD_REGISTRY: Record<string, { x: number; y: number }> = {
+  // MEX
+  'mex-gk': { x: 50, y: 112 },
+  'mex-lb': { x: 18, y: 88 },
+  'mex-cb-l': { x: 38, y: 92 },
+  'mex-cb-r': { x: 62, y: 92 },
+  'mex-rb': { x: 82, y: 88 },
+  'mex-cm-l': { x: 28, y: 65 },
+  'mex-dm': { x: 50, y: 68 },
+  'mex-cm-r': { x: 72, y: 65 },
+  'mex-rw': { x: 22, y: 38 },
+  'mex-st': { x: 50, y: 40 },
+  'mex-lw': { x: 78, y: 38 },
+  // RSA
+  'rsa-gk': { x: 50, y: 112 },
+  'rsa-lb': { x: 18, y: 88 },
+  'rsa-cb-l': { x: 38, y: 92 },
+  'rsa-cb-r': { x: 62, y: 92 },
+  'rsa-rb': { x: 82, y: 88 },
+  'rsa-cm-l': { x: 28, y: 65 },
+  'rsa-dm': { x: 50, y: 68 },
+  'rsa-cm-r': { x: 72, y: 65 },
+  'rsa-rw': { x: 22, y: 38 },
+  'rsa-st': { x: 50, y: 40 },
+  'rsa-lw': { x: 78, y: 38 },
   // ARG
   'arg-gk': { x: 50, y: 112 },
   'arg-lb': { x: 18, y: 88 },

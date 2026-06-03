@@ -9,7 +9,9 @@ import { AIMatchBrief } from './components/AIMatchBrief';
 import { SelectedPlayerPanel } from './components/SelectedPlayerPanel';
 import type { Player } from './data/lineups';
 import { usePlayers } from '../../hooks';
+import { TeamFlag, TeamCrest } from '../../components/identity';
 import { mapDatabasePlayersToLineups } from './data/stadiumDataMapper';
+import { getTeamVisualIdentity } from './data/teamVisualIdentity';
 import { 
   EyeOff, 
   Eye, 
@@ -342,7 +344,12 @@ function App() {
           <div className="canvas-wrapper" style={{ flex: 1, position: 'relative', borderRadius: '16px', overflow: 'hidden' }}>
             
             {/* OVERLAY: Top-Left Match Info & Selector */}
-            <div className="canvas-overlay-top-left">
+            <div className="canvas-overlay-top-left" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '12px', border: '1px solid var(--border-subtle)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', background: 'var(--bg-card)', backdropFilter: 'blur(8px)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <TeamCrest code={currentMatch.teams.homeShort} size={24} />
+                <TeamFlag code={currentMatch.teams.homeShort} size={13} />
+              </div>
+              
               <div className="match-title-group" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <select 
@@ -356,7 +363,7 @@ function App() {
                       fontSize: '0.85rem',
                       fontWeight: 800,
                       cursor: 'pointer',
-                      paddingRight: '16px',
+                      paddingRight: '12px',
                       appearance: 'none',
                       outline: 'none',
                       fontFamily: 'var(--font-sans)'
@@ -368,12 +375,18 @@ function App() {
                       </option>
                     ))}
                   </select>
-                  <span style={{ pointerEvents: 'none', borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: '4px solid #94a3b8', display: 'inline-block', marginLeft: '-10px' }} />
+                  <span style={{ pointerEvents: 'none', borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: '4px solid #94a3b8', display: 'inline-block', marginLeft: '-6px' }} />
                 </div>
-                <span className="match-desc-label" style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 500, marginTop: '2px' }}>
-                  {currentMatch.group} · {currentMatch.status === 'live' ? 'Final reimaginada' : currentMatch.status === 'pre-match' ? 'Pre-partido' : 'Finalizado'}
+                <span className="match-desc-label" style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 500, marginTop: '1px' }}>
+                  {currentMatch.group} · {currentMatch.status === 'live' ? 'En Vivo' : currentMatch.status === 'pre-match' ? 'Pre-partido' : 'Finalizado'}
                 </span>
               </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <TeamFlag code={currentMatch.teams.awayShort} size={13} />
+                <TeamCrest code={currentMatch.teams.awayShort} size={24} />
+              </div>
+
               <span 
                 className="live-badge-glow" 
                 onClick={cycleStatus}
@@ -381,7 +394,8 @@ function App() {
                   background: currentMatch.status === 'live' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(94, 163, 184, 0.12)', 
                   borderColor: currentMatch.status === 'live' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(94, 163, 184, 0.3)', 
                   color: currentMatch.status === 'live' ? 'var(--accent-emerald)' : 'var(--text-secondary)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  marginLeft: '4px'
                 }}
                 title="Haga clic para simular cambiar el estado del partido"
               >
@@ -649,16 +663,14 @@ function App() {
               height: '100%',
               overflow: 'hidden',
               transition: 'all 0.3s ease',
-              ...(selectedPlayerMapped ? {
-                borderColor: selectedPlayerMapped.team === 'ARG' 
-                  ? (selectedPlayerMapped.position === 'GK' ? '#fbbf24' : 'var(--accent-cyan)')
-                  : (selectedPlayerMapped.position === 'GK' ? 'var(--accent-emerald)' : 'var(--color-neon-red)'),
-                boxShadow: `0 0 24px ${
-                  (selectedPlayerMapped.team === 'ARG' 
-                    ? (selectedPlayerMapped.position === 'GK' ? '#fbbf24' : 'var(--accent-cyan)')
-                    : (selectedPlayerMapped.position === 'GK' ? 'var(--accent-emerald)' : 'var(--color-neon-red)'))
-                }20`
-              } : {})
+              ...(selectedPlayerMapped ? (() => {
+                const teamVisual = getTeamVisualIdentity(selectedPlayerMapped.team);
+                const borderColor = selectedPlayerMapped.position === 'GK' ? '#fbbf24' : teamVisual.primaryColor;
+                return {
+                  borderColor: borderColor,
+                  boxShadow: `0 0 24px ${borderColor}20`
+                };
+              })() : {})
             }}
           >
             {selectedPlayerMapped ? (
