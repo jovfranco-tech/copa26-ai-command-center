@@ -93,6 +93,7 @@ export async function askAI(
   pdf?: { name: string; data: string },
   audio?: { name: string; data: string },
   onToken?: (partial: string) => void,
+  onMeta?: (meta: AIResult['meta']) => void,
 ): Promise<AIResult> {
   try {
     const res = await fetch('/api/analyst', {
@@ -112,6 +113,7 @@ export async function askAI(
       } catch {
         /* ignore malformed meta header */
       }
+      if (meta && onMeta) onMeta(meta);
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let full = '';

@@ -12,6 +12,27 @@ export const FONT_PRESETS: Record<string, [ui: string, num: string]> = {
   'Hanken Grotesk': ["'Hanken Grotesk', system-ui, sans-serif", "'IBM Plex Mono', ui-monospace, monospace"],
 };
 
+/** Key used to track whether the user has explicitly chosen a theme. */
+const THEME_EXPLICIT_KEY = 'wc_theme_explicit';
+
+/** Returns true if the user has manually set a theme preference. */
+export function isThemeExplicit(): boolean {
+  return localStorage.getItem(THEME_EXPLICIT_KEY) === '1';
+}
+
+/** Mark the theme as explicitly chosen by the user. */
+export function markThemeExplicit(): void {
+  localStorage.setItem(THEME_EXPLICIT_KEY, '1');
+}
+
+/** Detect the initial theme: respect explicit choice, otherwise follow system. */
+function getSystemTheme(): Theme {
+  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    return 'light';
+  }
+  return 'dark';
+}
+
 export interface PreferencesState {
   theme: Theme;
   density: Density;
@@ -25,7 +46,7 @@ export interface PreferencesState {
 }
 
 const DEFAULTS = {
-  theme: 'light' as Theme,
+  theme: getSystemTheme(),
   density: 'regular' as Density,
   role: 'family' as AppRole,
   accent: '#c9a24b',
@@ -38,16 +59,33 @@ export const usePreferences = create<PreferencesState>()(
   persist(
     (set) => ({
       ...DEFAULTS,
-      set: (key, value) => set({ [key]: value } as Partial<PreferencesState>),
-      reset: () => set({ ...DEFAULTS }),
+      set: (key, value) => {
+        if (key === 'theme') markThemeExplicit();
+        set({ [key]: value } as Partial<PreferencesState>);
+      },
+      reset: () => {
+        localStorage.removeItem(THEME_EXPLICIT_KEY);
+        set({ ...DEFAULTS, theme: getSystemTheme() });
+      },
     }),
     {
       name: 'wc_prefs',
-      version: 2,
-      migrate: (persisted) => ({ ...(persisted as Partial<PreferencesState>), theme: 'light', role: 'family' }),
+      version: 3,
+      migrate: (persisted) => {
+        const prev = persisted as Partial<PreferencesState>;
+        // If upgrading from an earlier version, the user had no explicit choice yet.
+        // Keep the stored theme if it was explicitly set; otherwise detect system.
+        const theme = isThemeExplicit() ? (prev.theme ?? getSystemTheme()) : getSystemTheme();
+        return { ...prev, theme, role: prev.role ?? 'family' };
+      },
     },
   ),
 );
+
+/** Update theme without marking it as explicit (for system preference tracking). */
+export function setSystemThemePreference(theme: Theme): void {
+  usePreferences.setState({ theme });
+}
 
 /** Apply the current preferences to document.documentElement. */
 export function applyPreferences(p: PreferencesState): void {

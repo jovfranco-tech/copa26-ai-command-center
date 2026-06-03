@@ -3,7 +3,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
 import { FOOTER_NOTICE } from '@worldcup/shared';
 import { useMatches } from '@/hooks';
-import { usePreferences, applyPreferences, type AppRole } from '@/store/preferences';
+import { usePreferences, applyPreferences, isThemeExplicit, setSystemThemePreference, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
 import { NotificationToastStack } from './NotificationToast';
@@ -121,6 +121,18 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     applyPreferences(prefs);
   }, [prefs]);
+
+  // Follow system color-scheme changes when user hasn't explicitly chosen a theme
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const handler = (e: MediaQueryListEvent) => {
+      if (!isThemeExplicit()) {
+        setSystemThemePreference(e.matches ? 'light' : 'dark');
+      }
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
   const roleLabel = prefs.role === 'admin' ? 'Admin' : prefs.role === 'family' ? 'Familia' : 'Invitado';
 
   const { data: liveData } = useMatches({ status: 'LIVE' });

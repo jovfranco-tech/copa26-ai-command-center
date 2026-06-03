@@ -391,10 +391,10 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
 
       {/* Floodlights in 4 Corners */}
       <group onClick={(e) => { e.stopPropagation(); onZoneClick('lights'); }}>
-        <CornerFloodlight position={[-38, 0, -26]} color={homeColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} />
-        <CornerFloodlight position={[38, 0, -26]} color={awayColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} />
-        <CornerFloodlight position={[-38, 0, 26]} color={awayColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} />
-        <CornerFloodlight position={[38, 0, 26]} color={homeColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} />
+        <CornerFloodlight position={[-38, 0, -26]} color={homeColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} timeOfDay={timeOfDay} />
+        <CornerFloodlight position={[38, 0, -26]} color={awayColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} timeOfDay={timeOfDay} />
+        <CornerFloodlight position={[-38, 0, 26]} color={awayColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} timeOfDay={timeOfDay} />
+        <CornerFloodlight position={[38, 0, 26]} color={homeColor} beamTarget={[0, 0, 0]} isActive={activeZone === 'lights'} timeOfDay={timeOfDay} />
       </group>
 
       {/* THE FIELD / PITCH */}
@@ -687,9 +687,10 @@ interface CornerFloodlightProps {
   color: string;
   beamTarget: [number, number, number];
   isActive: boolean;
+  timeOfDay: 'day' | 'sunset' | 'night';
 }
 
-const CornerFloodlight: React.FC<CornerFloodlightProps> = ({ position, color, beamTarget, isActive }) => {
+const CornerFloodlight: React.FC<CornerFloodlightProps> = ({ position, color, beamTarget, isActive, timeOfDay }) => {
   const [x, y, z] = position;
   
   return (
@@ -709,14 +710,26 @@ const CornerFloodlight: React.FC<CornerFloodlightProps> = ({ position, color, be
       {/* Glowing Bulbs */}
       <mesh position={[0, 7.5, 0.4]}>
         <sphereGeometry args={[0.6, 12, 12]} />
-        <meshBasicMaterial color={isActive ? 'var(--accent-cyan)' : '#ffffff'} />
+        <meshStandardMaterial
+          color={isActive ? '#00f2fe' : timeOfDay === 'night' ? '#ffffff' : '#ffeedd'}
+          emissive={timeOfDay === 'night' ? '#ffffff' : '#000000'}
+          emissiveIntensity={timeOfDay === 'night' ? 2.0 : 0}
+        />
       </mesh>
+
+      {/* Bloom glow sphere around bulb (night only) */}
+      {timeOfDay === 'night' && (
+        <mesh position={[0, 7.5, 0.4]}>
+          <sphereGeometry args={[1.2, 12, 12]} />
+          <meshBasicMaterial color="#ffffee" transparent opacity={0.08} blending={THREE.AdditiveBlending} depthWrite={false} />
+        </mesh>
+      )}
 
       {/* SpotLight projecting onto the field */}
       <spotLight
         position={[0, 7.5, 0]}
         target-position={beamTarget}
-        intensity={3.8} // Raised from 2.2 to brighten field areas
+        intensity={3.8}
         distance={60}
         angle={Math.PI / 6}
         penumbra={0.6}

@@ -151,6 +151,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [answer, setAnswer] = useState<AnalystAnswer | null>(null);
   const [busy, setBusy] = useState(false);
   const [streamingText, setStreamingText] = useState('');
+  const [streamingProvider, setStreamingProvider] = useState<string | null>(null);
   const [usedAI, setUsedAI] = useState(false);
   const [lastAiMeta, setLastAiMeta] = useState<AIResult['meta'] | null>(null);
   const [pendingNativeAction, setPendingNativeAction] = useState<PendingNativeAction | null>(null);
@@ -287,15 +288,20 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
     setBusy(true);
     setStreamingText('');
+    setStreamingProvider(null);
     const ai = await askAI(
       q,
       contextText,
       attachedPdf || undefined,
       attachedAudio || undefined,
       (partial) => setStreamingText(partial),
+      (meta) => {
+        if (meta?.provider) setStreamingProvider(meta.provider);
+      },
     );
     setBusy(false);
     setStreamingText('');
+    setStreamingProvider(null);
     setAttachedPdf(null);
     setAttachedAudio(null);
 
@@ -1064,6 +1070,10 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 </span>
                 <span className="badge gold">EN VIVO</span>
               </div>
+              <span style={{ fontSize: 11, color: 'var(--tx-3)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <Icon name="ai" size={12} style={{ color: 'var(--gold)' }} />
+                {streamingProvider ? `Respondiendo via ${streamingProvider}...` : 'Conectando con IA...'}
+              </span>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                 {streamingText.replace(/```json[\s\S]*$/, '').trim()}
                 <span style={{ opacity: 0.6 }}>▍</span>

@@ -2,6 +2,7 @@ import { type ComponentType, lazy, Suspense } from 'react';
 import { Skeleton } from '@worldcup/ui';
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 import { AppShell } from '@/components/AppShell';
+import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import { Dashboard } from '@/routes/Dashboard';
 import { MatchCenter } from '@/routes/MatchCenter';
 import { MatchDetail } from '@/routes/MatchDetail';
@@ -16,9 +17,11 @@ type AnalystCtx = 'tournament' | 'match' | 'team' | 'player';
 
 const rootRoute = createRootRoute({
   component: () => (
-    <AppShell>
-      <Outlet />
-    </AppShell>
+    <RouteErrorBoundary>
+      <AppShell>
+        <Outlet />
+      </AppShell>
+    </RouteErrorBoundary>
   ),
 });
 
@@ -243,6 +246,29 @@ export const router = createRouter({
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultViewTransition: true,
+  defaultErrorComponent: ({ error }) => {
+    const err = error instanceof Error ? error : new Error(String(error));
+    return (
+      <div className="page-fade" style={{ padding: 32, textAlign: 'center', maxWidth: 480, margin: '80px auto' }}>
+        <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.4 }}>⚠</div>
+        <h2 style={{ color: 'var(--tx)', marginBottom: 8 }}>Error inesperado</h2>
+        <p style={{ color: 'var(--tx-2)', fontSize: 14, marginBottom: 20, lineHeight: 1.5 }}>
+          Algo salió mal al cargar esta sección. Intenta recargar la página.
+        </p>
+        <pre style={{ fontSize: 11, color: 'var(--tx-3)', background: 'var(--bg-2)', padding: 12, borderRadius: 8, textAlign: 'left', overflow: 'auto', maxHeight: 120 }}>
+          {err.message}
+        </pre>
+        <button
+          type="button"
+          className="btn gold"
+          onClick={() => window.location.reload()}
+          style={{ marginTop: 16 }}
+        >
+          Recargar página
+        </button>
+      </div>
+    );
+  },
 });
 
 declare module '@tanstack/react-router' {
