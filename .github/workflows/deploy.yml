@@ -38,6 +38,12 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Test (quality gate)
+        run: pnpm test
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
