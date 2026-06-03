@@ -104,7 +104,7 @@ export default async function handler(request: Request): Promise<Response> {
   const context = (body.context ?? '').slice(0, 6000);
   if (!question) return Response.json({ ok: false, reason: 'empty' }, { status: 400 });
 
-  const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+  const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   const openaiModel = process.env.OPENAI_MODEL || 'gpt-4o-mini';
   // AI_GATEWAY_BASE_URL / OPENAI_BASE_URL let you route through the Vercel AI
   // Gateway (or any compatible proxy) without code changes.
