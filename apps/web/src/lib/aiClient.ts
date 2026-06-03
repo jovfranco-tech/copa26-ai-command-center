@@ -92,13 +92,41 @@ export async function askAI(
   context: string,
   pdf?: { name: string; data: string },
   audio?: { name: string; data: string },
+  onToken?: (partial: string) => void,
 ): Promise<AIResult> {
   try {
     const res = await fetch('/api/analyst', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, context, pdf, audio }),
+      // Ask for a streamed answer only when the caller wants progressive tokens.
+      body: JSON.stringify({ question, context, pdf, audio, stream: !!onToken }),
     });
+
+    // Streaming response: a plain-text token stream with meta in the x-ai-meta header.
+    const contentType = res.headers.get('content-type') ?? '';
+    if (res.ok && res.body && onToken && !contentType.includes('application/json')) {
+      let meta: AIResult['meta'] | undefined;
+      try {
+        const raw = res.headers.get('x-ai-meta');
+        if (raw) meta = JSON.parse(raw) as AIResult['meta'];
+      } catch {
+        /* ignore malformed meta header */
+      }
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let full = '';
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        full += decoder.decode(value, { stream: true });
+        onToken(full);
+      }
+      full += decoder.decode();
+      if (!full.trim()) return { ok: false, reason: 'empty-answer', meta };
+      return { ok: true, answer: full, meta };
+    }
+
+    // Non-streaming response (no-key fallback, rate-limit, errors, or stream:false).
     const data = (await res.json().catch(() => ({}))) as AIResult;
     if (!res.ok) {
       return {

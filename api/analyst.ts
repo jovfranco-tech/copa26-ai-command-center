@@ -70,9 +70,9 @@ export default async function handler(request: Request): Promise<Response> {
     });
   }
 
-  let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string } };
+  let body: { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean };
   try {
-    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string } };
+    body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string }; stream?: boolean };
   } catch {
     return Response.json({ ok: false, reason: 'bad-request' }, { status: 400 });
   }
@@ -97,30 +97,100 @@ export default async function handler(request: Request): Promise<Response> {
   const context = (body.context ?? '').slice(0, 6000);
   if (!question) return Response.json({ ok: false, reason: 'empty' }, { status: 400 });
 
+  const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+  // Optionally route through the Vercel AI Gateway (or any Google-compatible proxy)
+  // by setting AI_GATEWAY_BASE_URL; defaults to Google's Generative Language API.
+  const apiBase = (process.env.AI_GATEWAY_BASE_URL || 'https://generativelanguage.googleapis.com').replace(/\/+$/, '');
+
+  const requestPayload = {
+    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    contents: [
+      {
+        role: 'user',
+        parts: [
+          { text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
+          ...(body.pdf ? [{ inlineData: { mimeType: 'application/pdf', data: body.pdf.data } }] : []),
+          ...(body.audio ? [{ inlineData: { mimeType: 'audio/webm', data: body.audio.data } }] : []),
+        ],
+      },
+    ],
+    generationConfig: { temperature: 0.3, maxOutputTokens: 600 },
+  };
+
+  const meta = {
+    provider: 'gemini',
+    model: modelName,
+    confidence: 'Media',
+    contextChars: context.length,
+    tools: ANALYST_TOOLS,
+    sources: ['contexto local', body.pdf ? `PDF: ${body.pdf.name}` : null, body.audio ? `Audio: ${body.audio.name}` : null].filter(Boolean),
+  };
+
+  // ── Streaming path: forward Gemini's SSE deltas as a plain-text stream so the
+  //    client renders the answer token-by-token. Meta travels in the x-ai-meta header. ──
+  if (body.stream) {
+    try {
+      const upstream = await fetch(`${apiBase}/v1beta/models/${modelName}:streamGenerateContent?alt=sse&key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestPayload),
+      });
+      if (upstream.ok && upstream.body) {
+        const textStream = new ReadableStream<Uint8Array>({
+          async start(controller) {
+            const reader = upstream.body!.getReader();
+            const decoder = new TextDecoder();
+            const encoder = new TextEncoder();
+            let buffer = '';
+            try {
+              for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() ?? '';
+                for (const line of lines) {
+                  const trimmed = line.trim();
+                  if (!trimmed.startsWith('data:')) continue;
+                  const json = trimmed.slice(5).trim();
+                  if (!json || json === '[DONE]') continue;
+                  try {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const chunk = JSON.parse(json) as any;
+                    const delta = chunk?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (delta) controller.enqueue(encoder.encode(delta));
+                  } catch {
+                    /* partial JSON across chunk boundary — ignored */
+                  }
+                }
+              }
+            } catch (err) {
+              controller.error(err);
+              return;
+            }
+            controller.close();
+          },
+        });
+        return new Response(textStream, {
+          headers: {
+            'Content-Type': 'text/plain; charset=utf-8',
+            'Cache-Control': 'no-store',
+            'x-ai-meta': JSON.stringify(meta),
+          },
+        });
+      }
+      // upstream not ok → fall through to non-streaming below
+    } catch (e) {
+      console.error('Gemini stream error (falling back to non-stream):', e);
+    }
+  }
+
+  // ── Non-streaming path (default / fallback) ──
   try {
-    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`, {
+    const res = await fetch(`${apiBase}/v1beta/models/${modelName}:generateContent?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_PROMPT }]
-        },
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              { text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
-              ...(body.pdf ? [{ inlineData: { mimeType: 'application/pdf', data: body.pdf.data } }] : []),
-              ...(body.audio ? [{ inlineData: { mimeType: 'audio/webm', data: body.audio.data } }] : [])
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 450,
-        }
-      }),
+      body: JSON.stringify(requestPayload),
     });
     if (!res.ok) {
       return Response.json({ ok: false, reason: 'api-error', status: res.status }, { status: 502 });
@@ -129,18 +199,7 @@ export default async function handler(request: Request): Promise<Response> {
     const data = (await res.json()) as any;
     const answer = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
     if (!answer) return Response.json({ ok: false, reason: 'empty-answer' }, { status: 502 });
-    return Response.json({
-      ok: true,
-      answer,
-      meta: {
-        provider: 'gemini',
-        model: modelName,
-        confidence: 'Media',
-        contextChars: context.length,
-        tools: ANALYST_TOOLS,
-        sources: ['contexto local', body.pdf ? `PDF: ${body.pdf.name}` : null, body.audio ? `Audio: ${body.audio.name}` : null].filter(Boolean),
-      },
-    });
+    return Response.json({ ok: true, answer, meta });
   } catch (e) {
     console.error('Gemini API fetch error:', e);
     return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });

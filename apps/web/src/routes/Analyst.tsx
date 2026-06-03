@@ -243,6 +243,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState<AnalystAnswer | null>(null);
   const [busy, setBusy] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
   const [usedAI, setUsedAI] = useState(false);
   const [lastAiMeta, setLastAiMeta] = useState<AIResult['meta'] | null>(null);
   const [pendingNativeAction, setPendingNativeAction] = useState<PendingNativeAction | null>(null);
@@ -465,8 +466,16 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     }
 
     setBusy(true);
-    const ai = await askAI(q, contextText, attachedPdf || undefined, attachedAudio || undefined);
+    setStreamingText('');
+    const ai = await askAI(
+      q,
+      contextText,
+      attachedPdf || undefined,
+      attachedAudio || undefined,
+      (partial) => setStreamingText(partial),
+    );
     setBusy(false);
+    setStreamingText('');
     setAttachedPdf(null);
     setAttachedAudio(null);
 
@@ -1225,6 +1234,22 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               )}
             </div>
           </div>
+
+          {busy && streamingText && (
+            <div className="card card-pad" style={{ borderColor: 'var(--gold-line)' }}>
+              <div className="row gap-8" style={{ alignItems: 'center', marginBottom: 10 }}>
+                <Icon name="sparkSmall" size={15} style={{ color: 'var(--gold)' }} />
+                <span className="mono-label" style={{ margin: 0 }}>
+                  Analista IA · escribiendo…
+                </span>
+                <span className="badge gold">EN VIVO</span>
+              </div>
+              <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                {streamingText.replace(/```json[\s\S]*$/, '').trim()}
+                <span style={{ opacity: 0.6 }}>▍</span>
+              </p>
+            </div>
+          )}
 
           {answer && parsed && (
             <div className="card card-pad">
