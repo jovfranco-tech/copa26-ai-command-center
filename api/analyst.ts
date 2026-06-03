@@ -193,7 +193,8 @@ export default async function handler(request: Request): Promise<Response> {
       body: JSON.stringify(requestPayload),
     });
     if (!res.ok) {
-      return Response.json({ ok: false, reason: 'api-error', status: res.status }, { status: 502 });
+      const detail = (await res.text().catch(() => '')).slice(0, 300);
+      return Response.json({ ok: false, reason: 'api-error', status: res.status, detail }, { status: 502 });
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = (await res.json()) as any;
