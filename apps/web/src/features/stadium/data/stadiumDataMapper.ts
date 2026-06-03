@@ -2,7 +2,6 @@ import { playerRatings, type PlayerRatings } from '@/lib/ratings';
 import type { Player as DbPlayer } from '@worldcup/shared';
 import { type Player as StadiumPlayer, type TeamLineup, type MatchLineups } from './lineups';
 import { getTeamVisualIdentity } from './teamVisualIdentity';
-import { MATCH_FIXTURES } from './matchData';
 
 interface SlotDefinition {
   slotId: string;
@@ -232,12 +231,21 @@ function generateGenericSlots(teamCode: string, side: 'home' | 'away'): SlotDefi
 
 /**
  * Map real database players to the expected 3D lineup templates.
+ *
+ * @param dbPlayers   - all players from usePlayers()
+ * @param homeCode    - 3-letter home team code
+ * @param awayCode    - 3-letter away team code
+ * @param matchId     - match identifier (used as lineups.matchId)
+ * @param matchStatus - pre-match | live | post-match (defaults to 'pre-match')
+ * @param matchMinute - live minute for display (defaults to 0)
  */
 export function mapDatabasePlayersToLineups(
   dbPlayers: DbPlayer[],
   homeCode: string,
   awayCode: string,
-  matchId: string
+  matchId: string,
+  matchStatus: 'pre-match' | 'live' | 'post-match' = 'pre-match',
+  matchMinute: number = 0,
 ): MatchLineups {
   const getTeamSlots = (teamCode: string, side: 'home' | 'away'): SlotDefinition[] => {
     return SLOT_TEMPLATES[teamCode] || generateGenericSlots(teamCode, side);
@@ -370,14 +378,10 @@ export function mapDatabasePlayersToLineups(
   const homeSlots = getTeamSlots(homeCode, 'home');
   const awaySlots = getTeamSlots(awayCode, 'away');
 
-  const fixture = MATCH_FIXTURES.find(f => f.id === matchId);
-  const minuteVal = fixture?.liveTime ? parseInt(fixture.liveTime) : (fixture?.status === 'post-match' ? 90 : 0);
-  const statusVal = fixture?.status || 'pre-match';
-
   return {
     matchId,
-    minute: minuteVal,
-    status: statusVal,
+    minute: matchStatus === 'post-match' ? 90 : matchMinute,
+    status: matchStatus,
     teams: {
       home: mapTeam(homeCode, homeSlots, 'home'),
       away: mapTeam(awayCode, awaySlots, 'away'),

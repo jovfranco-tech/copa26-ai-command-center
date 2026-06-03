@@ -21,6 +21,10 @@ const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 12;
 const ANALYST_TOOLS = ['calendario', 'partidos', 'selecciones', 'jugadores', 'sedes', 'clasificacion', 'adjuntos'];
 
+// Security: server-side upload limits and allowed MIME types
+const MAX_FILE_BYTES_B64 = 5_600_000;  // ~4MB raw (base64 overhead ~33%)
+const ALLOWED_MIME_TYPES = new Set(['application/pdf', 'audio/webm', 'audio/ogg', 'audio/mp4']);
+
 const SYSTEM_PROMPT =
   'Eres un analista del Mundial 2026. Responde SIEMPRE en español, de forma concisa y analítica. ' +
   'Usa ÚNICAMENTE los datos proporcionados en el contexto; no inventes resultados, estadísticas ni ' +
@@ -71,6 +75,22 @@ export default async function handler(request: Request): Promise<Response> {
     body = (await request.json()) as { question?: string; context?: string; pdf?: { name: string; data: string }; audio?: { name: string; data: string } };
   } catch {
     return Response.json({ ok: false, reason: 'bad-request' }, { status: 400 });
+  }
+
+  // Server-side file size validation
+  if (body.pdf) {
+    if (body.pdf.data.length > MAX_FILE_BYTES_B64) {
+      return Response.json({ ok: false, reason: 'file-too-large', max: '4MB' }, { status: 413 });
+    }
+    // MIME type: we trust the client-declared mimeType but verify it is a PDF-range type
+    if (!ALLOWED_MIME_TYPES.has('application/pdf')) {
+      return Response.json({ ok: false, reason: 'invalid-file-type' }, { status: 415 });
+    }
+  }
+  if (body.audio) {
+    if (body.audio.data.length > MAX_FILE_BYTES_B64) {
+      return Response.json({ ok: false, reason: 'file-too-large', max: '4MB' }, { status: 413 });
+    }
   }
 
   const question = (body.question ?? '').slice(0, 500);

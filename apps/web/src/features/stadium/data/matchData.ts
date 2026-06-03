@@ -1,3 +1,32 @@
+/**
+ * matchData.ts — Stadium analytics layer.
+ *
+ * The real match schedule comes from useMatches() / worldcup2026.json.
+ * This file provides:
+ *   - Narrative analytics for curated "demo" matches (MEX-RSA inaugural, ARG-FRA, BRA-GER, ESP-NED)
+ *   - Placeholder analytics for all other real matches ("Datos pendientes")
+ *   - MATCH_FIXTURES as emergency fallback if the real data API is unavailable
+ *
+ * Uso personal/privado — visualización no oficial — sin afiliación FIFA.
+ */
+export interface PitchZoneInsights {
+  stands: string;
+  field: string;
+  screens: string;
+  lights: string;
+}
+
+export interface MatchAnalytics {
+  confidence: number;       // 0 to 100
+  tacticalRisk: number;     // 0 to 100
+  momentum: number[];       // 20 values between -100 (Away dominant) and 100 (Home dominant)
+  storyline: string;
+  whatToWatch: string[];
+  strategyHome: string;
+  strategyAway: string;
+  heatZones: { x: number; y: number; r: number; val: number }[];
+}
+
 export interface Match {
   id: string;
   teams: {
@@ -21,60 +50,68 @@ export interface Match {
   };
   liveTime?: string;
   spectators: string;
-  pitchZoneInsights: {
-    stands: string;
-    field: string;
-    screens: string;
-    lights: string;
-  };
-  analytics: {
-    confidence: number; // 0 to 100
-    tacticalRisk: number; // 0 to 100
-    momentum: number[]; // 20 values between -100 (Away dominant) and 100 (Home dominant)
-    storyline: string;
-    whatToWatch: string[];
-    strategyHome: string;
-    strategyAway: string;
-    heatZones: { x: number; y: number; r: number; val: number }[];
-  };
+  pitchZoneInsights: PitchZoneInsights;
+  analytics: MatchAnalytics;
+  /** true when pitchZoneInsights/analytics come from curated demo data */
+  isDemo?: boolean;
+  /** true when analytics are placeholders ("Datos pendientes") */
+  isPending?: boolean;
 }
 
-export const MATCH_FIXTURES: Match[] = [
-  {
-    id: 'match-1',
-    teams: {
-      home: 'México',
-      away: 'Sudáfrica',
-      homeShort: 'MEX',
-      awayShort: 'RSA',
-      homeColor: '#006341', // Verde Bandera
-      awayColor: '#ffb612', // Amarillo Oro
-      homeStandsColor: '#006341',
-      awayStandsColor: '#007a4d', // Verde Sudafricano
-    },
-    stadiumName: 'Estadio Azteca',
-    group: 'Grupo A - Inauguración',
-    timeOfDay: 'day',
-    weather: 'clear',
-    status: 'live',
-    score: { home: 1, away: 0 },
-    liveTime: "24'",
-    spectators: '83,264 (100% de capacidad)',
+// ─────────────────────────────────────────────────────────────────────────────
+// Placeholder analytics for non-demo real matches
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const PLACEHOLDER_INSIGHTS: PitchZoneInsights = {
+  stands: 'Información de ambiente y afición disponible próximamente.',
+  field: 'Análisis táctico del terreno de juego — datos pendientes.',
+  screens: 'Estadísticas y transmisión — pendiente de inicio del partido.',
+  lights: 'Condiciones de iluminación — disponibles al acercarse el partido.',
+};
+
+export const PLACEHOLDER_ANALYTICS: MatchAnalytics = {
+  confidence: 50,
+  tacticalRisk: 50,
+  momentum: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  storyline: 'Alineación estimada. Análisis narrativo disponible próximamente — datos del partido pendientes.',
+  whatToWatch: [
+    'Análisis táctico en preparación.',
+    'Datos estadísticos disponibles cuando comience el partido.',
+    'Seguimiento en tiempo real activado al inicio del torneo.',
+  ],
+  strategyHome: 'Formación y estrategia — Calendario local',
+  strategyAway: 'Formación y estrategia — Calendario local',
+  heatZones: [
+    { x: 0, y: 0, r: 10, val: 0.3 },
+  ],
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Curated demo analytics — keyed by "HOME-AWAY" team code pair
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface DemoAnalyticsEntry {
+  pitchZoneInsights: PitchZoneInsights;
+  analytics: MatchAnalytics;
+}
+
+export const DEMO_MATCH_ANALYTICS: Record<string, DemoAnalyticsEntry> = {
+  'MEX-RSA': {
     pitchZoneInsights: {
       stands: 'El coloso de Santa Úrsula retumba con el grito de México y el vibrar de las vuvuzelas sudafricanas en las cabeceras. Mosaico tricolor espectacular en la tribuna este.',
-      field: 'México presiona alto buscando asfixiar la salida. Sudáfrica explota la velocidad por las bandas aprovechando el césped rápido tras la llovizna.',
+      field: 'México presiona alto buscando asfixiar la salida. Sudáfrica explota la velocidad por las bandas aprovechando el césped rápido.',
       screens: 'Mostrando repetición: gran remate de cabeza de Santiago Giménez a centro preciso desde la banda derecha.',
-      lights: 'Atmósfera electrizante bajo el cielo nublado de la capital mexicana. La iluminación LED resalta el verde intenso del terreno de juego.',
+      lights: 'Atmósfera electrizante bajo el cielo de la capital mexicana. La iluminación LED resalta el verde intenso del terreno de juego.',
     },
     analytics: {
       confidence: 82,
       tacticalRisk: 65,
       momentum: [10, 15, 30, 45, 20, -5, -15, 10, 35, 55, 60, 40, 20, -10, 15, 45, 50, 25, 35, 40],
-      storyline: 'Partido inaugural histórico. México domina la posesión y se pone al frente con gol de Santiago Giménez, pero Sudáfrica muestra peligro latente con sus descolgadas verticales y velocidad.',
+      storyline: 'Partido inaugural histórico. México domina la posesión y se pone al frente, pero Sudáfrica muestra peligro latente con sus descolgadas verticales y velocidad.',
       whatToWatch: [
         'Edson Álvarez controlando el ritmo y la recuperación en el mediocampo.',
         'Las descolgadas veloces de Percy Tau a las espaldas de los laterales mexicanos.',
-        'Luis Chávez buscando disparos de media distancia ante el bloque compacto rival.'
+        'Luis Chávez buscando disparos de media distancia ante el bloque compacto rival.',
       ],
       strategyHome: '4-3-3 Presión Alta, Posesión en Campo Rival y Laterales Ofensivos',
       strategyAway: '4-3-3 Bloque Medio-Bajo, Transición Rápida y Extremos Explosivos',
@@ -83,35 +120,16 @@ export const MATCH_FIXTURES: Match[] = [
         { x: -12, y: 12, r: 7, val: 0.7 },
         { x: 15, y: 5, r: 9, val: 0.85 },
         { x: -25, y: 0, r: 6, val: 0.9 },
-        { x: 5, y: -15, r: 8, val: 0.75 }
-      ]
-    }
-  },
-  {
-    id: 'match-2',
-    teams: {
-      home: 'Argentina',
-      away: 'Francia',
-      homeShort: 'ARG',
-      awayShort: 'FRA',
-      homeColor: '#74acdf', // Azul claro
-      awayColor: '#0f2042', // Azul profundo
-      homeStandsColor: '#74acdf',
-      awayStandsColor: '#0f2042',
+        { x: 5, y: -15, r: 8, val: 0.75 },
+      ],
     },
-    stadiumName: 'Estadio Lusail',
-    group: 'Final reimaginada',
-    timeOfDay: 'day',
-    weather: 'clear',
-    status: 'live',
-    score: { home: 3, away: 2 },
-    liveTime: "82'",
-    spectators: '88,966 (100% de capacidad)',
+  },
+  'ARG-FRA': {
     pitchZoneInsights: {
-      stands: 'La afición argentina domina la curva sur, desatando cánticos ensordecedores. Los hinchas franceses en la tribuna norte lucen tensos pero expectantes.',
+      stands: 'La afición argentina domina la curva sur con cánticos ensordecedores. Los hinchas franceses en la tribuna norte lucen tensos pero expectantes.',
       field: 'Combate intenso en el mediocampo. Argentina explota los espacios interiores en la Zona 14. Francia responde con transiciones veloces por las bandas.',
       screens: 'Mostrando repetición táctica del último gol: una secuencia rápida de pases al primer toque que culminó en volea cruzada.',
-      lights: 'Iluminación a máxima capacidad. Reflectores de 2,000 lux proyectan sombras nítidas, destacando el esfuerzo físico de los jugadores en cada sprint.',
+      lights: 'Iluminación a máxima capacidad. Reflectores proyectan sombras nítidas, destacando el esfuerzo físico de los jugadores en cada sprint.',
     },
     analytics: {
       confidence: 88,
@@ -121,38 +139,20 @@ export const MATCH_FIXTURES: Match[] = [
       whatToWatch: [
         'Messi encontrando bolsillos de espacio libre entre las líneas defensivas francesas.',
         'Los duelos individuales de Mbappé en el extremo izquierdo explotando el retroceso rival.',
-        'Los niveles de fatiga en la presión alta de Argentina durante los minutos finales.'
+        'Los niveles de fatiga en la presión alta de Argentina durante los minutos finales.',
       ],
       strategyHome: '4-3-3 Ofensivo de Posesión, Sobrecarga en la Banda Derecha',
       strategyAway: '4-2-3-1 Contraataque de Alta Velocidad, Transiciones Verticales',
       heatZones: [
-        { x: -10, y: 15, r: 8, val: 0.9 }, // Acción local
+        { x: -10, y: 15, r: 8, val: 0.9 },
         { x: -15, y: -10, r: 6, val: 0.7 },
-        { x: 5, y: 5, r: 9, val: 0.8 }, // Mediocampo intenso
-        { x: 25, y: 20, r: 7, val: 0.95 }, // Extremo izquierdo Francia
-        { x: -28, y: -5, r: 5, val: 0.6 }
-      ]
-    }
-  },
-  {
-    id: 'match-3',
-    teams: {
-      home: 'Brasil',
-      away: 'Alemania',
-      homeShort: 'BRA',
-      awayShort: 'GER',
-      homeColor: '#fed103', // Amarillo Canario
-      awayColor: '#ffffff', // Blanco Limpio
-      homeStandsColor: '#009b3a', // Tribuna Verde
-      awayStandsColor: '#d2143a', // Tribuna Negra-Roja-Oro
+        { x: 5, y: 5, r: 9, val: 0.8 },
+        { x: 25, y: 20, r: 7, val: 0.95 },
+        { x: -28, y: -5, r: 5, val: 0.6 },
+      ],
     },
-    stadiumName: 'Estadio Maracaná',
-    group: 'Grupo A - Jornada 1',
-    timeOfDay: 'sunset',
-    weather: 'rain',
-    status: 'pre-match',
-    score: { home: 0, away: 0 },
-    spectators: '74,738 espectadores previstos',
+  },
+  'BRA-GER': {
     pitchZoneInsights: {
       stands: 'Las gradas se tiñen de humo verde y amarillo con batucadas masivas. La porra alemana se concentra de forma compacta detrás de la portería norte.',
       field: 'Césped rápido y resbaladizo debido a la fuerte lluvia tropical. Los barridos serán de alto riesgo pero alta efectividad.',
@@ -163,40 +163,22 @@ export const MATCH_FIXTURES: Match[] = [
       confidence: 62,
       tacticalRisk: 40,
       momentum: [5, 10, 5, -5, -10, -12, -8, 2, 10, 15, -2, -8, -15, -5, 5, 8, 12, 15, 10, 5],
-      storyline: 'El clásico de las revanchas. Jugando ante la apasionada afición del Maracaná, Brasil busca redención histórica ante la disciplinada táctica alemana en una tarde de lluvia impredecible.',
+      storyline: 'El clásico de las revanchas. Jugando ante la apasionada afición, Brasil busca redención histórica ante la disciplinada táctica alemana en una tarde de lluvia impredecible.',
       whatToWatch: [
         'La acumulación de agua cerca de las bandas que ralentiza los regates de los extremos brasileños.',
         'El bloque de doble pivote alemán frustrando la gestación de juego creativo de Neymar.',
-        'La efectividad en táctica fija/balón parado bajo las condiciones de lluvia.'
+        'La efectividad en táctica fija/balón parado bajo las condiciones de lluvia.',
       ],
       strategyHome: '4-2-4 Jogo Bonito Absoluto, Extremos Cortando hacia el Interior',
       strategyAway: '3-5-2 Disciplina Posicional, Bloque Bajo y Delantero Centro Objetivo',
       heatZones: [
-        { x: 0, y: 0, r: 12, val: 0.5 }, // Construcción media
+        { x: 0, y: 0, r: 12, val: 0.5 },
         { x: -20, y: 15, r: 7, val: 0.3 },
-        { x: 20, y: -15, r: 7, val: 0.4 }
-      ]
-    }
-  },
-  {
-    id: 'match-4',
-    teams: {
-      home: 'España',
-      away: 'Países Bajos',
-      homeShort: 'ESP',
-      awayShort: 'NED',
-      homeColor: '#c60b1e', // Rojo Furia
-      awayColor: '#ff4f00', // Naranja Mecánica
-      homeStandsColor: '#fed103', // Amarillo Oro
-      awayStandsColor: '#ffffff',
+        { x: 20, y: -15, r: 7, val: 0.4 },
+      ],
     },
-    stadiumName: 'Johan Cruyff Arena',
-    group: 'Grupo C - Jornada 3',
-    timeOfDay: 'day',
-    weather: 'fog',
-    status: 'post-match',
-    score: { home: 1, away: 3 },
-    spectators: '54,000 espectadores (Lleno total)',
+  },
+  'ESP-NED': {
     pitchZoneInsights: {
       stands: 'Festejos neerlandeses efusivos en la cabecera este. El sector español permanece en silencio, analizando las estadísticas finales del encuentro.',
       field: 'España mantuvo un 72% de posesión pero no logró romper el repliegue defensivo. Países Bajos golpeó tres veces de manera vertical en transiciones.',
@@ -211,15 +193,126 @@ export const MATCH_FIXTURES: Match[] = [
       whatToWatch: [
         'El sistema dinámico de carrileros neerlandeses exponiendo a la zaga central de España.',
         'La velocidad de recuperación tras pérdidas de balón en el tercio medio español.',
-        'La contundencia de Países Bajos aprovechando los centros laterales.'
+        'La contundencia de Países Bajos aprovechando los centros laterales.',
       ],
       strategyHome: '4-3-3 Tiki-Taka de Posesión Extrema, Pases Cortos en Rombo',
       strategyAway: '5-3-2 Carrileros de Largo Recorrido, Transición Vertical Directa',
       heatZones: [
-        { x: -5, y: 0, r: 15, val: 0.95 }, // Posesión densa española en medio campo
-        { x: 28, y: 0, r: 10, val: 0.8 }, // Zona de contraataque holandés
-        { x: -28, y: -10, r: 4, val: 0.2 }
-      ]
-    }
-  }
+        { x: -5, y: 0, r: 15, val: 0.95 },
+        { x: 28, y: 0, r: 10, val: 0.8 },
+        { x: -28, y: -10, r: 4, val: 0.2 },
+      ],
+    },
+  },
+};
+
+/**
+ * Returns curated demo analytics for a known team pair, or placeholder analytics otherwise.
+ */
+export function getDemoAnalytics(homeCode: string, awayCode: string): { entry: DemoAnalyticsEntry | null; isDemo: boolean } {
+  const key = `${homeCode.toUpperCase()}-${awayCode.toUpperCase()}`;
+  const entry = DEMO_MATCH_ANALYTICS[key] ?? null;
+  return { entry, isDemo: !!entry };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MATCH_FIXTURES — emergency/offline fallback only.
+// When the real API is available, App.tsx uses useMatches() instead.
+// These 4 matches align with the curated demo analytics above.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const MATCH_FIXTURES: Match[] = [
+  {
+    id: 'M001',
+    teams: {
+      home: 'México',
+      away: 'Sudáfrica',
+      homeShort: 'MEX',
+      awayShort: 'RSA',
+      homeColor: '#006341',
+      awayColor: '#ffb612',
+      homeStandsColor: '#006341',
+      awayStandsColor: '#007a4d',
+    },
+    stadiumName: 'Estadio Azteca',
+    group: 'Group A · Matchday 1',
+    timeOfDay: 'day',
+    weather: 'clear',
+    status: 'pre-match',
+    score: { home: 0, away: 0 },
+    spectators: '83,000 (Estadio Azteca)',
+    pitchZoneInsights: DEMO_MATCH_ANALYTICS['MEX-RSA'].pitchZoneInsights,
+    analytics: DEMO_MATCH_ANALYTICS['MEX-RSA'].analytics,
+    isDemo: true,
+  },
+  {
+    id: 'match-arg-fra',
+    teams: {
+      home: 'Argentina',
+      away: 'Francia',
+      homeShort: 'ARG',
+      awayShort: 'FRA',
+      homeColor: '#74acdf',
+      awayColor: '#071f4e',
+      homeStandsColor: '#74acdf',
+      awayStandsColor: '#0f2042',
+    },
+    stadiumName: 'MetLife Stadium',
+    group: 'Visualización no oficial — Modo demo',
+    timeOfDay: 'day',
+    weather: 'clear',
+    status: 'live',
+    score: { home: 3, away: 2 },
+    liveTime: "82'",
+    spectators: '82,500 (MetLife Stadium)',
+    pitchZoneInsights: DEMO_MATCH_ANALYTICS['ARG-FRA'].pitchZoneInsights,
+    analytics: DEMO_MATCH_ANALYTICS['ARG-FRA'].analytics,
+    isDemo: true,
+  },
+  {
+    id: 'match-bra-ger',
+    teams: {
+      home: 'Brasil',
+      away: 'Alemania',
+      homeShort: 'BRA',
+      awayShort: 'GER',
+      homeColor: '#fed103',
+      awayColor: '#ffffff',
+      homeStandsColor: '#009b3a',
+      awayStandsColor: '#d2143a',
+    },
+    stadiumName: 'NRG Stadium',
+    group: 'Visualización no oficial — Modo demo',
+    timeOfDay: 'sunset',
+    weather: 'rain',
+    status: 'pre-match',
+    score: { home: 0, away: 0 },
+    spectators: '72,000 (NRG Stadium)',
+    pitchZoneInsights: DEMO_MATCH_ANALYTICS['BRA-GER'].pitchZoneInsights,
+    analytics: DEMO_MATCH_ANALYTICS['BRA-GER'].analytics,
+    isDemo: true,
+  },
+  {
+    id: 'match-esp-ned',
+    teams: {
+      home: 'España',
+      away: 'Países Bajos',
+      homeShort: 'ESP',
+      awayShort: 'NED',
+      homeColor: '#c60b1e',
+      awayColor: '#ff4f00',
+      homeStandsColor: '#fed103',
+      awayStandsColor: '#ffffff',
+    },
+    stadiumName: 'AT&T Stadium',
+    group: 'Visualización no oficial — Modo demo',
+    timeOfDay: 'day',
+    weather: 'fog',
+    status: 'post-match',
+    score: { home: 1, away: 3 },
+    spectators: '94,000 (AT&T Stadium)',
+    pitchZoneInsights: DEMO_MATCH_ANALYTICS['ESP-NED'].pitchZoneInsights,
+    analytics: DEMO_MATCH_ANALYTICS['ESP-NED'].analytics,
+    isDemo: true,
+  },
 ];

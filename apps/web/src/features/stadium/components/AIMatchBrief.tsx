@@ -1,13 +1,13 @@
 import React from 'react';
 import type { Match } from '../data/matchData';
-import { MATCH_LINEUPS } from '../data/lineups';
-import type { Player } from '../data/lineups';
+import type { MatchLineups, Player } from '../data/lineups';
+import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
 
 interface AIMatchBriefProps {
   match: Match;
   onSelectPlayer: (player: Player | null) => void;
   selectedPlayerId: string | null;
-  lineups?: typeof MATCH_LINEUPS;
+  lineups?: MatchLineups;
 }
 
 const COORD_REGISTRY: Record<string, { x: number; y: number }> = {
@@ -113,13 +113,23 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
   match,
   onSelectPlayer,
   selectedPlayerId,
-  lineups = MATCH_LINEUPS
+  lineups,
 }) => {
-  const homePlayers = lineups.teams.home.players;
-  const awayPlayers = lineups.teams.away.players;
+  // Safely resolve lineups — fall back to empty arrays if not provided
+  const homePlayers = lineups?.teams?.home?.players ?? [];
+  const awayPlayers = lineups?.teams?.away?.players ?? [];
 
-  const homeColor = lineups.teams.home.color;
-  const awayColor = lineups.teams.away.color;
+  const homeCode = lineups?.teams?.home?.teamCode ?? match.teams.homeShort;
+  const awayCode = lineups?.teams?.away?.teamCode ?? match.teams.awayShort;
+
+  const homeIdentity = getTeamVisualIdentity(homeCode, true);
+  const awayIdentity = getTeamVisualIdentity(awayCode, false);
+
+  // Ensure colors are always readable (not white-on-white)
+  const homeColor = homeIdentity.primaryColor;
+  const awayColor = awayIdentity.primaryColor === '#ffffff' || awayIdentity.primaryColor === '#dfe3ea'
+    ? awayIdentity.accentColor
+    : awayIdentity.primaryColor;
 
   // Helper to render a vertical pitch SVG
   const renderVerticalPitch = (players: Player[], side: 'home' | 'away') => {
@@ -164,11 +174,12 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
 
           const isSelected = selectedPlayerId === player.id;
           
+          // Use team identity colors for player nodes
           let markerColor = homeColor;
           if (player.position === 'GK') {
-            markerColor = '#fbbf24'; // Yellow/Gold GK
+            markerColor = '#fbbf24'; // Gold for GK always
           } else if (side === 'away') {
-            markerColor = awayColor === '#ffffff' ? '#94a3b8' : awayColor;
+            markerColor = awayColor;
           }
 
           return (
@@ -239,23 +250,30 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
         <h4 style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', margin: 0 }}>
           Estadio 3D · Resumen
         </h4>
-        <span 
-          style={{ 
-            fontSize: '0.62rem', 
-            fontWeight: 800, 
-            color: 'var(--accent-emerald)', 
-            background: 'rgba(16, 185, 129, 0.12)', 
-            padding: '2px 8px', 
-            borderRadius: '4px',
-            textTransform: 'uppercase',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}
-        >
-          <span style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent-emerald)' }}></span>
-          {match.status === 'live' ? 'En Vivo' : match.status === 'pre-match' ? 'Pre-partido' : 'Finalizado'}
-        </span>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          {match.isPending && (
+            <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--text-muted)', background: 'rgba(100, 116, 139, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(100, 116, 139, 0.2)' }}>
+              Datos Pendientes
+            </span>
+          )} 
+          <span 
+            style={{ 
+              fontSize: '0.62rem', 
+              fontWeight: 800, 
+              color: 'var(--accent-emerald)', 
+              background: 'rgba(16, 185, 129, 0.12)', 
+              padding: '2px 8px', 
+              borderRadius: '4px',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            <span style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent-emerald)' }}></span>
+            {match.status === 'live' ? 'En Vivo' : match.status === 'pre-match' ? 'Pre-partido' : 'Finalizado'}
+          </span>
+        </div>
       </div>
 
       {/* Main Title & Subtitle */}
@@ -276,10 +294,10 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
               <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: homeColor }}></span>
-              {lineups.teams.home.teamName.toUpperCase()}
+              {(lineups?.teams?.home?.teamName ?? match.teams.home).toUpperCase()}
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              {lineups.teams.home.formation}
+              {lineups?.teams?.home?.formation ?? '4-3-3'}
             </span>
           </div>
           {renderVerticalPitch(homePlayers, 'home')}
@@ -290,10 +308,10 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', letterSpacing: '0.02em' }}>
               <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: awayColor === '#ffffff' ? '#94a3b8' : awayColor }}></span>
-              {lineups.teams.away.teamName.toUpperCase()}
+              {(lineups?.teams?.away?.teamName ?? match.teams.away).toUpperCase()}
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              {lineups.teams.away.formation}
+              {lineups?.teams?.away?.formation ?? '4-3-3'}
             </span>
           </div>
           {renderVerticalPitch(awayPlayers, 'away')}
