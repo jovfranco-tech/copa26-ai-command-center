@@ -307,39 +307,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 gap: 18,
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 8,
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid var(--gold-line)',
-                  borderRadius: 12,
-                  padding: '12px 16px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <span className="mono-label" style={{ fontSize: 8.5, color: 'var(--gold)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                  Socios FIFA 2026
-                </span>
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: 24,
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    opacity: 0.65,
-                  }}
-                >
-                  <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.05em', color: 'var(--tx-3)', fontFamily: 'sans-serif' }}>adidas</span>
-                  <span style={{ fontSize: 11.5, fontWeight: 800, fontStyle: 'italic', color: 'var(--tx-3)', fontFamily: 'serif' }}>Coca-Cola</span>
-                  <span style={{ fontSize: 11.5, fontWeight: 800, color: 'var(--tx-3)' }}>HYUNDAI</span>
-                  <span style={{ fontSize: 12, fontWeight: 900, color: 'var(--tx-3)', fontStyle: 'italic' }}>VISA</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--tx-3)', letterSpacing: '0.05em' }}>QATAR airways</span>
-                </div>
-              </div>
+
 
               <div
                 style={{
