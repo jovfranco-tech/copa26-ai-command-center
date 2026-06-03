@@ -4,14 +4,20 @@ import { recordUsage } from './_shared/usage.js';
  * Vercel Edge Function — AI analyst relay.
  *
  * The browser POSTs { question, context } where `context` is the LOCAL data
- * summary the app already has. This function calls the configured AI provider
- * server-side and returns a grounded Spanish answer. If no key is configured it
- * returns { ok:false, reason:'no-key' } so the
- * client falls back to the local (offline) analyst.
+ * summary the app already has. This function calls a configured AI provider
+ * server-side and returns a grounded Spanish answer (streamed when asked).
  *
- * Set the key with:  vercel env add GEMINI_API_KEY production   (then redeploy)
+ * Dual provider with automatic failover: it tries OpenAI then Gemini (order set
+ * by AI_PROVIDER, default openai; PDF/audio always prefer Gemini). If neither
+ * key is set it returns { ok:false, reason:'no-key' } so the client falls back
+ * to the local (offline) analyst.
  *
- * The site is public, so this endpoint protects the provider key with a
+ * Configure with (then redeploy):
+ *   vercel env add OPENAI_API_KEY production
+ *   vercel env add GEMINI_API_KEY production
+ * Optional: OPENAI_MODEL, GEMINI_MODEL, AI_PROVIDER, AI_GATEWAY_BASE_URL.
+ *
+ * The site is public, so this endpoint protects the provider keys with a
  * per-session/IP rate limit and keeps all context grounded in local data.
  */
 export const config = { runtime: 'edge' };
@@ -61,8 +67,9 @@ export default async function handler(request: Request): Promise<Response> {
     );
   }
 
-  const key = process.env.GEMINI_API_KEY || process.env[LEGACY_PROVIDER_KEY];
-  if (!key) {
+  const openaiKey = process.env.OPENAI_API_KEY || process.env[LEGACY_PROVIDER_KEY];
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!openaiKey && !geminiKey) {
     return Response.json({
       ok: false,
       reason: 'no-key',
@@ -97,81 +104,52 @@ export default async function handler(request: Request): Promise<Response> {
   const context = (body.context ?? '').slice(0, 6000);
   if (!question) return Response.json({ ok: false, reason: 'empty' }, { status: 400 });
 
-  const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
-  // Optionally route through the Vercel AI Gateway (or any Google-compatible proxy)
-  // by setting AI_GATEWAY_BASE_URL; defaults to Google's Generative Language API.
-  const apiBase = (process.env.AI_GATEWAY_BASE_URL || 'https://generativelanguage.googleapis.com').replace(/\/+$/, '');
+  const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+  const openaiModel = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+  // AI_GATEWAY_BASE_URL / OPENAI_BASE_URL let you route through the Vercel AI
+  // Gateway (or any compatible proxy) without code changes.
+  const geminiBase = (process.env.AI_GATEWAY_BASE_URL || 'https://generativelanguage.googleapis.com').replace(/\/+$/, '');
+  const openaiBase = (process.env.OPENAI_BASE_URL || 'https://api.openai.com').replace(/\/+$/, '');
 
-  const requestPayload = {
-    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-    contents: [
-      {
-        role: 'user',
-        parts: [
-          { text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
-          ...(body.pdf ? [{ inlineData: { mimeType: 'application/pdf', data: body.pdf.data } }] : []),
-          ...(body.audio ? [{ inlineData: { mimeType: 'audio/webm', data: body.audio.data } }] : []),
-        ],
-      },
-    ],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 600 },
-  };
+  // Provider order: multimodal (PDF/audio) prefers Gemini (native inline support);
+  // otherwise honor AI_PROVIDER (default openai) with the other as automatic failover.
+  const isMultimodal = Boolean(body.pdf || body.audio);
+  const pref = (process.env.AI_PROVIDER || 'openai').toLowerCase();
+  const order: Array<'openai' | 'gemini'> =
+    isMultimodal || pref === 'gemini' ? ['gemini', 'openai'] : ['openai', 'gemini'];
+  const candidates = order.filter((p) => (p === 'openai' ? openaiKey : geminiKey));
 
-  const meta = {
-    provider: 'gemini',
-    model: modelName,
-    confidence: 'Media',
-    contextChars: context.length,
-    tools: ANALYST_TOOLS,
-    sources: ['contexto local', body.pdf ? `PDF: ${body.pdf.name}` : null, body.audio ? `Audio: ${body.audio.name}` : null].filter(Boolean),
-  };
+  const sources = [
+    'contexto local',
+    body.pdf ? `PDF: ${body.pdf.name}` : null,
+    body.audio ? `Audio: ${body.audio.name}` : null,
+  ].filter(Boolean);
 
-  // ── Streaming path: forward Gemini's SSE deltas as a plain-text stream so the
-  //    client renders the answer token-by-token. Meta travels in the x-ai-meta header. ──
-  if (body.stream) {
+  // Try each configured provider in turn; on failure, fail over to the next.
+  const errors: string[] = [];
+  for (const provider of candidates) {
+    const isOpenAI = provider === 'openai';
+    const meta = {
+      provider,
+      model: isOpenAI ? openaiModel : geminiModel,
+      confidence: 'Media',
+      contextChars: context.length,
+      tools: ANALYST_TOOLS,
+      sources,
+    };
     try {
-      const upstream = await fetch(`${apiBase}/v1beta/models/${modelName}:streamGenerateContent?alt=sse&key=${key}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestPayload),
-      });
-      if (upstream.ok && upstream.body) {
-        const textStream = new ReadableStream<Uint8Array>({
-          async start(controller) {
-            const reader = upstream.body!.getReader();
-            const decoder = new TextDecoder();
-            const encoder = new TextEncoder();
-            let buffer = '';
-            try {
-              for (;;) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split('\n');
-                buffer = lines.pop() ?? '';
-                for (const line of lines) {
-                  const trimmed = line.trim();
-                  if (!trimmed.startsWith('data:')) continue;
-                  const json = trimmed.slice(5).trim();
-                  if (!json || json === '[DONE]') continue;
-                  try {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const chunk = JSON.parse(json) as any;
-                    const delta = chunk?.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (delta) controller.enqueue(encoder.encode(delta));
-                  } catch {
-                    /* partial JSON across chunk boundary — ignored */
-                  }
-                }
-              }
-            } catch (err) {
-              controller.error(err);
-              return;
-            }
-            controller.close();
-          },
-        });
-        return new Response(textStream, {
+      const upstream = isOpenAI
+        ? await callOpenAI(openaiBase, openaiKey as string, openaiModel, context, question, Boolean(body.stream))
+        : await callGemini(geminiBase, geminiKey as string, geminiModel, context, question, body.pdf, body.audio, Boolean(body.stream));
+
+      if (!upstream.ok || !upstream.body) {
+        const detail = upstream.ok ? 'no-body' : (await upstream.text().catch(() => '')).slice(0, 160);
+        errors.push(`${provider}:${upstream.status} ${detail}`);
+        continue; // failover
+      }
+
+      if (body.stream) {
+        return new Response(toTextStream(upstream.body, isOpenAI ? extractOpenAIDelta : extractGeminiDelta), {
           headers: {
             'Content-Type': 'text/plain; charset=utf-8',
             'Cache-Control': 'no-store',
@@ -179,32 +157,134 @@ export default async function handler(request: Request): Promise<Response> {
           },
         });
       }
-      // upstream not ok → fall through to non-streaming below
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = (await upstream.json()) as any;
+      const answer = (
+        isOpenAI ? data.choices?.[0]?.message?.content : data.candidates?.[0]?.content?.parts?.[0]?.text
+      )?.trim() ?? '';
+      if (!answer) {
+        errors.push(`${provider}:empty-answer`);
+        continue;
+      }
+      return Response.json({ ok: true, answer, meta });
     } catch (e) {
-      console.error('Gemini stream error (falling back to non-stream):', e);
+      errors.push(`${provider}:${(e as Error).message}`);
     }
   }
 
-  // ── Non-streaming path (default / fallback) ──
-  try {
-    const res = await fetch(`${apiBase}/v1beta/models/${modelName}:generateContent?key=${key}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestPayload),
-    });
-    if (!res.ok) {
-      const detail = (await res.text().catch(() => '')).slice(0, 300);
-      return Response.json({ ok: false, reason: 'api-error', status: res.status, detail }, { status: 502 });
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = (await res.json()) as any;
-    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
-    if (!answer) return Response.json({ ok: false, reason: 'empty-answer' }, { status: 502 });
-    return Response.json({ ok: true, answer, meta });
-  } catch (e) {
-    console.error('Gemini API fetch error:', e);
-    return Response.json({ ok: false, reason: 'fetch-failed' }, { status: 502 });
-  }
+  // Every configured provider failed → the client falls back to the local analyst.
+  return Response.json(
+    { ok: false, reason: 'api-error', detail: errors.join(' | ').slice(0, 300) },
+    { status: 502 },
+  );
+}
+
+// ── Provider calls ───────────────────────────────────────────────────────────
+async function callGemini(
+  base: string,
+  key: string,
+  model: string,
+  context: string,
+  question: string,
+  pdf: { name: string; data: string } | undefined,
+  audio: { name: string; data: string } | undefined,
+  stream: boolean,
+): Promise<Response> {
+  const payload = {
+    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    contents: [
+      {
+        role: 'user',
+        parts: [
+          { text: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
+          ...(pdf ? [{ inlineData: { mimeType: 'application/pdf', data: pdf.data } }] : []),
+          ...(audio ? [{ inlineData: { mimeType: 'audio/webm', data: audio.data } }] : []),
+        ],
+      },
+    ],
+    generationConfig: { temperature: 0.3, maxOutputTokens: 600 },
+  };
+  const op = stream ? 'streamGenerateContent?alt=sse&' : 'generateContent?';
+  return fetch(`${base}/v1beta/models/${model}:${op}key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
+async function callOpenAI(
+  base: string,
+  key: string,
+  model: string,
+  context: string,
+  question: string,
+  stream: boolean,
+): Promise<Response> {
+  return fetch(`${base}/v1/chat/completions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      model,
+      temperature: 0.3,
+      max_tokens: 600,
+      stream,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: `DATOS LOCALES:\n${context}\n\nPREGUNTA: ${question}` },
+      ],
+    }),
+  });
+}
+
+function extractGeminiDelta(json: string): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (JSON.parse(json) as any)?.candidates?.[0]?.content?.parts?.[0]?.text;
+}
+
+function extractOpenAIDelta(json: string): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (JSON.parse(json) as any)?.choices?.[0]?.delta?.content;
+}
+
+/** Transforms an upstream provider SSE stream into a plain-text token stream. */
+function toTextStream(
+  body: ReadableStream<Uint8Array>,
+  extract: (json: string) => string | undefined,
+): ReadableStream<Uint8Array> {
+  return new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const reader = body.getReader();
+      const decoder = new TextDecoder();
+      const encoder = new TextEncoder();
+      let buffer = '';
+      try {
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data:')) continue;
+            const json = trimmed.slice(5).trim();
+            if (!json || json === '[DONE]') continue;
+            try {
+              const delta = extract(json);
+              if (delta) controller.enqueue(encoder.encode(delta));
+            } catch {
+              /* partial JSON across a chunk boundary — ignored */
+            }
+          }
+        }
+      } catch (err) {
+        controller.error(err);
+        return;
+      }
+      controller.close();
+    },
+  });
 }
 
 function checkRateLimit(request: Request): { ok: true } | { ok: false; retryAfter: number } {
