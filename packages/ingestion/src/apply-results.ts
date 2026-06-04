@@ -25,7 +25,11 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATASET = join(HERE, '..', '..', 'shared', 'src', 'data', 'worldcup2026.json');
 
-const resultsPath = resolve(process.cwd(), process.argv[2] ?? 'results.json');
+// pnpm sets INIT_CWD to the directory the command was invoked from (repo root),
+// while process.cwd() is the package dir under `--filter`. Resolve against INIT_CWD
+// so a results file at the repo root is found when you run from the repo root.
+const baseDir = process.env.INIT_CWD || process.cwd();
+const resultsPath = resolve(baseDir, process.argv[2] ?? 'results.json');
 
 if (!existsSync(resultsPath)) {
   console.error(`✗ No se encontró el archivo de resultados: ${resultsPath}`);
@@ -40,7 +44,16 @@ const dataset = JSON.parse(readFileSync(DATASET, 'utf8')) as {
   [k: string]: unknown;
 };
 
-const { matches, applied, skipped } = applyMatchResults(dataset.matches, results);
+const { matches, applied, pending, skipped } = applyMatchResults(dataset.matches, results);
+
+if (applied.length === 0) {
+  console.log(
+    `Nada que aplicar — ${pending.length} pendiente(s)${skipped.length ? `, ${skipped.length} con problema` : ''}. El dataset no se modificó.`,
+  );
+  for (const s of skipped) console.warn(`   - ${s.id}: ${s.reason}`);
+  console.log('Llena homeGoals/awayGoals de los partidos jugados y vuelve a correr.');
+  process.exit(0);
+}
 
 // Preserve the canonical (date, time, id) ordering the CI integrity test guards.
 matches.sort(
@@ -49,7 +62,8 @@ matches.sort(
 
 writeFileSync(DATASET, JSON.stringify({ ...dataset, matches }, null, 2) + '\n', 'utf8');
 
-console.log(`✓ Resultados aplicados: ${applied.length}${applied.length ? ` (${applied.join(', ')})` : ''}`);
+console.log(`✓ Resultados aplicados: ${applied.length} (${applied.join(', ')})`);
+if (pending.length) console.log(`· Pendientes (sin marcador aún): ${pending.length}`);
 if (skipped.length) {
   console.warn(`⚠ Omitidos: ${skipped.length}`);
   for (const s of skipped) console.warn(`   - ${s.id}: ${s.reason}`);

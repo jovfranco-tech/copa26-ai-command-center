@@ -15,8 +15,9 @@
 import type { Match } from './types.js';
 
 export interface MatchResultInput {
-  homeGoals: number;
-  awayGoals: number;
+  /** `null` (or absent) = not played yet → treated as pending, fixture untouched. */
+  homeGoals: number | null;
+  awayGoals: number | null;
   /** Defaults to 'FT' (full time). Use 'LIVE' to show an in-progress score. */
   status?: 'LIVE' | 'FT';
   /** Only meaningful for 'LIVE'; ignored (nulled) for 'FT'. */
@@ -29,6 +30,8 @@ export interface MatchResultInput {
 export interface ApplyResultsReport {
   matches: Match[];
   applied: string[];
+  /** Entries present but with no score yet (null) — expected while filling a template. */
+  pending: string[];
   skipped: { id: string; reason: string }[];
 }
 
@@ -41,16 +44,24 @@ export function applyMatchResults(
 ): ApplyResultsReport {
   const ids = new Set(matches.map((m) => m.id));
   const applied: string[] = [];
+  const pending: string[] = [];
   const skipped: { id: string; reason: string }[] = [];
 
-  // Surface result ids that don't correspond to any fixture.
+  // Surface result ids that don't correspond to any fixture, ignoring `_`-prefixed
+  // metadata/comment keys (e.g. "_README") used in the template.
   for (const id of Object.keys(results)) {
+    if (id.startsWith('_')) continue;
     if (!ids.has(id)) skipped.push({ id, reason: 'matchId inexistente en el calendario' });
   }
 
   const patched = matches.map((m) => {
     const r = results[m.id];
     if (!r) return m;
+    // Placeholder entry (template not filled in yet) — leave the fixture untouched.
+    if (r.homeGoals == null || r.awayGoals == null) {
+      pending.push(m.id);
+      return m;
+    }
     if (!isNonNegInt(r.homeGoals) || !isNonNegInt(r.awayGoals)) {
       skipped.push({ id: m.id, reason: 'marcador inválido (se esperan enteros ≥ 0)' });
       return m;
@@ -69,5 +80,5 @@ export function applyMatchResults(
     };
   });
 
-  return { matches: patched, applied, skipped };
+  return { matches: patched, applied, pending, skipped };
 }

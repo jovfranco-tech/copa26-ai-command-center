@@ -54,3 +54,7 @@ playwright-report/
 # --- Vercel (project link metadata; deploys are local-only-aware) ---
 .vercel/
 .vercel
+
+# --- Matchday: live results working copy (fill from results.example.json) ---
+# The committed source of truth is the dataset; results.json is a throwaway input.
+/results.json

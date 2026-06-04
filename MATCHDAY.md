@@ -9,23 +9,33 @@ oficiales**. Después: commit + push, y CI valida y despliega.
 
 ## 1) Resultados → tabla / estadísticas (automático al desplegar)
 
-Crea un archivo `results.json` con los marcadores confirmados:
+Ya hay una plantilla con **los 72 partidos** lista para llenar: **`results.example.json`**
+(un partido por línea, con su `_fixture` de referencia). Cópiala y edita sólo los
+partidos jugados:
 
-```json
+```bash
+cp results.example.json results.json   # results.json está gitignorado (copia de trabajo)
+```
+
+```jsonc
 {
-  "M001": { "homeGoals": 2, "awayGoals": 1 },
-  "M002": { "homeGoals": 0, "awayGoals": 0 },
-  "M007": { "homeGoals": 1, "awayGoals": 0, "status": "LIVE", "minute": 63 }
+  "_README": "…",                                            // se ignora (clave con _)
+  "M001": { "_fixture": "MEX vs RSA · …", "homeGoals": 2, "awayGoals": 1 },
+  "M002": { "_fixture": "KOR vs CZE · …", "homeGoals": 0, "awayGoals": 0 },
+  "M007": { "_fixture": "CAN vs BIH · …", "homeGoals": 1, "awayGoals": 0, "status": "LIVE", "minute": 63 },
+  "M019": { "_fixture": "USA vs PAR · …", "homeGoals": null, "awayGoals": null }   // null = no jugado → pendiente
 }
 ```
 
-- `status` por defecto es `"FT"` (final); usa `"LIVE"` + `"minute"` para un partido en curso.
-- Opcionales por partido: `"possH"`, `"shotsH"`, `"shotsA"`.
+- Deja `null` los partidos no jugados (se omiten en silencio como **pendientes**).
+- `status` por defecto es `"FT"`; usa `"LIVE"` + `"minute"` para un partido en curso.
+- Opcionales por partido: `"possH"`, `"shotsH"`, `"shotsA"`. El campo `_fixture` y las
+  claves que empiezan con `_` se ignoran.
 
-Aplícalo al dataset:
+Aplícalo al dataset (**desde la raíz del repo**):
 
 ```bash
-pnpm --filter @worldcup/ingestion apply:results ./results.json
+pnpm --filter @worldcup/ingestion apply:results results.json
 ```
 
 El script valida cada marcador, ignora ids inexistentes (sin romper), reordena el

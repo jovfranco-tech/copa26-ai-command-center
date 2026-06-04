@@ -30,6 +30,25 @@ describe('applyMatchResults', () => {
     expect(skipped.map((s) => s.id).sort()).toEqual(['M002', 'NOPE']);
   });
 
+  it('trata marcadores null como pendientes (plantilla sin llenar), sin warning', () => {
+    const { applied, pending, skipped } = applyMatchResults(MATCHES, {
+      M001: { homeGoals: null, awayGoals: null },
+      M002: { homeGoals: 2, awayGoals: 0 },
+    });
+    expect(applied).toEqual(['M002']);
+    expect(pending).toEqual(['M001']);
+    expect(skipped).toHaveLength(0);
+  });
+
+  it('ignora claves de metadata que empiezan con "_" (p. ej. _README)', () => {
+    const { applied, skipped } = applyMatchResults(MATCHES, {
+      _README: { homeGoals: null, awayGoals: null },
+      M001: { homeGoals: 1, awayGoals: 1 },
+    });
+    expect(applied).toEqual(['M001']);
+    expect(skipped).toHaveLength(0);
+  });
+
   it('la tabla se deriva automáticamente del resultado aplicado', () => {
     const m1 = MATCHES.find((x) => x.id === 'M001')!; // inaugural
     const { matches } = applyMatchResults(MATCHES, { M001: { homeGoals: 3, awayGoals: 0 } });
