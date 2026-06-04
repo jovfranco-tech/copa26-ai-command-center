@@ -195,7 +195,7 @@ export function Bracket() {
             <div className="bk-col" style={{ justifyContent: 'center' }}>
               <div className="bk-round mono-label">Campeón</div>
               <div className="card bk-champ">
-                <img className="bk-cup" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26 trophy" loading="lazy" />
+                <img className="bk-cup" src="/brand/fwc26-emblem.svg" alt="Copa 2026 trophy" loading="lazy" />
                 {champion ? (
                   <>
                     <TeamCrest code={champion} size={48} />

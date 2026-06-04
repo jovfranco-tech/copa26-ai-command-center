@@ -718,7 +718,7 @@ export function Pool() {
 
       <div className="pool-hero card">
         <div className="pool-cup">
-          <img src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" loading="lazy" decoding="async" />
+          <img src="/brand/fwc26-emblem.svg" alt="Copa 2026" loading="lazy" decoding="async" />
         </div>
         <div className="pool-copy">
           <span className="mono-label">Quiniela familiar</span>
