@@ -9,7 +9,7 @@ import { shareTextCard } from '@/lib/shareCards';
 import { usePool } from '@/store/pool';
 import { DataSourceBadge } from './DataSourceBadge';
 
-export function MatchdayHero({ match }: { match: Match | null }) {
+export function MatchdayHero({ match, variant = 'featured' }: { match: Match | null; variant?: 'featured' | 'compact' }) {
   const navigate = useNavigate();
   const teams = useTeamsMap();
   const venues = useVenuesMap();
@@ -71,7 +71,7 @@ export function MatchdayHero({ match }: { match: Match | null }) {
   };
 
   return (
-    <section className="matchday-hero" style={photo ? { '--hero-img': `url(${photo})` } as React.CSSProperties : undefined}>
+    <section className={`matchday-hero ${variant}`} style={photo ? { '--hero-img': `url(${photo})` } as React.CSSProperties : undefined}>
       <div className="matchday-bg" />
       <div className="matchday-content">
         <div className="matchday-copy">

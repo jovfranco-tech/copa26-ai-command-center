@@ -1,4 +1,5 @@
 /** Data-bound cards + rows, ported from the approved prototype. */
+import type { CSSProperties } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge, Form, cn } from '@worldcup/ui';
 import { fmtDay, fmtGD, nextMatchFor, type Match, type Player, type StandingRow } from '@worldcup/shared';
@@ -310,45 +311,48 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
   const t = teams[p.team];
   const r = playerRatings(p);
   const labels = attrLabelsFor(p);
+  const primary = t?.colorA ?? '#c9a24b';
+  const secondary = t?.colorB ?? '#e0bd6c';
+  const cardStyle = {
+    '--player-primary': primary,
+    '--player-secondary': secondary,
+  } as CSSProperties;
+
   return (
     <div
       className="card hoverable player-card"
       onClick={() => navigate({ to: '/players/$playerId', params: { playerId: p.id } })}
+      style={cardStyle}
     >
-      <div className="row gap-12">
+      <div className="player-card-kitbar" aria-hidden="true" />
+      <div className="player-card-top">
         {rank != null && (
-          <span className="num muted" style={{ width: 20, fontWeight: 700 }}>
+          <span className="num muted player-card-rank">
             {rank}
           </span>
         )}
-        <span style={{ position: 'relative', flex: 'none' }}>
+        <span className="player-card-avatar">
           <PlayerAvatar player={p} size={62} />
-          <span
-            className="num"
-            style={{
-              position: 'absolute',
-              top: -6,
-              left: -8,
-              background: 'linear-gradient(150deg, var(--gold-2), var(--gold))',
-              color: '#181203',
-              fontWeight: 800,
-              fontSize: 12,
-              padding: '0 6px',
-              borderRadius: 6,
-              boxShadow: 'var(--shadow)',
-            }}
-          >
+          <span className="num player-overall-badge">
             {r.overall}
           </span>
         </span>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="row gap-8">
-            <span style={{ fontWeight: 700, fontSize: 14 }} className="nowrap">
+        <div className="player-card-copy">
+          <div className="player-card-name-row">
+            <span className="player-card-name">
               {p.name}
             </span>
             <span className="num muted" style={{ fontSize: 11 }}>
               #{p.number ?? '—'}
             </span>
+          </div>
+          <div className="player-card-meta">
+            <TeamFlag code={p.team} size={13} />
+            <span className="nowrap">{t?.name ?? p.team}</span>
+            <span className={`pos-tag pos-${p.pos}`}>{p.pos}</span>
+            <span className="nowrap">{p.club}</span>
+          </div>
+          <div className="player-card-badges">
             <span className={`rating-source ${r.source}`} title={ratingSourceText(r)}>
               {r.source === 'fc26' ? 'FC 26' : 'Estimado'}
             </span>
@@ -359,13 +363,6 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
               confidence={r.source === 'fc26' ? 'Alta' : 'Media'}
               compact
             />
-          </div>
-          <div className="row gap-6 muted" style={{ fontSize: 11.5, marginTop: 2 }}>
-            <TeamFlag code={p.team} size={13} />
-            <span className="nowrap">{t?.name ?? p.team}</span>
-            <span>·</span>
-            <span className={`pos-tag pos-${p.pos}`}>{p.pos}</span>
-            <span className="nowrap">{p.club}</span>
           </div>
         </div>
         <FavStar kind="players" id={p.id} />

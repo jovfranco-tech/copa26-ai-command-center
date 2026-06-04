@@ -68,7 +68,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
             borderRadius: '12px', 
             background: 'var(--stadium-pitch-bg, radial-gradient(circle at 50% 50%, #0d1530 0%, #05070e 100%))',
             border: activeZone === 'field' ? '2px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
-            boxShadow: activeZone === 'field' ? '0 0 20px rgba(0, 242, 254, 0.25)' : 'none',
+            boxShadow: activeZone === 'field' ? '0 0 20px var(--gold-soft)' : 'none',
             transition: 'all 0.3s'
           }}
           onClick={() => onZoneClick('field')}
@@ -106,7 +106,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
             {match.analytics.heatZones.map((zone, idx) => (
               <radialGradient id={`heat-grad-2d-${idx}`} key={idx}>
                 <stop offset="0%" stopColor="#10b981" stopOpacity={zone.val} />
-                <stop offset="65%" stopColor="#00f2fe" stopOpacity={zone.val * 0.4} />
+                <stop offset="65%" stopColor="var(--accent-cyan)" stopOpacity={zone.val * 0.4} />
                 <stop offset="100%" stopColor="transparent" stopOpacity="0" />
               </radialGradient>
             ))}
@@ -285,8 +285,8 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                     justifyContent: 'space-between', 
                     padding: '4px 6px', 
                     borderRadius: '4px',
-                    background: isSel ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                    border: isSel ? '1px solid rgba(0, 242, 254, 0.3)' : '1px solid transparent',
+                    background: isSel ? 'var(--gold-soft)' : 'transparent',
+                    border: isSel ? '1px solid var(--gold-line)' : '1px solid transparent',
                     cursor: 'pointer',
                     fontSize: '0.7rem'
                   }}
@@ -334,8 +334,8 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
                     justifyContent: 'space-between', 
                     padding: '4px 6px', 
                     borderRadius: '4px',
-                    background: isSel ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                    border: isSel ? '1px solid rgba(0, 242, 254, 0.3)' : '1px solid transparent',
+                    background: isSel ? 'var(--gold-soft)' : 'transparent',
+                    border: isSel ? '1px solid var(--gold-line)' : '1px solid transparent',
                     cursor: 'pointer',
                     fontSize: '0.7rem'
                   }}

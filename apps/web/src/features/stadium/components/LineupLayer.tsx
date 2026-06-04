@@ -140,14 +140,15 @@ export const LineupLayer: React.FC<LineupLayerProps> = ({
     return targets.map(targetId => {
       const targetPlayer = allPlayers.find(p => p.id === targetId);
       if (!targetPlayer) return null;
+      const selectedVisual = getTeamVisualIdentity(selectedPlayer.team);
       return {
         from: [selectedPlayer.x, selectedPlayer.z] as [number, number],
         to: [targetPlayer.x, targetPlayer.z] as [number, number],
-        color: selectedPlayer.team === lineups.teams.home.teamCode ? 'var(--accent-cyan)' : 'var(--color-neon-red)',
+        color: selectedVisual.accentColor,
         id: `${selectedPlayer.id}-to-${targetId}`
       };
     }).filter((lane): lane is { from: [number, number], to: [number, number], color: string, id: string } => lane !== null);
-  }, [selectedPlayer, allPlayers, lineups.teams.home.teamCode]);
+  }, [selectedPlayer, allPlayers]);
 
   const isLimpia = visualizationMode === 'limpia';
   const isNombres = visualizationMode === 'nombres';
@@ -527,7 +528,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
                     ...(isSelected ? {
                       borderColor: 'var(--accent-cyan)',
                       color: 'var(--accent-cyan)',
-                      boxShadow: '0 0 10px rgba(0, 242, 254, 0.2)',
+                      boxShadow: '0 0 10px var(--gold-soft)',
                     } : {})
                   }}
                 >

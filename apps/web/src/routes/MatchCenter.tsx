@@ -53,7 +53,7 @@ export function MatchCenter() {
 
       {!isLoading && matches.length > 0 && (
         <>
-          <MatchdayHero match={heroMatch} />
+          <MatchdayHero match={heroMatch} variant="compact" />
           <MatchCenterCommand matches={matches} compact={compact} onToggleCompact={() => setCompact((value) => !value)} />
         </>
       )}

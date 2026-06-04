@@ -1,5 +1,5 @@
 /** Appearance "Tweaks" — theme / density / accent / radius / font. */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon, Pill } from '@worldcup/ui';
 import { FONT_PRESETS, usePreferences } from '@/store/preferences';
 
@@ -8,6 +8,15 @@ const GOLDS = ['#c9a24b', '#d8b15e', '#b8863a', '#cbb27a', '#c08a4e'];
 export function TweaksPanel() {
   const [open, setOpen] = useState(false);
   const p = usePreferences();
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
 
   return (
     <>
@@ -40,7 +49,13 @@ export function TweaksPanel() {
               <Icon name="settings" size={15} style={{ color: 'var(--gold)' }} />
               <h3>Ajustes</h3>
               <span className="spacer" />
-              <button type="button" className="icon-btn" style={{ width: 30, height: 30 }} onClick={() => setOpen(false)}>
+              <button
+                type="button"
+                className="icon-btn"
+                aria-label="Cerrar ajustes"
+                style={{ width: 30, height: 30 }}
+                onClick={() => setOpen(false)}
+              >
                 <Icon name="close" size={15} />
               </button>
             </div>

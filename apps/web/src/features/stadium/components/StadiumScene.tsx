@@ -155,7 +155,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
         for (let j = 2; j < canvas.width; j += 6) {
           if (random() > 0.3) {
             const rand = random();
-            ctx.fillStyle = rand < 0.2 ? '#00f2fe' : rand < 0.4 ? '#f97316' : 'rgba(255,255,255,0.15)';
+            ctx.fillStyle = rand < 0.2 ? '#c9a24b' : rand < 0.4 ? '#f97316' : 'rgba(255,255,255,0.15)';
             ctx.fillRect(j + random() * 2, i * rowHeight + 1, 1.5, 1.5);
           }
         }
@@ -179,10 +179,10 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
       ctx.fillStyle = '#090d16';
       ctx.fillRect(0, 0, 1024, 32);
       
-      // Neon green and cyan glowing rectangles/blocks
-      ctx.fillStyle = '#00f2fe';
+      // Warm gold and green LED rectangles/blocks
+      ctx.fillStyle = '#c9a24b';
       for (let x = 10; x < 1024; x += 256) {
-        ctx.fillStyle = '#00f2fe';
+        ctx.fillStyle = '#c9a24b';
         ctx.fillRect(x, 8, 8, 16);
         ctx.fillStyle = '#10b981';
         ctx.fillRect(x + 12, 8, 8, 16);
@@ -838,7 +838,7 @@ const CornerFloodlight: React.FC<CornerFloodlightProps> = ({ position, color, be
       <mesh position={[0, 7.5, 0.4]}>
         <sphereGeometry args={[0.6, 12, 12]} />
         <meshStandardMaterial
-          color={isActive ? '#00f2fe' : timeOfDay === 'night' ? '#ffffff' : '#ffeedd'}
+          color={isActive ? '#c9a24b' : timeOfDay === 'night' ? '#ffffff' : '#ffeedd'}
           emissive={timeOfDay === 'night' ? '#ffffff' : '#000000'}
           emissiveIntensity={timeOfDay === 'night' ? 2.0 : 0}
         />

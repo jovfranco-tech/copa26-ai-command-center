@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge, Empty, cn } from '@worldcup/ui';
 import { fmtFull, type MatchEvent, type Player } from '@worldcup/shared';
@@ -110,7 +110,7 @@ export function MatchDetail({ id }: { id: string }) {
         </div>
       </div>
 
-      <div className="row gap-6" style={{ marginBottom: 14 }}>
+      <div className="row gap-6 match-detail-tabs" style={{ marginBottom: 14 }}>
         {(['events', 'lineups', 'stats', 'intel'] as Tab[]).map((t) => (
           <button key={t} type="button" className={cn('pill', tab === t && 'on')} onClick={() => setTab(t)}>
             {t === 'events' ? 'Eventos' : t === 'lineups' ? 'Alineaciones' : t === 'stats' ? 'Estadísticas' : 'Fuentes'}
@@ -194,12 +194,157 @@ function EventsTimeline({ events, homeCode }: { events: MatchEvent[]; homeCode: 
 function Lineups({ homeCode, awayCode }: { homeCode: string; awayCode: string }) {
   const { data: home } = usePlayers({ team: homeCode });
   const { data: away } = usePlayers({ team: awayCode });
+  const homePlayers = home?.items ?? [];
+  const awayPlayers = away?.items ?? [];
+
   return (
-    <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))' }}>
-      <SquadList code={homeCode} players={home?.items ?? []} />
-      <SquadList code={awayCode} players={away?.items ?? []} />
+    <div className="match-lineups-layout">
+      <LineupPitch homeCode={homeCode} awayCode={awayCode} homePlayers={homePlayers} awayPlayers={awayPlayers} />
+      <div className="grid squad-list-grid">
+        <SquadList code={homeCode} players={homePlayers} />
+        <SquadList code={awayCode} players={awayPlayers} />
+      </div>
     </div>
   );
+}
+
+function LineupPitch({
+  homeCode,
+  awayCode,
+  homePlayers,
+  awayPlayers,
+}: {
+  homeCode: string;
+  awayCode: string;
+  homePlayers: Player[];
+  awayPlayers: Player[];
+}) {
+  const teams = useTeamsMap();
+  const homeTeam = teams[homeCode];
+  const awayTeam = teams[awayCode];
+  const homeXI = selectLineup(homePlayers);
+  const awayXI = selectLineup(awayPlayers);
+
+  return (
+    <section className="card lineup-pitch-card">
+      <div className="lineup-pitch-head">
+        <TeamBrief code={homeCode} label={homeTeam?.name ?? homeCode} formation={formationLabel(homeXI)} />
+        <span className="mono-label">Formación estimada</span>
+        <TeamBrief code={awayCode} label={awayTeam?.name ?? awayCode} formation={formationLabel(awayXI)} align="right" />
+      </div>
+      <div
+        className="lineup-pitch-board"
+        style={{
+          '--home-primary': homeTeam?.colorA ?? 'var(--gold)',
+          '--home-secondary': homeTeam?.colorB ?? 'var(--gold-2)',
+          '--away-primary': awayTeam?.colorA ?? 'var(--gold)',
+          '--away-secondary': awayTeam?.colorB ?? 'var(--gold-2)',
+        } as CSSProperties}
+      >
+        <PitchMarkings />
+        <TeamShape code={awayCode} players={awayXI} side="away" />
+        <div className="lineup-center-label mono-label">Medio campo</div>
+        <TeamShape code={homeCode} players={homeXI} side="home" />
+      </div>
+    </section>
+  );
+}
+
+function TeamBrief({
+  code,
+  label,
+  formation,
+  align = 'left',
+}: {
+  code: string;
+  label: string;
+  formation: string;
+  align?: 'left' | 'right';
+}) {
+  return (
+    <div className={`lineup-team-brief ${align}`}>
+      <TeamCrest code={code} size={26} />
+      <div>
+        <strong>{label}</strong>
+        <span className="mono-label">{formation}</span>
+      </div>
+    </div>
+  );
+}
+
+function TeamShape({ code, players, side }: { code: string; players: Player[]; side: 'home' | 'away' }) {
+  const rows = side === 'away' ? ['GK', 'DF', 'MF', 'FW'] : ['FW', 'MF', 'DF', 'GK'];
+  return (
+    <div className={`lineup-team-shape ${side}`}>
+      {rows.map((pos) => (
+        <div key={`${code}-${side}-${pos}`} className={`lineup-line lineup-line-${pos}`}>
+          {players
+            .filter((p) => p.pos === pos)
+            .map((p) => (
+              <span key={p.id} className="lineup-player-chip">
+                <span className="num">{p.number ?? '—'}</span>
+                <b>{shortPlayerName(p.name)}</b>
+                <small>{p.pos}</small>
+              </span>
+            ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PitchMarkings() {
+  return (
+    <svg className="lineup-pitch-markings" viewBox="0 0 100 150" aria-hidden="true">
+      <rect x="4" y="4" width="92" height="142" rx="3" />
+      <line x1="4" x2="96" y1="75" y2="75" />
+      <circle cx="50" cy="75" r="15" />
+      <rect x="24" y="4" width="52" height="22" />
+      <rect x="36" y="4" width="28" height="9" />
+      <rect x="24" y="124" width="52" height="22" />
+      <rect x="36" y="137" width="28" height="9" />
+    </svg>
+  );
+}
+
+function selectLineup(players: Player[]): Player[] {
+  const picked = new Map<string, Player>();
+  const take = (pos: Player['pos'], count: number) => {
+    players
+      .filter((p) => p.pos === pos)
+      .sort(playerSort)
+      .slice(0, count)
+      .forEach((p) => picked.set(p.id, p));
+  };
+
+  take('GK', 1);
+  take('DF', 4);
+  take('MF', 3);
+  take('FW', 3);
+
+  for (const p of [...players].sort(playerSort)) {
+    if (picked.size >= 11) break;
+    picked.set(p.id, p);
+  }
+
+  return [...picked.values()];
+}
+
+function playerSort(a: Player, b: Player): number {
+  const order = { GK: 0, DF: 1, MF: 2, FW: 3 };
+  return order[a.pos] - order[b.pos] || (a.number ?? 99) - (b.number ?? 99) || a.name.localeCompare(b.name);
+}
+
+function formationLabel(players: Player[]): string {
+  const df = players.filter((p) => p.pos === 'DF').length;
+  const mf = players.filter((p) => p.pos === 'MF').length;
+  const fw = players.filter((p) => p.pos === 'FW').length;
+  return df && mf && fw ? `${df}-${mf}-${fw}` : 'Pendiente';
+}
+
+function shortPlayerName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return parts.length > 1 ? parts[parts.length - 1]! : name;
 }
 
 function SquadList({ code, players }: { code: string; players: Player[] }) {

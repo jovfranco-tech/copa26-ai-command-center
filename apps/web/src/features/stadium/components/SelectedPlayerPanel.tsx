@@ -386,7 +386,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                 background: player.stamina < 70 
                   ? 'rgba(239, 68, 68, 0.1)' 
                   : player.influenceScore > 85 
-                  ? 'rgba(0, 242, 254, 0.1)' 
+                  ? 'var(--gold-soft)'
                   : 'rgba(16, 185, 129, 0.1)', 
                 color: player.stamina < 70 
                   ? 'var(--color-neon-red)' 

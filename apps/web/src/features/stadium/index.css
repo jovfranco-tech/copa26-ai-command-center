@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-
 /* ══════════════════════════════════════════════════════════════════════════════
    ESTADIO 3D — HARD LAYOUT RESET v0.2.1
    All layout is normal-flow grid/flex. No position:absolute for major UI.
@@ -11,13 +9,13 @@
 }
 
 @keyframes pulse-cyan {
-  0%, 100% { box-shadow: 0 0 12px rgba(0, 242, 254, 0.15); }
-  50% { box-shadow: 0 0 24px rgba(0, 242, 254, 0.4); }
+  0%, 100% { box-shadow: 0 0 12px var(--gold-soft); }
+  50% { box-shadow: 0 0 24px var(--gold-glow); }
 }
 
 /* ── Scoped root ───────────────────────────────────────────────────────────── */
 .stadium-feature-root {
-  --font-sans: var(--font-ui, 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  --font-sans: var(--font-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 
   /* Inherit dashboard theme tokens */
   --text-primary: var(--tx);
@@ -29,13 +27,13 @@
   --bg-card-hover: var(--bg-hover);
   --border-subtle: var(--line, rgba(0, 0, 0, 0.08));
   --border-focus: var(--line-2, rgba(0, 0, 0, 0.16));
-  --accent-cyan: #00f2fe;
-  --accent-blue: #4facfe;
+  --accent-cyan: var(--gold);
+  --accent-blue: #5ea3b8;
   --accent-emerald: #10b981;
-  --accent-violet: #8b5cf6;
+  --accent-violet: #8c7a4e;
   --accent-orange: #f97316;
-  --color-neon-red: hsl(355, 100%, 60%);
-  --color-neon-yellow: hsl(50, 100%, 50%);
+  --color-neon-red: var(--neg);
+  --color-neon-yellow: var(--warn);
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -62,7 +60,7 @@
     --bg-card: rgba(22, 28, 54, 0.85);
     --bg-card-hover: rgba(30, 39, 73, 0.9);
     --border-subtle: rgba(255, 255, 255, 0.1);
-    --border-focus: rgba(0, 242, 254, 0.35);
+    --border-focus: var(--gold-line);
     --stadium-toggle-bg: rgba(7, 9, 19, 0.5);
     --stadium-toggle-border: rgba(255, 255, 255, 0.05);
     background: radial-gradient(circle at 50% 50%, #0d1530, #05070e);
@@ -259,7 +257,7 @@
     background: var(--bg-card-hover);
     border-color: var(--accent-cyan);
     color: var(--text-primary);
-    box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
+    box-shadow: 0 0 8px var(--gold-soft);
   }
 
   .toggle-dot {
@@ -427,7 +425,7 @@
 
   .tactical-widget-card.interactive-card:hover {
     background: var(--bg-card-hover);
-    border-color: rgba(0, 242, 254, 0.2);
+    border-color: var(--gold-line);
   }
 
   .widget-label {
@@ -462,7 +460,7 @@
   .signal-bars .bar:nth-child(3) { height: 10px; }
   .signal-bars .bar:nth-child(4) { height: 13px; }
   .signal-bars .bar:nth-child(5) { height: 16px; }
-  .signal-bars .bar.filled { background: var(--accent-cyan); box-shadow: 0 0 4px rgba(0, 242, 254, 0.3); }
+  .signal-bars .bar.filled { background: var(--accent-cyan); box-shadow: 0 0 4px var(--gold-soft); }
 
   .toggle-group {
     display: flex;
@@ -491,7 +489,7 @@
   }
   .toggle-group .toggle-btn:hover { color: var(--text-primary); }
   .toggle-group .toggle-btn.active {
-    background: rgba(0, 242, 254, 0.08);
+    background: var(--gold-soft);
     border: 1px solid var(--border-focus);
     color: var(--text-primary);
   }
@@ -570,7 +568,7 @@
   }
   .stadium-btn:hover { background: var(--bg-card-hover); border-color: var(--accent-cyan); }
   .stadium-btn.active {
-    background: rgba(0, 242, 254, 0.06);
+    background: var(--gold-soft);
     border-color: var(--accent-cyan);
     color: var(--accent-cyan);
   }
@@ -752,7 +750,7 @@
   .detail-chip { display: flex; align-items: center; gap: 3px; border-radius: 99px; padding: 2px 6px; font-size: 0.52rem; font-weight: 800; border: 1px solid; cursor: default; }
   .detail-chip.stamina { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); }
   .detail-chip.stamina.low { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.2); color: var(--color-neon-red); }
-  .detail-chip.influence { background: rgba(0, 242, 254, 0.08); border-color: rgba(0, 242, 254, 0.2); color: var(--accent-cyan); }
+  .detail-chip.influence { background: var(--gold-soft); border-color: var(--gold-line); color: var(--accent-cyan); }
   .detail-chip.risk { text-transform: uppercase; }
   .detail-chip.risk.bajo { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); }
   .detail-chip.risk.medio { background: rgba(249, 115, 22, 0.08); border-color: rgba(249, 115, 22, 0.2); color: var(--accent-orange); }
@@ -811,7 +809,13 @@
       height: clamp(300px, 50vh, 500px);
     }
     .side-panel-glass {
-      max-height: 500px;
+      height: auto;
+      max-height: none;
+    }
+    .side-panel-glass .panel-content,
+    .side-panel-glass > div {
+      height: auto !important;
+      overflow: visible;
     }
     .stadium-tactical-grid {
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -863,7 +867,8 @@
       grid-template-columns: 1fr 1fr;
     }
     .side-panel-glass {
-      max-height: 400px;
+      height: auto;
+      max-height: none;
     }
   }
 
