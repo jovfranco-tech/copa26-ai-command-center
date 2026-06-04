@@ -117,8 +117,8 @@ export function Stats() {
         board.sort((a, b) => b.points - a.points);
         setLeaderboard(board);
       },
-      (error) => {
-        console.error('Firestore onSnapshot in Stats error:', error);
+      () => {
+        // Firestore snapshot error handled silently
       }
     );
 

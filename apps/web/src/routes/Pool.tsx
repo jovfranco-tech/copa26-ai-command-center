@@ -15,6 +15,7 @@ import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { notifySuccess, notifyInfo, notifyWarning } from '@/store/notifications';
 import { QuinielaScanner } from '@/components/QuinielaScanner';
 import { P2PSyncPanel } from '@/components/P2PSyncPanel';
 import { RetoRelampago } from '@/components/RetoRelampago';
@@ -357,7 +358,7 @@ export function Pool() {
   const shareLeaderboardLogro = async () => {
     const userRow = leaderboard.find((row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase());
     if (!userRow) {
-      alert('Asegúrate de registrar tu nombre en el perfil para compartir tu puesto.');
+      notifyWarning('Nombre requerido', 'Registra tu nombre para compartir tu puesto.');
       return;
     }
 
@@ -456,7 +457,7 @@ export function Pool() {
         a.click();
         URL.revokeObjectURL(url);
         if ('vibrate' in navigator) navigator.vibrate([15]);
-        alert('Tu tarjeta de gala se ha descargado con éxito. ¡Compártela en tus redes favoritas!');
+        notifySuccess('Descarga completa', 'Tu tarjeta de gala se ha descargado con éxito.');
       }
     }, 'image/png');
   };
@@ -472,7 +473,7 @@ export function Pool() {
       });
       playSuccessTick();
     } catch (e) {
-      console.error('Failed to save peer picks to Firestore:', e);
+      // Error already handled by UI state
     }
   };
 
@@ -549,7 +550,7 @@ export function Pool() {
 
   const shareFamilyTable = async () => {
     if (!leaderboard.length) {
-      alert('Todavia no hay tabla familiar para compartir.');
+      notifyInfo('Sin tabla', 'Todavía no hay tabla familiar para compartir.');
       return;
     }
     await shareTextCard({
@@ -689,12 +690,12 @@ export function Pool() {
       return pick?.homeGoals != null && pick.awayGoals != null;
     }) ?? upcomingMatches[0];
     if (!match) {
-      alert('No hay partidos pendientes para compartir.');
+      notifyInfo('Sin partidos', 'No hay partidos pendientes para compartir.');
       return;
     }
     const pick = pool.picks[match.id];
     if (!pick?.outcome) {
-      alert('Primero captura al menos un ganador o empate para compartir tu predicción.');
+      notifyInfo('Pick incompleto', 'Captura al menos un ganador o empate para compartir.');
       return;
     }
     await shareTextCard({

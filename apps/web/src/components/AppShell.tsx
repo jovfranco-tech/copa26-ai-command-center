@@ -368,9 +368,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <NavList onPick={() => setDrawer(false)} />
             </nav>
             <div className="sidebar-foot">
-              Private local dashboard.
+              Dashboard privado familiar.
               <br />
-              Not for public distribution.
+              No es para distribución pública.
             </div>
           </div>
         </>

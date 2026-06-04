@@ -108,8 +108,8 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           setLeaderName(topUser);
         }
       },
-      (error) => {
-        console.error('Firestore onSnapshot in Analyst error:', error);
+      () => {
+        // Firestore snapshot error handled silently
       }
     );
 
@@ -191,8 +191,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         setCloudMemory(records);
         setCloudMemoryStatus('synced');
       },
-      (error) => {
-        console.error('AI cloud memory sync error:', error);
+      () => {
         setCloudMemoryStatus('error');
       },
     );
@@ -258,8 +257,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       citations: next.citations,
     });
     setMemory(saveAIMemoryRecord(record));
-    saveCloudAIInsight(poolGroupId, record).catch((error) => {
-      console.error('Failed to save cloud AI insight:', error);
+    saveCloudAIInsight(poolGroupId, record).catch(() => {
       setCloudMemoryStatus('error');
     });
   };

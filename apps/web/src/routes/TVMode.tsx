@@ -22,7 +22,7 @@ export function TVMode() {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 30000);
+    const id = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(id);
   }, []);
 
@@ -95,7 +95,7 @@ function TVBroadcastPanel({ match, featured }: { match: Match | null; featured: 
       <div className="tv-broadcast-main">
         <div className="tv-broadcast-screen" aria-label="Acceso a transmisión oficial">
           <div className="tv-broadcast-glow" />
-          <div className="tv-broadcast-play">
+          <div className="tv-broadcast-play" aria-hidden="true" style={{ pointerEvents: 'none', opacity: 0.4 }}>
             <Icon name="play" size={30} />
           </div>
           <span className="mono-label">Transmisión oficial</span>

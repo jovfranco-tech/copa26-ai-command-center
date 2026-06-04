@@ -108,7 +108,12 @@ export function Bracket() {
   return (
     <div className="page-fade">
       <MockBanner />
-      
+
+      <div className="card card-pad" style={{ marginBottom: 16, background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.25)', display: 'flex', gap: 10, alignItems: 'center', fontSize: 12, color: 'var(--tx-2)' }}>
+        <Icon name="info" size={16} style={{ color: '#f59e0b', flexShrink: 0 }} />
+        <span><strong>Proyección simulada.</strong> Este bracket muestra resultados estimados basados en rankings FIFA. No son resultados reales. Se actualizará con datos oficiales cuando concluya la fase de grupos.</span>
+      </div>
+
       <div className="card card-pad" style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
         <Icon name="grid" size={15} style={{ color: 'var(--gold)' }} />
         <span className="mono-label" style={{ flex: 1, margin: 0 }}>
@@ -199,7 +204,7 @@ export function Bracket() {
                 ) : (
                   <span className="muted">TBD</span>
                 )}
-                <span className="mono-label">Campeón proyectado</span>
+                <span className="mono-label">Campeón proyectado (simulado)</span>
               </div>
             </div>
           </div>
@@ -211,7 +216,14 @@ export function Bracket() {
 
 function BracketSide({ code, win, onClick }: { code: string; win: boolean; onClick: () => void }) {
   return (
-    <div className={`bk-side${win ? ' win' : code ? '' : ' lose'}`} onClick={onClick} style={{ cursor: code ? 'pointer' : 'default' }}>
+    <div
+      className={`bk-side${win ? ' win' : code ? '' : ' lose'}`}
+      onClick={onClick}
+      role={code ? 'button' : undefined}
+      tabIndex={code ? 0 : undefined}
+      onKeyDown={code ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+      style={{ cursor: code ? 'pointer' : 'default' }}
+    >
       {code ? <TeamCrest code={code} size={20} /> : <span style={{ width: 20 }} />}
       <span className="bk-name">{code || 'TBD'}</span>
       {win && <Icon name="check" size={13} style={{ color: 'var(--gold-2)' }} />}
