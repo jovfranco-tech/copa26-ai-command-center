@@ -18,6 +18,7 @@
     "ingest:all": "tsx src/ingest-all.ts",
     "import:schedule": "tsx src/import-schedule.ts",
     "apply:results": "tsx src/apply-results.ts",
+    "gen:lineup": "tsx src/gen-lineup-template.ts",
     "validate:data": "tsx src/validate-ingested-data.ts",
     "report:data": "tsx src/generate-data-quality-report.ts",
     "check:gitignore": "tsx src/check-gitignore.ts",

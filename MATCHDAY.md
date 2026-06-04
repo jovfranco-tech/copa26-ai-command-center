@@ -59,8 +59,19 @@ de los partidos con `status: "FT"`. **No hay que tocar nada más.**
 ## 2) Alineaciones oficiales → Estadio 3D (oficial > estimada)
 
 Pre-torneo, el estadio muestra un **XI estimado** (plantilla + formación
-característica) con el badge **"XI Estimado"**. Cuando se confirme una alineación,
-añádela a `apps/web/src/features/stadium/data/officialLineups.ts`:
+característica) con el badge **"XI Estimado"**. Cuando se confirme una alineación:
+
+**No la escribas a mano** — genera el esqueleto (lo pre-rellena con los 11 huecos
+por equipo y los `playerId` reales de la plantilla) para cualquier partido:
+
+```bash
+pnpm --filter @worldcup/ingestion gen:lineup M001 4-3-3 4-3-3
+```
+
+Copia la entrada que imprime a `OFFICIAL_LINEUPS` en
+`apps/web/src/features/stadium/data/officialLineups.ts`, ajusta dorsales/nombres/
+manager y formación a la alineación confirmada, y pon `status: 'confirmada'`.
+Hay un ejemplo completo de la forma en `officialLineups.example.ts`:
 
 ```ts
 export const OFFICIAL_LINEUPS: Record<string, OfficialMatchLineup> = {
@@ -71,8 +82,8 @@ export const OFFICIAL_LINEUPS: Record<string, OfficialMatchLineup> = {
       formation: '4-3-3',
       manager: 'Javier Aguirre',
       starters: [
-        { shirt: 1, name: 'Guillermo Ochoa', pos: 'GK', playerId: 'MEX-1' },
-        { shirt: 2, name: 'Jorge Sánchez',   pos: 'DF' },
+        { shirt: 13, name: 'Guillermo Ochoa', pos: 'GK', playerId: 'MEX-7' },
+        { shirt: 3,  name: 'César Montes',    pos: 'DF', playerId: 'MEX-6' },
         // ...11 en total, ordenados GK → DF → MF → FW según la formación
       ],
     },

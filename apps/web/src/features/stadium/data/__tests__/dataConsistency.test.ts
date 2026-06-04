@@ -3,6 +3,7 @@ import { mock } from '@worldcup/shared';
 import { mapDatabasePlayersToLineups, buildMatchLineups } from '../stadiumDataMapper';
 import { MATCH_FIXTURES } from '../matchData';
 import type { OfficialMatchLineup, OfficialTeamSheet } from '../officialLineups';
+import { EXAMPLE_OFFICIAL_LINEUPS } from '../officialLineups.example';
 
 const players = mock.PLAYERS;
 const teams = mock.TEAMS;
@@ -105,5 +106,51 @@ describe('Estadio: resolución alineación oficial → estimada (buildMatchLineu
     expect(l.teams.away.source).toBe('estimated');
     expect(l.teams.home.players).toHaveLength(11);
     expect(l.teams.away.players).toHaveLength(11);
+  });
+});
+
+describe('Estadio: plantilla officialLineups.example es válida y usable', () => {
+  const playerIds = new Set(players.map((p) => p.id));
+  const matchById = new Map(mock.MATCHES.map((m) => [m.id, m]));
+  const entries = Object.entries(EXAMPLE_OFFICIAL_LINEUPS);
+  const sides = ['home', 'away'] as const;
+
+  it('no está vacía y cada partido existe en el calendario', () => {
+    expect(entries.length).toBeGreaterThan(0);
+    for (const [id] of entries) expect(matchById.has(id), id).toBe(true);
+  });
+
+  it('cada lado tiene 11 titulares y formación válida (suma 10)', () => {
+    for (const [id, entry] of entries) {
+      for (const side of sides) {
+        const sheet = entry[side]!;
+        expect(sheet.starters, `${id}.${side}`).toHaveLength(11);
+        expect(sumFormation(sheet.formation), `${id}.${side} formación=${sheet.formation}`).toBe(10);
+      }
+    }
+  });
+
+  it('todos los playerId enlazan a jugadores reales', () => {
+    for (const [id, entry] of entries) {
+      for (const side of sides) {
+        for (const s of entry[side]!.starters) {
+          if (s.playerId) expect(playerIds.has(s.playerId), `${id}.${side} ${s.playerId}`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it('alimentada a buildMatchLineups produce un XI oficial de 11 por lado', () => {
+    for (const [id, entry] of entries) {
+      const m = matchById.get(id)!;
+      const l = buildMatchLineups(players, m.home, m.away, id, 'pre-match', 0, EXAMPLE_OFFICIAL_LINEUPS);
+      expect(l.dataSource, id).toBe('official');
+      expect(l.teams.home.players, `${id} home`).toHaveLength(11);
+      expect(l.teams.away.players, `${id} away`).toHaveLength(11);
+      expect(l.teams.home.source).toBe('official');
+      // sanity: the official XI carries names from the sheet, not generated ones
+      const homeNames = l.teams.home.players.map((p) => p.name);
+      expect(homeNames).toContain(entry.home!.starters[0]!.name);
+    }
   });
 });
