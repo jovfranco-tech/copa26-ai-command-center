@@ -1,26 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <!-- Copa 2026 AI Command Center — Original emblem -->
-  <!-- Hexagonal shield with "26" and AI circuit accent -->
+  
+  <!-- Background circle for contrast -->
+  <circle cx="32" cy="32" r="30" fill="#0f1420"/>
   
   <!-- Outer hexagon shield -->
-  <path d="M32 4 L56 18 L56 46 L32 60 L8 46 L8 18 Z" fill="#080c14" stroke="#c9a24b" stroke-width="2.5"/>
+  <path d="M32 5 L55 18 L55 46 L32 59 L9 46 L9 18 Z" fill="none" stroke="#c9a24b" stroke-width="2.8"/>
   
-  <!-- Inner gold hexagon accent -->
-  <path d="M32 10 L50 21 L50 43 L32 54 L14 43 L14 21 Z" fill="none" stroke="#c9a24b" stroke-width="0.8" opacity="0.4"/>
+  <!-- Inner hexagon accent -->
+  <path d="M32 11 L49 22 L49 42 L32 53 L15 42 L15 22 Z" fill="none" stroke="#c9a24b" stroke-width="0.7" opacity="0.35"/>
   
-  <!-- "26" text -->
-  <text x="32" y="38" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#c9a24b" text-anchor="middle" letter-spacing="-1">26</text>
+  <!-- "26" large centered -->
+  <text x="32" y="40" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#c9a24b" text-anchor="middle">26</text>
   
-  <!-- AI circuit dot accents -->
-  <circle cx="32" cy="12" r="2" fill="#c9a24b"/>
-  <circle cx="20" cy="48" r="1.5" fill="#c9a24b" opacity="0.6"/>
-  <circle cx="44" cy="48" r="1.5" fill="#c9a24b" opacity="0.6"/>
+  <!-- Top accent dot -->
+  <circle cx="32" cy="8" r="2.5" fill="#c9a24b"/>
   
-  <!-- Connecting lines (AI/tech feel) -->
-  <line x1="32" y1="14" x2="32" y2="20" stroke="#c9a24b" stroke-width="0.6" opacity="0.5"/>
-  <line x1="21" y1="47" x2="26" y2="44" stroke="#c9a24b" stroke-width="0.6" opacity="0.4"/>
-  <line x1="43" y1="47" x2="38" y2="44" stroke="#c9a24b" stroke-width="0.6" opacity="0.4"/>
+  <!-- Bottom stadium arc -->
+  <path d="M20 51 Q32 56 44 51" fill="none" stroke="#c9a24b" stroke-width="1.2" opacity="0.6"/>
   
-  <!-- Small stadium arc at bottom -->
-  <path d="M22 50 Q32 54 42 50" fill="none" stroke="#c9a24b" stroke-width="0.8" opacity="0.5"/>
+  <!-- Side dots -->
+  <circle cx="11" cy="32" r="1.5" fill="#c9a24b" opacity="0.4"/>
+  <circle cx="53" cy="32" r="1.5" fill="#c9a24b" opacity="0.4"/>
 </svg>

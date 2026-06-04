@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64">
   <!-- Copa 2026 AI Command Center — Stacked wordmark -->
   
-  <!-- Main title -->
-  <text x="110" y="24" font-family="'Arial Black', Arial, sans-serif" font-size="16" font-weight="900" fill="#c9a24b" text-anchor="middle" letter-spacing="2">COPA 2026</text>
+  <!-- Top line: COPA 2026 -->
+  <text x="120" y="26" font-family="Arial Black, Arial, sans-serif" font-size="18" font-weight="900" fill="#c9a24b" text-anchor="middle" letter-spacing="3">COPA 2026</text>
   
-  <!-- Subtitle -->
-  <text x="110" y="42" font-family="Arial, sans-serif" font-size="9" font-weight="600" fill="#f4efe2" text-anchor="middle" letter-spacing="3" opacity="0.8">AI COMMAND CENTER</text>
+  <!-- Separator line -->
+  <line x1="50" y1="34" x2="190" y2="34" stroke="#c9a24b" stroke-width="0.6" opacity="0.4"/>
   
-  <!-- Accent line -->
-  <line x1="60" y1="29" x2="160" y2="29" stroke="#c9a24b" stroke-width="0.5" opacity="0.4"/>
+  <!-- Bottom line: AI COMMAND CENTER -->
+  <text x="120" y="50" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#f4efe2" text-anchor="middle" letter-spacing="4">AI COMMAND CENTER</text>
 </svg>
