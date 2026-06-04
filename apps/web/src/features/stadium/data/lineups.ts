@@ -27,12 +27,20 @@ export interface TeamLineup {
   formation: string;
   manager: string;
   players: Player[];
+  /**
+   * Provenance of this XI: 'official' when it comes from a confirmed matchday
+   * team sheet (OFFICIAL_LINEUPS), 'estimated' when generated from the curated
+   * squad + a characteristic formation. Defaults to 'estimated'.
+   */
+  source?: 'official' | 'estimated';
 }
 
 export interface MatchLineups {
   matchId: string;
   minute: number;
   status: string;
+  /** 'official' if both sheets are confirmed, 'mixed' if only one is, else 'estimated'. */
+  dataSource?: 'official' | 'estimated' | 'mixed';
   teams: {
     home: TeamLineup;
     away: TeamLineup;

@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { mock } from '@worldcup/shared';
-import { mapDatabasePlayersToLineups } from '../stadiumDataMapper';
+import { mapDatabasePlayersToLineups, buildMatchLineups } from '../stadiumDataMapper';
 import { MATCH_FIXTURES } from '../matchData';
+import type { OfficialMatchLineup, OfficialTeamSheet } from '../officialLineups';
 
 const players = mock.PLAYERS;
 const teams = mock.TEAMS;
@@ -43,5 +44,66 @@ describe('Estadio: consistencia con el dataset', () => {
       expect(teamCodes.has(m.teams.homeShort), `${m.id} home=${m.teams.homeShort}`).toBe(true);
       expect(teamCodes.has(m.teams.awayShort), `${m.id} away=${m.teams.awayShort}`).toBe(true);
     }
+  });
+});
+
+// A synthetic 4-3-3 sheet (ordered GK → DF → MF → FW) used to exercise the
+// official-lineup resolution path without shipping a fake "official" lineup.
+const sheet433 = (mgr: string): OfficialTeamSheet => ({
+  formation: '4-3-3',
+  manager: mgr,
+  starters: [
+    { shirt: 1, name: 'Arquero Titular', pos: 'GK' },
+    { shirt: 2, name: 'Lateral Derecho', pos: 'DF' },
+    { shirt: 3, name: 'Central Uno', pos: 'DF' },
+    { shirt: 4, name: 'Central Dos', pos: 'DF' },
+    { shirt: 5, name: 'Lateral Izquierdo', pos: 'DF' },
+    { shirt: 6, name: 'Volante Uno', pos: 'MF' },
+    { shirt: 8, name: 'Volante Dos', pos: 'MF' },
+    { shirt: 10, name: 'Volante Tres', pos: 'MF' },
+    { shirt: 7, name: 'Extremo Derecho', pos: 'FW' },
+    { shirt: 9, name: 'Delantero Centro', pos: 'FW' },
+    { shirt: 11, name: 'Extremo Izquierdo', pos: 'FW' },
+  ],
+});
+
+describe('Estadio: resolución alineación oficial → estimada (buildMatchLineups)', () => {
+  it('sin alineación oficial cae a XI estimado para ambos equipos', () => {
+    const l = buildMatchLineups(players, 'MEX', 'RSA', 'M001', 'pre-match', 0, {});
+    expect(l.dataSource).toBe('estimated');
+    expect(l.teams.home.source).toBe('estimated');
+    expect(l.teams.away.source).toBe('estimated');
+    expect(l.teams.home.players).toHaveLength(11);
+    expect(l.teams.away.players).toHaveLength(11);
+  });
+
+  it('con ambas alineaciones oficiales usa el XI real y marca dataSource = official', () => {
+    const official: Record<string, OfficialMatchLineup> = {
+      M001: { status: 'confirmada', source: 'Test', home: sheet433('DT Local'), away: sheet433('DT Visita') },
+    };
+    const l = buildMatchLineups(players, 'MEX', 'RSA', 'M001', 'pre-match', 0, official);
+    expect(l.dataSource).toBe('official');
+    expect(l.teams.home.source).toBe('official');
+    expect(l.teams.away.source).toBe('official');
+    expect(l.teams.home.players).toHaveLength(11);
+    expect(l.teams.home.formation).toBe('4-3-3');
+    expect(l.teams.home.manager).toBe('DT Local');
+    const names = l.teams.home.players.map((p) => p.name);
+    expect(names).toContain('Arquero Titular');
+    expect(names).toContain('Delantero Centro');
+    const shirts = l.teams.home.players.map((p) => p.number).sort((a, b) => a - b);
+    expect(shirts).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+  });
+
+  it('con sólo una alineación oficial marca dataSource = mixed', () => {
+    const official: Record<string, OfficialMatchLineup> = {
+      M001: { status: 'confirmada', source: 'Test', home: sheet433('DT Local') },
+    };
+    const l = buildMatchLineups(players, 'MEX', 'RSA', 'M001', 'pre-match', 0, official);
+    expect(l.dataSource).toBe('mixed');
+    expect(l.teams.home.source).toBe('official');
+    expect(l.teams.away.source).toBe('estimated');
+    expect(l.teams.home.players).toHaveLength(11);
+    expect(l.teams.away.players).toHaveLength(11);
   });
 });

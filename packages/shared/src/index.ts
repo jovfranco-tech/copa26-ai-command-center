@@ -5,4 +5,5 @@ export * from './types.js';
 export * from './formatters.js';
 export * from './standings.js';
 export * from './selectors.js';
+export * from './applyResults.js';
 export * as mock from './mock/index.js';

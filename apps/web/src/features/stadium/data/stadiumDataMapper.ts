@@ -2,6 +2,7 @@ import { playerRatings, type PlayerRatings } from '@/lib/ratings';
 import type { Player as DbPlayer } from '@worldcup/shared';
 import { type Player as StadiumPlayer, type TeamLineup, type MatchLineups } from './lineups';
 import { getTeamVisualIdentity } from './teamVisualIdentity';
+import { OFFICIAL_LINEUPS, type OfficialLineupEntry, type OfficialMatchLineup, type OfficialTeamSheet } from './officialLineups';
 
 interface SlotDefinition {
   slotId: string;
@@ -465,6 +466,7 @@ export function mapDatabasePlayersToLineups(
       formation: info.formation,
       manager: info.manager,
       players: matchedPlayers,
+      source: 'estimated' as const,
     };
   };
 
@@ -475,9 +477,146 @@ export function mapDatabasePlayersToLineups(
     matchId,
     minute: matchStatus === 'post-match' ? 90 : matchMinute,
     status: matchStatus,
+    dataSource: 'estimated' as const,
     teams: {
       home: mapTeam(homeCode, homeSlots, 'home'),
       away: mapTeam(awayCode, awaySlots, 'away'),
     },
   };
+}
+
+// ── Official lineups (matchday team sheets) ───────────────────────────────────
+
+const POS_ORDER = ['GK', 'DF', 'MF', 'FW'] as const;
+
+/** Build a stadium Player from a confirmed official roster entry. */
+function officialEntryToPlayer(
+  entry: OfficialLineupEntry,
+  slot: SlotDefinition,
+  teamCode: string,
+  db: DbPlayer | undefined,
+): StadiumPlayer {
+  const ratings = db ? playerRatings(db) : null;
+  return {
+    id: db?.id ?? `${slot.slotId}-official`,
+    name: entry.name,
+    displayName: entry.name.split(' ').pop() || entry.name,
+    number: entry.shirt,
+    team: teamCode,
+    position: entry.pos,
+    positionLabel: db?.posLong ?? slot.defaultLabel,
+    tacticalRole: slot.defaultRole,
+    x: slot.x,
+    z: slot.z,
+    influenceScore: ratings?.overall ?? 75,
+    stamina: ratings?.physical ?? 80,
+    riskLevel: ratings ? (ratings.defending < 50 ? 'alto' : ratings.defending < 70 ? 'medio' : 'bajo') : 'medio',
+    notes: db
+      ? `Alineación oficial confirmada · ${db.club}. Calificación ${ratings!.overall} (${ratings!.source === 'fc26' ? 'EA SPORTS FC 26' : 'Estimada'}).`
+      : 'Titular de la alineación oficial confirmada.',
+    pos: entry.pos,
+    club: db?.club,
+    age: db?.age ?? null,
+    slotId: slot.slotId,
+  };
+}
+
+/**
+ * Overlay a confirmed official team sheet onto the estimated base lineup: keeps
+ * the resolved visual identity (name/colors) but replaces formation, manager and
+ * the XI with the real starters, placed on coordinates generated from the
+ * official formation. Starters are zipped to slots per position line.
+ */
+function applyOfficialSheet(
+  base: TeamLineup,
+  teamCode: string,
+  side: 'home' | 'away',
+  sheet: OfficialTeamSheet,
+  dbPlayers: DbPlayer[],
+): TeamLineup {
+  const slots = generateSlotsFromFormation(teamCode, side, sheet.formation);
+  const teamDbPlayers = dbPlayers.filter((p) => p.team === teamCode);
+  const usedDbIds = new Set<string>();
+  const players: StadiumPlayer[] = [];
+
+  for (const pos of POS_ORDER) {
+    const posSlots = slots.filter((s) => s.pos === pos);
+    const posStarters = sheet.starters.filter((s) => s.pos === pos);
+    for (let i = 0; i < posSlots.length; i++) {
+      const slot = posSlots[i];
+      const entry = posStarters[i];
+      if (entry) {
+        const db = entry.playerId
+          ? teamDbPlayers.find((p) => p.id === entry.playerId && !usedDbIds.has(p.id))
+          : undefined;
+        if (db) usedDbIds.add(db.id);
+        players.push(officialEntryToPlayer(entry, slot, teamCode, db));
+      } else {
+        // Sheet has fewer players in this line than the formation implies — keep
+        // the slot visible with a neutral placeholder rather than dropping it.
+        players.push({
+          id: slot.slotId,
+          name: slot.defaultName,
+          displayName: slot.defaultName.split(' ').pop() || slot.defaultName,
+          number: slot.slotId.includes('gk') ? 1 : 4,
+          team: teamCode,
+          position: slot.pos,
+          positionLabel: slot.defaultLabel,
+          tacticalRole: slot.defaultRole,
+          x: slot.x,
+          z: slot.z,
+          influenceScore: 75,
+          stamina: 80,
+          riskLevel: 'medio',
+          notes: 'Plaza de formación oficial sin titular asignado.',
+          slotId: slot.slotId,
+        });
+      }
+    }
+  }
+
+  players.sort((a, b) => a.slotId!.localeCompare(b.slotId!));
+
+  return {
+    ...base,
+    formation: sheet.formation,
+    manager: sheet.manager || base.manager,
+    players,
+    source: 'official',
+  };
+}
+
+/**
+ * Resolve the lineups for a match: use the confirmed official team sheet for any
+ * side present in OFFICIAL_LINEUPS, and fall back to the estimated XI generated
+ * from the curated squad for the rest. The result's `dataSource` reflects the
+ * mix so the UI badge can tell the truth ('official' | 'mixed' | 'estimated').
+ *
+ * `officialSource` is injectable for tests; production uses OFFICIAL_LINEUPS.
+ */
+export function buildMatchLineups(
+  dbPlayers: DbPlayer[],
+  homeCode: string,
+  awayCode: string,
+  matchId: string,
+  matchStatus: 'pre-match' | 'live' | 'post-match' = 'pre-match',
+  matchMinute: number = 0,
+  officialSource: Record<string, OfficialMatchLineup> = OFFICIAL_LINEUPS,
+): MatchLineups {
+  const base = mapDatabasePlayersToLineups(dbPlayers, homeCode, awayCode, matchId, matchStatus, matchMinute);
+  const official = officialSource[matchId];
+  if (!official) return base;
+
+  const home = official.home
+    ? applyOfficialSheet(base.teams.home, homeCode, 'home', official.home, dbPlayers)
+    : base.teams.home;
+  const away = official.away
+    ? applyOfficialSheet(base.teams.away, awayCode, 'away', official.away, dbPlayers)
+    : base.teams.away;
+
+  const officialCount = (official.home ? 1 : 0) + (official.away ? 1 : 0);
+  const dataSource: MatchLineups['dataSource'] =
+    officialCount === 2 ? 'official' : officialCount === 1 ? 'mixed' : 'estimated';
+
+  return { ...base, dataSource, teams: { home, away } };
 }

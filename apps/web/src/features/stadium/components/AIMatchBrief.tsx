@@ -272,11 +272,26 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
           Estadio 3D · Resumen
         </h4>
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          {match.isPending && (
-            <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--text-muted)', background: 'rgba(100, 116, 139, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(100, 116, 139, 0.2)' }}>
-              Datos Pendientes
-            </span>
-          )} 
+          {(() => {
+            const ds = lineups?.dataSource ?? 'estimated';
+            if (ds === 'official')
+              return (
+                <span title="Alineación oficial confirmada" style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--accent-emerald)', background: 'rgba(16, 185, 129, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                  XI Oficial
+                </span>
+              );
+            if (ds === 'mixed')
+              return (
+                <span title="Una alineación oficial confirmada; la otra es estimada" style={{ fontSize: '0.6rem', fontWeight: 800, color: '#d97706', background: 'rgba(217, 119, 6, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
+                  XI Oficial · parcial
+                </span>
+              );
+            return (
+              <span title="XI estimado a partir de la plantilla y una formación característica (no oficial)" style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--text-muted)', background: 'rgba(100, 116, 139, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(100, 116, 139, 0.2)' }}>
+                XI Estimado
+              </span>
+            );
+          })()}
           <span 
             style={{ 
               fontSize: '0.62rem', 

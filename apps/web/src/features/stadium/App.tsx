@@ -10,7 +10,7 @@ import { SelectedPlayerPanel } from './components/SelectedPlayerPanel';
 import type { Player } from './data/lineups';
 import { usePlayers, useMatches, useTeamsMap, useVenuesMap } from '../../hooks';
 import { TeamFlag, TeamCrest } from '../../components/identity';
-import { mapDatabasePlayersToLineups } from './data/stadiumDataMapper';
+import { buildMatchLineups } from './data/stadiumDataMapper';
 import { getTeamVisualIdentity } from './data/teamVisualIdentity';
 import type { Match as SharedMatch } from '@worldcup/shared';
 import {
@@ -152,7 +152,7 @@ function App() {
       'post-match': 'post-match',
     };
     const minute = currentMatch.liveTime ? parseInt(currentMatch.liveTime) : 0;
-    return mapDatabasePlayersToLineups(
+    return buildMatchLineups(
       dbPlayers,
       currentMatch.teams.homeShort,
       currentMatch.teams.awayShort,
@@ -169,7 +169,7 @@ function App() {
 
     const nextMatch = fixturesWithOverrides.find((m) => m.id === matchId) ?? fixturesWithOverrides[0];
     const nextMinute = nextMatch.liveTime ? parseInt(nextMatch.liveTime) : 0;
-    const nextLineups = mapDatabasePlayersToLineups(
+    const nextLineups = buildMatchLineups(
       dbPlayers,
       nextMatch.teams.homeShort,
       nextMatch.teams.awayShort,
