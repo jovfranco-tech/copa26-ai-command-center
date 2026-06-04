@@ -175,6 +175,7 @@ function ResultRow({
   const [away, setAway] = useState(current?.awayGoals != null ? String(current.awayGoals) : '');
   const [status, setStatus] = useState<'FT' | 'LIVE'>(current?.status === 'LIVE' ? 'LIVE' : 'FT');
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(false);
   const published = current != null && current.homeGoals != null;
 
   async function save() {
@@ -186,8 +187,9 @@ function ResultRow({
         data: { homeGoals: Number(home), awayGoals: Number(away), status },
       });
       onOverlay(next);
+      setErr(false);
     } catch {
-      /* surfaced globally via reconnect; keep row state */
+      setErr(true);
     } finally {
       setBusy(false);
     }
@@ -225,8 +227,15 @@ function ResultRow({
         <option value="LIVE">EN VIVO</option>
       </select>
       <span style={{ display: 'flex', gap: 4 }}>
-        <button type="button" className="btn gold" disabled={busy || !valid} onClick={save} style={{ padding: '4px 10px', fontSize: 12 }}>
-          {busy ? '…' : 'Guardar'}
+        <button
+          type="button"
+          className={err ? 'btn' : 'btn gold'}
+          disabled={busy || !valid}
+          onClick={save}
+          title={err ? 'No se pudo guardar — revisa la configuración del Blob store' : undefined}
+          style={{ padding: '4px 10px', fontSize: 12, ...(err ? { borderColor: '#f87171', color: '#f87171' } : {}) }}
+        >
+          {busy ? '…' : err ? 'Reintentar' : 'Guardar'}
         </button>
         {published && (
           <button type="button" className="btn" disabled={busy} onClick={clear} style={{ padding: '4px 8px', fontSize: 12 }}>
@@ -307,6 +316,7 @@ function LineupForm({
   const [home, setHome] = useState<LineupSheet>(seed.home);
   const [away, setAway] = useState<LineupSheet>(seed.away);
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(false);
   const published = Boolean(overlay.lineups[match.id]);
 
   async function save() {
@@ -318,6 +328,9 @@ function LineupForm({
         data: { status: 'confirmada', source: 'Publicado desde el panel', home, away },
       });
       onOverlay(next);
+      setErr(false);
+    } catch {
+      setErr(true);
     } finally {
       setBusy(false);
     }
@@ -338,8 +351,15 @@ function LineupForm({
         <TeamColumn title={match.away} sheet={away} onChange={setAway} />
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <button type="button" className="btn gold" disabled={busy} onClick={save}>
-          {busy ? 'Guardando…' : published ? 'Actualizar XI oficial' : 'Publicar XI oficial'}
+        <button
+          type="button"
+          className={err ? 'btn' : 'btn gold'}
+          disabled={busy}
+          onClick={save}
+          title={err ? 'No se pudo guardar — revisa la configuración del Blob store' : undefined}
+          style={err ? { borderColor: '#f87171', color: '#f87171' } : undefined}
+        >
+          {busy ? 'Guardando…' : err ? 'Reintentar' : published ? 'Actualizar XI oficial' : 'Publicar XI oficial'}
         </button>
         {published && (
           <button type="button" className="btn" disabled={busy} onClick={clear}>

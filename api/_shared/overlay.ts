@@ -12,7 +12,11 @@ import { sanitizeOverlay, emptyOverlay, type LiveOverlay } from '../../packages/
 const KEY = 'live-overlay.json';
 
 export function blobConfigured(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  // @vercel/blob authenticates with EITHER a static read-write token OR OIDC
+  // (BLOB_STORE_ID + VERCEL_OIDC_TOKEN, the default on Vercel — the SDK resolves
+  // it automatically). Connecting a store injects BLOB_STORE_ID, so that alone is
+  // enough on Vercel.
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
 export async function getOverlay(): Promise<LiveOverlay> {
