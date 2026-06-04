@@ -1,11 +1,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
-import { FOOTER_NOTICE } from '@worldcup/shared';
 import { useMatches, useLiveOverlaySync, usePWAInstall } from '@/hooks';
+import { useT } from '@/i18n';
 import { usePreferences, applyPreferences, isThemeExplicit, setSystemThemePreference, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
+import { LanguageToggle } from './LanguageToggle';
 import { NotificationToastStack } from './NotificationToast';
 
 type StaticPath =
@@ -32,34 +33,35 @@ interface NavItem {
   live?: boolean;
 }
 
+// `group` and `label` hold i18n keys, resolved with t() at render time.
 const NAV: Array<{ group: string; items: NavItem[] }> = [
   {
-    group: 'Centro de mando',
+    group: 'nav.groupCommand',
     items: [
-      { key: 'home', label: 'Panel', icon: 'home', to: '/' },
-      { key: 'matches', label: 'Partidos', icon: 'calendar', to: '/matches', live: true },
-      { key: 'tv', label: 'Modo TV', icon: 'present', to: '/tv' },
-      { key: 'bracket', label: 'Eliminatorias', icon: 'bracket', to: '/bracket' },
+      { key: 'home', label: 'nav.home', icon: 'home', to: '/' },
+      { key: 'matches', label: 'nav.matches', icon: 'calendar', to: '/matches', live: true },
+      { key: 'tv', label: 'nav.tv', icon: 'present', to: '/tv' },
+      { key: 'bracket', label: 'nav.bracket', icon: 'bracket', to: '/bracket' },
     ],
   },
   {
-    group: 'Explorar',
+    group: 'nav.groupExplore',
     items: [
-      { key: 'teams', label: 'Selecciones', icon: 'teams', to: '/teams' },
-      { key: 'players', label: 'Jugadores', icon: 'players', to: '/players' },
-      { key: 'standings', label: 'Grupos y tabla', icon: 'standings', to: '/standings' },
-      { key: 'stats', label: 'Estadísticas', icon: 'stats', to: '/stats' },
-      { key: 'estadio-3d', label: 'Estadio 3D', icon: 'route', to: '/estadio-3d' },
-      { key: 'venues', label: 'Sedes', icon: 'venues', to: '/venues' },
+      { key: 'teams', label: 'nav.teams', icon: 'teams', to: '/teams' },
+      { key: 'players', label: 'nav.players', icon: 'players', to: '/players' },
+      { key: 'standings', label: 'nav.standings', icon: 'standings', to: '/standings' },
+      { key: 'stats', label: 'nav.stats', icon: 'stats', to: '/stats' },
+      { key: 'estadio-3d', label: 'nav.stadium', icon: 'route', to: '/estadio-3d' },
+      { key: 'venues', label: 'nav.venues', icon: 'venues', to: '/venues' },
     ],
   },
   {
-    group: 'Personal',
+    group: 'nav.groupPersonal',
     items: [
-      { key: 'pool', label: 'Quiniela', icon: 'trophy', to: '/pool' },
-      { key: 'favorites', label: 'Favoritos', icon: 'star', to: '/favorites' },
-      { key: 'data', label: 'Datos', icon: 'cloud', to: '/data' },
-      { key: 'analyst', label: 'Analista IA', icon: 'ai', to: '/analyst' },
+      { key: 'pool', label: 'nav.pool', icon: 'trophy', to: '/pool' },
+      { key: 'favorites', label: 'nav.favorites', icon: 'star', to: '/favorites' },
+      { key: 'data', label: 'nav.data', icon: 'cloud', to: '/data' },
+      { key: 'analyst', label: 'nav.analyst', icon: 'ai', to: '/analyst' },
     ],
   },
 ];
@@ -68,20 +70,20 @@ const MOBILE_KEYS = ['home', 'matches', 'pool', 'standings', 'analyst'];
 const ALL_ITEMS = NAV.flatMap((g) => g.items);
 
 const TITLES: Record<string, string> = {
-  home: 'Panel',
-  matches: 'Centro de partidos',
-  tv: 'Modo TV',
-  bracket: 'Eliminatorias',
-  teams: 'Selecciones',
-  players: 'Jugadores',
-  standings: 'Grupos y clasificación',
-  stats: 'Estadísticas',
-  venues: 'Sedes',
-  favorites: 'Favoritos',
-  pool: 'Quiniela',
-  data: 'Centro de datos',
-  analyst: 'Analista de partidos IA',
-  'estadio-3d': 'Estadio 3D',
+  home: 'titles.home',
+  matches: 'titles.matches',
+  tv: 'titles.tv',
+  bracket: 'titles.bracket',
+  teams: 'titles.teams',
+  players: 'titles.players',
+  standings: 'titles.standings',
+  stats: 'titles.stats',
+  venues: 'titles.venues',
+  favorites: 'titles.favorites',
+  pool: 'titles.pool',
+  data: 'titles.data',
+  analyst: 'titles.analyst',
+  'estadio-3d': 'titles.stadium',
 };
 
 function activeKeyFromPath(pathname: string): string {
@@ -92,6 +94,7 @@ function activeKeyFromPath(pathname: string): string {
 
 export function AppShell({ children }: { children: ReactNode }) {
   useLiveOverlaySync(); // prime + keep the live results/lineups overlay in sync
+  const t = useT();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isRouterLoading = useRouterState({ select: (s) => s.status === 'pending' });
@@ -134,7 +137,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
-  const roleLabel = prefs.role === 'admin' ? 'Admin' : prefs.role === 'family' ? 'Estándar' : 'Invitado';
+  const roleLabel = t(`role.${prefs.role}`);
 
   const { data: liveData } = useMatches({ status: 'LIVE' });
   const liveCount = liveData?.items.length ?? 0;
@@ -161,7 +164,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="brand-copy">
         <img className="brand-wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="Copa 2026" />
         <div className="brand-sub">
-          <span>Centro de mando</span>
+          <span>{t('nav.groupCommand')}</span>
         </div>
       </div>
     </div>
@@ -171,7 +174,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <>
       {NAV.map((grp) => (
         <div key={grp.group}>
-          <div className="nav-group-label mono-label">{grp.group}</div>
+          <div className="nav-group-label mono-label">{t(grp.group)}</div>
           {grp.items.map((it) => (
             <Link
               key={it.key}
@@ -180,8 +183,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               onClick={onPick}
             >
               <Icon name={it.icon} size={18} />
-              <span>{it.label}</span>
-              {it.live && liveCount > 0 && <span className="nav-badge">{liveCount} EN VIVO</span>}
+              <span>{t(it.label)}</span>
+              {it.live && liveCount > 0 && <span className="nav-badge">{liveCount} {t('common.live')}</span>}
             </Link>
           ))}
         </div>
@@ -191,7 +194,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app-bg">
-      <a href="#main-content" className="skip-to-content">Ir al contenido principal</a>
+      <a href="#main-content" className="skip-to-content">{t('common.skipToContent')}</a>
       {isRouterLoading && (
         <div
           className="global-progress-bar"
@@ -241,9 +244,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Icon name="close" size={12} />
           </div>
           <div style={{ flex: 1, lineHeight: '1.4' }}>
-            <strong style={{ display: 'block', color: 'var(--tx)' }}>Modo sin conexión activo</strong>
+            <strong style={{ display: 'block', color: 'var(--tx)' }}>{t('states.offlineTitle')}</strong>
             <span style={{ color: 'var(--tx-2)', display: 'block', fontSize: '11px', marginTop: '1px' }}>
-              Tus predicciones se guardarán localmente y se sincronizarán al recuperar señal.
+              {t('states.offlineBody')}
             </span>
           </div>
         </div>
@@ -262,22 +265,22 @@ export function AppShell({ children }: { children: ReactNode }) {
                 className="pwa-install-btn"
                 onClick={promptInstall}
               >
-                <Icon name="download" size={14} /> Instalar app
+                <Icon name="download" size={14} /> {t('common.installApp')}
               </button>
             )}
-            Copa 2026 · AI Command Center.
+            {t('footer.brand')}
             <br />
-            Proyecto personal · sin afiliación oficial.
+            {t('footer.tagline')}
           </div>
         </aside>
 
         <div className="main">
           <header className="topbar">
-            <button type="button" className="icon-btn menu-btn" onClick={() => setDrawer(true)} aria-label="Menú">
+            <button type="button" className="icon-btn menu-btn" onClick={() => setDrawer(true)} aria-label={t('common.menu')}>
               <Icon name="menu" size={18} />
             </button>
             <div>
-              <h1>{TITLES[activeKey] ?? 'Panel'}</h1>
+              <h1>{t(TITLES[activeKey] ?? 'titles.home')}</h1>
             </div>
             <form
               className="searchbox"
@@ -288,32 +291,33 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Icon name="search" size={15} />
               <input
-                aria-label="Buscar jugadores y clubes"
-                placeholder="Buscar jugadores, clubes…"
+                aria-label={t('common.search')}
+                placeholder={t('common.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </form>
-            <span className="badge" style={{ alignSelf: 'center' }} title="Datos locales">
+            <span className="badge" style={{ alignSelf: 'center' }} title={t('common.dataBadge')}>
               <span className="dot-ok" />
-              <span className="sb-text">Datos</span>
+              <span className="sb-text">{t('common.dataBadge')}</span>
             </span>
+            <LanguageToggle />
             <select
               className="role-switch"
               value={prefs.role}
-              aria-label="Rol de uso"
-              title={`Rol activo: ${roleLabel}`}
+              aria-label={t('role.label')}
+              title={`${t('role.active')}: ${roleLabel}`}
               onChange={(e) => prefs.set('role', e.target.value as AppRole)}
             >
-              <option value="admin">Admin</option>
-              <option value="family">Estándar</option>
-              <option value="guest">Invitado</option>
+              <option value="admin">{t('role.admin')}</option>
+              <option value="family">{t('role.family')}</option>
+              <option value="guest">{t('role.guest')}</option>
             </select>
-            <Link to="/analyst" className="icon-btn" title="Analista IA" aria-label="Analista IA">
+            <Link to="/analyst" className="icon-btn" title={t('nav.analyst')} aria-label={t('nav.analyst')}>
               <Icon name="ai" size={18} />
             </Link>
             {!isLocalHost && (
-              <button type="button" className="icon-btn logout-btn" title="Salir" aria-label="Salir" onClick={logout}>
+              <button type="button" className="icon-btn logout-btn" title={t('common.logout')} aria-label={t('common.logout')} onClick={logout}>
                 <Icon name="arrowR" size={18} />
               </button>
             )}
@@ -342,8 +346,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                   width: '100%',
                 }}
               >
-                <span className="mono-label">{FOOTER_NOTICE}</span>
-                <span className="mono-label">Calendario del Torneo</span>
+                <span className="mono-label">{t('disclaimer.footer')}</span>
+                <span className="mono-label">{t('footer.calendar')}</span>
               </div>
             </footer>
           </div>
@@ -357,7 +361,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           return (
             <Link key={k} to={it.to} className={`mi${activeKey === k ? ' active' : ''}`}>
               <Icon name={it.icon} size={21} />
-              <span>{it.label.split(' ')[0]}</span>
+              <span>{t(it.label).split(' ')[0]}</span>
             </Link>
           );
         })}
@@ -377,9 +381,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <NavList onPick={() => setDrawer(false)} />
             </nav>
             <div className="sidebar-foot">
-              Dashboard privado.
+              {t('footer.privateNote')}
               <br />
-              No es para distribución pública.
+              {t('footer.notForDistribution')}
             </div>
           </div>
         </>

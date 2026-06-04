@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware';
 export type Theme = 'dark' | 'light';
 export type Density = 'compact' | 'regular' | 'comfy';
 export type AppRole = 'admin' | 'family' | 'guest';
+export type Lang = 'es' | 'en';
 
 export const FONT_PRESETS: Record<string, [ui: string, num: string]> = {
   Archivo: ["'Archivo', 'Space Grotesk', system-ui, sans-serif", "'JetBrains Mono', ui-monospace, monospace"],
@@ -37,6 +38,7 @@ export interface PreferencesState {
   theme: Theme;
   density: Density;
   role: AppRole;
+  lang: Lang;
   accent: string;
   goldAmt: number; // 0..100
   radius: number; // px
@@ -49,6 +51,7 @@ const DEFAULTS = {
   theme: getSystemTheme(),
   density: 'regular' as Density,
   role: 'family' as AppRole,
+  lang: 'es' as Lang,
   accent: '#c9a24b',
   goldAmt: 30,
   radius: 14,
@@ -70,13 +73,13 @@ export const usePreferences = create<PreferencesState>()(
     }),
     {
       name: 'wc_prefs',
-      version: 3,
+      version: 4,
       migrate: (persisted) => {
         const prev = persisted as Partial<PreferencesState>;
         // If upgrading from an earlier version, the user had no explicit choice yet.
         // Keep the stored theme if it was explicitly set; otherwise detect system.
         const theme = isThemeExplicit() ? (prev.theme ?? getSystemTheme()) : getSystemTheme();
-        return { ...prev, theme, role: prev.role ?? 'family' };
+        return { ...prev, theme, role: prev.role ?? 'family', lang: prev.lang ?? 'es' };
       },
     },
   ),
