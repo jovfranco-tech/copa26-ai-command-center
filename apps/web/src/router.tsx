@@ -5,10 +5,7 @@ import { AppShell } from '@/components/AppShell';
 import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import { Dashboard } from '@/routes/Dashboard';
 import { MatchCenter } from '@/routes/MatchCenter';
-import { MatchDetail } from '@/routes/MatchDetail';
 import { Teams } from '@/routes/Teams';
-import { TeamDetail } from '@/routes/TeamDetail';
-import { PlayerDetail } from '@/routes/PlayerDetail';
 import { Standings } from '@/routes/Standings';
 import { Bracket } from '@/routes/Bracket';
 import { Favorites } from '@/routes/Favorites';
@@ -38,7 +35,11 @@ const matchDetailRoute = createRoute({
   path: '/matches/$matchId',
   component: function MatchDetailRoute() {
     const { matchId } = matchDetailRoute.useParams();
-    return <MatchDetail id={matchId} />;
+    return (
+      <Suspense fallback={<Skeleton h={240} />}>
+        <LazyMatchDetail id={matchId} />
+      </Suspense>
+    );
   },
 });
 
@@ -49,7 +50,11 @@ const teamDetailRoute = createRoute({
   path: '/teams/$code',
   component: function TeamDetailRoute() {
     const { code } = teamDetailRoute.useParams();
-    return <TeamDetail code={code} />;
+    return (
+      <Suspense fallback={<Skeleton h={240} />}>
+        <LazyTeamDetail code={code} />
+      </Suspense>
+    );
   },
 });
 
@@ -58,7 +63,11 @@ const playerDetailRoute = createRoute({
   path: '/players/$playerId',
   component: function PlayerDetailRoute() {
     const { playerId } = playerDetailRoute.useParams();
-    return <PlayerDetail id={playerId} />;
+    return (
+      <Suspense fallback={<Skeleton h={240} />}>
+        <LazyPlayerDetail id={playerId} />
+      </Suspense>
+    );
   },
 });
 
@@ -100,6 +109,10 @@ const LazyDataCenter = lazyWithRetry(() => import('./routes/DataCenter').then((m
 const LazyAnalyst = lazyWithRetry(() => import('./routes/Analyst').then((m) => ({ default: m.Analyst })));
 const LazyTVMode = lazyWithRetry(() => import('./routes/TVMode').then((m) => ({ default: m.TVMode })));
 const LazyEstadio3D = lazyWithRetry(() => import('./routes/Estadio3D').then((m) => ({ default: m.Estadio3D })));
+// Detail pages are navigation-only — defer them out of the initial shell.
+const LazyMatchDetail = lazyWithRetry(() => import('./routes/MatchDetail').then((m) => ({ default: m.MatchDetail })));
+const LazyTeamDetail = lazyWithRetry(() => import('./routes/TeamDetail').then((m) => ({ default: m.TeamDetail })));
+const LazyPlayerDetail = lazyWithRetry(() => import('./routes/PlayerDetail').then((m) => ({ default: m.PlayerDetail })));
 
 const playersRoute = createRoute({
   getParentRoute: () => rootRoute,

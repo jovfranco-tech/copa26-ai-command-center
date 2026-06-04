@@ -1,5 +1,5 @@
 import { recordUsage } from './_shared/usage.js';
-import { getAnalystSystemPrompt, PROMPT_META } from './_shared/systemPrompts.js';
+import { getAnalystSystemPrompt } from './_shared/systemPrompts.js';
 
 /**
  * Vercel Edge Function — AI analyst relay.

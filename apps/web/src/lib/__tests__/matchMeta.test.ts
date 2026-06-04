@@ -281,16 +281,16 @@ describe('isMatchLocked', () => {
   });
 
   it('respects leadMinutes parameter', () => {
-    // A match 10 minutes from now
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 10);
-    const date = now.toISOString().split('T')[0];
-    const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    
-    // With 0 lead minutes, it shouldn't be locked
-    expect(isMatchLocked(makeMatch({ status: 'UPCOMING', date, time }), 0)).toBe(false);
-    // With 30 lead minutes, it should be locked
-    expect(isMatchLocked(makeMatch({ status: 'UPCOMING', date, time }), 30)).toBe(true);
+    // A match 10 minutes from now, expressed in UTC with a venue that has no
+    // offset, so the test is deterministic regardless of the runner's timezone.
+    const kickoff = new Date(Date.now() + 10 * 60 * 1000);
+    const date = kickoff.toISOString().slice(0, 10);
+    const time = kickoff.toISOString().slice(11, 16);
+    const at = (lead: number) =>
+      isMatchLocked(makeMatch({ status: 'UPCOMING', date, time, venue: 'Unknown Venue' }), lead);
+
+    expect(at(0)).toBe(false); // kickoff is still in the future
+    expect(at(30)).toBe(true); // already inside the 30-minute lead window
   });
 });
 

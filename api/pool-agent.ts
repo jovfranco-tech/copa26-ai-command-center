@@ -1,5 +1,5 @@
 import { recordUsage } from './_shared/usage.js';
-import { getPoolAgentSystemPrompt, PROMPT_META } from './_shared/systemPrompts.js';
+import { getPoolAgentSystemPrompt } from './_shared/systemPrompts.js';
 
 /**
  * Vercel Edge Function — AI pool co-pilot.

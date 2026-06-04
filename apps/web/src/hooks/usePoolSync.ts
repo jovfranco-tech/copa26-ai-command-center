@@ -64,7 +64,6 @@ export function usePoolSync(options: UsePoolSyncOptions): UsePoolSyncReturn {
       }
     };
     loadPicks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerName, groupId]);
 
   // Sync picks to Firestore (debounced to avoid spamming the connection)

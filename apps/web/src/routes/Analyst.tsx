@@ -172,6 +172,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     () => entityMemory(combinedMemory, memoryEntityType, memoryEntityId).slice(0, 4),
     [combinedMemory, memoryEntityType, memoryEntityId],
   );
+  // `memory` is an intentional recompute trigger: getMemoryStats() reads the
+  // persisted store, so we want fresh stats whenever the memory list changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const memStats = useMemo(() => getMemoryStats(), [memory]);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -212,12 +215,15 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   const listening = voiceInput.listening;
   const toggleSpeech = voiceInput.toggleSpeech;
 
-  // Sync hook attachments into local state (maintains existing data flow)
+  // Sync hook attachments into local state (maintains existing data flow).
+  // Intentionally keyed only on `.attachment` (the one-shot trigger); clearAttachment
+  // is a stable setter and adding the whole hook object would re-run every render.
   useEffect(() => {
     if (pdfUpload.attachment) {
       setAttachedPdf(pdfUpload.attachment);
       pdfUpload.clearAttachment();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pdfUpload.attachment]);
 
   useEffect(() => {
@@ -225,6 +231,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       setAttachedAudio(audioRecording.attachment);
       audioRecording.clearAttachment();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioRecording.attachment]);
 
   const commitAnswer = (

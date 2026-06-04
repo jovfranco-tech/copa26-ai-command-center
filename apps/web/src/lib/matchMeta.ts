@@ -106,9 +106,28 @@ export function matchSourceInfo(match: Match): DataSourceInfo {
   };
 }
 
+/**
+ * Absolute kickoff instant (ms since epoch).
+ *
+ * `match.time` is wall-clock "hora sede" with a fixed venue offset (e.g. "UTC-6").
+ * We resolve it to a real UTC instant so the lock fires at the same moment for
+ * every viewer regardless of their device timezone — and so the client and the
+ * edge server agree. Falls back to a consistent UTC reading when no offset.
+ */
+export function kickoffInstant(match: Match): number {
+  const base = Date.parse(`${match.date}T${match.time || '00:00'}:00Z`); // wall-clock read as UTC
+  if (!Number.isFinite(base)) return NaN;
+  const offsetMatch = /^UTC([+-]\d{1,2})(?::?(\d{2}))?$/.exec(venueExtras[match.venue]?.timezone ?? '');
+  if (!offsetMatch) return base; // unknown/abbreviated offset → consistent UTC interpretation
+  const hours = parseInt(offsetMatch[1]!, 10);
+  const minutes = offsetMatch[2] ? parseInt(offsetMatch[2], 10) : 0;
+  const offsetMin = hours * 60 + (hours < 0 ? -minutes : minutes);
+  return base - offsetMin * 60_000; // shift the venue wall-clock onto the true UTC timeline
+}
+
 export function isMatchLocked(match: Match, leadMinutes = 0): boolean {
   if (match.status !== 'UPCOMING') return true;
-  const kickoff = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
+  const kickoff = kickoffInstant(match);
   if (!Number.isFinite(kickoff)) return false;
   return Date.now() >= kickoff - leadMinutes * 60 * 1000;
 }

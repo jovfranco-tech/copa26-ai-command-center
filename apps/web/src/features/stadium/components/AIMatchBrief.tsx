@@ -10,6 +10,14 @@ interface AIMatchBriefProps {
   lineups?: MatchLineups;
 }
 
+/**
+ * Hand-authored 2D mini-pitch coordinates for the 8 "marquee" teams only — a
+ * deliberate visual-polish layer (flat back line, clean winger spread) that reads
+ * better than the auto-derivation for the most-viewed sides. This is intentional
+ * curation, NOT duplication of data: every other team is positioned by
+ * derive2DCoord() from its real 3D x/z. Keep both in sync if a template's 3D
+ * coordinates change.
+ */
 const COORD_REGISTRY: Record<string, { x: number; y: number }> = {
   // MEX
   'mex-gk': { x: 50, y: 112 },

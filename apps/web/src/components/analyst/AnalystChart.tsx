@@ -11,6 +11,8 @@ export interface ParsedAnswer {
   } | null;
 }
 
+// Co-located with its chart component on purpose; this only affects HMR granularity.
+// eslint-disable-next-line react-refresh/only-export-components
 export function parseAIAnswer(text: string): ParsedAnswer {
   const match = text.match(/```json\s*([\s\S]*?)\s*```/);
   if (match && match[1]) {
