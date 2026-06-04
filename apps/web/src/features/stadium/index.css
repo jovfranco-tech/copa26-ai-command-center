@@ -632,9 +632,10 @@
     user-select: none;
     font-family: var(--font-sans);
     transform: translateY(-50%);
-    transition: transform var(--transition-fast);
+    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     cursor: pointer;
     z-index: 1;
+    opacity: 1;
   }
   .player-badge-marker:hover { transform: translateY(-50%) scale(1.1); z-index: 5; }
   .player-badge-marker.selected { transform: translateY(-50%) scale(1.15); z-index: 10; }
