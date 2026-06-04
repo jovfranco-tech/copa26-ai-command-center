@@ -157,9 +157,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const Brand = () => (
     <div className="brand">
-      <img className="brand-mark" src="/brand/fwc26-emblem.svg" alt="FIFA World Cup 26" />
+      <img className="brand-mark" src="/brand/fwc26-emblem.svg" alt="Copa 2026" />
       <div className="brand-copy">
-        <img className="brand-wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="FIFA World Cup 26" />
+        <img className="brand-wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="Copa 2026" />
         <div className="brand-sub">
           <span>Centro de mando</span>
           <span>Familiar</span>
@@ -266,9 +266,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <Icon name="download" size={14} /> Instalar app
               </button>
             )}
-            FIFA World Cup 26 · acceso familiar.
+            Copa 2026 · AI Command Center.
             <br />
-            No oficial · sin afiliación FIFA.
+            Proyecto personal · sin afiliación oficial.
           </div>
         </aside>
 

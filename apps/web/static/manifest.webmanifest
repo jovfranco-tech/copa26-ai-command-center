@@ -1,7 +1,7 @@
 {
-  "name": "FIFA World Cup 2026 — Dashboard Familiar",
-  "short_name": "Mundial 2026",
-  "description": "Dashboard privado familiar para el Mundial FIFA 2026 con quiniela, analista IA, y estadio 3D.",
+  "name": "Copa 2026 AI Command Center",
+  "short_name": "Copa 2026",
+  "description": "AI-native sports intelligence dashboard — quiniela familiar, analista IA, estadio 3D interactivo.",
   "id": "/",
   "lang": "es",
   "start_url": "/",

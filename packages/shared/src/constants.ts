@@ -68,7 +68,7 @@ export const LOCAL_ONLY = {
 } as const;
 
 export const FOOTER_NOTICE =
-  'No oficial · sin afiliación con la FIFA · calendario del torneo.';
-export const ANALYST_DISCLAIMER = 'Contenido generado automáticamente. Las predicciones son estimaciones que pueden ser incorrectas. No constituye asesoría de apuestas. Basado en datos públicos del calendario FIFA 2026; sin afiliación oficial.';
+  'Proyecto personal · sin afiliación oficial · datos públicos del torneo.';
+export const ANALYST_DISCLAIMER = 'Contenido generado automáticamente. Las predicciones son estimaciones que pueden ser incorrectas. No constituye asesoría de apuestas. Basado en datos públicos del calendario 2026; sin afiliación oficial.';
 export const MOCK_BANNER =
-  'Calendario real del Mundial 2026. Plantillas, resultados y estadísticas aparecen cuando se jueguen los partidos (11 jun).';
+  'Calendario real del torneo 2026. Plantillas, resultados y estadísticas aparecen cuando se jueguen los partidos (11 jun).';
