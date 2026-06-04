@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef } from 'react';
 import { Icon } from '@worldcup/ui';
 import { type Match as WorldCupMatch } from '@worldcup/shared';
+import { notifyInfo } from '@/store/notifications';
 
 export function HawkEyePitch({
   homeTeam,
@@ -360,7 +361,7 @@ export function PressRoom({
             style={{ padding: '6px 14px', fontSize: 12.5 }}
             onClick={() => {
               if (!userResponse.trim()) {
-                alert('Escribe una respuesta para responder a la prensa.');
+                notifyInfo('Campo vacío', 'Escribe una respuesta para responder a la prensa.');
                 return;
               }
               const score = Math.floor(Math.random() * 20) + 80;

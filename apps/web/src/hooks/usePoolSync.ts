@@ -59,8 +59,8 @@ export function usePoolSync(options: UsePoolSyncOptions): UsePoolSyncReturn {
           if (res.avatarUrl) setImportedAvatarUrl(res.avatarUrl);
           setSyncStatus('synced');
         }
-      } catch (e) {
-        console.error('Failed to load picks from Firestore', e);
+      } catch {
+        // Failure handled gracefully — no picks loaded
       }
     };
     loadPicks();
@@ -264,8 +264,7 @@ export function usePoolSync(options: UsePoolSyncOptions): UsePoolSyncReturn {
         setLeaderboard(board);
         setLoadingLeaderboard(false);
       },
-      (error) => {
-        console.error('Firestore onSnapshot error:', error);
+      (_error) => {
         setLoadingLeaderboard(false);
       }
     );

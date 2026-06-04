@@ -6,6 +6,7 @@ import { usePool, type PoolOutcome } from '@/store/pool';
 import { isMatchLocked, lockLabel } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
+import { notifyInfo } from '@/store/notifications';
 
 const playTick = () => {
   try {
@@ -127,7 +128,7 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
 
   const sharePrediction = async () => {
     if (!outcome || homeGoals == null || awayGoals == null) {
-      alert('Primero captura ganador y marcador para compartir tu prediccion.');
+      notifyInfo('Pick incompleto', 'Primero captura ganador y marcador para compartir tu predicción.');
       return;
     }
     await shareTextCard({

@@ -402,8 +402,7 @@ export const fetchPoolPicks = async (playerName: string, groupId = 'familia-2026
       };
     }
     return { ok: true, picks: {}, avatarUrl: '' };
-  } catch (error) {
-    console.error("fetchPoolPicks from Firestore failed", error);
+  } catch {
     return { ok: false, picks: {}, avatarUrl: '' };
   }
 };
@@ -430,8 +429,7 @@ export async function syncPoolPicks(
       { merge: true },
     );
     return true;
-  } catch (error) {
-    console.error("syncPoolPicks to Firestore failed", error);
+  } catch {
     return false;
   }
 }

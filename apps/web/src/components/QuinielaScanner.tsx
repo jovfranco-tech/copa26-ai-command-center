@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@worldcup/ui';
 import { scanPoolPaper } from '@/lib/api';
+import { notifySuccess, notifyWarning } from '@/store/notifications';
 
 interface ScannerProps {
   onClose: () => void;
@@ -36,6 +37,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
       }
     } catch (err) {
       console.error('Camera access failed:', err);
+      notifyWarning('Cámara no disponible', 'No se pudo acceder a la cámara. Verifica los permisos.');
       setError('No se pudo acceder a la cámara. Asegúrate de otorgar permisos de cámara en tu navegador.');
     }
   };
@@ -78,7 +80,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
       if (res.ok && res.predictions && Object.keys(res.predictions).length > 0) {
         onScanSuccess(res.predictions);
         if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
-        alert(`¡Quiniela procesada con éxito! Se cargaron marcadores para ${Object.keys(res.predictions).length} partidos.`);
+        notifySuccess('Quiniela escaneada', `Se cargaron marcadores para ${Object.keys(res.predictions).length} partidos.`);
         onClose();
       } else {
         setError(res.reason === 'no-key' 

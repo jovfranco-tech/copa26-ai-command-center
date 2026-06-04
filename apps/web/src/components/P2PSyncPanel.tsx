@@ -3,6 +3,7 @@ import { db } from '@/lib/firebase';
 import { doc, setDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
 import { Icon } from '@worldcup/ui';
 import type { PoolPick } from '@/store/pool';
+import { notifyWarning, notifyInfo } from '@/store/notifications';
 
 type PeerPicks = Record<string, PoolPick>;
 
@@ -45,7 +46,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
   // Generate 4-digit code and become the Host
   const startHosting = async () => {
     if (!playerName.trim()) {
-      alert('Por favor ingresa tu nombre de participante antes de sincronizar.');
+      notifyWarning('Nombre requerido', 'Ingresa tu nombre de participante antes de sincronizar.');
       return;
     }
     
@@ -107,11 +108,11 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
   // Join an existing host session using 4 digit code
   const joinSession = async () => {
     if (!playerName.trim()) {
-      alert('Por favor ingresa tu nombre de participante antes de sincronizar.');
+      notifyWarning('Nombre requerido', 'Ingresa tu nombre de participante antes de sincronizar.');
       return;
     }
     if (!inputCode.trim() || inputCode.length !== 4) {
-      alert('Ingresa un código de 4 dígitos válido.');
+      notifyInfo('Código inválido', 'Ingresa un código de 4 dígitos válido.');
       return;
     }
 

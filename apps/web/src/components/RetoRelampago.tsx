@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, doc, addDoc, onSnapshot, updateDoc, increment } from 'firebase/firestore';
+import { notifyWarning, notifyInfo } from '@/store/notifications';
 
 interface Challenge {
   id: string;
@@ -60,15 +61,15 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
   // Create a new Flash Challenge in Firestore
   const handleCreateChallenge = async () => {
     if (!playerName.trim()) {
-      alert('Por favor, introduce tu nombre de participante para lanzar retos.');
+      notifyWarning('Nombre requerido', 'Introduce tu nombre de participante para lanzar retos.');
       return;
     }
     if (!newTitle.trim()) {
-      alert('El reto debe tener una pregunta.');
+      notifyInfo('Reto incompleto', 'El reto debe tener una pregunta.');
       return;
     }
     if (newOptions.filter(o => o.trim()).length < 2) {
-      alert('Debes proveer al menos 2 opciones.');
+      notifyInfo('Opciones insuficientes', 'Debes proveer al menos 2 opciones.');
       return;
     }
 
@@ -102,7 +103,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
   // Vote for a challenge option
   const handleVote = async (challengeId: string, option: string) => {
     if (!playerName.trim()) {
-      alert('Por favor, ingresa tu nombre de participante para votar.');
+      notifyWarning('Nombre requerido', 'Ingresa tu nombre de participante para votar.');
       return;
     }
     if (votedIds[challengeId]) return;
