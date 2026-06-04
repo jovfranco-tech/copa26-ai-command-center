@@ -883,4 +883,20 @@
     .camera-toggle-btn { font-size: 0.55rem; padding: 3px 5px; }
     .match-status-badge { display: none; }
   }
+
+  /* Performance: reduce backdrop-filter on mobile */
+  @media (max-width: 768px) {
+    .side-panel-glass,
+    .canvas-hint-pill,
+    .zone-info-card {
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .stadium-header-card,
+    .stadium-match-card,
+    .tactical-widget-card {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
 }

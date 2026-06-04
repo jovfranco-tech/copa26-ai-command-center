@@ -62,7 +62,10 @@
       "better-sqlite3",
       "protobufjs",
       "@firebase/util"
-    ]
+    ],
+    "overrides": {
+      "undici": "^6.24.0"
+    }
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",

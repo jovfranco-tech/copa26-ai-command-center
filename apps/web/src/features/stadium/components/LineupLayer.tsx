@@ -329,6 +329,9 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
   const ringRef = React.useRef<THREE.Mesh>(null);
   const floatingGroupRef = React.useRef<THREE.Group>(null);
   useFrame((state) => {
+    // Performance: skip all animation work for non-interactive players
+    if (!isSelected && !hovered) return;
+
     const elapsed = state.clock.getElapsedTime();
     const speedMultiplier = ritmo === 'alto' ? 1.8 : 1.0;
     
@@ -345,9 +348,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
       const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.15);
       floatingGroupRef.current.scale.set(nextScale, nextScale, nextScale);
       
-      const floatOffset = (isSelected || hovered) 
-        ? Math.sin(elapsed * 3.5 * speedMultiplier) * 0.05 
-        : 0;
+      const floatOffset = Math.sin(elapsed * 3.5 * speedMultiplier) * 0.05;
       floatingGroupRef.current.position.y = floatOffset;
     }
   });
@@ -360,8 +361,14 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
   const isCompactas = visualizationMode === 'compactas';
   const isSeleccionar = visualizationMode === 'seleccionar';
 
-  const showBadge = !isCompactas && !(isSelected && isSeleccionar);
-  const showCompactCard = isCompactas && !isSelected;
+  // Performance: Only render HtmlDrei overlays for interactive (selected/hovered) players
+  // in heavy modes. 'nombres' keeps all badges (lightweight text). 'limpia' shows none.
+  // - 'limpia': No HtmlDrei at all
+  // - 'nombres': All players show simple text badge (lightweight)
+  // - 'compactas': Only hovered player shows compact card (selected gets full card)
+  // - 'seleccionar': Only selected/hovered players show badge (selected gets full card instead)
+  const showBadge = !isLimpia && !isCompactas && !(isSelected && isSeleccionar) && (isNombres || isSelected || hovered);
+  const showCompactCard = isCompactas && !isSelected && hovered;
   const showFullCard = isSelected && !isLimpia;
 
   return (

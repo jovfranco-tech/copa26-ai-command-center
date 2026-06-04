@@ -999,10 +999,12 @@ const SoccerGoal: React.FC<SoccerGoalProps> = ({ position, facing }) => {
 
 // Main Export Component exposing the Canvas and Controls
 export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
+  const isMobileOuter = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
+
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <Canvas
-        shadows
+        shadows={!isMobileOuter}
         camera={{ position: [0, 26, 44], fov: 50 }}
         style={{ width: '100%', height: '100%' }}
       >

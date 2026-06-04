@@ -141,26 +141,28 @@ export function StandsGeometry({
         />
       </mesh>
 
-      {/* Seating Crowd Glowing Sparkles */}
+      {/* Seating Crowd Glowing Sparkles (consolidated: 2 instances instead of 4) */}
       {!reduceEffects && (
-        <group>
-          {/* Left Curve Stands (Home Team) */}
-          <group position={[-38, 3, 0]}>
-            <SparklesDrei count={180} scale={[5, 4, 26]} size={1.2} speed={0.4} color={homeStandsColor} />
-          </group>
-          {/* Right Curve Stands (Away Team) */}
-          <group position={[38, 3, 0]}>
-            <SparklesDrei count={180} scale={[5, 4, 26]} size={1.2} speed={0.4} color={awayStandsColor} />
-          </group>
-          {/* Back Sideline Stands */}
-          <group position={[0, 3, -39]}>
-            <SparklesDrei count={150} scale={[30, 4, 4]} size={1.0} speed={0.3} color="rgba(255,255,255,0.15)" />
-          </group>
-          {/* Front Sideline Stands */}
-          <group position={[0, 3, 39]}>
-            <SparklesDrei count={150} scale={[30, 4, 4]} size={1.0} speed={0.3} color="rgba(255,255,255,0.15)" />
-          </group>
-        </group>
+        <>
+          <SparklesDrei
+            count={250}
+            scale={[40, 5, 30]}
+            position={[0, 7, -12]}
+            size={1.1}
+            speed={0.35}
+            color={homeStandsColor}
+            opacity={0.6}
+          />
+          <SparklesDrei
+            count={250}
+            scale={[40, 5, 30]}
+            position={[0, 7, 12]}
+            size={1.1}
+            speed={0.35}
+            color={awayStandsColor}
+            opacity={0.6}
+          />
+        </>
       )}
 
       {/* 12 Concrete Stand Dividers (Aisles) */}
