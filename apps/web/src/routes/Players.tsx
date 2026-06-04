@@ -12,7 +12,7 @@ export function Players() {
   const { data: teamsData } = useTeams();
   const { data, isLoading } = usePlayers({ q: f.q, team: f.team, pos: f.pos });
   const players = data?.items ?? [];
-  const teams = teamsData?.items ?? [];
+  const teams = useMemo(() => teamsData?.items ?? [], [teamsData]);
   const [filtersOpen, setFiltersOpen] = useState(() =>
     typeof window === 'undefined' ? true : window.innerWidth > 640,
   );
