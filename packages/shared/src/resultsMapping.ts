@@ -13,6 +13,15 @@ import type { ResultEntry } from './liveOverlay.js';
 const normalize = (s: string): string =>
   s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
 
+/**
+ * football-data.org TLAs that differ from our team codes. Verified against the
+ * live WC feed: every qualified team matches except Uruguay (URY vs our URU).
+ * Add more here if a provider code ever diverges.
+ */
+const PROVIDER_TLA_ALIAS: Record<string, string> = {
+  URY: 'URU',
+};
+
 /** football-data status → our overlay status (null = not played yet, skip). */
 export function mapProviderStatus(s: string): 'FT' | 'LIVE' | null {
   if (s === 'FINISHED' || s === 'AWARDED') return 'FT';
@@ -44,7 +53,10 @@ export function mapProviderMatches(providerMatches: ProviderMatch[]): SyncMappin
   const codes = new Set(TEAMS.map((t) => t.code));
   const byName = new Map(TEAMS.map((t) => [normalize(t.name), t.code]));
   const resolve = (team?: ProviderTeam): string | null => {
-    if (team?.tla && codes.has(team.tla)) return team.tla;
+    if (team?.tla) {
+      const aliased = PROVIDER_TLA_ALIAS[team.tla] ?? team.tla;
+      if (codes.has(aliased)) return aliased;
+    }
     if (team?.name) {
       const n = normalize(team.name);
       if (n && byName.has(n)) return byName.get(n)!;

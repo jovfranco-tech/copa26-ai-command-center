@@ -75,4 +75,17 @@ describe('mapProviderMatches', () => {
     ]);
     expect(matched).toBe(0);
   });
+
+  it('resuelve el alias de código del proveedor (URY → URU, Uruguay)', () => {
+    const { results, matched } = mapProviderMatches([
+      {
+        status: 'FINISHED',
+        homeTeam: { tla: 'URY', name: 'Uruguay' },
+        awayTeam: { tla: 'CPV', name: 'Cape Verde Islands' },
+        score: { fullTime: { home: 1, away: 0 } },
+      },
+    ]);
+    expect(matched).toBe(1);
+    expect(results.M046).toEqual({ homeGoals: 1, awayGoals: 0, status: 'FT', minute: null, source: 'auto' });
+  });
 });
