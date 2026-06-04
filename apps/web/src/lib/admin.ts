@@ -55,6 +55,30 @@ export async function adminLoad(pw: string): Promise<AdminState> {
   return (await res.json()) as AdminState;
 }
 
+export interface SyncSummary {
+  ok: boolean;
+  total?: number;
+  matched?: number;
+  written?: number;
+  skippedManual?: number;
+  unmatched?: number;
+  unmatchedSample?: { home?: string; away?: string }[];
+  error?: string;
+  detail?: string;
+}
+
+/** Force an immediate results sync from the feed (same job the cron runs). */
+export async function adminSyncNow(pw: string): Promise<SyncSummary> {
+  let res: Response;
+  try {
+    res = await fetch('/api/sync-results', { headers: { 'x-admin-password': pw } });
+  } catch {
+    throw new AdminError('network');
+  }
+  if (res.status === 401) throw new AdminError('unauthorized');
+  return (await res.json()) as SyncSummary;
+}
+
 /** Apply one admin operation; returns the new overlay. */
 export async function adminApply(pw: string, op: AdminOp): Promise<LiveOverlay> {
   let res: Response;

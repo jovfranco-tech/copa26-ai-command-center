@@ -79,6 +79,7 @@ export function sanitizeOverlay(raw: unknown): LiveOverlay {
       awayGoals: nonNegInt(r.awayGoals),
       status: r.status === 'LIVE' ? 'LIVE' : 'FT',
       minute: nonNegInt(r.minute),
+      ...(r.source === 'manual' || r.source === 'auto' ? { source: r.source } : {}),
     };
   }
 

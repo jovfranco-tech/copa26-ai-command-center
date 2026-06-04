@@ -11,10 +11,12 @@ import { buildMatchLineups } from '@/features/stadium/data/stadiumDataMapper';
 import {
   adminApply,
   adminLoad,
+  adminSyncNow,
   AdminError,
   clearStoredPassword,
   getStoredPassword,
   setStoredPassword,
+  type SyncSummary,
 } from '@/lib/admin';
 
 const card: React.CSSProperties = {
@@ -120,9 +122,74 @@ export function Admin() {
         </div>
       )}
 
+      <SyncSection pw={pw} onOverlay={setOverlay} />
       <ResultsSection matches={matches} overlay={overlay} pw={pw} onOverlay={setOverlay} />
       <LineupsSection matches={matches} players={players} overlay={overlay} pw={pw} onOverlay={setOverlay} />
     </div>
+  );
+}
+
+/* ──────────────────────────── Sincronización ──────────────────────────── */
+
+function SyncSection({ pw, onOverlay }: { pw: string; onOverlay: (o: LiveOverlay) => void }) {
+  const [busy, setBusy] = useState(false);
+  const [summary, setSummary] = useState<SyncSummary | null>(null);
+  const [err, setErr] = useState('');
+
+  async function run() {
+    setBusy(true);
+    setErr('');
+    try {
+      const s = await adminSyncNow(pw);
+      setSummary(s);
+      if (s.ok && (s.written ?? 0) > 0) {
+        try {
+          const fresh = await adminLoad(pw);
+          onOverlay(fresh.overlay);
+        } catch {
+          /* keep current overlay */
+        }
+      }
+    } catch {
+      setErr('No se pudo sincronizar.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section style={{ ...card, display: 'grid', gap: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 16 }}>Sincronización automática</h2>
+          <p className="muted" style={{ fontSize: 12, margin: '2px 0 0' }}>
+            El cron jala marcadores de football-data.org cada 10 min. Aquí puedes forzarlo.
+          </p>
+        </div>
+        <button type="button" className="btn gold" disabled={busy} onClick={run} style={{ whiteSpace: 'nowrap' }}>
+          {busy ? 'Sincronizando…' : 'Sincronizar ahora'}
+        </button>
+      </div>
+      {err && <div style={{ color: '#f87171', fontSize: 13 }}>{err}</div>}
+      {summary && !summary.ok && (
+        <div style={{ color: '#fbbf24', fontSize: 13 }}>
+          {summary.error === 'no-token'
+            ? 'Falta FOOTBALL_DATA_TOKEN en Vercel (variable de entorno).'
+            : summary.error === 'feed'
+              ? `Error del feed: ${summary.detail ?? ''}`
+              : summary.error === 'blob-not-configured'
+                ? 'Blob no configurado.'
+                : `Error: ${summary.error}`}
+        </div>
+      )}
+      {summary && summary.ok && (
+        <div style={{ fontSize: 13, color: 'var(--text-secondary, #9aa0aa)' }}>
+          Feed: {summary.total} partidos · {summary.matched} mapeados · <strong>{summary.written}</strong> actualizados
+          {summary.skippedManual ? ` · ${summary.skippedManual} manuales respetados` : ''}
+          {summary.unmatched ? ` · ${summary.unmatched} sin mapear` : ''}
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -184,7 +251,7 @@ function ResultRow({
       const next = await adminApply(pw, {
         op: 'set-result',
         matchId: match.id,
-        data: { homeGoals: Number(home), awayGoals: Number(away), status },
+        data: { homeGoals: Number(home), awayGoals: Number(away), status, source: 'manual' },
       });
       onOverlay(next);
       setErr(false);

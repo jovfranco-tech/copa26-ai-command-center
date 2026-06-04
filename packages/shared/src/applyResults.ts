@@ -25,6 +25,9 @@ export interface MatchResultInput {
   possH?: number | null;
   shotsH?: number | null;
   shotsA?: number | null;
+  /** Provenance in the live overlay: 'auto' = synced from the feed, 'manual' =
+   * set in the admin panel. The auto-sync never overwrites a 'manual' entry. */
+  source?: 'auto' | 'manual';
 }
 
 export interface ApplyResultsReport {
