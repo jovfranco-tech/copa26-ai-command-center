@@ -9,7 +9,9 @@
  * yet (kickoff 2026-06-11), so that data does not exist. It will populate once
  * matches are played (and, locally, once you ingest squads).
  */
-import dataset from '../data/worldcup2026.json';
+// `with { type: 'json' }` is required by the Node ESM loader (Vercel Functions
+// import this at runtime); Vite/TS handle it fine for the web build.
+import dataset from '../data/worldcup2026.json' with { type: 'json' };
 import { SQUADS } from '../data/squads.js';
 import { POSITION_LONG } from '../constants.js';
 import type {
