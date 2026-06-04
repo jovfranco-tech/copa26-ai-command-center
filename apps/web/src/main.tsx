@@ -26,6 +26,35 @@ createRoot(el).render(
   </StrictMode>,
 );
 
+// Global error reporting — sends unhandled errors to monitoring endpoint
+if (typeof window !== 'undefined') {
+  const reportError = (payload: { type: string; message: string; stack?: string; url?: string }) => {
+    // Fire-and-forget — don't block UI
+    fetch('/api/monitoring', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'client-error', ...payload, timestamp: Date.now() }),
+    }).catch(() => {}); // Silently fail if monitoring endpoint is down
+  };
+
+  window.addEventListener('error', (event) => {
+    reportError({
+      type: 'uncaught',
+      message: event.message,
+      stack: event.error?.stack?.slice(0, 500),
+      url: event.filename,
+    });
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    reportError({
+      type: 'unhandled-promise',
+      message: event.reason?.message || String(event.reason).slice(0, 200),
+      stack: event.reason?.stack?.slice(0, 500),
+    });
+  });
+}
+
 if ('serviceWorker' in navigator) {
   // When an updated service worker takes control, reload once so the freshest
   // build is shown immediately — no manual hard-refresh needed.

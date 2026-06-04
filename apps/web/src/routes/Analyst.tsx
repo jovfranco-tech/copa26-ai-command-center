@@ -302,6 +302,8 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     setStreamingProvider(null);
     abortRef.current?.abort();
     abortRef.current = new AbortController();
+    // 30s timeout for AI response
+    const timeoutId = setTimeout(() => abortRef.current?.abort(), 30000);
     const ai = await askAI(
       q,
       contextText,
@@ -314,6 +316,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       abortRef.current.signal,
       memory.map((r) => ({ question: r.question, answer: r.answer })),
     );
+    clearTimeout(timeoutId);
     setBusy(false);
     setStreamingText('');
     setStreamingProvider(null);

@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import type { Match } from '../data/matchData';
 import * as THREE from 'three';
@@ -1000,9 +1000,32 @@ const SoccerGoal: React.FC<SoccerGoalProps> = ({ position, facing }) => {
 // Main Export Component exposing the Canvas and Controls
 export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
   const isMobileOuter = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
+  const [webglLost, setWebglLost] = useState(false);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = canvasContainerRef.current;
+    if (!container) return;
+    const canvas = container.querySelector('canvas');
+    if (!canvas) return;
+
+    const handleLost = (e: Event) => {
+      e.preventDefault();
+      setWebglLost(true);
+    };
+    canvas.addEventListener('webglcontextlost', handleLost);
+    return () => canvas.removeEventListener('webglcontextlost', handleLost);
+  }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }} aria-hidden="true">
+    <div ref={canvasContainerRef} style={{ width: '100%', height: '100%', position: 'relative' }} aria-hidden="true">
+      {webglLost && (
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', zIndex: 10, borderRadius: 8 }}>
+          <p style={{ color: 'var(--tx-2)', fontSize: 13, textAlign: 'center', padding: 24 }}>
+            El contexto 3D se perdió. <button type="button" className="btn gold btn-sm" onClick={() => { setWebglLost(false); window.location.reload(); }}>Recargar</button>
+          </p>
+        </div>
+      )}
       <Canvas
         shadows={!isMobileOuter}
         camera={{ position: [0, 26, 44], fov: 50 }}

@@ -23,6 +23,7 @@ export function Stats() {
   const [seg, setSeg] = useState<Segment>('players');
 
   const [leaderboard, setLeaderboard] = useState<Array<{ name: string; points: number }>>([]);
+  const [loadingLeaderboard, setLoadingLeaderboard] = useState(true);
 
   useEffect(() => {
     const matchItems = matchData?.data?.items ?? [];
@@ -32,9 +33,15 @@ export function Stats() {
     const teamItems = Object.values(teams);
     const teamMap = new Map(teamItems.map((t) => [t.code, t]));
 
+    // 10s timeout — show empty state if Firestore doesn't respond
+    const firestoreTimeout = setTimeout(() => {
+      setLoadingLeaderboard(false);
+    }, 10000);
+
     const unsubscribe = onSnapshot(
       collection(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members'),
       (snapshot) => {
+        clearTimeout(firestoreTimeout);
         const board: Array<{ name: string; points: number }> = [];
 
         snapshot.forEach((docSnap) => {
@@ -116,13 +123,16 @@ export function Stats() {
 
         board.sort((a, b) => b.points - a.points);
         setLeaderboard(board);
+        setLoadingLeaderboard(false);
       },
       () => {
+        clearTimeout(firestoreTimeout);
+        setLoadingLeaderboard(false);
         // Firestore snapshot error handled silently
       }
     );
 
-    return () => unsubscribe();
+    return () => { unsubscribe(); clearTimeout(firestoreTimeout); };
   }, [matchData, teams, pool.groupId]);
 
   const radarData = [
@@ -284,7 +294,9 @@ export function Stats() {
               ) : (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                   <p className="muted" style={{ fontSize: 12, textAlign: 'center' }}>
-                    Cargando clasificación en tiempo real desde Firestore…
+                    {loadingLeaderboard
+                      ? 'Cargando clasificación en tiempo real desde Firestore…'
+                      : 'No se pudo cargar la clasificación. Intenta recargar la página.'}
                   </p>
                 </div>
               )}
