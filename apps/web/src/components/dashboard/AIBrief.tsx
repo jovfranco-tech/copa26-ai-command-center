@@ -69,7 +69,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
     playPodcastChime();
 
     const sentences = [
-      "Bienvenidos a El Minuto Táctico del Mundial familiar.",
+      "Bienvenidos al resumen narrado del Mundial familiar.",
       `Hoy es el día destacado del torneo, ${day || 'de hoy'}. Contamos con ${todayCount} partidos de altísimo nivel programados.`,
       liveCount > 0 
         ? `Y ojo, ¡tenemos ${liveCount} partidos disputándose en vivo en este preciso instante en la cima!` 
@@ -77,7 +77,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
       top && top.goals > 0 
         ? `La bota de oro está que arde: ${top.name} lidera la tabla de artilleros con un espectacular registro de ${top.goals} goles. ¿Podrá alguien alcanzar su ritmo arrollador?` 
         : "",
-      "¡Esto es todo por ahora en El Minuto Táctico! Sigue al tanto de tu quiniela familiar y que gane el mejor estratega. ¡Hasta la próxima!"
+      "¡Esto es todo por ahora! Sigue al tanto de tu quiniela familiar y que gane el mejor estratega. ¡Hasta la próxima!"
     ].filter(Boolean);
 
     activeIndexRef.current = 0;
@@ -125,9 +125,9 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
             color: 'var(--gold)',
           }}
         >
-          <Icon name="ai" size={15} />
+          <Icon name="calendar" size={15} />
         </span>
-        <h3>Resumen IA del Mundial</h3>
+        <h3>Resumen del Día</h3>
         <span className="spacer" />
         <div style={{ display: 'flex', gap: 6 }}>
           <button
@@ -137,7 +137,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
             style={{ padding: '4px 10px', fontSize: 11.5 }}
           >
             <Icon name={isPlaying ? 'pause' : 'play'} size={11} />
-            {isPlaying ? 'Parar Minuto' : 'Minuto Táctico'}
+            {isPlaying ? 'Parar Resumen' : 'Resumen Narrado'}
           </button>
           <button type="button" className="btn ghost btn-sm" onClick={() => navigate({ to: '/analyst' })} style={{ padding: '4px 10px', fontSize: 11.5 }}>
             <Icon name="sparkSmall" size={13} /> Analista
@@ -153,7 +153,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
               <div style={{ width: 2, height: 6, background: 'var(--gold)', animation: 'pulse-briefing 0.6s infinite alternate 0.4s' }} />
               <div style={{ width: 2, height: 10, background: 'var(--gold)', animation: 'pulse-briefing 0.8s infinite alternate 0.1s' }} />
             </div>
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--gold-2)' }}>Transmitiendo boletín táctico...</span>
+            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--gold-2)' }}>Transmitiendo resumen narrado...</span>
           </div>
         )}
         <div className="brief-pt">
@@ -178,7 +178,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
           </div>
         )}
         <div className="mono-label" style={{ marginTop: 10 }}>
-          Generado desde datos locales · haz clic en Minuto Táctico para escuchar el boletín vocal
+          Datos locales del torneo · haz clic en Resumen Narrado para escuchar el boletín vocal
         </div>
       </div>
     </div>

@@ -1,11 +1,13 @@
-import { useState, type CSSProperties } from 'react';
+import { useState, useMemo, type CSSProperties } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge, Empty, cn } from '@worldcup/ui';
-import { fmtFull, type MatchEvent, type Player } from '@worldcup/shared';
+import { fmtFull, type Match, type MatchEvent, type Player, type Team } from '@worldcup/shared';
 import { DataSourceBadge } from '@/components/DataSourceBadge';
 import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
 import { useMatch, usePlayers, useTeamsMap } from '@/hooks';
 import { h2hSummary, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
+import { recommendPick } from '@/lib/opsIntelligence';
+import { usePool, type PoolPick } from '@/store/pool';
 
 type Tab = 'events' | 'lineups' | 'stats' | 'intel';
 
@@ -13,6 +15,7 @@ export function MatchDetail({ id }: { id: string }) {
   const navigate = useNavigate();
   const { data, isLoading } = useMatch(id);
   const teams = useTeamsMap();
+  const picks = usePool((s) => s.picks);
   const [tab, setTab] = useState<Tab>('events');
 
   if (isLoading) return <MatchDetailSkeleton />;
@@ -110,6 +113,28 @@ export function MatchDetail({ id }: { id: string }) {
         </div>
       </div>
 
+      {m.status === 'UPCOMING' && (
+        <section className="card card-pad" style={{ marginTop: 16 }}>
+          <div className="row gap-8 align-center" style={{ marginBottom: 8 }}>
+            <Icon name="ai" size={16} style={{ color: 'var(--gold)' }} />
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>Vista Previa Táctica</h3>
+            <span className="badge">Auto-generado</span>
+          </div>
+          <MatchPreviewBrief match={m} homeTeam={teams[m.home]} awayTeam={teams[m.away]} teamsArray={Object.values(teams)} />
+        </section>
+      )}
+
+      {m.status === 'FT' && (
+        <section className="card card-pad" style={{ marginTop: 16 }}>
+          <div className="row gap-8 align-center" style={{ marginBottom: 8 }}>
+            <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>Debrief Post-Partido</h3>
+            <span className="badge">Análisis automático</span>
+          </div>
+          <PostMatchDebrief match={m} homeTeam={teams[m.home]} awayTeam={teams[m.away]} userPick={picks[m.id]} />
+        </section>
+      )}
+
       <div className="row gap-6 match-detail-tabs" style={{ marginBottom: 14 }}>
         {(['events', 'lineups', 'stats', 'intel'] as Tab[]).map((t) => (
           <button key={t} type="button" className={cn('pill', tab === t && 'on')} onClick={() => setTab(t)}>
@@ -122,6 +147,73 @@ export function MatchDetail({ id }: { id: string }) {
       {tab === 'lineups' && <Lineups homeCode={m.home} awayCode={m.away} />}
       {tab === 'stats' && <MatchStats m={m} pH={pH} />}
       {tab === 'intel' && <MatchIntel source={source} weather={weather} h2h={h2h} />}
+    </div>
+  );
+}
+
+function MatchPreviewBrief({ match, homeTeam, awayTeam, teamsArray }: { match: Match; homeTeam: Team | undefined; awayTeam: Team | undefined; teamsArray: Team[] }) {
+  const preview = useMemo(() => {
+    if (!homeTeam || !awayTeam) return null;
+    return recommendPick(match, teamsArray);
+  }, [match, homeTeam, awayTeam, teamsArray]);
+
+  if (!preview) return null;
+
+  return (
+    <div style={{ fontSize: 13, color: 'var(--tx-2)', lineHeight: 1.6 }}>
+      <p style={{ margin: '0 0 8px' }}>
+        <strong>{homeTeam!.name}</strong> (#{homeTeam!.ranking}) vs <strong>{awayTeam!.name}</strong> (#{awayTeam!.ranking}).
+        {' '}{preview.rationale}
+      </p>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 11, color: 'var(--tx-3)' }}>
+        <span>Confianza: <strong style={{ color: preview.confidence === 'Alta' ? 'var(--color-success)' : 'var(--gold)' }}>{preview.confidence}</strong></span>
+        <span>Pick sugerido: <strong>{preview.pick.homeGoals}-{preview.pick.awayGoals}</strong></span>
+        <span>Riesgo: {preview.risk}</span>
+      </div>
+      <p style={{ margin: '8px 0 0', fontSize: 11, color: 'var(--tx-3)', fontStyle: 'italic' }}>
+        Basado en rankings FIFA y calendario local. No incluye lesiones, forma reciente ni alineaciones confirmadas.
+      </p>
+    </div>
+  );
+}
+
+function PostMatchDebrief({ match, homeTeam, awayTeam, userPick }: { match: Match; homeTeam: Team | undefined; awayTeam: Team | undefined; userPick: PoolPick | undefined }) {
+  const realHome = match.homeGoals ?? 0;
+  const realAway = match.awayGoals ?? 0;
+  const realOutcome = realHome > realAway ? 'home' : realHome < realAway ? 'away' : 'draw';
+
+  let pointsText = '';
+  let pointsColor = 'var(--tx-3)';
+  if (userPick?.outcome) {
+    const isExact = userPick.homeGoals === realHome && userPick.awayGoals === realAway;
+    const isOutcome = userPick.outcome === realOutcome;
+    if (isExact) { pointsText = '+3 pts (marcador exacto)'; pointsColor = 'var(--gold)'; }
+    else if (isOutcome) { pointsText = '+1 pt (resultado correcto)'; pointsColor = 'var(--color-success)'; }
+    else { pointsText = '0 pts'; pointsColor = 'var(--color-danger)'; }
+  }
+
+  const observation = realHome + realAway === 0
+    ? 'Partido cerrado y defensivo — típico de fases iniciales de Mundial.'
+    : realHome + realAway >= 4
+    ? 'Encuentro de alta intensidad ofensiva con múltiples goles.'
+    : realHome === realAway
+    ? 'Empate justo que refleja paridad competitiva.'
+    : `Victoria clara del ${realHome > realAway ? (homeTeam?.name ?? 'local') : (awayTeam?.name ?? 'visitante')}.`;
+
+  return (
+    <div style={{ fontSize: 13, color: 'var(--tx-2)', lineHeight: 1.6 }}>
+      <p style={{ margin: '0 0 6px' }}>
+        Resultado final: <strong>{homeTeam?.name ?? match.home} {realHome} - {realAway} {awayTeam?.name ?? match.away}</strong>
+      </p>
+      <p style={{ margin: '0 0 6px' }}>{observation}</p>
+      {userPick?.outcome && (
+        <p style={{ margin: '0 0 4px' }}>
+          Tu predicción: <strong>{userPick.homeGoals ?? '?'}-{userPick.awayGoals ?? '?'}</strong> → <span style={{ color: pointsColor, fontWeight: 700 }}>{pointsText}</span>
+        </p>
+      )}
+      {!userPick?.outcome && (
+        <p style={{ margin: 0, fontSize: 11, color: 'var(--tx-3)', fontStyle: 'italic' }}>No registraste predicción para este partido.</p>
+      )}
     </div>
   );
 }

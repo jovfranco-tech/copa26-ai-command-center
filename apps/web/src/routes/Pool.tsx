@@ -4,6 +4,7 @@ import { fmtDay, type Match } from '@worldcup/shared';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
 import { usePoolSync } from '@/hooks/usePoolSync';
+import { useProactiveAI } from '@/hooks/useProactiveAI';
 import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
 import { usePreferences } from '@/store/preferences';
 import { askPoolAgent } from '@/lib/aiClient';
@@ -679,6 +680,9 @@ export function Pool() {
     [data?.items, pool.picks, leaderboard, pool.playerName],
   );
 
+  // Proactive AI notifications (fires once per session)
+  useProactiveAI({ matches: data?.items ?? [], picks: pool.picks, playerName: pool.playerName, leaderboard });
+
   const shareNextPick = async () => {
     const match = upcomingMatches.find((m) => {
       const pick = pool.picks[m.id];
@@ -1087,12 +1091,20 @@ export function Pool() {
                   Informe Táctico del Co-piloto ({activeAgent === 'optimista' ? 'Optimista' : activeAgent === 'stats' ? 'Estadístico' : 'Contrarian'})
                 </span>
                 <p className="copilot-brief-text">{agentBrief}</p>
-                <div className="copilot-trace">
-                  <span><strong>Confianza:</strong> {agentMeta?.confidence ?? 'Media'}</span>
-                  <span><strong>Usó:</strong> {(agentMeta?.dataUsed ?? ['calendario', 'selecciones']).join(', ')}</span>
-                  <span><strong>No usó:</strong> {(agentMeta?.ignoredData ?? ['noticias externas', 'lesiones', 'alineaciones']).join(', ')}</span>
-                  {agentMeta?.warning ? <span><strong>Nota:</strong> {agentMeta.warning}</span> : null}
-                </div>
+                <details className="copilot-trace" style={{ marginTop: 8 }}>
+                  <summary style={{ cursor: 'pointer', fontSize: 11, color: 'var(--tx-3)', fontWeight: 600, marginBottom: 4 }}>
+                    <Icon name="info" size={11} /> ¿Por qué esta predicción? (explainability)
+                  </summary>
+                  <div style={{ paddingTop: 6, fontSize: 11, color: 'var(--tx-3)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <span><strong>Confianza:</strong> {agentMeta?.confidence ?? 'Media'}</span>
+                    <span><strong>Datos utilizados:</strong> {(agentMeta?.dataUsed ?? ['calendario', 'selecciones']).join(', ')}</span>
+                    <span><strong>Datos NO utilizados:</strong> {(agentMeta?.ignoredData ?? ['noticias externas', 'lesiones', 'alineaciones']).join(', ')}</span>
+                    {agentMeta?.warning && <span><strong>Limitación:</strong> {agentMeta.warning}</span>}
+                    <span style={{ marginTop: 4, fontStyle: 'italic', opacity: 0.7 }}>
+                      Esta predicción se basa exclusivamente en rankings FIFA, calendario y sede. No refleja forma actual, lesiones ni convocatorias.
+                    </span>
+                  </div>
+                </details>
               </div>
             </div>
           )}
@@ -1140,6 +1152,31 @@ export function Pool() {
             </div>
           ) : (
             <div className="card" style={{ overflowX: 'auto', border: '1px solid var(--gold-line)' }}>
+              {leaderboard.length > 1 && pool.playerName && (() => {
+                const userIdx = leaderboard.findIndex(r => r.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase());
+                if (userIdx < 0) return null;
+                const userRow = leaderboard[userIdx];
+                const leader = leaderboard[0];
+                const isLeading = userIdx === 0;
+                const gap = isLeading ? 0 : leader.points - (userRow?.points ?? 0);
+                const aheadName = userIdx > 0 ? leaderboard[userIdx - 1]?.playerName : null;
+
+                if (isLeading) return (
+                  <div className="card card-pad" style={{ background: 'rgba(56,211,154,0.06)', border: '1px solid rgba(56,211,154,0.2)', marginBottom: 12, fontSize: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <Icon name="trophy" size={14} style={{ color: 'var(--color-success)' }} />
+                    <span>Vas liderando. Mantén la ventaja cerrando todos los picks pendientes.</span>
+                  </div>
+                );
+
+                if (gap <= 6) return (
+                  <div className="card card-pad" style={{ background: 'rgba(201,162,75,0.06)', border: '1px solid var(--gold-line)', marginBottom: 12, fontSize: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <Icon name="ai" size={14} style={{ color: 'var(--gold)' }} />
+                    <span>A {gap} pts de {aheadName ?? 'la cima'}. Dos marcadores exactos te dan +6 — es alcanzable.</span>
+                  </div>
+                );
+
+                return null;
+              })()}
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, textAlign: 'left' }}>
                 <thead>
                   <tr style={{ background: 'var(--bg-2)', borderBottom: '1px solid var(--line)' }}>

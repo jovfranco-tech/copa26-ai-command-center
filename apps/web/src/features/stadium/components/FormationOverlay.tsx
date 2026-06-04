@@ -3,7 +3,7 @@ import type { Match } from '../data/matchData';
 import type { MatchLineups, Player } from '../data/lineups';
 import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
 
-interface AIMatchBriefProps {
+interface FormationOverlayProps {
   match: Match;
   onSelectPlayer: (player: Player | null) => void;
   selectedPlayerId: string | null;
@@ -130,7 +130,7 @@ function derive2DCoord(player: Player): { x: number; y: number } {
   return { x, y };
 }
 
-export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
+export const FormationOverlay: React.FC<FormationOverlayProps> = ({
   match,
   onSelectPlayer,
   selectedPlayerId,
@@ -363,3 +363,6 @@ export const AIMatchBrief: React.FC<AIMatchBriefProps> = ({
     </div>
   );
 };
+
+/** @deprecated Use FormationOverlay instead */
+export const AIMatchBrief = FormationOverlay;

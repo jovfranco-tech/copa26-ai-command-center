@@ -5,7 +5,7 @@ import type { Match } from './data/matchData';
 import { StadiumScene } from './components/StadiumScene';
 import { Tactical2DMap } from './components/Tactical2DMap';
 import { WebGLBoundary } from './components/WebGLBoundary';
-import { AIMatchBrief } from './components/AIMatchBrief';
+import { FormationOverlay } from './components/FormationOverlay';
 import { SelectedPlayerPanel } from './components/SelectedPlayerPanel';
 import type { Player } from './data/lineups';
 import { usePlayers, useMatches, useTeamsMap, useVenuesMap, useLiveOverlay } from '../../hooks';
@@ -479,7 +479,7 @@ function App() {
                   status={currentMatch.status}
                 />
               ) : (
-                <AIMatchBrief
+                <FormationOverlay
                   match={currentMatch}
                   onSelectPlayer={setSelectedPlayer}
                   selectedPlayerId={null}
