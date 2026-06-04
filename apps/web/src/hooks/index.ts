@@ -121,3 +121,4 @@ export function useAsset(assetId: string | null | undefined): string | null {
 }
 
 export { useHolographicTilt } from './useHolographicTilt';
+export { usePWAInstall } from './usePWAInstall';

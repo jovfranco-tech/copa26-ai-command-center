@@ -316,6 +316,26 @@ body {
   color: var(--tx-3);
   line-height: 1.5;
 }
+.pwa-install-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--gold);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.pwa-install-btn:hover {
+  opacity: 0.85;
+}
 .main {
   flex: 1;
   min-width: 0;
@@ -1335,7 +1355,7 @@ body {
     color: var(--tx-3);
     cursor: pointer;
     border-radius: 9px;
-    font-size: 9.5px;
+    font-size: 11px;
     font-weight: 600;
     min-width: 56px;
     min-height: 44px;
@@ -1625,7 +1645,7 @@ body {
 }
 .cite {
   font-family: var(--font-num);
-  font-size: 9.5px;
+  font-size: 11px;
   color: var(--tx-3);
   border: 1px solid var(--line-2);
   border-radius: 5px;
@@ -2872,7 +2892,7 @@ body {
 .source-badge.compact {
   height: 21px;
   padding: 0 7px;
-  font-size: 9.5px;
+  font-size: 11px;
 }
 .match-intel-row {
   display: grid;
@@ -4267,7 +4287,7 @@ body {
     font-size: 9px;
   }
   .lineup-player-chip b {
-    font-size: 9.5px;
+    font-size: 11px;
   }
   .lineup-player-chip small {
     font-size: 7.5px;

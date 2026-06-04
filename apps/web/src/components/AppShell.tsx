@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
 import { FOOTER_NOTICE } from '@worldcup/shared';
-import { useMatches, useLiveOverlaySync } from '@/hooks';
+import { useMatches, useLiveOverlaySync, usePWAInstall } from '@/hooks';
 import { usePreferences, applyPreferences, isThemeExplicit, setSystemThemePreference, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
@@ -138,6 +138,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const { data: liveData } = useMatches({ status: 'LIVE' });
   const liveCount = liveData?.items.length ?? 0;
+  const { canInstall, promptInstall } = usePWAInstall();
 
   const setPlayerQ = usePlayerFilters((s) => s.set);
   const runSearch = () => {
@@ -256,6 +257,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavList />
           </nav>
           <div className="sidebar-foot">
+            {canInstall && (
+              <button
+                type="button"
+                className="pwa-install-btn"
+                onClick={promptInstall}
+              >
+                <Icon name="download" size={14} /> Instalar app
+              </button>
+            )}
             FIFA World Cup 26 · acceso familiar.
             <br />
             No oficial · sin afiliación FIFA.
