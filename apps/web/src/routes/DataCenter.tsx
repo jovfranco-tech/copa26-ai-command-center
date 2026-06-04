@@ -63,7 +63,7 @@ export function DataCenter() {
   const roleUsage = useMemo(
     () => [
       { role: 'Admin', access: 'IA remota + revisión manual', limit: monitoring?.limits.analyst ?? '12 / 10 min', usage: aiCallsToday },
-      { role: 'Familia', access: 'Co-piloto limitado + quiniela', limit: monitoring?.limits.poolAgent ?? '8 / 10 min', usage: poolAgentCallsToday },
+      { role: 'Estándar', access: 'Co-piloto limitado + quiniela', limit: monitoring?.limits.poolAgent ?? '8 / 10 min', usage: poolAgentCallsToday },
       { role: 'Invitado', access: 'Solo motor local', limit: '0 llamadas remotas', usage: 0 },
     ],
     [aiCallsToday, poolAgentCallsToday, monitoring?.limits.analyst, monitoring?.limits.poolAgent],
@@ -145,7 +145,7 @@ export function DataCenter() {
         </div>
         <div className="card card-pad data-command-card">
           <Icon name="activity" size={16} style={{ color: 'var(--gold)' }} />
-          <span className="mono-label">Acceso público familiar</span>
+          <span className="mono-label">Acceso público</span>
           <h3>Guardrails visibles</h3>
           <p>
             La app ya no usa password. Los endpoints de IA quedan limitados por sesión/IP y el modo invitado fuerza
@@ -171,7 +171,7 @@ export function DataCenter() {
           <OpsPlanItem status={estimatedRatings ? 'wait' : 'ok'} title="Convocatorias finales" source="Plantillas locales editables" action="Reemplazar jugadores cuando cada selección publique lista final." />
           <OpsPlanItem status="wait" title="H2H y árbitros" source="Pipeline preparado" action="Cargar fuente autorizada; no se inventan árbitros ni historial." />
           <OpsPlanItem status="ok" title="Clima y sedes" source={`${weatherMeta.matchesCovered} partidos con baseline`} action="Cambiar a forecast cercano cuando falten menos días." />
-          <OpsPlanItem status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela multi-dispositivo" source={poolStatus?.label ?? 'Sin revisar'} action={poolStatus?.durable ? 'Lista para familia; monitorear reglas y consumo.' : 'Verificar persistencia antes de compartir.'} />
+          <OpsPlanItem status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela multi-dispositivo" source={poolStatus?.label ?? 'Sin revisar'} action={poolStatus?.durable ? 'Lista para el grupo; monitorear reglas y consumo.' : 'Verificar persistencia antes de compartir.'} />
         </div>
       </div>
 
@@ -182,10 +182,10 @@ export function DataCenter() {
           <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
           <h3>AI native operativo</h3>
           <span className="spacer" />
-          <span className="badge gold">{role === 'admin' ? 'Admin' : role === 'family' ? 'Familia' : 'Invitado'}</span>
+          <span className="badge gold">{role === 'admin' ? 'Admin' : role === 'family' ? 'Estándar' : 'Invitado'}</span>
         </div>
         <div className="card-pad ai-native-grid">
-          <AINativeTile label="Modelo" value={monitoring?.ai.configured ? monitoring.ai.model : 'Local fallback'} note={monitoring?.ai.configured ? 'Proveedor remoto configurado.' : 'Responde con analista local si falta clave.'} />
+          <AINativeTile label="Modelo" value={monitoring?.ai.configured ? 'IA remota' : 'Local fallback'} note={monitoring?.ai.configured ? 'Proveedor remoto configurado.' : 'Responde con analista local si falta clave.'} />
           <AINativeTile label="Limite analista" value={monitoring?.limits.analyst ?? '30 / 10 min'} note={role === 'guest' ? 'Modo invitado usa motor local.' : 'Protege consumo cuando compartes link.'} />
           <AINativeTile label="Herramientas" value="7 conectadas" note="Calendario, equipos, jugadores, sedes, tablas, adjuntos y memoria." />
           <AINativeTile label="Guardrail" value="Sin noticias simuladas" note="Co-pilotos declaran datos usados, ignorados y confianza." />
@@ -210,7 +210,7 @@ export function DataCenter() {
           <ExecSignal status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Resultados" source={check?.resultsSource === 'configured' ? 'Feed autorizado' : 'RESULTS_SOURCE_URL pendiente'} date={check?.checkedAt ?? 'Sin revision'} confidence={check?.resultsSource === 'configured' ? 'Alta' : 'Pendiente'} />
           <ExecSignal status={estimatedRatings ? 'wait' : 'ok'} title="Ratings" source={playerRatingMeta.source} date={playerRatingMeta.downloadedAt.slice(0, 10)} confidence={estimatedRatings ? 'Media' : 'Alta'} />
           <ExecSignal status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela" source={poolStatus?.label ?? 'Sin revisar'} date={check?.checkedAt ?? 'Sin revision'} confidence={poolStatus?.durable ? 'Alta' : 'Pendiente'} />
-          <ExecSignal status={monitoring?.ai.configured ? 'ok' : 'wait'} title="IA" source={monitoring?.ai.model ?? 'Proveedor pendiente'} date={monitoring?.usage.day ?? 'Sin revision'} confidence={monitoring?.ai.configured ? 'Media' : 'Pendiente'} />
+          <ExecSignal status={monitoring?.ai.configured ? 'ok' : 'wait'} title="IA" source={monitoring?.ai.configured ? 'IA remota' : 'Proveedor pendiente'} date={monitoring?.usage.day ?? 'Sin revision'} confidence={monitoring?.ai.configured ? 'Media' : 'Pendiente'} />
         </div>
       </div>
 
@@ -257,7 +257,7 @@ export function DataCenter() {
             </div>
             <div className="sync-row">
               <span className="k">IA</span>
-              <span className="num">{monitoring?.ai.configured ? monitoring.ai.model : 'No verificada'}</span>
+              <span className="num">{monitoring?.ai.configured ? 'IA remota' : 'No verificada'}</span>
             </div>
           </div>
         </div>

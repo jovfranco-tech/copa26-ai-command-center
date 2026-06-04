@@ -204,13 +204,13 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div className="row gap-8 align-center" style={{ marginBottom: 12 }}>
           <span style={{ fontSize: 20 }}>📶</span>
-          <h4 style={{ margin: 0, color: 'var(--gold)' }}>Sincronización familiar por código</h4>
+          <h4 style={{ margin: 0, color: 'var(--gold)' }}>Sincronización por código</h4>
         </div>
 
         {mode === 'idle' && (
           <div>
             <p className="muted" style={{ fontSize: 12.5, marginTop: 0, marginBottom: 16 }}>
-              Intercambia tus quinielas y compite al instante con familiares o amigos usando un canal temporal en Firestore.
+              Intercambia tus quinielas y compite al instante con amigos usando un canal temporal en Firestore.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <button
@@ -276,7 +276,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         {mode === 'join' && (
           <div>
             <p className="muted" style={{ fontSize: 12.5, marginTop: 0, marginBottom: 14 }}>
-              Ingresa el código de 4 dígitos generado en la pantalla de tu amigo o familiar:
+              Ingresa el código de 4 dígitos generado en la pantalla de tu amigo:
             </p>
             <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
               <input

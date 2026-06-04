@@ -78,7 +78,7 @@ const TITLES: Record<string, string> = {
   stats: 'Estadísticas',
   venues: 'Sedes',
   favorites: 'Favoritos',
-  pool: 'Quiniela familiar',
+  pool: 'Quiniela',
   data: 'Centro de datos',
   analyst: 'Analista de partidos IA',
   'estadio-3d': 'Estadio 3D',
@@ -134,7 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
-  const roleLabel = prefs.role === 'admin' ? 'Admin' : prefs.role === 'family' ? 'Familia' : 'Invitado';
+  const roleLabel = prefs.role === 'admin' ? 'Admin' : prefs.role === 'family' ? 'Estándar' : 'Invitado';
 
   const { data: liveData } = useMatches({ status: 'LIVE' });
   const liveCount = liveData?.items.length ?? 0;
@@ -162,7 +162,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         <img className="brand-wordmark" src="/brand/fwc26-stacked-wordmark.svg" alt="Copa 2026" />
         <div className="brand-sub">
           <span>Centro de mando</span>
-          <span>Familiar</span>
         </div>
       </div>
     </div>
@@ -307,7 +306,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               onChange={(e) => prefs.set('role', e.target.value as AppRole)}
             >
               <option value="admin">Admin</option>
-              <option value="family">Familia</option>
+              <option value="family">Estándar</option>
               <option value="guest">Invitado</option>
             </select>
             <Link to="/analyst" className="icon-btn" title="Analista IA" aria-label="Analista IA">
@@ -378,7 +377,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <NavList onPick={() => setDrawer(false)} />
             </nav>
             <div className="sidebar-foot">
-              Dashboard privado familiar.
+              Dashboard privado.
               <br />
               No es para distribución pública.
             </div>

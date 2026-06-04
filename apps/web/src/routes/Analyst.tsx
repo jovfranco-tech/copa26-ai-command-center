@@ -137,7 +137,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
     if (leaderName) {
       // Inject dynamic question about the leaderboard trend
-      list[4] = `¿Quién va ganando la quiniela familiar y cómo rinde el puntero ${leaderName}?`;
+      list[4] = `¿Quién va ganando la quiniela y cómo rinde el puntero ${leaderName}?`;
     }
 
     return list;
@@ -474,15 +474,15 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     if (action === 'compare-family') {
       const leader = leaderName || 'sin líder todavía';
       commitAnswer(
-        'Acción IA: comparar mi quiniela con la familia',
+        'Acción IA: comparar mi quiniela con el grupo',
         {
-          text: `${pool.playerName || 'Tu perfil'} tiene ${diagnostics.pickedPending}/${diagnostics.totalPending} ganadores y ${diagnostics.completeScores}/${diagnostics.totalPending} marcadores completos. Líder familiar actual: ${leader}. ${diagnostics.familySignal}`,
-          sources: ['quiniela local', 'tabla familiar'],
+          text: `${pool.playerName || 'Tu perfil'} tiene ${diagnostics.pickedPending}/${diagnostics.totalPending} ganadores y ${diagnostics.completeScores}/${diagnostics.totalPending} marcadores completos. Líder del grupo actual: ${leader}. ${diagnostics.familySignal}`,
+          sources: ['quiniela local', 'tabla'],
           structured: {
-            prediction: diagnostics.pickedPending ? 'Ya hay base para competir en la tabla familiar.' : 'Falta capturar picks antes de comparar rendimiento.',
+            prediction: diagnostics.pickedPending ? 'Ya hay base para competir en la tabla.' : 'Falta capturar picks antes de comparar rendimiento.',
             risk: 'La comparación será más útil cuando existan resultados reales.',
             confidence: 'Alta local',
-            dataUsed: ['Picks locales', 'grupo familiar', 'leaderboard Firestore'],
+            dataUsed: ['Picks locales', 'grupo', 'leaderboard Firestore'],
             ignoredData: ['Picks de otros miembros no sincronizados'],
             rationale: 'La acción compara cobertura de picks y líder visible sin leer datos sensibles fuera del grupo.',
             nextAction: diagnostics.recommendedAction,
@@ -561,13 +561,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
     if (action === 'family-learning') {
       commitAnswer(
-        'Acción IA: aprender estilo familiar',
+        'Acción IA: aprender estilo del grupo',
         {
-          text: `Lectura de estilo: ${diagnostics.styleLabel}. ${diagnostics.styleDetail} Señal familiar: ${diagnostics.familySignal}`,
-          sources: ['picks locales', 'memoria IA', 'grupo familiar'],
+          text: `Lectura de estilo: ${diagnostics.styleLabel}. ${diagnostics.styleDetail} Señal del grupo: ${diagnostics.familySignal}`,
+          sources: ['picks locales', 'memoria IA', 'grupo'],
           structured: {
             prediction: `Tu perfil operativo actual es ${diagnostics.styleLabel.toLowerCase()}.`,
-            risk: 'El aprendizaje mejora cuando haya más familiares sincronizados y resultados reales.',
+            risk: 'El aprendizaje mejora cuando haya más miembros sincronizados y resultados reales.',
             confidence: diagnostics.pickedPending >= 8 ? 'Media' : 'Baja',
             dataUsed: ['Patrón de marcadores', 'cobertura de picks', 'memoria compartida'],
             ignoredData: ['Picks no sincronizados de otros dispositivos', 'sesgos personales no observados'],
@@ -676,7 +676,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           sources: ['quiniela local', 'ranking local', 'motor de recomendación'],
           structured: {
             prediction: hints.length ? 'Hay diferencias revisables antes del cierre.' : 'No hay cambios de criterio pendientes.',
-            risk: 'Una diferencia no significa error; puede ser una decisión de riesgo familiar.',
+            risk: 'Una diferencia no significa error; puede ser una decisión de riesgo del grupo.',
             confidence: hints.length ? 'Media' : 'Alta local',
             dataUsed: ['Picks actuales', 'ranking', 'partidos pendientes'],
             ignoredData: ['Noticias', 'alineaciones', 'lesiones'],
@@ -817,7 +817,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <div className="ai-native-strip">
                 <div>
                   <span className="mono-label">Rol activo</span>
-                  <strong>{role === 'admin' ? 'Admin' : role === 'family' ? 'Familia' : 'Invitado local'}</strong>
+                  <strong>{role === 'admin' ? 'Admin' : role === 'family' ? 'Estándar' : 'Invitado local'}</strong>
                 </div>
                 <div>
                   <span className="mono-label">Herramientas</span>
@@ -1014,7 +1014,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                           transition: 'all 0.2s ease',
                           animation: recordingAudio ? 'pulse-microphone 1s infinite alternate' : 'none',
                         }}
-                        title={recordingAudio ? 'Detener grabación de audio' : 'Grabar nota de voz táctica para Gemini'}
+                        title={recordingAudio ? 'Detener grabación de audio' : 'Grabar nota de voz táctica para el modelo IA'}
                       >
                         <Icon name="mic" size={14} style={{ color: recordingAudio ? '#ef4444' : attachedAudio ? 'var(--gold)' : 'var(--tx-3)' }} />
                       </button>

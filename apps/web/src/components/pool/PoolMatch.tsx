@@ -140,7 +140,7 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
         `Marcador: ${homeGoals}-${awayGoals}`,
         lockLabel(match),
       ],
-      footer: 'Quiniela familiar Mundial 2026',
+      footer: 'Quiniela Mundial 2026',
       fileName: `prediccion-${match.id}.png`,
     });
   };

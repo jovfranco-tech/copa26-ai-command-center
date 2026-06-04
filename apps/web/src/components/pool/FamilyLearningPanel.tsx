@@ -6,14 +6,14 @@ export function FamilyLearningPanel({ diagnostics }: { diagnostics: PoolDiagnost
     { label: 'Cobertura', value: `${diagnostics.coveragePct}%`, text: `${diagnostics.missingWinner} ganadores pendientes` },
     { label: 'Marcadores', value: `${diagnostics.scorePct}%`, text: `${diagnostics.missingScore} por cerrar` },
     { label: 'Estilo', value: diagnostics.styleLabel, text: diagnostics.styleDetail },
-    { label: 'Familia', value: diagnostics.leaderLabel, text: diagnostics.familySignal },
+    { label: 'Estándar', value: diagnostics.leaderLabel, text: diagnostics.familySignal },
   ];
   return (
     <section className="family-learning-panel">
       <div className="family-learning-main">
         <Icon name="ai" size={16} />
         <div>
-          <span className="mono-label">Aprendizaje familiar</span>
+          <span className="mono-label">Aprendizaje</span>
           <strong>{diagnostics.recommendedAction}</strong>
         </div>
       </div>

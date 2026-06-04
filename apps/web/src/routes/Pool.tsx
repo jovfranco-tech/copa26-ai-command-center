@@ -182,7 +182,7 @@ function buildPoolAlerts({
 
   alerts.push({
     icon: syncStatus === 'error' ? 'close' : syncStatus === 'syncing' ? 'cloud' : 'shield',
-    title: 'Nube familiar',
+    title: 'Nube compartida',
     text: syncStatus === 'synced' ? 'Tus cambios están guardados en la base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios en segundo plano.' : syncStatus === 'error' ? 'Sincronización pendiente; la app reintentará.' : 'Escribe tu alias para activar guardado.',
     tone: syncStatus === 'error' ? 'warn' : syncStatus === 'synced' ? 'ok' : 'info',
   });
@@ -219,7 +219,7 @@ function buildPoolAwards({
     },
     {
       icon: 'trophy',
-      title: 'Puntero familiar',
+      title: 'Puntero del grupo',
       text: currentRank > 0 ? `Puesto ${currentRank} con ${stats.totalPoints} pts.` : 'Aparece al sincronizar.',
       active: currentRank === 1,
     },
@@ -395,7 +395,7 @@ export function Pool() {
 
     ctx.fillStyle = 'rgba(255,255,255,0.4)';
     ctx.font = '10px monospace';
-    ctx.fillText('QUINIELA FAMILIAR OFICIAL DE GALA', 300, 70);
+    ctx.fillText('QUINIELA OFICIAL DE GALA', 300, 70);
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
     ctx.beginPath();
@@ -427,7 +427,7 @@ export function Pool() {
 
     ctx.fillStyle = 'rgba(201, 162, 75, 0.6)';
     ctx.font = 'italic 11px sans-serif';
-    ctx.fillText('¡Desafía a tu familia en tiempo real en la quiniela!', 300, 340);
+    ctx.fillText('¡Desafía a tus amigos en tiempo real en la quiniela!', 300, 340);
 
     ctx.fillStyle = 'rgba(255,255,255,0.2)';
     ctx.font = '12px sans-serif';
@@ -442,7 +442,7 @@ export function Pool() {
           await navigator.share({
             files: [file],
             title: 'Mi Logro en la Quiniela FIFA 2026',
-            text: `Voy en el puesto ${rankNum} con ${userRow.points} puntos en la quiniela familiar. ¿Quién me supera?`,
+            text: `Voy en el puesto ${rankNum} con ${userRow.points} puntos en la quiniela. ¿Quién me supera?`,
           });
           if ('vibrate' in navigator) navigator.vibrate([15]);
         } catch (err) {
@@ -530,7 +530,7 @@ export function Pool() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `quiniela_${pool.playerName || 'familiar'}.csv`);
+    link.setAttribute('download', `quiniela_${pool.playerName || 'quiniela'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -550,17 +550,17 @@ export function Pool() {
 
   const shareFamilyTable = async () => {
     if (!leaderboard.length) {
-      notifyInfo('Sin tabla', 'Todavía no hay tabla familiar para compartir.');
+      notifyInfo('Sin tabla', 'Todavía no hay tabla para compartir.');
       return;
     }
     await shareTextCard({
-      title: 'Tabla familiar',
+      title: 'Tabla',
       subtitle: `Grupo ${normalizePoolGroupId(pool.groupId)}`,
       lines: leaderboard.slice(0, 6).map((row, index) => {
         const place = index + 1;
         return `${place}. ${row.playerName}: ${row.points} pts, ${row.exactScores} plenos, ${row.efficiency}%`;
       }),
-      footer: 'Quiniela familiar Mundial 2026',
+      footer: 'Quiniela Mundial 2026',
       fileName: `tabla-${normalizePoolGroupId(pool.groupId)}.png`,
     });
   };
@@ -569,15 +569,15 @@ export function Pool() {
     const group = normalizePoolGroupId(pool.groupId);
     const url = `${window.location.origin}/pool?group=${encodeURIComponent(group)}`;
     await shareTextCard({
-      title: 'Únete a la quiniela familiar',
-      subtitle: `Grupo familiar ${group}`,
+      title: 'Únete a la quiniela',
+      subtitle: `Grupo ${group}`,
       lines: [
         '1. Abre el link y escribe tu alias.',
         '2. Captura tus marcadores antes de cada partido.',
-        '3. La tabla familiar se actualiza con resultados reales.',
+        '3. La tabla se actualiza con resultados reales.',
         url,
       ],
-      footer: 'Mundial 2026 familiar',
+      footer: 'Mundial 2026',
       fileName: `invitacion-${group}.png`,
     });
   };
@@ -629,7 +629,7 @@ export function Pool() {
   // Compute live AI Trend Alerts based on the Leaderboard
   const trendAlert = useMemo(() => {
     if (!leaderboard || leaderboard.length === 0) {
-      return "Analista IA: registra tus pronósticos para comparar rendimiento con la familia y con los co-pilotos tácticos.";
+      return "Analista IA: registra tus pronósticos para comparar rendimiento con el grupo y con los co-pilotos tácticos.";
     }
 
     const leader = leaderboard[0];
@@ -643,13 +643,13 @@ export function Pool() {
     const leaderEfficiency = leader.efficiency ?? 0;
 
     if (leaderName.startsWith(AI_AGENT_PREFIX)) {
-      return `Tendencia IA: ${leaderName} lidera el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Revisa sus picks antes de seguir esa estrategia.`;
+      return `Tendencia IA: ${leaderName} lidera el ranking del grupo con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Revisa sus picks antes de seguir esa estrategia.`;
     }
 
     if (userRow && userRow.playerName === leaderName) {
       const nextAi = aiRows[0];
       const aiText = nextAi ? `, pero ${nextAi.playerName} te pisa los talones en la tabla` : '';
-      return `Vas liderando el ranking familiar con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Excelente consistencia táctica${aiText}.`;
+      return `Vas liderando el ranking del grupo con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Excelente consistencia táctica${aiText}.`;
     }
 
     return `Tendencia del líder: ${leaderName} lidera la tabla con ${leaderPoints} pts. Te recomendamos invocar al Simulador Estadístico para afinar tu puntería defensiva.`;
@@ -700,14 +700,14 @@ export function Pool() {
     }
     await shareTextCard({
       title: `${teams[match.home]?.name ?? match.home} vs ${teams[match.away]?.name ?? match.away}`,
-      subtitle: `Predicción de ${pool.playerName || 'familia'} · ${fmtDay(match.date)} ${match.time}`,
+      subtitle: `Predicción de ${pool.playerName || 'jugador'} · ${fmtDay(match.date)} ${match.time}`,
       lines: [
         `Pick: ${pickScoreText(pick)}`,
         `Ganador: ${outcomeText(pick.outcome)}`,
         lockLabel(match),
-        `Grupo familiar: ${normalizePoolGroupId(pool.groupId)}`,
+        `Grupo: ${normalizePoolGroupId(pool.groupId)}`,
       ],
-      footer: 'Quiniela familiar Mundial 2026',
+      footer: 'Quiniela Mundial 2026',
       fileName: `prediccion-${match.id}-${normalizePoolGroupId(pool.groupId)}.png`,
     });
   };
@@ -721,10 +721,10 @@ export function Pool() {
           <img src="/brand/fwc26-emblem.svg" alt="Copa 2026" loading="lazy" decoding="async" />
         </div>
         <div className="pool-copy">
-          <span className="mono-label">Quiniela familiar</span>
+          <span className="mono-label">Quiniela</span>
           <h2>Pronósticos para compartir en casa</h2>
           <p>
-            Guarda tus picks en la nube familiar. Cuando empiece el torneo, los resultados reales servirán para
+            Guarda tus picks en la nube compartida. Cuando empiece el torneo, los resultados reales servirán para
             comparar aciertos entre todos.
           </p>
         </div>
@@ -831,7 +831,7 @@ export function Pool() {
               value={pool.groupId}
               onChange={(e) => pool.setGroupId(normalizePoolGroupId(e.target.value))}
               placeholder="familia-2026"
-              aria-label="Grupo familiar"
+              aria-label="Grupo"
             />
             <button type="button" className="btn ghost btn-sm" onClick={copyInviteLink}>
               <Icon name="share" size={13} />
@@ -845,7 +845,7 @@ export function Pool() {
         <span><Icon name="trophy" size={13} /> Marcador exacto +3</span>
         <span><Icon name="check" size={13} /> Ganador/empate correcto +1</span>
         <span><Icon name="clock" size={13} /> Pronosticos cierran al inicio del partido</span>
-        <span><Icon name="shield" size={13} /> Grupo familiar: {normalizePoolGroupId(pool.groupId)}</span>
+        <span><Icon name="shield" size={13} /> Grupo: {normalizePoolGroupId(pool.groupId)}</span>
       </div>
 
       <FamilySetupGuide
@@ -1125,7 +1125,7 @@ export function Pool() {
           <div className="row spread align-center animate-fade-in" style={{ marginBottom: 6 }}>
             <div className="row gap-8 align-center">
               <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
-              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Ranking Familiar (Leaderboard)</h3>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Ranking (Leaderboard)</h3>
               <span className="badge gold">Compartido</span>
             </div>
             {leaderboard.length > 0 && (

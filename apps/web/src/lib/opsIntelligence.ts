@@ -237,7 +237,7 @@ export function comparePickStrategies(matches: Match[], teams: Team[], limit = 8
       id: 'aggressive',
       label: 'Agresiva',
       summary: 'Busca plenos con marcadores más altos cuando hay favorito claro.',
-      risk: 'Más volatilidad; útil para remontar en la tabla familiar.',
+      risk: 'Más volatilidad; útil para remontar en la tabla.',
       confidence: 'Baja',
     },
     {
@@ -313,7 +313,7 @@ export function evaluateAIStrategyOutcomes(matches: Match[], teams: Team[]): Str
   return {
     played: played.length,
     summary: played.length
-      ? `${played.length} partidos finalizados evaluados con reglas de quiniela familiar.`
+      ? `${played.length} partidos finalizados evaluados con reglas de quiniela.`
       : 'Scorecard preparado; se activará cuando existan marcadores finales reales.',
     bestLabel: best && played.length ? `${best.label} · ${best.points} pts` : 'Esperando resultados',
     strategies: rows,
@@ -439,7 +439,7 @@ export function buildPoolDiagnostics(
         ? `Tu fila tiene ${userRow.points} pts y ${userRow.efficiency}% de efectividad.`
         : humanRows.length
           ? `${humanRows.length} participantes humanos sincronizados.`
-          : 'Invita familiares para activar lectura grupal.',
+          : 'Invita a tus amigos para activar lectura grupal.',
     recommendedAction:
       coveragePct < 80
         ? 'Completar ganadores pendientes.'

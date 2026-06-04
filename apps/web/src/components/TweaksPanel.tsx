@@ -77,7 +77,7 @@ export function TweaksPanel() {
               <Field label="Rol de uso">
                 {(['admin', 'family', 'guest'] as const).map((v) => (
                   <Pill key={v} on={p.role === v} onClick={() => p.set('role', v)}>
-                    {v === 'admin' ? 'Admin' : v === 'family' ? 'Familia' : 'Invitado'}
+                    {v === 'admin' ? 'Admin' : v === 'family' ? 'Estándar' : 'Invitado'}
                   </Pill>
                 ))}
               </Field>

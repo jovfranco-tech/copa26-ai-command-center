@@ -29,7 +29,7 @@ export function FamilyInviteKit({
   return (
     <div className="card family-invite-kit">
       <div className="family-invite-main">
-        <span className="mono-label">Invitación familiar</span>
+        <span className="mono-label">Invitación</span>
         <strong>Grupo {groupId}</strong>
         <p>Comparte el link, cada persona elige alias/foto y la tabla se arma con resultados reales cuando empiece el torneo.</p>
       </div>

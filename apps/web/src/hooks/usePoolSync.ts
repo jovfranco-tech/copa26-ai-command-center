@@ -78,7 +78,7 @@ export function usePoolSync(options: UsePoolSyncOptions): UsePoolSyncReturn {
           setSyncStatus('synced');
           setLastSavedAt(new Date().toISOString());
           onSyncSuccess?.();
-          notifySuccess('Quiniela guardada', 'Tus picks se sincronizaron en la nube familiar.');
+          notifySuccess('Quiniela guardada', 'Tus picks se sincronizaron en la nube compartida.');
         } else {
           setSyncStatus('error');
           registerPoolBackgroundSync().catch(() => {});

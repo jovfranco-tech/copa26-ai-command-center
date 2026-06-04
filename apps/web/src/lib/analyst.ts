@@ -146,7 +146,7 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
         dataUsed: ['Calendario', 'Grupo', 'Tabla local'],
         ignoredData: m.status === 'UPCOMING' ? ['Lesiones no cargadas', 'alineación oficial', 'momento de forma reciente'] : ['Eventos no disponibles en el feed'],
         rationale: 'El análisis se limita al estado del partido, grupo y tabla local; no extrapola información externa.',
-        nextAction: m.status === 'UPCOMING' ? 'Definir marcador y revisar cierre de quiniela.' : 'Comparar pick familiar contra resultado real.',
+        nextAction: m.status === 'UPCOMING' ? 'Definir marcador y revisar cierre de quiniela.' : 'Comparar pick del grupo contra resultado real.',
       }),
       citations: [
         ...matchCitation(m, teams, venues),
@@ -300,7 +300,7 @@ export function buildAnalystAnswer(input: AnalystInput): AnalystAnswer {
       dataUsed: ['Calendario completo', 'Plantillas', 'Tablas por grupo'],
       ignoredData: ['Resultados futuros', 'alineaciones oficiales', 'lesiones no cargadas'],
       rationale: 'El torneo aún está en modo previa; se priorizan calendario, sedes, grupos y ratings cercanos.',
-      nextAction: 'Usar Día de partido y quiniela familiar para preparar el primer juego.',
+      nextAction: 'Usar Día de partido y quiniela para preparar el primer juego.',
     }),
     citations: [
       {

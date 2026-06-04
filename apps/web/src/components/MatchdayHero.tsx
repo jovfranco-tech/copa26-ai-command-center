@@ -61,7 +61,7 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
           `${venue?.stadium ?? 'Sede por confirmar'}, ${venue?.city ?? ''}`,
           weather ? `Clima: ${weather.label}` : 'Clima pendiente',
           h2h?.label ?? 'Historial pendiente',
-          played ? `Marcador: ${match.homeGoals ?? 0}-${match.awayGoals ?? 0}` : 'Listo para quiniela familiar',
+          played ? `Marcador: ${match.homeGoals ?? 0}-${match.awayGoals ?? 0}` : 'Listo para quiniela',
         ],
         fileName: `partido-${match.id}.png`,
       });

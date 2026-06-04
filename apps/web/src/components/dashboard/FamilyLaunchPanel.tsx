@@ -20,9 +20,9 @@ export function FamilyLaunchPanel({ match }: { match: Match | null }) {
         lines: [
           `Fecha: ${match.date} ${match.time}`,
           `Sede: ${match.venue}`,
-          'Acceso directo a quiniela familiar, modo TV y centro de datos.',
+          'Acceso directo a quiniela, modo TV y centro de datos.',
         ],
-        footer: 'Mundial 2026 familiar',
+        footer: 'Mundial 2026',
         fileName: `partido-del-dia-${match.id}.png`,
       });
     } finally {

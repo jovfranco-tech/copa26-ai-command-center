@@ -41,7 +41,7 @@ export function PoolCommandCenter({
     <div className="card pool-command-center">
       <div className="pool-command-head">
         <div>
-          <span className="mono-label">Centro de mando familiar</span>
+          <span className="mono-label">Centro de mando</span>
           <strong>{pct}% de próximos partidos con pick</strong>
           <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${fmtTime(lastSavedAt)}.` : 'Guardado remoto pendiente.'}</p>
         </div>

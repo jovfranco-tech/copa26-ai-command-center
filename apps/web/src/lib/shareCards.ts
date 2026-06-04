@@ -56,7 +56,7 @@ export async function shareTextCard(options: ShareCardOptions): Promise<void> {
   ctx.fillStyle = 'rgba(224, 189, 108, 0.82)';
   ctx.font = '700 26px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(options.footer ?? 'Quiniela familiar privada', 540, 1166);
+  ctx.fillText(options.footer ?? 'Quiniela privada', 540, 1166);
 
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png', 0.92));
   if (!blob) return;

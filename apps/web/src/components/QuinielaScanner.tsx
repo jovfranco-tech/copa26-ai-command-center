@@ -84,7 +84,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
         onClose();
       } else {
         setError(res.reason === 'no-key' 
-          ? 'No se ha configurado la API Key de Gemini en tu cuenta.' 
+          ? 'No se ha configurado la API Key del modelo de IA en tu cuenta.' 
           : 'No se pudieron reconocer marcadores legibles en la foto. Intenta alinear mejor la hoja.');
       }
     } catch (err) {
