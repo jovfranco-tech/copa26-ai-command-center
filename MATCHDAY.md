@@ -1,9 +1,33 @@
 # Runbook de día de partido (matchday)
 
-Cómo encender datos reales cuando arranque el torneo. La app está construida para
-que **la tabla, los rangos de grupo y las diferencias de gol se deriven solos** de
-los resultados; tú sólo aportas dos cosas: **resultados** y (opcional) **alineaciones
-oficiales**. Después: commit + push, y CI valida y despliega.
+Hay **dos formas** de actualizar: el **panel en vivo** (un botón, sin redeploy —
+recomendado) o el **flujo CLI** (plantillas + git push). En ambos, la tabla, los
+rangos de grupo y las diferencias de gol **se derivan solos** de los resultados.
+
+---
+
+## 0) Panel en vivo — `/admin` (recomendado, sin redeploy)
+
+Entra a **`/admin`**, escribe la contraseña y edita:
+
+- **Resultados**: marcador + estado (FT / EN VIVO) por partido → la tabla y las
+  estadísticas se actualizan para todos en segundos.
+- **Alineaciones**: elige partido, ajusta el XI (viene pre-cargado con el estimado)
+  → el Estadio 3D muestra "XI Oficial".
+
+Cómo funciona: el panel escribe un *overlay* en Vercel Blob; la app lo lee en vivo
+y lo superpone al dataset estático. **No hace falta redeploy.** Sólo tú escribes
+(contraseña verificada en el servidor); el público sólo lee.
+
+### Activación (una vez)
+1. **Vercel → Storage → Create → Blob**, conéctalo al proyecto (añade
+   `BLOB_READ_WRITE_TOKEN` solo). 
+2. `vercel env add ADMIN_PASSWORD` (production) — tu contraseña.
+3. **Redespliega** para que tomen efecto las variables (push vacío o "Redeploy"
+   en el dashboard).
+
+Mientras no esté configurado, el panel muestra un aviso y la app funciona igual
+que hoy (overlay vacío). El flujo CLI de abajo sigue disponible como alternativa.
 
 ---
 
