@@ -82,8 +82,8 @@ export function notifySuccess(title: string, message: string) {
 }
 
 /** Push an info toast that auto-closes in 5s */
-export function notifyInfo(title: string, message: string) {
-  return useNotifications.getState().push({ type: 'info', title, message, autoClose: 5000 });
+export function notifyInfo(title: string, message: string, action?: AppNotification['action']) {
+  return useNotifications.getState().push({ type: 'info', title, message, autoClose: 5000, action });
 }
 
 /** Push a warning that stays until dismissed */

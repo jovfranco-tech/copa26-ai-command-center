@@ -178,7 +178,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
           </div>
         )}
         <div className="mono-label" style={{ marginTop: 10 }}>
-          Datos locales del torneo · haz clic en Resumen Narrado para escuchar el boletín vocal
+          Generado automáticamente desde datos locales del torneo · haz clic en Resumen Narrado para escuchar el boletín vocal
         </div>
       </div>
     </div>

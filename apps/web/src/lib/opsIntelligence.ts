@@ -208,12 +208,12 @@ function strategyPick(match: Match, teams: Team[], strategy: PickStrategyId): { 
   if (underdogOutcome === 'home') {
     return {
       pick: { outcome: 'home', homeGoals: 1, awayGoals: 0 },
-      rationale: 'Contraria al ranking: apuesta por sorpresa local de margen mínimo.',
+      rationale: 'Contraria al ranking: opta por sorpresa local de margen mínimo.',
     };
   }
   return {
     pick: { outcome: 'away', homeGoals: 0, awayGoals: 1 },
-    rationale: 'Contraria al ranking: apuesta por sorpresa visitante de margen mínimo.',
+    rationale: 'Contraria al ranking: opta por sorpresa visitante de margen mínimo.',
   };
 }
 

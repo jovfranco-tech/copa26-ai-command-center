@@ -214,6 +214,9 @@ function PostMatchDebrief({ match, homeTeam, awayTeam, userPick }: { match: Matc
       {!userPick?.outcome && (
         <p style={{ margin: 0, fontSize: 11, color: 'var(--tx-3)', fontStyle: 'italic' }}>No registraste predicción para este partido.</p>
       )}
+      <p style={{ margin: '8px 0 0', fontSize: 10, color: 'var(--tx-3)', opacity: 0.7, fontStyle: 'italic' }}>
+        Observación generada automáticamente a partir del marcador. No es análisis editorial.
+      </p>
     </div>
   );
 }

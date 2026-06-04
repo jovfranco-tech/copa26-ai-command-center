@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { notifyAI, notifyWarning } from '@/store/notifications';
+import { notifyInfo, notifyWarning } from '@/store/notifications';
 import type { Match } from '@worldcup/shared';
 import type { PoolPick } from '@/store/pool';
 
@@ -46,7 +46,7 @@ export function useProactiveAI({ matches, picks, playerName, leaderboard }: Proa
           const leader = leaderboard[0];
           const gap = leader.points - (leaderboard[userIdx]?.points ?? 0);
           if (gap <= 6) {
-            notifyAI(
+            notifyInfo(
               'Oportunidad táctica',
               `Estás a solo ${gap} pts del puntero (${leader.playerName}). Un par de aciertos exactos te ponen en la cima.`,
               { label: 'Ver quiniela', href: '/pool' },
@@ -60,7 +60,7 @@ export function useProactiveAI({ matches, picks, playerName, leaderboard }: Proa
         return !picks[m.id]?.outcome;
       });
       if (nextBig && !unpicked.length) {
-        notifyAI(
+        notifyInfo(
           'Próximo partido sin pick',
           `${nextBig.home} vs ${nextBig.away} (${nextBig.date}) aún no tiene pronóstico. Consulta al analista IA para decidir.`,
           { label: 'Analista IA', href: '/analyst' },
