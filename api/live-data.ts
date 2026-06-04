@@ -3,15 +3,15 @@
  * Returns an empty overlay when nothing has been published yet (or Blob is not
  * configured), so the app always renders. Cached briefly so admin edits show up
  * within seconds without hammering storage.
+ *
+ * Node (Fluid) runtime: @vercel/blob depends on undici, which is not supported on
+ * the edge runtime — keeping this off edge stops it leaking into the edge bundle.
  */
 import { getOverlay } from './_shared/overlay.js';
 
-export const config = { runtime: 'edge' };
+// No `config` block → Node (Fluid) runtime by default for method-export handlers.
 
-export default async function handler(request: Request): Promise<Response> {
-  if (request.method !== 'GET') {
-    return Response.json({ ok: false, error: 'method' }, { status: 405 });
-  }
+export async function GET(): Promise<Response> {
   const overlay = await getOverlay();
   return Response.json(overlay, {
     headers: { 'Cache-Control': 'public, max-age=15, s-maxage=15, stale-while-revalidate=30' },

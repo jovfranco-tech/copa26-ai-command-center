@@ -7,11 +7,13 @@
  *   POST → apply one AdminOp, persist, return the new overlay
  *
  * Body (POST): { op, matchId, data } — see applyAdminOp in @worldcup/shared.
+ *
+ * Node (Fluid) runtime: @vercel/blob depends on undici (not edge-compatible).
  */
 import { applyAdminOp, type AdminOp } from '../packages/shared/src/liveOverlay.js';
 import { blobConfigured, getOverlay, putOverlay } from './_shared/overlay.js';
 
-export const config = { runtime: 'edge' };
+// No `config` block → Node (Fluid) runtime by default for method-export handlers.
 
 /** Length-then-value comparison; avoids leaking length via early exit on equal-length inputs. */
 function passwordOk(request: Request): boolean {
@@ -24,23 +26,19 @@ function passwordOk(request: Request): boolean {
   return diff === 0;
 }
 
-export default async function handler(request: Request): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   const configured = blobConfigured() && Boolean(process.env.ADMIN_PASSWORD);
-
-  if (request.method === 'GET') {
-    if (!process.env.ADMIN_PASSWORD) {
-      return Response.json({ ok: false, configured: false, error: 'not-configured' }, { status: 503 });
-    }
-    if (!passwordOk(request)) return Response.json({ ok: false, configured }, { status: 401 });
-    return Response.json(
-      { ok: true, configured, overlay: await getOverlay() },
-      { headers: { 'Cache-Control': 'no-store' } },
-    );
+  if (!process.env.ADMIN_PASSWORD) {
+    return Response.json({ ok: false, configured: false, error: 'not-configured' }, { status: 503 });
   }
+  if (!passwordOk(request)) return Response.json({ ok: false, configured }, { status: 401 });
+  return Response.json(
+    { ok: true, configured, overlay: await getOverlay() },
+    { headers: { 'Cache-Control': 'no-store' } },
+  );
+}
 
-  if (request.method !== 'POST') {
-    return Response.json({ ok: false, error: 'method' }, { status: 405 });
-  }
+export async function POST(request: Request): Promise<Response> {
   if (!passwordOk(request)) return Response.json({ ok: false, error: 'auth' }, { status: 401 });
   if (!blobConfigured()) return Response.json({ ok: false, error: 'blob-not-configured' }, { status: 503 });
 
