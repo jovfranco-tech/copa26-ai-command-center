@@ -8,9 +8,10 @@ import { WebGLBoundary } from './components/WebGLBoundary';
 import { AIMatchBrief } from './components/AIMatchBrief';
 import { SelectedPlayerPanel } from './components/SelectedPlayerPanel';
 import type { Player } from './data/lineups';
-import { usePlayers, useMatches, useTeamsMap, useVenuesMap } from '../../hooks';
+import { usePlayers, useMatches, useTeamsMap, useVenuesMap, useLiveOverlay } from '../../hooks';
 import { TeamFlag, TeamCrest } from '../../components/identity';
 import { buildMatchLineups } from './data/stadiumDataMapper';
+import { OFFICIAL_LINEUPS, type OfficialMatchLineup } from './data/officialLineups';
 import { getTeamVisualIdentity } from './data/teamVisualIdentity';
 import type { Match as SharedMatch } from '@worldcup/shared';
 import {
@@ -144,6 +145,13 @@ function App() {
     fixturesWithOverrides.find((m) => m.id === 'M001') ??
     fixturesWithOverrides[0];
 
+  // ── Live overlay: admin-published official lineups (merged over the static store)
+  const overlayLineups = useLiveOverlay().data?.lineups;
+  const officialSource = useMemo<Record<string, OfficialMatchLineup>>(
+    () => ({ ...OFFICIAL_LINEUPS, ...(overlayLineups ?? {}) }),
+    [overlayLineups],
+  );
+
   // ── Lineup mapping ──────────────────────────────────────────────────────────
   const mappedLineups = useMemo(() => {
     const statusMap: Record<Match['status'], 'pre-match' | 'live' | 'post-match'> = {
@@ -159,8 +167,9 @@ function App() {
       currentMatch.id,
       statusMap[currentMatch.status],
       minute,
+      officialSource,
     );
-  }, [dbPlayers, currentMatch]);
+  }, [dbPlayers, currentMatch, officialSource]);
 
   // ── Match change handler ────────────────────────────────────────────────────
   const handleMatchChange = (matchId: string) => {
@@ -176,6 +185,7 @@ function App() {
       nextMatch.id,
       nextMatch.status === 'live' ? 'live' : nextMatch.status === 'post-match' ? 'post-match' : 'pre-match',
       nextMinute,
+      officialSource,
     );
 
     if (selectedPlayer) {

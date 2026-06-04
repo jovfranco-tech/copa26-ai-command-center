@@ -5,11 +5,14 @@
  */
 import {
   allGroupTables,
+  applyMatchResults,
   buildStats,
   computeStandings,
+  emptyOverlay,
   mock,
   type ApiItem,
   type ApiList,
+  type LiveOverlay,
   type Match,
   type MatchEvent,
   type Player,
@@ -25,6 +28,24 @@ import type { PoolPick } from '@/store/pool';
 
 
 const BASE = '/api';
+
+// ── Live overlay (admin-published results/lineups, fetched at runtime) ──────────
+// A single module-level cache primed by useLiveOverlaySync(). When the admin
+// publishes a score, the matches the whole app reads are patched on the fly and
+// standings/stats re-derive — no redeploy, no per-call refetch.
+let LIVE_OVERLAY: LiveOverlay = emptyOverlay();
+export function setLiveOverlay(o: LiveOverlay): void {
+  LIVE_OVERLAY = o;
+}
+export function getLiveOverlay(): LiveOverlay {
+  return LIVE_OVERLAY;
+}
+/** mock.MATCHES with any admin-published scores applied (status flips to FT/LIVE). */
+function overlaidMatches(): Match[] {
+  if (!Object.keys(LIVE_OVERLAY.results).length) return mock.MATCHES;
+  return applyMatchResults(mock.MATCHES, LIVE_OVERLAY.results).matches;
+}
+export const fetchLiveOverlay = () => safeGet<LiveOverlay>('/live-data', () => emptyOverlay());
 
 async function safeGet<T>(path: string, fallback: () => T): Promise<T> {
   try {
@@ -93,7 +114,7 @@ export interface MatchFilters {
 }
 export const fetchMatches = (f: MatchFilters = {}) =>
   safeGet<ApiList<Match>>(`/matches${qs(f)}`, () => {
-    let items = mock.MATCHES;
+    let items = overlaidMatches();
     if (f.status) items = items.filter((m) => m.status === f.status);
     if (f.group) items = items.filter((m) => m.group === f.group);
     if (f.team) items = items.filter((m) => m.home === f.team || m.away === f.team);
@@ -111,7 +132,7 @@ export interface MatchDetail {
 }
 export const fetchMatch = (id: string) =>
   safeGet<MatchDetail>(`/matches/${id}`, () => {
-    const item = mock.MATCHES.find((m) => m.id === id) ?? null;
+    const item = overlaidMatches().find((m) => m.id === id) ?? null;
     return {
       source: 'mock',
       item,
@@ -133,7 +154,7 @@ export const fetchStandings = () =>
   safeGet<{ source: 'mock' | 'sqlite'; groups: Record<string, StandingRow[]> }>(
     '/standings',
     () => {
-      const table = computeStandings(mock.TEAMS, mock.MATCHES);
+      const table = computeStandings(mock.TEAMS, overlaidMatches());
       const letters = [...new Set(mock.TEAMS.map((t) => t.group))].sort();
       return { source: 'mock', groups: allGroupTables(letters, table) };
     },
@@ -141,7 +162,7 @@ export const fetchStandings = () =>
 
 export const fetchStats = () =>
   safeGet<StatsBundle>('/stats', () =>
-    buildStats(mock.TEAMS, mock.PLAYERS, mock.MATCHES, mock.GOALKEEPERS, 'mock'),
+    buildStats(mock.TEAMS, mock.PLAYERS, overlaidMatches(), mock.GOALKEEPERS, 'mock'),
   );
 
 export const fetchSyncStatus = () =>

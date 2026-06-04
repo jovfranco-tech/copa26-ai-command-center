@@ -1,9 +1,10 @@
 /** TanStack Query hooks over the local API client. */
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import type { Team, Venue } from '@worldcup/shared';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import type { LiveOverlay, Team, Venue } from '@worldcup/shared';
 import {
   assetUrl,
+  fetchLiveOverlay,
   fetchMatch,
   fetchMatches,
   fetchPlayer,
@@ -14,9 +15,40 @@ import {
   fetchTeam,
   fetchTeams,
   fetchVenues,
+  setLiveOverlay,
   type MatchFilters,
   type PlayerFilters,
 } from '@/lib/api';
+
+/** The live overlay (admin-published results/lineups), polled every 60s. */
+export function useLiveOverlay() {
+  return useQuery<LiveOverlay>({
+    queryKey: ['live-overlay'],
+    queryFn: fetchLiveOverlay,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  });
+}
+
+/**
+ * Mount ONCE near the app root. Primes the api.ts overlay cache and, whenever the
+ * published overlay changes, invalidates the derived queries so the table/stats
+ * and match views pick up new scores without a redeploy.
+ */
+export function useLiveOverlaySync() {
+  const qc = useQueryClient();
+  const { data } = useLiveOverlay();
+  const stamp = data?.updatedAt ?? null;
+  useEffect(() => {
+    if (!data) return;
+    setLiveOverlay(data);
+    for (const key of ['matches', 'match', 'standings', 'stats']) {
+      qc.invalidateQueries({ queryKey: [key] });
+    }
+    // Re-run only when the published overlay actually changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stamp]);
+}
 
 export function useTeams() {
   return useQuery({ queryKey: ['teams'], queryFn: fetchTeams });

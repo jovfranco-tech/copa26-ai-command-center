@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
 import { FOOTER_NOTICE } from '@worldcup/shared';
-import { useMatches } from '@/hooks';
+import { useMatches, useLiveOverlaySync } from '@/hooks';
 import { usePreferences, applyPreferences, isThemeExplicit, setSystemThemePreference, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
@@ -91,6 +91,7 @@ function activeKeyFromPath(pathname: string): string {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
+  useLiveOverlaySync(); // prime + keep the live results/lineups overlay in sync
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isRouterLoading = useRouterState({ select: (s) => s.status === 'pending' });

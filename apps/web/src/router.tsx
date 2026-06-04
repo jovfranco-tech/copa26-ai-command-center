@@ -109,6 +109,7 @@ const LazyDataCenter = lazyWithRetry(() => import('./routes/DataCenter').then((m
 const LazyAnalyst = lazyWithRetry(() => import('./routes/Analyst').then((m) => ({ default: m.Analyst })));
 const LazyTVMode = lazyWithRetry(() => import('./routes/TVMode').then((m) => ({ default: m.TVMode })));
 const LazyEstadio3D = lazyWithRetry(() => import('./routes/Estadio3D').then((m) => ({ default: m.Estadio3D })));
+const LazyAdmin = lazyWithRetry(() => import('./routes/Admin').then((m) => ({ default: m.Admin })));
 // Detail pages are navigation-only — defer them out of the initial shell.
 const LazyMatchDetail = lazyWithRetry(() => import('./routes/MatchDetail').then((m) => ({ default: m.MatchDetail })));
 const LazyTeamDetail = lazyWithRetry(() => import('./routes/TeamDetail').then((m) => ({ default: m.TeamDetail })));
@@ -213,6 +214,18 @@ const estadio3DRoute = createRoute({
   },
 });
 
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: function AdminRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyAdmin />
+      </Suspense>
+    );
+  },
+});
+
 const analystRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/analyst',
@@ -251,6 +264,7 @@ const routeTree = rootRoute.addChildren([
   dataRoute,
   tvRoute,
   estadio3DRoute,
+  adminRoute,
   analystRoute,
 ]);
 
