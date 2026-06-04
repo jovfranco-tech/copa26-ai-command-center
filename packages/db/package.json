@@ -20,7 +20,7 @@
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "@worldcup/shared": "workspace:*",
-    "drizzle-orm": "^0.38.3"
+    "drizzle-orm": "^0.45.2"
   },
   "devDependencies": {
     "drizzle-kit": "^0.30.1",

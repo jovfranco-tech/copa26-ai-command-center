@@ -70,10 +70,10 @@ service cloud.firestore {
         && request.resource.data.status in ['active', 'resolved'];
     }
 
+    // Legacy flat collection — the app migrated to /poolGroups and no longer reads
+    // or writes here. Locked down to remove the public-read surface (names/picks).
     match /poolPicks/{playerName} {
-      allow read: if true;
-      allow create, update: if validPoolPickDoc(playerName);
-      allow delete: if false;
+      allow read, write: if false;
     }
 
     match /poolGroups/{groupId}/members/{playerName} {

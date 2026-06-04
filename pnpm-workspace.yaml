@@ -5,3 +5,9 @@ allowBuilds:
   '@firebase/util': true
   esbuild: true
   protobufjs: true
+# Bump ONLY the firebase-transitive undici off the vulnerable 6.19.7 pin (WebSocket
+# DoS/overflow advisories, patched >=6.24.0). Scoped to 6.19.7 so jsdom's own undici
+# (dev test env) is untouched. Browser firebase uses native fetch/WS, so undici is
+# not executed at runtime here anyway — this just clears the audit.
+overrides:
+  undici@6.19.7: ^6.24.0

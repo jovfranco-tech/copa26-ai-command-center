@@ -62,14 +62,11 @@
       "better-sqlite3",
       "protobufjs",
       "@firebase/util"
-    ],
-    "overrides": {
-      "undici": "^6.24.0"
-    }
+    ]
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "@vercel/blob": "^2.4.0",
-    "drizzle-orm": "^0.38.4"
+    "drizzle-orm": "^0.45.2"
   }
 }

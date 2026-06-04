@@ -472,7 +472,7 @@ export function Pool() {
         updatedAt: new Date().toISOString(),
       });
       playSuccessTick();
-    } catch (e) {
+    } catch {
       // Error already handled by UI state
     }
   };
