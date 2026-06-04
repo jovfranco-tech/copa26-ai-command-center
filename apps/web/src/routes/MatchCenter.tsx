@@ -119,7 +119,7 @@ export function MatchCenter() {
       </div>
 
       {isLoading ? (
-        <p className="muted">Cargando partidos…</p>
+        <p className="muted" role="status" aria-live="polite">Cargando partidos…</p>
       ) : matches.length === 0 ? (
         <Empty icon="calendar" title="Sin partidos" text="Ningún partido coincide con los filtros." />
       ) : (

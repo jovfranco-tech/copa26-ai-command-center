@@ -1078,6 +1078,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             </div>
           </div>
 
+          <div aria-live="polite" aria-atomic="false">
           {busy && streamingText && (
             <div className="card card-pad" style={{ borderColor: 'var(--gold-line)' }}>
               <div className="row gap-8" style={{ alignItems: 'center', marginBottom: 10 }}>
@@ -1097,6 +1098,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               </p>
             </div>
           )}
+          </div>
 
           {answer && parsed && (
             <div className="card card-pad">

@@ -37,7 +37,7 @@
   --line-2: rgba(255, 255, 255, 0.13);
   --tx: #f4efe2;
   --tx-2: #98a3ba;
-  --tx-3: #5b6680;
+  --tx-3: #7a8598;
   --live: #ff4747;
   --pos: #38d39a;
   --neg: #ff6b6b;
@@ -1153,8 +1153,11 @@ body {
   border: none;
   cursor: pointer;
   color: var(--tx-3);
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   padding: 4px;
   transition: color 0.14s, transform 0.14s;
 }
@@ -1326,6 +1329,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 3px;
     padding: 5px 8px;
     color: var(--tx-3);
@@ -1334,6 +1338,7 @@ body {
     font-size: 9.5px;
     font-weight: 600;
     min-width: 56px;
+    min-height: 44px;
     text-decoration: none;
   }
   .mobile-nav .mi svg {

@@ -1002,7 +1002,7 @@ export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
   const isMobileOuter = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }} aria-hidden="true">
       <Canvas
         shadows={!isMobileOuter}
         camera={{ position: [0, 26, 44], fov: 50 }}

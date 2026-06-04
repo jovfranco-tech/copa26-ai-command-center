@@ -300,11 +300,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               <option value="family">Familia</option>
               <option value="guest">Invitado</option>
             </select>
-            <Link to="/analyst" className="icon-btn" title="Analista IA">
+            <Link to="/analyst" className="icon-btn" title="Analista IA" aria-label="Analista IA">
               <Icon name="ai" size={18} />
             </Link>
             {!isLocalHost && (
-              <button type="button" className="icon-btn logout-btn" title="Salir" onClick={logout}>
+              <button type="button" className="icon-btn logout-btn" title="Salir" aria-label="Salir" onClick={logout}>
                 <Icon name="arrowR" size={18} />
               </button>
             )}

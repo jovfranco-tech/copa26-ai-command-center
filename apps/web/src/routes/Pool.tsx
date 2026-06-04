@@ -879,9 +879,13 @@ export function Pool() {
         onShareAchievement={shareLeaderboardLogro}
       />
 
-      <div className="pool-tabs">
+      <div className="pool-tabs" role="tablist" aria-label="Secciones de la quiniela">
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === 'predict'}
+          aria-controls="pool-panel-predict"
+          id="pool-tab-predict"
           className={`pool-tab${activeTab === 'predict' ? ' on' : ''}`}
           onClick={() => { setActiveTab('predict'); playTick(); }}
         >
@@ -891,6 +895,10 @@ export function Pool() {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === 'results'}
+          aria-controls="pool-panel-results"
+          id="pool-tab-results"
           className={`pool-tab${activeTab === 'results' ? ' on' : ''}`}
           onClick={() => { setActiveTab('results'); playTick(); }}
         >
@@ -986,7 +994,7 @@ export function Pool() {
       )}
 
       {activeTab === 'predict' && (
-        <div className="copilot-section">
+        <div className="copilot-section" id="pool-panel-predict" role="tabpanel" aria-labelledby="pool-tab-predict">
           <div className="row gap-8" style={{ alignItems: 'center' }}>
             <Icon name="ai" size={16} style={{ color: 'var(--gold)' }} />
             <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Co-pilotos Tácticos IA</h3>
@@ -1112,7 +1120,7 @@ export function Pool() {
       )}
 
       {activeTab === 'results' && (
-        <div className="copilot-section" style={{ marginBottom: 24 }}>
+        <div className="copilot-section" id="pool-panel-results" role="tabpanel" aria-labelledby="pool-tab-results" style={{ marginBottom: 24 }}>
           <div className="row spread align-center animate-fade-in" style={{ marginBottom: 6 }}>
             <div className="row gap-8 align-center">
               <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
@@ -1145,7 +1153,7 @@ export function Pool() {
           </p>
 
           {loadingLeaderboard ? (
-            <p className="muted" style={{ fontSize: 13 }}>Cargando tabla de posiciones…</p>
+            <p className="muted" role="status" aria-live="polite" style={{ fontSize: 13 }}>Cargando tabla de posiciones…</p>
           ) : !leaderboard.length ? (
             <div className="card card-pad muted" style={{ fontSize: 13, textAlign: 'center' }}>
               No hay predicciones sincronizadas todavía. Escribe tu nombre y guarda algunos marcadores.
@@ -1239,7 +1247,7 @@ export function Pool() {
       )}
 
       {isLoading ? (
-        <p className="muted">Cargando quiniela…</p>
+        <p className="muted" role="status" aria-live="polite">Cargando quiniela…</p>
       ) : !visible.length ? (
         <Empty
           icon="trophy"
