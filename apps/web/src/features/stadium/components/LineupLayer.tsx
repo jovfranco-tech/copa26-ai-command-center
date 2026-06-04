@@ -366,11 +366,11 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
   // - 'limpia': No HtmlDrei at all
   // - 'nombres': All players show simple text badge (lightweight)
   // - 'compactas': Only hovered/selected player shows compact card
-  // - 'seleccionar': Only selected/hovered players show badge (selected gets full card instead)
+  // - 'seleccionar': All players show mini badge; selected/hovered get expanded card
   const isInteractive = isSelected || hovered;
-  const showBadge = !isLimpia && !isCompactas && !(isSelected && isSeleccionar) && (isNombres || isInteractive);
+  const showBadge = !isLimpia && (isNombres || isSeleccionar || isInteractive);
   const showCompactCard = isCompactas && isInteractive && !isSelected;
-  const showFullCard = isSelected && !isLimpia;
+  const showFullCard = isSelected && !isLimpia && !isNombres;
 
   return (
     <group 
