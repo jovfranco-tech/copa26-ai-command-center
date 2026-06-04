@@ -80,6 +80,8 @@ export const MatchSchema = z.object({
   shotsA: z.number().int().min(0).nullable().default(null),
   shotsTH: z.number().int().min(0).nullable().default(null),
   shotsTA: z.number().int().min(0).nullable().default(null),
+  resultSource: z.enum(['manual', 'live-overlay', 'scraper', 'ai-vision']).optional(),
+  resultVerifiedAt: z.string().optional(),
 });
 
 export const VenueSchema = z.object({
@@ -131,6 +133,21 @@ export const AssetSchema = z.object({
   status: z.enum(ASSET_STATUSES).default('present'),
 });
 
+export const MatchLineupSchema = z.object({
+  matchId: z.string(),
+  teamCode: z.string().min(2).max(4),
+  playerId: z.string(),
+  playerName: z.string(),
+  position: z.enum(['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST', 'CF']),
+  shirtNumber: z.number().int().min(1).max(99).optional(),
+  isStarter: z.boolean().default(true),
+  status: z.enum(['official', 'estimated', 'provisional']).default('estimated'),
+  sourceUrl: z.string().url().optional(),
+  publishedAt: z.string().optional(),
+});
+
+export type MatchLineup = z.infer<typeof MatchLineupSchema>;
+
 export const schemas = {
   TeamSchema,
   PlayerSchema,
@@ -139,4 +156,5 @@ export const schemas = {
   StandingSchema,
   MatchEventSchema,
   AssetSchema,
+  MatchLineupSchema,
 } as const;

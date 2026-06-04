@@ -29,6 +29,30 @@ import type { PoolPick } from '@/store/pool';
 
 const BASE = '/api';
 
+// ── Data Confidence ─────────────────────────────────────────────────────────
+
+export interface DataConfidence {
+  calendar: 'official' | 'confirmed' | 'pending';
+  teams: 'official' | 'confirmed' | 'pending';
+  venues: 'official' | 'confirmed' | 'pending';
+  players: 'estimated' | 'confirmed' | 'pending';
+  results: 'official' | 'live' | 'pending';
+  standings: 'derived' | 'pending';
+}
+
+export function getDataConfidence(matches: Array<{ status: string }>): DataConfidence {
+  const hasResults = matches.some(m => m.status === 'FT');
+  const hasLive = matches.some(m => m.status === 'LIVE');
+  return {
+    calendar: 'official',
+    teams: 'official',
+    venues: 'official',
+    players: 'estimated',
+    results: hasResults ? 'official' : hasLive ? 'live' : 'pending',
+    standings: hasResults ? 'derived' : 'pending',
+  };
+}
+
 // ── Live overlay (admin-published results/lineups, fetched at runtime) ──────────
 // A single module-level cache primed by useLiveOverlaySync(). When the admin
 // publishes a score, the matches the whole app reads are patched on the fly and

@@ -8,4 +8,7 @@ export * from './selectors.js';
 export * from './applyResults.js';
 export * from './liveOverlay.js';
 export * from './resultsMapping.js';
-export * as mock from './mock/index.js';
+export * from './auditLog.js';
+export * as mock from './dataset/index.js';
+// Backward-compatible alias — prefer `mock` or direct `./dataset` import.
+export * as dataset from './dataset/index.js';

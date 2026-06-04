@@ -7,7 +7,7 @@
  * to ours) with a normalized-name fallback. Unmatched matches are reported, not
  * guessed — so a feed/our-data mismatch is visible instead of silently wrong.
  */
-import { MATCHES, TEAMS } from './mock/index.js';
+import { MATCHES, TEAMS } from './dataset/index.js';
 import type { ResultEntry } from './liveOverlay.js';
 
 const normalize = (s: string): string =>

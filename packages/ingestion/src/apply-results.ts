@@ -25,6 +25,59 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATASET = join(HERE, '..', '..', 'shared', 'src', 'data', 'worldcup2026.json');
 
+// ── Validation guards ───────────────────────────────────────────────────────
+
+interface ValidationResult {
+  valid: boolean;
+  warnings: string[];
+}
+
+/**
+ * Validates a result entry before it is applied to the dataset.
+ * Returns { valid, warnings } — when valid is false the result should be skipped.
+ */
+export function validateResult(
+  matchId: string,
+  result: MatchResultInput,
+  existingMatch: Match | undefined,
+): ValidationResult {
+  const warnings: string[] = [];
+  let valid = true;
+
+  const home = result.homeGoals ?? 0;
+  const away = result.awayGoals ?? 0;
+
+  // 1. Score bounds: impossible score
+  if (home + away > 15) {
+    warnings.push(`${matchId}: total goals (${home + away}) exceeds 15 — impossible score, skipping`);
+    valid = false;
+  }
+
+  // 2. Status transition: overwriting a finished match
+  if (existingMatch && existingMatch.status === 'FT') {
+    warnings.push(`${matchId}: match already has status FT — overwriting previous result`);
+  }
+
+  // 3. Cross-check: home !== away
+  if (existingMatch && existingMatch.home === existingMatch.away) {
+    warnings.push(`${matchId}: homeTeam === awayTeam (${existingMatch.home}) — data integrity issue, skipping`);
+    valid = false;
+  }
+
+  // 4. Date range: WC2026 runs 2026-06-11 to 2026-07-19
+  if (existingMatch) {
+    const matchDate = existingMatch.date;
+    if (matchDate < '2026-06-11' || matchDate > '2026-07-19') {
+      warnings.push(`${matchId}: match date ${matchDate} is outside WC2026 window (2026-06-11 to 2026-07-19), skipping`);
+      valid = false;
+    }
+  }
+
+  return { valid, warnings };
+}
+
+// ── Main script ─────────────────────────────────────────────────────────────
+
 // pnpm sets INIT_CWD to the directory the command was invoked from (repo root),
 // while process.cwd() is the package dir under `--filter`. Resolve against INIT_CWD
 // so a results file at the repo root is found when you run from the repo root.
@@ -44,7 +97,24 @@ const dataset = JSON.parse(readFileSync(DATASET, 'utf8')) as {
   [k: string]: unknown;
 };
 
-const { matches, applied, pending, skipped } = applyMatchResults(dataset.matches, results);
+// Run validation guards on each result before applying
+const matchById = new Map(dataset.matches.map((m) => [m.id, m]));
+const validatedResults: Record<string, MatchResultInput> = {};
+const allWarnings: string[] = [];
+
+for (const [id, entry] of Object.entries(results)) {
+  const existing = matchById.get(id);
+  const { valid, warnings } = validateResult(id, entry, existing);
+  allWarnings.push(...warnings);
+  if (!valid) {
+    for (const w of warnings) console.error(`✗ ${w}`);
+    continue;
+  }
+  for (const w of warnings) console.warn(`⚠ ${w}`);
+  validatedResults[id] = entry;
+}
+
+const { matches, applied, pending, skipped } = applyMatchResults(dataset.matches, validatedResults);
 
 if (applied.length === 0) {
   console.log(
