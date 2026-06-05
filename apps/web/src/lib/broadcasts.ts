@@ -1,4 +1,5 @@
 import type { Match, Team } from '@worldcup/shared';
+import { tEs, type Translate } from '@/i18n';
 
 export interface BroadcastProvider {
   id: string;
@@ -22,64 +23,77 @@ export interface BroadcastGuide {
 const HOST_TEAMS = new Set(['MEX', 'USA', 'CAN']);
 const MARQUEE_TEAMS = new Set(['MEX', 'USA', 'BRA', 'ARG', 'FRA', 'ESP', 'ENG', 'GER', 'POR']);
 
-export const OFFICIAL_BROADCASTERS: BroadcastProvider[] = [
+/** Static provider data with i18n keys for the human-readable fields. */
+const BROADCASTER_SEED: Array<Omit<BroadcastProvider, 'region' | 'language' | 'note'> & {
+  regionKey: string;
+  languageKey: string;
+  noteKey: string;
+}> = [
   {
     id: 'vix-mx',
     label: 'ViX Pase Mundial',
-    region: 'México',
-    language: 'Español',
+    regionKey: 'broadcasts.regionMx',
+    languageKey: 'lang.es',
     platform: 'Streaming',
     url: 'https://www.vix.com/',
-    note: 'Acceso online oficial en México; requiere disponibilidad territorial/cuenta.',
+    noteKey: 'broadcasts.noteVix',
     sourceLabel: 'Ayuda ViX · Pase Mundial 2026',
     sourceUrl: 'https://ayuda.vix.com/hc/es-mx/articles/42684164886541-Pase-Mundial-2026-Todo-lo-que-necesitas-saber',
   },
   {
     id: 'fox-us',
     label: 'FOX Sports / FOX One',
-    region: 'Estados Unidos',
-    language: 'Inglés',
+    regionKey: 'broadcasts.regionUs',
+    languageKey: 'lang.en',
     platform: 'TV + streaming',
     url: 'https://www.foxsports.com/stories/soccer/2026-world-cup-schedule-all-games-dates-matchups-how-watch/',
-    note: 'Calendario oficial de FOX; FOX/FS1 y streaming FOX One/App según suscripción.',
+    noteKey: 'broadcasts.noteFox',
     sourceLabel: 'FOX Sports · schedule/how to watch',
     sourceUrl: 'https://www.foxsports.com/stories/soccer/2026-world-cup-schedule-all-games-dates-matchups-how-watch/',
   },
   {
     id: 'peacock-us',
     label: 'Peacock / Telemundo',
-    region: 'Estados Unidos',
-    language: 'Español',
+    regionKey: 'broadcasts.regionUs',
+    languageKey: 'lang.es',
     platform: 'Streaming',
     url: 'https://www.peacocktv.com/sports/copa-mundial?cid=2211sptcpmndlpkowneml20009',
-    note: 'Streaming en español de los 104 partidos; algunos partidos pueden ser gratis.',
+    noteKey: 'broadcasts.notePeacock',
     sourceLabel: 'Peacock · Copa Mundial 2026',
     sourceUrl: 'https://www.peacocktv.com/sports/copa-mundial?cid=2211sptcpmndlpkowneml20009',
   },
 ];
 
-export function getBroadcastGuide(match: Match | null): BroadcastGuide {
+export function getBroadcasters(t: Translate = tEs): BroadcastProvider[] {
+  return BROADCASTER_SEED.map(({ regionKey, languageKey, noteKey, ...rest }) => ({
+    ...rest,
+    region: t(regionKey),
+    language: t(languageKey),
+    note: t(noteKey),
+  }));
+}
+
+export function getBroadcastGuide(match: Match | null, t: Translate = tEs): BroadcastGuide {
   if (!match) {
     return {
-      providers: OFFICIAL_BROADCASTERS,
+      providers: getBroadcasters(t),
       priority: 'Normal',
-      headline: 'Transmisión oficial',
-      note: 'Elige un proveedor autorizado según tu país y cuenta.',
+      headline: t('broadcasts.official'),
+      note: t('broadcasts.chooseProvider'),
     };
   }
 
   const score = broadcastImportanceScore(match);
   return {
-    providers: OFFICIAL_BROADCASTERS,
+    providers: getBroadcasters(t),
     priority: score >= 90 ? 'Alta' : score >= 45 ? 'Media' : 'Normal',
     headline:
       score >= 90
-        ? 'Partido prioritario para ver en vivo'
+        ? t('broadcasts.priorityMatch')
         : score >= 45
-          ? 'Transmisión recomendada'
-          : 'Transmisión oficial disponible',
-    note:
-      'La app abre hubs oficiales; si el proveedor exige login, DRM o ubicación, se controla en su plataforma.',
+          ? t('broadcasts.recommended')
+          : t('broadcasts.officialAvailable'),
+    note: t('broadcasts.guideNote'),
   };
 }
 
@@ -96,15 +110,15 @@ export function broadcastImportanceScore(match: Match): number {
   return score;
 }
 
-export function broadcastImportanceLabel(match: Match, teams: Record<string, Team>): string {
+export function broadcastImportanceLabel(match: Match, teams: Record<string, Team>, t: Translate = tEs): string {
   const score = broadcastImportanceScore(match);
-  if (match.id === 'M001') return 'Apertura del Mundial';
+  if (match.id === 'M001') return t('broadcasts.worldCupOpener');
   if (HOST_TEAMS.has(match.home) || HOST_TEAMS.has(match.away)) {
     const host = HOST_TEAMS.has(match.home) ? match.home : match.away;
-    return `${teams[host]?.name ?? host} anfitrión`;
+    return t('broadcasts.host', { name: teams[host]?.name ?? host });
   }
-  if (score >= 44) return 'Selección candidata';
-  return 'Agenda recomendada';
+  if (score >= 44) return t('broadcasts.candidate');
+  return t('broadcasts.recommendedAgenda');
 }
 
 export function featuredBroadcastMatches(matches: Match[], limit = 6): Match[] {
