@@ -2,9 +2,11 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { Icon } from '@worldcup/ui';
 import { TeamCrest } from '@/components/identity';
 import { useHolographicTilt } from '@/hooks';
+import { useT } from '@/i18n';
 import { stadiumAudio } from '@/lib/audioSynth';
 
 export function LiveActivityWidget() {
+  const t = useT();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [minute, setMinute] = useState(0);
@@ -14,10 +16,15 @@ export function LiveActivityWidget() {
   const [lastScorer, setLastScorer] = useState<string>('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const soundEnabledRef = useRef(true);
+  const tRef = useRef(t);
 
   useEffect(() => {
     soundEnabledRef.current = soundEnabled;
   }, [soundEnabled]);
+
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
 
   useHolographicTilt(containerRef);
 
@@ -43,7 +50,7 @@ export function LiveActivityWidget() {
             setTimeout(() => setGoalFlash(false), 1200);
             const scorers = ['Santi Giménez', 'Chucky Lozano', 'Edson Álvarez', 'Luis Chávez'];
             const scorer = scorers[Math.floor(Math.random() * scorers.length)];
-            setLastScorer(`⚽ GOL MÉXICO! ${scorer} (${nextMin}')`);
+            setLastScorer(tRef.current('liveWidget.goalMexico', { scorer, min: nextMin }));
             if (soundEnabledRef.current) {
               stadiumAudio.triggerGoalSequence('home');
             }
@@ -54,7 +61,7 @@ export function LiveActivityWidget() {
             setTimeout(() => setGoalFlash(false), 1200);
             const scorers = ['Leo Messi', 'Lautaro Martínez', 'Julián Álvarez', 'Enzo Fernández'];
             const scorer = scorers[Math.floor(Math.random() * scorers.length)];
-            setLastScorer(`⚽ GOL ARGENTINA! ${scorer} (${nextMin}')`);
+            setLastScorer(tRef.current('liveWidget.goalArgentina', { scorer, min: nextMin }));
             if (soundEnabledRef.current) {
               stadiumAudio.triggerGoalSequence('away');
             }
@@ -89,11 +96,12 @@ export function LiveActivityWidget() {
   };
 
   const liveLeaderboard = useMemo(() => {
+    const aiPrefix = t('stats.aiPrefix');
     const players = [
-      { name: 'Jovan (Tú)', pickHome: 2, pickAway: 1, isUser: true },
-      { name: 'IA · Optimista', pickHome: 3, pickAway: 1, isUser: false },
-      { name: 'IA · Estadístico', pickHome: 1, pickAway: 1, isUser: false },
-      { name: 'IA · Contrarian', pickHome: 0, pickAway: 2, isUser: false },
+      { name: t('liveWidget.youName'), pickHome: 2, pickAway: 1, isUser: true },
+      { name: `${aiPrefix} · ${t('stats.agentOptimist')}`, pickHome: 3, pickAway: 1, isUser: false },
+      { name: `${aiPrefix} · ${t('stats.agentStatistician')}`, pickHome: 1, pickAway: 1, isUser: false },
+      { name: `${aiPrefix} · ${t('stats.agentContrarian')}`, pickHome: 0, pickAway: 2, isUser: false },
     ];
 
     const mapped = players.map((p) => {
@@ -106,14 +114,14 @@ export function LiveActivityWidget() {
     });
 
     return mapped.sort((a, b) => b.pts - a.pts);
-  }, [homeScore, awayScore]);
+  }, [homeScore, awayScore, t]);
 
   return (
     <div ref={containerRef} className={`live-activity-card holographic-card ${goalFlash ? 'goal-flash' : ''}`} style={{ marginBottom: 16 }}>
       {/* Header */}
       <div className="row spread align-center" style={{ marginBottom: 12 }}>
         <div className="row gap-6 align-center">
-          <span className="live-badge">Actividad en Vivo</span>
+          <span className="live-badge">{t('liveWidget.liveActivity')}</span>
           <span className="mono-label" style={{ margin: 0, color: 'rgba(255, 255, 255, 0.6)', fontSize: 10 }}>Lock Screen</span>
           <button
             type="button"
@@ -132,13 +140,13 @@ export function LiveActivityWidget() {
               justifyContent: 'center',
               transition: 'color 0.2s ease',
             }}
-            title={soundEnabled ? "Desactivar Sonido 3D" : "Activar Sonido 3D"}
+            title={soundEnabled ? t('liveWidget.soundOff') : t('liveWidget.soundOn')}
           >
             <Icon name={soundEnabled ? 'volume' : 'mute'} size={13} />
           </button>
         </div>
         <div className="num" style={{ fontSize: 13, fontWeight: 700, color: 'var(--gold)' }}>
-          {minute === 90 ? 'Fin' : minute > 0 ? `${minute}'` : '0\''}
+          {minute === 90 ? t('liveWidget.end') : minute > 0 ? `${minute}'` : '0\''}
         </div>
       </div>
 
@@ -192,7 +200,7 @@ export function LiveActivityWidget() {
       {/* Live Leaderboard Podium Inside Widget */}
       <div style={{ marginTop: 12 }}>
         <div className="mono-label" style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 9.5, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
-          Live Quiniela (Pronóstico vs Pts)
+          {t('liveWidget.liveQuiniela')}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {liveLeaderboard.map((u, i) => (
@@ -222,7 +230,7 @@ export function LiveActivityWidget() {
           }}
         >
           <Icon name={isRunning ? 'pause' : 'play'} size={11} />
-          {isRunning ? 'Pausar' : minute > 0 && minute < 90 ? 'Reanudar' : 'Simular Goles'}
+          {isRunning ? t('liveWidget.pause') : minute > 0 && minute < 90 ? t('liveWidget.resume') : t('liveWidget.simulate')}
         </button>
 
         {(minute > 0 || isRunning) && (

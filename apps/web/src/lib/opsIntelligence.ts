@@ -347,15 +347,19 @@ export function buildPickChangeHints(
     .slice(0, limit);
 }
 
-export function buildDayBrief(matches: Match[], teams: Team[], picks: Record<string, PoolPick>): DayBrief {
+function confLabel(confidence: 'Alta' | 'Media' | 'Baja', t: Translate): string {
+  return confidence === 'Alta' ? t('opsIntel.confHigh') : confidence === 'Media' ? t('opsIntel.confMed') : t('opsIntel.confLow');
+}
+
+export function buildDayBrief(matches: Match[], teams: Team[], picks: Record<string, PoolPick>, t: Translate = tEs): DayBrief {
   const upcoming = sortedUpcoming(matches);
   const next = upcoming[0];
   if (!next) {
     return {
-      title: 'Sin partidos pendientes',
-      subtitle: 'El calendario no tiene próximos juegos abiertos.',
-      highlights: ['Revisar resultados y tabla.', 'Actualizar estadísticas si ya hay marcadores.'],
-      nextAction: 'Ir al Centro de datos para validar estado.',
+      title: t('opsIntel.briefNoMatchesTitle'),
+      subtitle: t('opsIntel.briefNoMatchesSub'),
+      highlights: [t('opsIntel.briefHl1'), t('opsIntel.briefHl2')],
+      nextAction: t('opsIntel.briefNoMatchesAction'),
     };
   }
 
@@ -365,18 +369,18 @@ export function buildDayBrief(matches: Match[], teams: Team[], picks: Record<str
     const pick = picks[match.id];
     return pick?.homeGoals != null && pick.awayGoals != null;
   }).length;
-  const rec = recommendPick(next, teams);
+  const rec = recommendPick(next, teams, t);
 
   return {
     title: `${teamName(teams, next.home)} vs ${teamName(teams, next.away)}`,
-    subtitle: `${next.date} · ${next.time || 'hora pendiente'} · ${next.venue}`,
+    subtitle: `${next.date} · ${next.time || t('opsIntel.timePending')} · ${next.venue}`,
     highlights: [
-      `${dayMatches.length} partidos en el día destacado.`,
-      `${missing} picks del día sin ganador.`,
-      `${complete}/${dayMatches.length} marcadores completos.`,
-      `Sugerencia local: ${rec.label} (${rec.confidence}).`,
+      t('opsIntel.briefHlMatches', { n: dayMatches.length }),
+      t('opsIntel.briefHlMissing', { n: missing }),
+      t('opsIntel.briefHlScores', { complete, total: dayMatches.length }),
+      t('opsIntel.briefHlSuggestion', { label: rec.label, conf: confLabel(rec.confidence, t) }),
     ],
-    nextAction: missing ? 'Completar picks del día antes del cierre.' : 'Revisar marcadores y compartir predicción.',
+    nextAction: missing ? t('opsIntel.briefActionComplete') : t('opsIntel.briefActionReview'),
   };
 }
 
@@ -385,6 +389,7 @@ export function buildPoolDiagnostics(
   picks: Record<string, PoolPick>,
   leaderboard: LeaderboardEntry[] = [],
   playerName = '',
+  t: Translate = tEs,
 ): PoolDiagnostics {
   const upcoming = sortedUpcoming(matches);
   const pickedPending = upcoming.filter((match) => picks[match.id]?.outcome).length;
@@ -408,18 +413,18 @@ export function buildPoolDiagnostics(
     : undefined;
   const aiLeader = Boolean(leaderboard[0]?.playerName.startsWith(AI_AGENT_PREFIX));
 
-  let styleLabel = 'Perfil por definir';
-  let styleDetail = 'Captura más picks para que la app aprenda tu patrón.';
+  let styleLabel = t('opsIntel.styleUndefined');
+  let styleDetail = t('opsIntel.styleUndefinedDetail');
   if (scoredPicks.length >= 3) {
     if (avgGoals >= 3.2) {
-      styleLabel = 'Agresivo';
-      styleDetail = `Promedio ${avgGoals.toFixed(1)} goles por pick; útil para remontadas, riesgoso en fase cerrada.`;
+      styleLabel = t('opsIntel.styleAggressive');
+      styleDetail = t('opsIntel.styleAggressiveDetail', { avg: avgGoals.toFixed(1) });
     } else if (drawShare >= 0.3) {
-      styleLabel = 'Conservador de empates';
-      styleDetail = `${Math.round(drawShare * 100)}% de picks al empate; bueno para cruces parejos.`;
+      styleLabel = t('opsIntel.styleDraws');
+      styleDetail = t('opsIntel.styleDrawsDetail', { pct: Math.round(drawShare * 100) });
     } else {
-      styleLabel = 'Baja varianza';
-      styleDetail = `Promedio ${avgGoals.toFixed(1)} goles por pick; prioriza ganador antes que marcador amplio.`;
+      styleLabel = t('opsIntel.styleLowVar');
+      styleDetail = t('opsIntel.styleLowVarDetail', { avg: avgGoals.toFixed(1) });
     }
   }
 
@@ -433,20 +438,20 @@ export function buildPoolDiagnostics(
     scorePct,
     styleLabel,
     styleDetail,
-    leaderLabel: leader ? `${leader.playerName} · ${leader.points} pts` : 'Sin tabla todavía',
+    leaderLabel: leader ? `${leader.playerName} · ${leader.points} pts` : t('opsIntel.noLeaderboard'),
     familySignal: aiLeader
-      ? 'Los co-pilotos IA están arriba; conviene revisar picks conservadores.'
+      ? t('opsIntel.signalAiLeads')
       : userRow
-        ? `Tu fila tiene ${userRow.points} pts y ${userRow.efficiency}% de efectividad.`
+        ? t('opsIntel.signalYourRow', { points: userRow.points, eff: userRow.efficiency })
         : humanRows.length
-          ? `${humanRows.length} participantes humanos sincronizados.`
-          : 'Invita a tus amigos para activar lectura grupal.',
+          ? t('opsIntel.signalHumans', { n: humanRows.length })
+          : t('opsIntel.signalInvite'),
     recommendedAction:
       coveragePct < 80
-        ? 'Completar ganadores pendientes.'
+        ? t('opsIntel.actionCompleteWinners')
         : scorePct < 80
-          ? 'Cerrar marcadores para tarjetas compartibles.'
-          : 'Revisar partidos inciertos antes del cierre.',
+          ? t('opsIntel.actionCloseScores')
+          : t('opsIntel.actionReviewUncertain'),
   };
 }
 

@@ -2,10 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon } from '@worldcup/ui';
 import { useStats } from '@/hooks';
+import { useT, useLang } from '@/i18n';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
 
 export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCount: number; liveCount: number }) {
   const navigate = useNavigate();
+  const t = useT();
+  const lang = useLang();
   const { data: stats } = useStats();
   const top = stats?.topScorers[0];
 
@@ -69,21 +72,21 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
     playPodcastChime();
 
     const sentences = [
-      "Bienvenidos al resumen narrado del Mundial.",
-      `Hoy es el día destacado del torneo, ${day || 'de hoy'}. Contamos con ${todayCount} partidos de altísimo nivel programados.`,
-      liveCount > 0 
-        ? `Y ojo, ¡tenemos ${liveCount} partidos disputándose en vivo en este preciso instante en la cima!` 
-        : "En este momento todos los equipos de la quiniela afinan sus estrategias.",
-      top && top.goals > 0 
-        ? `La bota de oro está que arde: ${top.name} lidera la tabla de artilleros con un espectacular registro de ${top.goals} goles. ¿Podrá alguien alcanzar su ritmo arrollador?` 
+      t('aiBrief.ttsWelcome'),
+      t('aiBrief.ttsToday', { day: day || t('aiBrief.ttsTodayDay'), count: todayCount }),
+      liveCount > 0
+        ? t('aiBrief.ttsLive', { count: liveCount })
+        : t('aiBrief.ttsNoLive'),
+      top && top.goals > 0
+        ? t('aiBrief.ttsTop', { name: top.name, goals: top.goals })
         : "",
-      "¡Esto es todo por ahora! Sigue al tanto de tu quiniela y que gane el mejor estratega. ¡Hasta la próxima!"
+      t('aiBrief.ttsOutro'),
     ].filter(Boolean);
 
     activeIndexRef.current = 0;
     utterancesRef.current = sentences.map((text) => {
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'es-MX';
+      u.lang = lang === 'es' ? 'es-MX' : 'en-US';
       u.rate = 1.0;
       u.pitch = 1.05;
 
@@ -127,7 +130,7 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
         >
           <Icon name="calendar" size={15} />
         </span>
-        <h3>Resumen del Día</h3>
+        <h3>{t('aiBrief.title')}</h3>
         <span className="spacer" />
         <div style={{ display: 'flex', gap: 6 }}>
           <button
@@ -137,10 +140,10 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
             style={{ padding: '4px 10px', fontSize: 11.5 }}
           >
             <Icon name={isPlaying ? 'pause' : 'play'} size={11} />
-            {isPlaying ? 'Parar Resumen' : 'Resumen Narrado'}
+            {isPlaying ? t('aiBrief.stopNarration') : t('aiBrief.narratedSummary')}
           </button>
           <button type="button" className="btn ghost btn-sm" onClick={() => navigate({ to: '/analyst' })} style={{ padding: '4px 10px', fontSize: 11.5 }}>
-            <Icon name="sparkSmall" size={13} /> Analista
+            <Icon name="sparkSmall" size={13} /> {t('aiBrief.analyst')}
           </button>
         </div>
       </div>
@@ -153,16 +156,16 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
               <div style={{ width: 2, height: 6, background: 'var(--gold)', animation: 'pulse-briefing 0.6s infinite alternate 0.4s' }} />
               <div style={{ width: 2, height: 10, background: 'var(--gold)', animation: 'pulse-briefing 0.8s infinite alternate 0.1s' }} />
             </div>
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--gold-2)' }}>Transmitiendo resumen narrado...</span>
+            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--gold-2)' }}>{t('aiBrief.broadcasting')}</span>
           </div>
         )}
         <div className="brief-pt">
           <span className="dot" />
           <span style={{ flex: 1 }}>
-            Día destacado {day || '—'}: <span className="hl">{todayCount} partidos</span>
+            {t('aiBrief.focusDay', { day: day || '—' })}: <span className="hl">{t('matchCenter.matchesCount', { n: todayCount })}</span>
             {liveCount ? (
               <>
-                , <span className="hl">{liveCount} en vivo</span> ahora
+                , <span className="hl">{t('aiBrief.liveCount', { n: liveCount })}</span> {t('aiBrief.now')}
               </>
             ) : null}
             .
@@ -172,13 +175,12 @@ export function AIBrief({ day, todayCount, liveCount }: { day: string; todayCoun
           <div className="brief-pt">
             <span className="dot" />
             <span style={{ flex: 1 }}>
-              <span className="hl">{top.name}</span> lidera el goleo con {top.goals} goles y {top.assists}{' '}
-              asistencias.
+              <span className="hl">{top.name}</span> {t('aiBrief.leadsScoring', { goals: top.goals, assists: top.assists })}
             </span>
           </div>
         )}
         <div className="mono-label" style={{ marginTop: 10 }}>
-          Generado automáticamente desde datos locales del torneo · haz clic en Resumen Narrado para escuchar el boletín vocal
+          {t('aiBrief.autoGenerated')}
         </div>
       </div>
     </div>
