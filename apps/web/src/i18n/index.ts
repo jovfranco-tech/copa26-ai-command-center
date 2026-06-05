@@ -13,6 +13,8 @@ import { es } from './es';
 import { en } from './en';
 
 export type { Lang };
+/** Translator signature shared by useT() and the Spanish-default tEs helper. */
+export type Translate = (key: string, vars?: Record<string, string | number>) => string;
 const DICTS = { es, en } as const;
 
 function lookup(dict: unknown, key: string): string | undefined {
@@ -23,12 +25,20 @@ function lookup(dict: unknown, key: string): string | undefined {
   return typeof val === 'string' ? val : undefined;
 }
 
-function translate(lang: Lang, key: string, vars?: Record<string, string | number>): string {
+export function translate(lang: Lang, key: string, vars?: Record<string, string | number>): string {
   // Fall back to Spanish (the complete dict) if a key is missing in the active language.
   let s = lookup(DICTS[lang], key) ?? lookup(DICTS.es, key) ?? key;
   if (vars) for (const [k, v] of Object.entries(vars)) s = s.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
   return s;
 }
+
+/**
+ * Spanish-default translator for non-React/pure helpers (e.g. lib/matchMeta).
+ * Pure functions accept an optional `Translate`; when a React caller passes the
+ * reactive `useT()` result the output follows the active language, otherwise it
+ * falls back to Spanish — the app default — so nothing mixes.
+ */
+export const tEs: Translate = (key, vars) => translate('es', key, vars);
 
 /** Reactive translation hook. Re-renders the component when the language changes. */
 export function useT() {

@@ -189,8 +189,8 @@ function CompactMatchCard({ m }: { m: Match }) {
   const venues = useVenuesMap();
   const t = useT();
   const teamItems = useMemo(() => Object.values(teams), [teams]);
-  const rec = useMemo(() => recommendPick(m, teamItems), [m, teamItems]);
-  const weather = weatherSummary(m.id);
+  const rec = useMemo(() => recommendPick(m, teamItems, t), [m, teamItems, t]);
+  const weather = weatherSummary(m.id, t);
   const played = m.status !== 'UPCOMING';
   const venue = venues[m.venue];
 
@@ -233,7 +233,7 @@ function CompactMatchCard({ m }: { m: Match }) {
         <TeamKit code={m.away} size={28} variant="away" />
       </div>
       <div className="compact-match-foot">
-        <span title={venueTimeLabel(m)}><Icon name="clock" size={12} /> {venueTimeLabel(m)}</span>
+        <span title={venueTimeLabel(m, t)}><Icon name="clock" size={12} /> {venueTimeLabel(m, t)}</span>
         <span title={weather.detail}><Icon name="rain" size={12} /> {weather.label}</span>
         <span title={rec.risk}><Icon name="target" size={12} /> {rec.label}</span>
         <span><Icon name="pin" size={12} /> {venue?.city ?? m.venue}</span>

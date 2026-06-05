@@ -263,7 +263,9 @@ function ProactiveAlerts({
   const navigate = useNavigate();
   if (!match) return null;
   const pick = picks[match.id];
-  const weather = weatherSummary(match.id);
+  const weather = weatherSummary(match.id, t);
+  const weatherConf =
+    weather.confidence === 'Alta' ? t('sourceBadge.high') : weather.confidence === 'Media' ? t('sourceBadge.medium') : t('sourceBadge.pending');
   const alerts = [
     {
       icon: 'target' as const,
@@ -275,7 +277,7 @@ function ProactiveAlerts({
     {
       icon: 'rain' as const,
       title: t('dashboard.weatherWatch'),
-      text: `${weather.label} · ${weather.confidence}`,
+      text: `${weather.label} · ${weatherConf}`,
       action: t('dashboard.viewMatch'),
       to: '/matches' as const,
     },
@@ -291,7 +293,7 @@ function ProactiveAlerts({
     <div className="proactive-alert-strip">
       <div>
         <span className="mono-label">{t('dashboard.proactiveAlerts')}</span>
-        <strong>{lockLabel(match)}</strong>
+        <strong>{lockLabel(match, t)}</strong>
       </div>
       {alerts.map((alert) => (
         <button key={alert.title} type="button" className="proactive-alert" onClick={() => navigate({ to: alert.to })}>

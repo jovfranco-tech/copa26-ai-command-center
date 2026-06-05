@@ -1,6 +1,7 @@
 import type { Match, Team } from '@worldcup/shared';
 import type { LeaderboardEntry } from '@/lib/api';
 import type { PoolPick } from '@/store/pool';
+import { tEs, type Translate } from '@/i18n';
 
 export type OpsTone = 'ok' | 'warn' | 'info';
 const AI_AGENT_PREFIX = 'IA ·';
@@ -125,7 +126,7 @@ function pickText(pick: PoolPick): string {
   return 'Sin pick';
 }
 
-export function recommendPick(match: Match, teams: Team[]): RecommendedPick {
+export function recommendPick(match: Match, teams: Team[], t: Translate = tEs): RecommendedPick {
   const homeRank = rankOf(teams, match.home);
   const awayRank = rankOf(teams, match.away);
   const diff = awayRank - homeRank;
@@ -134,10 +135,10 @@ export function recommendPick(match: Match, teams: Team[]): RecommendedPick {
   if (absDiff <= 4) {
     return {
       pick: { outcome: 'draw', homeGoals: 1, awayGoals: 1 },
-      label: 'Empate 1-1',
+      label: t('opsIntel.drawLabel'),
       confidence: 'Baja',
-      rationale: 'Ranking muy cercano; conviene marcador corto y reversible.',
-      risk: 'Un gol temprano cambia mucho el guion del partido.',
+      rationale: t('opsIntel.drawRationale'),
+      risk: t('opsIntel.drawRisk'),
     };
   }
 
@@ -154,8 +155,8 @@ export function recommendPick(match: Match, teams: Team[]): RecommendedPick {
     },
     label: `${homeBetter ? teamName(teams, match.home) : teamName(teams, match.away)} ${score}`,
     confidence: clearEdge ? 'Alta' : 'Media',
-    rationale: `Diferencia de ranking ${absDiff}; el modelo local privilegia baja varianza.`,
-    risk: 'No incluye convocatoria final, lesiones ni forma de la semana del partido.',
+    rationale: t('opsIntel.edgeRationale', { diff: absDiff }),
+    risk: t('opsIntel.edgeRisk'),
   };
 }
 

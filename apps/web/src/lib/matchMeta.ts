@@ -1,5 +1,6 @@
 import type { Match } from '@worldcup/shared';
 import { downloadedVenuePhotoExts, matchWeather, venueExtras, weatherMeta } from '@/generated/intelPacks';
+import { tEs, type Translate } from '@/i18n';
 
 export interface WeatherSummary {
   label: string;
@@ -36,26 +37,31 @@ export function venuePhotoSrc(venueId: string | null | undefined): string | null
   return ext ? `/venue-photos/${encodeURIComponent(venueId)}.${ext}` : null;
 }
 
-export function venueTimeLabel(match: Match): string {
+export function venueTimeLabel(match: Match, t: Translate = tEs): string {
   const extra = venueExtras[match.venue];
-  return extra?.timezone ? `${match.time} hora sede · ${extra.timezone}` : `${match.time} hora sede`;
+  return extra?.timezone
+    ? t('matchMeta.venueTimeTz', { time: match.time, tz: extra.timezone })
+    : t('matchMeta.venueTime', { time: match.time });
 }
 
-export function weatherSummary(matchId: string): WeatherSummary {
+export function weatherSummary(matchId: string, t: Translate = tEs): WeatherSummary {
   const w = matchWeather[matchId];
   if (!w || w.temperatureMaxC == null) {
     return {
-      label: 'Clima pendiente',
-      detail: 'Se completa cuando exista forecast cercano al partido.',
-      source: 'Forecast pendiente',
-      date: 'Por actualizar',
+      label: t('matchMeta.weatherPending'),
+      detail: t('matchMeta.weatherPendingDetail'),
+      source: t('matchMeta.forecastPending'),
+      date: t('matchMeta.toUpdate'),
       confidence: 'Pendiente',
     };
   }
 
-  const rain = w.precipitationMm != null && w.precipitationMm > 0.5 ? ` · lluvia ${w.precipitationMm.toFixed(1)} mm` : '';
+  const rain = w.precipitationMm != null && w.precipitationMm > 0.5 ? t('matchMeta.rain', { mm: w.precipitationMm.toFixed(1) }) : '';
   return {
-    label: `${Math.round(w.temperatureMaxC)}°C max / ${Math.round(w.temperatureMinC ?? w.temperatureMaxC)}°C min`,
+    label: t('matchMeta.weatherLabel', {
+      max: Math.round(w.temperatureMaxC),
+      min: Math.round(w.temperatureMinC ?? w.temperatureMaxC),
+    }),
     detail: `${w.city}${rain}`,
     source: weatherMeta.source,
     date: w.sourceDate,
@@ -63,44 +69,44 @@ export function weatherSummary(matchId: string): WeatherSummary {
   };
 }
 
-export function h2hSummary(home: string, away: string): DataSourceInfo {
+export function h2hSummary(home: string, away: string, t: Translate = tEs): DataSourceInfo {
   const key = [home, away].sort().join('-');
   if (key === 'MEX-RSA') {
     return {
-      label: 'H2H destacado: apertura 2010, 1-1',
-      source: 'Historial curado local',
+      label: t('matchMeta.h2hHighlight'),
+      source: t('matchMeta.h2hCuratedSource'),
       date: '2026-05-31',
       confidence: 'Media',
     };
   }
   return {
-    label: 'H2H pendiente de fuente viva',
-    source: 'Pipeline preparado',
-    date: 'Por actualizar',
+    label: t('matchMeta.h2hPending'),
+    source: t('matchMeta.h2hPipeline'),
+    date: t('matchMeta.toUpdate'),
     confidence: 'Pendiente',
   };
 }
 
-export function matchSourceInfo(match: Match): DataSourceInfo {
+export function matchSourceInfo(match: Match, t: Translate = tEs): DataSourceInfo {
   if (match.status === 'FT') {
     return {
-      label: 'Marcador final',
-      source: 'Resultados del torneo',
+      label: t('matchMeta.finalScore'),
+      source: t('matchMeta.tournamentResults'),
       date: match.date,
       confidence: 'Alta',
     };
   }
   if (match.status === 'LIVE') {
     return {
-      label: 'Marcador en vivo',
-      source: 'Feed de resultados',
+      label: t('matchMeta.liveScore'),
+      source: t('matchMeta.resultsFeed'),
       date: match.date,
       confidence: 'Media',
     };
   }
   return {
-    label: 'Calendario confirmado',
-    source: 'Dataset local del torneo',
+    label: t('matchMeta.scheduleConfirmed'),
+    source: t('matchMeta.localTournamentDataset'),
     date: '2026-05-31',
     confidence: 'Alta',
   };
@@ -132,9 +138,9 @@ export function isMatchLocked(match: Match, leadMinutes = 0): boolean {
   return Date.now() >= kickoff - leadMinutes * 60 * 1000;
 }
 
-export function lockLabel(match: Match): string {
-  if (match.status === 'LIVE') return 'Cerrado · en vivo';
-  if (match.status === 'FT') return 'Cerrado · final';
-  return isMatchLocked(match) ? 'Cerrado' : `Cierra al inicio · ${venueTimeLabel(match)}`;
+export function lockLabel(match: Match, t: Translate = tEs): string {
+  if (match.status === 'LIVE') return t('matchMeta.lockedLive');
+  if (match.status === 'FT') return t('matchMeta.lockedFinal');
+  return isMatchLocked(match) ? t('matchMeta.locked') : t('matchMeta.closesAtStart', { time: venueTimeLabel(match, t) });
 }
 

@@ -20,9 +20,9 @@ export function MatchCard({ m }: { m: Match }) {
   const played = m.status !== 'UPCOMING';
   const pH = m.possH != null ? Math.min(72, Math.max(28, m.possH)) : 50;
   const city = venues[m.venue]?.city ?? '';
-  const source = matchSourceInfo(m);
-  const weather = weatherSummary(m.id);
-  const h2h = h2hSummary(m.home, m.away);
+  const source = matchSourceInfo(m, t);
+  const weather = weatherSummary(m.id, t);
+  const h2h = h2hSummary(m.home, m.away, t);
   const venuePhoto = venuePhotoSrc(m.venue);
 
   return (
