@@ -5,9 +5,11 @@ import { PlayerCard } from '@/components/cards';
 import { MockBanner } from '@/components/MockBanner';
 import { playerRatingMeta } from '@/generated/playerRatings';
 import { usePlayers, useTeams } from '@/hooks';
+import { useT } from '@/i18n';
 import { usePlayerFilters } from '@/store/filters';
 
 export function Players() {
+  const t = useT();
   const f = usePlayerFilters();
   const { data: teamsData } = useTeams();
   const { data, isLoading } = usePlayers({ q: f.q, team: f.team, pos: f.pos });
@@ -18,13 +20,13 @@ export function Players() {
   );
   const activeFilters = [f.q, f.team, f.pos].filter(Boolean).length;
   const selectedTeamName = useMemo(
-    () => teams.find((t) => t.code === f.team)?.name ?? f.team,
+    () => teams.find((tm) => tm.code === f.team)?.name ?? f.team,
     [f.team, teams],
   );
   const activeSummary = [
-    f.q ? `Búsqueda: ${f.q}` : null,
-    f.pos ? `Posición: ${f.pos}` : null,
-    f.team ? `Selección: ${selectedTeamName}` : null,
+    f.q ? t('players.searchChip', { q: f.q }) : null,
+    f.pos ? t('players.posChip', { pos: f.pos }) : null,
+    f.team ? t('players.teamChip', { team: selectedTeamName }) : null,
   ].filter((label): label is string => Boolean(label));
 
   return (
@@ -36,13 +38,13 @@ export function Players() {
           <div className="searchbox player-filter-search">
             <Icon name="search" size={15} />
             <input
-              aria-label="Buscar jugadores"
-              placeholder="Buscar jugadores o clubes..."
+              aria-label={t('players.searchAria')}
+              placeholder={t('players.searchPlaceholder')}
               value={f.q}
               onChange={(e) => f.set({ q: e.target.value })}
             />
             {f.q && (
-              <button type="button" className="fav-btn" onClick={() => f.set({ q: '' })} aria-label="Limpiar busqueda">
+              <button type="button" className="fav-btn" onClick={() => f.set({ q: '' })} aria-label={t('players.clearSearch')}>
                 <Icon name="close" size={14} />
               </button>
             )}
@@ -50,12 +52,12 @@ export function Players() {
           <button
             type="button"
             className="btn ghost btn-sm player-filter-toggle"
-            aria-label={filtersOpen ? 'Ocultar filtros' : 'Filtros'}
+            aria-label={filtersOpen ? t('players.hideFilters') : t('players.filters')}
             aria-expanded={filtersOpen}
             onClick={() => setFiltersOpen((value) => !value)}
           >
             <Icon name="filter" size={14} />
-            <span>{filtersOpen ? 'Ocultar' : 'Filtros'}</span>
+            <span>{filtersOpen ? t('players.hide') : t('players.filters')}</span>
             {activeFilters > 0 && <b className="num">{activeFilters}</b>}
           </button>
         </div>
@@ -68,7 +70,7 @@ export function Players() {
               </span>
             ))}
             <button type="button" className="card-link" onClick={() => f.reset()}>
-              Limpiar filtros
+              {t('players.clearFilters')}
             </button>
           </div>
         )}
@@ -76,7 +78,7 @@ export function Players() {
         <div className="player-filter-body" hidden={!filtersOpen}>
           <div className="row gap-8 wrap" style={{ marginBottom: 8 }}>
             <Pill on={!f.pos} onClick={() => f.set({ pos: '' })}>
-              Todas las posiciones
+              {t('players.allPositions')}
             </Pill>
             {POSITIONS.map((p) => (
               <Pill key={p} on={f.pos === p} onClick={() => f.set({ pos: p })}>
@@ -86,30 +88,30 @@ export function Players() {
           </div>
           <div className="player-team-filter-row">
             <Pill on={!f.team} onClick={() => f.set({ team: '' })}>
-              Todas las selecciones
+              {t('players.allTeams')}
             </Pill>
-            {teams.map((t) => (
-              <Pill key={t.code} on={f.team === t.code} onClick={() => f.set({ team: t.code })}>
-                {t.code}
+            {teams.map((tm) => (
+              <Pill key={tm.code} on={f.team === tm.code} onClick={() => f.set({ team: tm.code })}>
+                {tm.code}
               </Pill>
             ))}
           </div>
           <div className="ratings-note">
             <span className="rating-source fc26">FC 26</span>
             <span>
-              {playerRatingMeta.resolved}/{playerRatingMeta.total} ratings reales cercanos desde base pública FC 26.
+              {t('players.ratingsReal', { resolved: playerRatingMeta.resolved, total: playerRatingMeta.total })}
             </span>
-            <span className="rating-source estimate">Estimado</span>
-            <span>{playerRatingMeta.total - playerRatingMeta.resolved} jugadores con modelo por club/selección.</span>
+            <span className="rating-source estimate">{t('cards.estimated')}</span>
+            <span>{t('players.ratingsEstimated', { n: playerRatingMeta.total - playerRatingMeta.resolved })}</span>
           </div>
         </div>
       </div>
 
       <div className="row" style={{ justifyContent: 'space-between', marginBottom: 12 }}>
-        <span className="mono-label">{players.length} jugadores</span>
+        <span className="mono-label">{t('players.count', { n: players.length })}</span>
         {(f.q || f.team || f.pos) && (
           <button type="button" className="card-link" onClick={() => f.reset()}>
-            Limpiar filtros
+            {t('players.clearFilters')}
           </button>
         )}
       </div>
@@ -117,7 +119,7 @@ export function Players() {
       {isLoading ? (
         <PlayersSkeleton />
       ) : players.length === 0 ? (
-        <Empty icon="players" title="Sin jugadores" text="Las plantillas oficiales aún no se publican (se anuncian días antes del torneo)." />
+        <Empty icon="players" title={t('players.emptyTitle')} text={t('players.emptyText')} />
       ) : (
         <div className="grid player-grid">
           {players.map((p) => (

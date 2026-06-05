@@ -4,8 +4,10 @@ import { GROUP_LETTERS, type StandingRow } from '@worldcup/shared';
 import { TeamCard } from '@/components/cards';
 import { MockBanner } from '@/components/MockBanner';
 import { useStandings, useTeams } from '@/hooks';
+import { useT } from '@/i18n';
 
 export function Teams() {
+  const t = useT();
   const { data, isLoading } = useTeams();
   const { data: standings } = useStandings();
   const [group, setGroup] = useState('');
@@ -16,30 +18,30 @@ export function Teams() {
     return map;
   }, [standings]);
 
-  const teams = (data?.items ?? []).filter((t) => !group || t.group === group);
+  const teams = (data?.items ?? []).filter((tm) => !group || tm.group === group);
 
   return (
     <div className="page-fade">
       <MockBanner />
       <div className="row gap-8 wrap filter-sticky" style={{ marginBottom: 16 }}>
         <Pill on={!group} onClick={() => setGroup('')}>
-          Todas
+          {t('teams.all')}
         </Pill>
         {GROUP_LETTERS.map((g) => (
           <Pill key={g} on={group === g} onClick={() => setGroup(g)}>
-            Grupo {g}
+            {t('cards.group', { g })}
           </Pill>
         ))}
       </div>
 
       {isLoading ? (
-        <p className="muted">Cargando selecciones…</p>
+        <p className="muted">{t('teams.loading')}</p>
       ) : teams.length === 0 ? (
-        <Empty icon="teams" title="Sin selecciones" text="No hay selecciones en el dataset." />
+        <Empty icon="teams" title={t('teams.emptyTitle')} text={t('teams.emptyText')} />
       ) : (
         <div className="grid team-grid">
-          {teams.map((t) => (
-            <TeamCard key={t.code} code={t.code} standing={standingByCode[t.code]} />
+          {teams.map((tm) => (
+            <TeamCard key={tm.code} code={tm.code} standing={standingByCode[tm.code]} />
           ))}
         </div>
       )}

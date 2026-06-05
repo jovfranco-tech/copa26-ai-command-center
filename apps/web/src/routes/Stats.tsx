@@ -8,21 +8,25 @@ import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { PreTournamentNotice } from '@/components/PreTournamentNotice';
 import { useStats, useTeamsMap, useMatches } from '@/hooks';
+import { useT } from '@/i18n';
 import { usePool } from '@/store/pool';
 import { db } from '@/lib/firebase';
 import { normalizePoolGroupId } from '@/lib/api';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 type Segment = 'players' | 'keepers' | 'teams' | 'arena';
+type AgentKey = 'optimista' | 'stats' | 'contrarian';
+type BoardRow = { name: string; points: number; agentKey?: AgentKey };
 
 export function Stats() {
+  const t = useT();
   const { data, isLoading } = useStats();
   const teams = useTeamsMap();
   const matchData = useMatches();
   const pool = usePool();
   const [seg, setSeg] = useState<Segment>('players');
 
-  const [leaderboard, setLeaderboard] = useState<Array<{ name: string; points: number }>>([]);
+  const [leaderboard, setLeaderboard] = useState<BoardRow[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(true);
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export function Stats() {
 
     const playedMatches = matchItems.filter((m) => m.status === 'FT');
     const teamItems = Object.values(teams);
-    const teamMap = new Map(teamItems.map((t) => [t.code, t]));
+    const teamMap = new Map(teamItems.map((tm) => [tm.code, tm]));
 
     // 10s timeout — show empty state if Firestore doesn't respond
     const firestoreTimeout = setTimeout(() => {
@@ -42,7 +46,7 @@ export function Stats() {
       collection(db, 'poolGroups', normalizePoolGroupId(pool.groupId), 'members'),
       (snapshot) => {
         clearTimeout(firestoreTimeout);
-        const board: Array<{ name: string; points: number }> = [];
+        const board: BoardRow[] = [];
 
         snapshot.forEach((docSnap) => {
           const docData = docSnap.data();
@@ -71,13 +75,8 @@ export function Stats() {
           board.push({ name, points });
         });
 
-        // Inject the 3 AI Agents
-        const agents: Array<'optimista' | 'stats' | 'contrarian'> = ['optimista', 'stats', 'contrarian'];
-        const agentNames = {
-          optimista: 'IA · Optimista',
-          stats: 'IA · Estadístico',
-          contrarian: 'IA · Contrarian',
-        };
+        // Inject the 3 AI Agents (names localized at render time)
+        const agents: AgentKey[] = ['optimista', 'stats', 'contrarian'];
 
         for (const agent of agents) {
           let points = 0;
@@ -118,7 +117,7 @@ export function Stats() {
             else if (isOutcomeCorrect) points += 1;
           }
 
-          board.push({ name: agentNames[agent], points });
+          board.push({ name: '', points, agentKey: agent });
         }
 
         board.sort((a, b) => b.points - a.points);
@@ -135,16 +134,24 @@ export function Stats() {
     return () => { unsubscribe(); clearTimeout(firestoreTimeout); };
   }, [matchData, teams, pool.groupId]);
 
+  const agentLabel = (key: AgentKey) =>
+    key === 'optimista' ? t('stats.agentOptimist') : key === 'stats' ? t('stats.agentStatistician') : t('stats.agentContrarian');
+
+  const displayBoard = leaderboard.map((r) => ({
+    ...r,
+    label: r.agentKey ? `${t('stats.aiPrefix')} · ${agentLabel(r.agentKey)}` : r.name,
+  }));
+
   const radarData = [
-    { subject: 'Ataque Ofensivo', optimista: 95, stats: 45, contrarian: 80, fullMark: 100 },
-    { subject: 'Eficacia Goleo', optimista: 90, stats: 50, contrarian: 75, fullMark: 100 },
-    { subject: 'Posesión Balón', optimista: 85, stats: 75, contrarian: 45, fullMark: 100 },
-    { subject: 'Afinidad Sorpresa', optimista: 40, stats: 20, contrarian: 95, fullMark: 100 },
-    { subject: 'Consistencia', optimista: 65, stats: 95, contrarian: 30, fullMark: 100 },
+    { subject: t('stats.radarAttack'), optimista: 95, stats: 45, contrarian: 80, fullMark: 100 },
+    { subject: t('stats.radarFinishing'), optimista: 90, stats: 50, contrarian: 75, fullMark: 100 },
+    { subject: t('stats.radarPossession'), optimista: 85, stats: 75, contrarian: 45, fullMark: 100 },
+    { subject: t('stats.radarSurprise'), optimista: 40, stats: 20, contrarian: 95, fullMark: 100 },
+    { subject: t('stats.radarConsistency'), optimista: 65, stats: 95, contrarian: 30, fullMark: 100 },
   ];
 
-  if (isLoading) return <p className="muted">Cargando estadísticas…</p>;
-  if (!data) return <Empty icon="stats" title="Sin estadísticas" text="Las estadísticas aparecen cuando se juegan los partidos." />;
+  if (isLoading) return <p className="muted">{t('stats.loading')}</p>;
+  if (!data) return <Empty icon="stats" title={t('stats.emptyTitle')} text={t('stats.emptyText')} />;
 
   return (
     <div className="page-fade">
@@ -152,8 +159,8 @@ export function Stats() {
       <PreTournamentNotice contextKey="stats" />
       <div className="source-strip">
         <DataSourceBadge
-          label="Estadisticas de torneo"
-          source={data.source === 'sqlite' ? 'SQLite local' : 'Dataset local'}
+          label={t('stats.tournamentStats')}
+          source={data.source === 'sqlite' ? t('dashboard.sqliteLocal') : t('standings.localDataset')}
           date="2026-05-31"
           confidence={data.topScorers.length || data.teamGoals.length ? 'Alta' : 'Pendiente'}
         />
@@ -162,20 +169,20 @@ export function Stats() {
       <div className="row gap-6 wrap" style={{ marginBottom: 16 }}>
         {(['players', 'keepers', 'teams', 'arena'] as Segment[]).map((s) => (
           <Pill key={s} on={seg === s} onClick={() => setSeg(s)}>
-            {s === 'players' ? 'Jugadores' : s === 'keepers' ? 'Porteros' : s === 'teams' ? 'Selecciones' : 'Arena de Co-pilotos'}
+            {s === 'players' ? t('stats.segPlayers') : s === 'keepers' ? t('stats.segKeepers') : s === 'teams' ? t('stats.segTeams') : t('stats.segArena')}
           </Pill>
         ))}
       </div>
 
       {seg === 'players' && (
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))' }}>
-          <Leaderboard title="Goleadores" icon="ball" players={data.topScorers} metric={(p) => `${p.goals}`} />
-          <Leaderboard title="Asistencias" icon="target" players={data.topAssists} metric={(p) => `${p.assists}`} />
+          <Leaderboard title={t('stats.scorers')} icon="ball" players={data.topScorers} metric={(p) => `${p.goals}`} />
+          <Leaderboard title={t('stats.assists')} icon="target" players={data.topAssists} metric={(p) => `${p.assists}`} />
           <Leaderboard
-            title="Tarjetas"
+            title={t('stats.cards')}
             icon="info"
             players={data.topCards}
-            metric={(p) => `${p.yellow}A ${p.red}R`}
+            metric={(p) => t('stats.cardsMetric', { y: p.yellow, r: p.red })}
           />
         </div>
       )}
@@ -184,7 +191,7 @@ export function Stats() {
         <div className="card">
           <div className="card-hd">
             <Icon name="shield" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Atajadas de porteros</h3>
+            <h3>{t('stats.gkSaves')}</h3>
           </div>
           <div className="card-pad">
             {data.goalkeepers.length ? (
@@ -206,7 +213,7 @@ export function Stats() {
                 </div>
               ))
             ) : (
-              <Empty icon="shield" title="Porteros en espera" text="Las atajadas y vallas invictas aparecerán cuando haya partidos jugados." />
+              <Empty icon="shield" title={t('stats.gkEmptyTitle')} text={t('stats.gkEmptyText')} />
             )}
           </div>
         </div>
@@ -217,7 +224,7 @@ export function Stats() {
           <div className="card">
             <div className="card-hd">
               <Icon name="ball" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Goles por selección</h3>
+              <h3>{t('stats.goalsByTeam')}</h3>
             </div>
             <div className="card-pad" style={{ height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -238,8 +245,8 @@ export function Stats() {
             </div>
           </div>
 
-          <TeamLeader title="Posesión %" rows={data.teamPossession.map((r) => [r.team, r.possession])} />
-          <TeamLeader title="Tiros" rows={data.teamShots.map((r) => [r.team, r.shots])} />
+          <TeamLeader title={t('stats.possession')} rows={data.teamPossession.map((r) => [r.team, r.possession])} />
+          <TeamLeader title={t('stats.shots')} rows={data.teamShots.map((r) => [r.team, r.shots])} />
         </div>
       )}
 
@@ -248,7 +255,7 @@ export function Stats() {
           <div className="card animate-fade-in">
             <div className="card-hd">
               <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Huella Táctica de Co-pilotos (Radar)</h3>
+              <h3>{t('stats.tacticalRadar')}</h3>
             </div>
             <div className="card-pad" style={{ height: 320, display: 'flex', justifyContent: 'center' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -256,9 +263,9 @@ export function Stats() {
                   <PolarGrid stroke="var(--line)" />
                   <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--tx-2)', fontSize: 10 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: 'var(--tx-3)', fontSize: 8 }} />
-                  <Radar name="Optimista" dataKey="optimista" stroke="#c9a24b" fill="#c9a24b" fillOpacity={0.15} />
-                  <Radar name="Estadístico" dataKey="stats" stroke="#10b981" fill="#10b981" fillOpacity={0.15} />
-                  <Radar name="Contrarian" dataKey="contrarian" stroke="#e11d48" fill="#e11d48" fillOpacity={0.15} />
+                  <Radar name={t('stats.agentOptimist')} dataKey="optimista" stroke="#c9a24b" fill="#c9a24b" fillOpacity={0.15} />
+                  <Radar name={t('stats.agentStatistician')} dataKey="stats" stroke="#10b981" fill="#10b981" fillOpacity={0.15} />
+                  <Radar name={t('stats.agentContrarian')} dataKey="contrarian" stroke="#e11d48" fill="#e11d48" fillOpacity={0.15} />
                   <Legend wrapperStyle={{ fontSize: 10, paddingTop: 10 }} />
                   <Tooltip contentStyle={{ background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--tx)' }} />
                 </RadarChart>
@@ -269,24 +276,24 @@ export function Stats() {
           <div className="card animate-fade-in">
             <div className="card-hd">
               <Icon name="trophy" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Rendimiento Real Quiniela (Firestore)</h3>
+              <h3>{t('stats.poolPerformance')}</h3>
             </div>
             <div className="card-pad" style={{ height: 320 }}>
               {leaderboard.length ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={leaderboard.slice(0, 5)} layout="vertical" margin={{ left: 8, right: 16 }}>
+                  <BarChart data={displayBoard.slice(0, 5)} layout="vertical" margin={{ left: 8, right: 16 }}>
                     <XAxis type="number" hide />
-                    <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 9, fill: 'var(--tx-2)' }} />
+                    <YAxis type="category" dataKey="label" width={110} tick={{ fontSize: 9, fill: 'var(--tx-2)' }} />
                     <Tooltip
                       cursor={{ fill: 'var(--bg-3)' }}
                       contentStyle={{ background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--tx)' }}
                     />
-                    <Bar dataKey="points" name="Puntos" radius={[0, 6, 6, 0]}>
-                      {leaderboard.slice(0, 5).map((d) => {
-                        const isAi = d.name.startsWith('IA ·');
-                        const isUser = d.name.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
+                    <Bar dataKey="points" name={t('stats.points')} radius={[0, 6, 6, 0]}>
+                      {displayBoard.slice(0, 5).map((d) => {
+                        const isAi = !!d.agentKey;
+                        const isUser = !d.agentKey && d.name.trim().toLowerCase() === pool.playerName.trim().toLowerCase();
                         const color = isUser ? 'var(--gold)' : isAi ? 'var(--tx-3)' : '#4f46e5';
-                        return <Cell key={d.name} fill={color} />;
+                        return <Cell key={d.label || d.name} fill={color} />;
                       })}
                     </Bar>
                   </BarChart>
@@ -294,9 +301,7 @@ export function Stats() {
               ) : (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                   <p className="muted" style={{ fontSize: 12, textAlign: 'center' }}>
-                    {loadingLeaderboard
-                      ? 'Cargando clasificación en tiempo real desde Firestore…'
-                      : 'No se pudo cargar la clasificación. Intenta recargar la página.'}
+                    {loadingLeaderboard ? t('stats.loadingBoard') : t('stats.boardError')}
                   </p>
                 </div>
               )}
@@ -319,6 +324,7 @@ function Leaderboard({
   players: Player[];
   metric: (p: Player) => string;
 }) {
+  const t = useT();
   return (
     <div className="card">
       <div className="card-hd">
@@ -329,7 +335,7 @@ function Leaderboard({
         {players.length ? (
           players.map((p, i) => <PlayerMini key={p.id} p={p} rank={i + 1} metric={metric} />)
         ) : (
-          <Empty icon={icon} title={`${title} en espera`} text="El torneo aún no empieza; esta tabla se llenará con estadísticas reales." />
+          <Empty icon={icon} title={t('stats.waitTitle', { title })} text={t('stats.leaderboardWait')} />
         )}
       </div>
     </div>
@@ -337,6 +343,7 @@ function Leaderboard({
 }
 
 function TeamLeader({ title, rows }: { title: string; rows: Array<[string, number]> }) {
+  const t = useT();
   const max = Math.max(1, ...rows.map((r) => r[1]));
   return (
     <div className="card">
@@ -361,7 +368,7 @@ function TeamLeader({ title, rows }: { title: string; rows: Array<[string, numbe
             </div>
           ))
         ) : (
-          <Empty icon="stats" title={`${title} en espera`} text="Se llenará automáticamente cuando haya partidos con estadísticas." />
+          <Empty icon="stats" title={t('stats.waitTitle', { title })} text={t('stats.teamLeaderWait')} />
         )}
       </div>
     </div>

@@ -6,14 +6,16 @@ import { fmtDay, fmtGD, nextMatchFor, type Match, type Player, type StandingRow 
 import { TeamCrest, TeamFlag, TeamKit, FavStar, PlayerAvatar } from './identity';
 import { DataSourceBadge } from './DataSourceBadge';
 import { useMatches, useTeamsMap, useVenuesMap } from '@/hooks';
+import { useT, useLang } from '@/i18n';
 import { playerRatingMeta } from '@/generated/playerRatings';
 import { h2hSummary, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
-import { attrColor, attrLabelsFor, playerRatings, ratingSourceText } from '@/lib/ratings';
+import { attrColor, attrLabelsFor, playerRatings } from '@/lib/ratings';
 
 export function MatchCard({ m }: { m: Match }) {
   const navigate = useNavigate();
   const teams = useTeamsMap();
   const venues = useVenuesMap();
+  const t = useT();
   const live = m.status === 'LIVE';
   const played = m.status !== 'UPCOMING';
   const pH = m.possH != null ? Math.min(72, Math.max(28, m.possH)) : 50;
@@ -52,7 +54,7 @@ export function MatchCard({ m }: { m: Match }) {
         </div>
         <div className="match-card-kits">
           <TeamKit code={m.home} size={32} variant="home" />
-          <span className="mono-label">{m.group ? `Grupo ${m.group}` : m.stage}</span>
+          <span className="mono-label">{m.group ? t('cards.group', { g: m.group }) : m.stage}</span>
           <TeamKit code={m.away} size={32} variant="away" />
         </div>
       </div>
@@ -99,7 +101,7 @@ export function MatchCard({ m }: { m: Match }) {
           <div>
             <div className="row" style={{ justifyContent: 'space-between', fontSize: 10.5 }}>
               <span className="mono-label" style={{ margin: 0 }}>
-                Posesión
+                {t('cards.possession')}
               </span>
               <span className="num">{pH}%</span>
             </div>
@@ -113,7 +115,7 @@ export function MatchCard({ m }: { m: Match }) {
           </span>
           <div style={{ textAlign: 'right' }}>
             <div className="mono-label" style={{ margin: 0 }}>
-              Tiros
+              {t('cards.shots')}
             </div>
             <div className="num" style={{ fontWeight: 700, fontSize: 13 }}>
               {m.shotsH}
@@ -127,12 +129,12 @@ export function MatchCard({ m }: { m: Match }) {
       <div className="mc-foot">
         <span className="row gap-6 wrap">
           <span className="mono-label" style={{ margin: 0 }}>
-            {live ? `EN VIVO · ${m.minute}'` : played ? 'Final' : `${fmtDay(m.date)} · ${m.time}`}
+            {live ? t('cards.liveMin', { min: m.minute ?? 0 }) : played ? t('cards.final') : `${fmtDay(m.date)} · ${m.time}`}
           </span>
           <DataSourceBadge {...source} compact />
         </span>
         <span className="mc-cta">
-          Ver partido <Icon name="chevR" size={12} />
+          {t('common.viewMatch')} <Icon name="chevR" size={12} />
         </span>
       </div>
     </div>
@@ -177,6 +179,7 @@ export function MatchRow({ m }: { m: Match }) {
 
 export function Ticker({ items }: { items: Match[] }) {
   const navigate = useNavigate();
+  const t = useT();
   return (
     <div className="ticker">
       {items.map((m) => {
@@ -199,7 +202,7 @@ export function Ticker({ items }: { items: Match[] }) {
                 </span>
               )}
               <span className="mono-label" style={{ margin: 0 }}>
-                Grp {m.group}
+                {t('cards.grp', { g: m.group })}
               </span>
             </div>
             <div className="tick-team">
@@ -222,19 +225,20 @@ export function Ticker({ items }: { items: Match[] }) {
 export function TeamCard({ code, standing }: { code: string; standing?: StandingRow }) {
   const navigate = useNavigate();
   const teams = useTeamsMap();
+  const t = useT();
   const { data: matchesData } = useMatches();
-  const t = teams[code];
+  const team = teams[code];
   const matches = matchesData?.items ?? [];
   const next = nextMatchFor(matches, code);
   const oppCode = next ? (next.home === code ? next.away : next.home) : null;
-  if (!t) return null;
+  if (!team) return null;
 
   return (
     <div
       className="card hoverable team-card"
       onClick={() => navigate({ to: '/teams/$code', params: { code } })}
     >
-      <div className="team-card-strip" style={{ background: `linear-gradient(90deg, ${t.colorA}, ${t.colorB})` }} />
+      <div className="team-card-strip" style={{ background: `linear-gradient(90deg, ${team.colorA}, ${team.colorB})` }} />
       <div className="card-pad">
         <div className="row gap-12 team-card-main">
           <TeamCrest code={code} size={46} />
@@ -243,16 +247,16 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
             <div className="row gap-8">
               <TeamFlag code={code} size={14} />
               <span style={{ fontWeight: 700, fontSize: 15 }} className="nowrap">
-                {t.name}
+                {team.name}
               </span>
             </div>
-            <div className="mono-label">Grupo {t.group}</div>
+            <div className="mono-label">{t('cards.group', { g: team.group })}</div>
             <div style={{ marginTop: 6 }}>
               <DataSourceBadge
-                label={t.ranking ? 'Ranking cargado' : 'Ranking pendiente'}
-                source={t.ranking ? 'Dataset local' : 'Feed FIFA/Elo pendiente'}
-                date={t.ranking ? '2026-05-31' : 'Por actualizar'}
-                confidence={t.ranking ? 'Media' : 'Pendiente'}
+                label={team.ranking ? t('cards.rankingLoaded') : t('cards.rankingPending')}
+                source={team.ranking ? t('cards.localDataset') : t('cards.fifaFeedPending')}
+                date={team.ranking ? '2026-05-31' : t('cards.toUpdate')}
+                confidence={team.ranking ? 'Media' : 'Pendiente'}
                 compact
               />
             </div>
@@ -261,16 +265,16 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
         </div>
         {standing && (
           <div className="row team-card-stats">
-            <Stat label="Pts" value={standing.Pts} />
-            <Stat label="G-E-P" value={`${standing.W}-${standing.D}-${standing.L}`} />
-            <Stat label="GF" value={standing.GF} />
+            <Stat label={t('table.pts')} value={standing.Pts} />
+            <Stat label={t('table.wdl')} value={`${standing.W}-${standing.D}-${standing.L}`} />
+            <Stat label={t('table.gf')} value={standing.GF} />
             <Stat
-              label="DG"
+              label={t('table.gd')}
               value={fmtGD(standing.GD)}
               className={standing.GD > 0 ? 'gd-pos' : standing.GD < 0 ? 'gd-neg' : ''}
             />
             <div>
-              <div className="mono-label">Forma</div>
+              <div className="mono-label">{t('table.form')}</div>
               <div style={{ marginTop: 3 }}>
                 <Form list={standing.form} />
               </div>
@@ -280,7 +284,7 @@ export function TeamCard({ code, standing }: { code: string; standing?: Standing
         {next && oppCode && (
           <div className="tc-next" style={{ marginTop: 13 }}>
             <span className="mono-label" style={{ margin: 0 }}>
-              Próximo
+              {t('cards.next')}
             </span>
             <TeamCrest code={oppCode} size={20} />
             <span style={{ fontSize: 12.5, fontWeight: 600 }}>{teams[oppCode]?.name ?? oppCode}</span>
@@ -308,11 +312,13 @@ function Stat({ label, value, className }: { label: string; value: string | numb
 export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
   const navigate = useNavigate();
   const teams = useTeamsMap();
-  const t = teams[p.team];
+  const t = useT();
+  const lang = useLang();
+  const team = teams[p.team];
   const r = playerRatings(p);
   const labels = attrLabelsFor(p);
-  const primary = t?.colorA ?? '#c9a24b';
-  const secondary = t?.colorB ?? '#e0bd6c';
+  const primary = team?.colorA ?? '#c9a24b';
+  const secondary = team?.colorB ?? '#e0bd6c';
   const cardStyle = {
     '--player-primary': primary,
     '--player-secondary': secondary,
@@ -348,17 +354,26 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
           </div>
           <div className="player-card-meta">
             <TeamFlag code={p.team} size={13} />
-            <span className="nowrap">{t?.name ?? p.team}</span>
+            <span className="nowrap">{team?.name ?? p.team}</span>
             <span className={`pos-tag pos-${p.pos}`}>{p.pos}</span>
             <span className="nowrap">{p.club}</span>
           </div>
           <div className="player-card-badges">
-            <span className={`rating-source ${r.source}`} title={ratingSourceText(r)}>
-              {r.source === 'fc26' ? 'FC 26' : 'Estimado'}
+            <span
+              className={`rating-source ${r.source}`}
+              title={
+                r.source === 'fc26'
+                  ? r.providerName
+                    ? t('attrs.fc26Provider', { provider: r.providerName })
+                    : t('attrs.fc26')
+                  : t('attrs.estimateText')
+              }
+            >
+              {r.source === 'fc26' ? 'FC 26' : t('cards.estimated')}
             </span>
             <DataSourceBadge
-              label={r.source === 'fc26' ? 'Rating FC 26' : 'Rating estimado'}
-              source={r.sourceLabel}
+              label={r.source === 'fc26' ? t('cards.ratingFc26') : t('cards.ratingEstimated')}
+              source={r.source === 'fc26' ? 'EA SPORTS FC 26' : t('attrs.estimateSource')}
               date={r.source === 'fc26' ? playerRatingMeta.downloadedAt.slice(0, 10) : '2026-05-30'}
               confidence={r.source === 'fc26' ? 'Alta' : 'Media'}
               compact
@@ -376,7 +391,7 @@ export function PlayerCard({ p, rank }: { p: Player; rank?: number }) {
               {r[a.key]}
             </div>
             <div className="mono-label" style={{ margin: 0 }}>
-              {a.short}
+              {lang === 'es' ? a.short : a.shortEn}
             </div>
           </div>
         ))}
@@ -424,22 +439,23 @@ export function PlayerMini({
 
 export function StandingsTable({ rows, highlight }: { rows: StandingRow[]; highlight?: string }) {
   const navigate = useNavigate();
+  const t = useT();
   return (
     <div className="scroll-x">
       <table className="tbl">
         <thead>
           <tr>
             <th style={{ width: 30 }}>#</th>
-            <th>Equipo</th>
-            <th className="center">PJ</th>
-            <th className="center">G</th>
-            <th className="center">E</th>
-            <th className="center">P</th>
-            <th className="center">GF</th>
-            <th className="center">GC</th>
-            <th className="center">DG</th>
-            <th className="center">Pts</th>
-            <th>Forma</th>
+            <th>{t('table.team')}</th>
+            <th className="center">{t('table.played')}</th>
+            <th className="center">{t('table.won')}</th>
+            <th className="center">{t('table.drawn')}</th>
+            <th className="center">{t('table.lost')}</th>
+            <th className="center">{t('table.gf')}</th>
+            <th className="center">{t('table.ga')}</th>
+            <th className="center">{t('table.gd')}</th>
+            <th className="center">{t('table.pts')}</th>
+            <th>{t('table.form')}</th>
           </tr>
         </thead>
         <tbody>

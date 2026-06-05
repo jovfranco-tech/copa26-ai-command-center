@@ -26,24 +26,24 @@ type RatingPlayer = {
 
 type RatingKey = keyof Pick<PlayerRatings, 'pace' | 'shooting' | 'passing' | 'dribbling' | 'defending' | 'physical'>;
 
-export type RatingLabel = { key: RatingKey; es: string; short: string };
+export type RatingLabel = { key: RatingKey; es: string; en: string; short: string; shortEn: string };
 
 export const ATTR_LABELS: RatingLabel[] = [
-  { key: 'pace', es: 'Velocidad', short: 'VEL' },
-  { key: 'shooting', es: 'Tiro', short: 'TIR' },
-  { key: 'passing', es: 'Pase', short: 'PAS' },
-  { key: 'dribbling', es: 'Regate', short: 'REG' },
-  { key: 'defending', es: 'Defensa', short: 'DEF' },
-  { key: 'physical', es: 'Físico', short: 'FIS' },
+  { key: 'pace', es: 'Velocidad', en: 'Pace', short: 'VEL', shortEn: 'PAC' },
+  { key: 'shooting', es: 'Tiro', en: 'Shooting', short: 'TIR', shortEn: 'SHO' },
+  { key: 'passing', es: 'Pase', en: 'Passing', short: 'PAS', shortEn: 'PAS' },
+  { key: 'dribbling', es: 'Regate', en: 'Dribbling', short: 'REG', shortEn: 'DRI' },
+  { key: 'defending', es: 'Defensa', en: 'Defending', short: 'DEF', shortEn: 'DEF' },
+  { key: 'physical', es: 'Físico', en: 'Physical', short: 'FIS', shortEn: 'PHY' },
 ];
 
 export const GK_ATTR_LABELS: RatingLabel[] = [
-  { key: 'pace', es: 'Estirada', short: 'EST' },
-  { key: 'shooting', es: 'Manejo', short: 'MAN' },
-  { key: 'passing', es: 'Saque', short: 'SAQ' },
-  { key: 'dribbling', es: 'Reflejos', short: 'REF' },
-  { key: 'defending', es: 'Posición', short: 'POS' },
-  { key: 'physical', es: 'Físico', short: 'FIS' },
+  { key: 'pace', es: 'Estirada', en: 'Diving', short: 'EST', shortEn: 'DIV' },
+  { key: 'shooting', es: 'Manejo', en: 'Handling', short: 'MAN', shortEn: 'HAN' },
+  { key: 'passing', es: 'Saque', en: 'Kicking', short: 'SAQ', shortEn: 'KIC' },
+  { key: 'dribbling', es: 'Reflejos', en: 'Reflexes', short: 'REF', shortEn: 'REF' },
+  { key: 'defending', es: 'Posición', en: 'Positioning', short: 'POS', shortEn: 'POS' },
+  { key: 'physical', es: 'Físico', en: 'Physical', short: 'FIS', shortEn: 'PHY' },
 ];
 
 export function attrLabelsFor(p: { pos: string }): RatingLabel[] {

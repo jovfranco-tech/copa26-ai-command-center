@@ -9,16 +9,19 @@ import { TeamCrest, TeamFlag, TeamKit } from '@/components/identity';
 import { useMatches, useTeams, useTeamsMap, useVenues, useVenuesMap } from '@/hooks';
 import { focusMatch, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 import { recommendPick } from '@/lib/opsIntelligence';
+import { useT, useLang } from '@/i18n';
 import { useMatchFilters } from '@/store/filters';
 
 const STATUSES = [
-  { v: '', l: 'Todos' },
-  { v: 'LIVE', l: 'En vivo' },
-  { v: 'UPCOMING', l: 'Próximos' },
-  { v: 'FT', l: 'Final' },
+  { v: '', k: 'matchCenter.all' },
+  { v: 'LIVE', k: 'matchCenter.live' },
+  { v: 'UPCOMING', k: 'matchCenter.upcoming' },
+  { v: 'FT', k: 'matchCenter.final' },
 ];
 
 export function MatchCenter() {
+  const t = useT();
+  const lang = useLang();
   const f = useMatchFilters();
   const [compact, setCompact] = useState(true);
   const { data: teamsData } = useTeams();
@@ -62,56 +65,56 @@ export function MatchCenter() {
         <div className="row gap-8 wrap" style={{ marginBottom: 10 }}>
           {STATUSES.map((s) => (
             <Pill key={s.v} on={f.status === s.v} onClick={() => f.set({ status: s.v })}>
-              {s.l}
+              {t(s.k)}
             </Pill>
           ))}
           {activeFilters > 0 && (
             <button type="button" className="pill" onClick={() => f.reset()}>
-              <Icon name="close" size={12} /> Limpiar ({activeFilters})
+              <Icon name="close" size={12} /> {t('matchCenter.clear', { n: activeFilters })}
             </button>
           )}
           <button type="button" className={`pill match-density-toggle${compact ? ' on' : ''}`} onClick={() => setCompact((value) => !value)}>
-            <Icon name={compact ? 'grid' : 'calendar'} size={12} /> {compact ? 'Vista compacta' : 'Vista completa'}
+            <Icon name={compact ? 'grid' : 'calendar'} size={12} /> {compact ? t('matchCenter.compactView') : t('matchCenter.fullView')}
           </button>
         </div>
         <div className="row gap-8 wrap">
-          <Select value={f.group} onChange={(v) => f.set({ group: v })} label="Grupo">
-            <option value="">Todos los grupos</option>
+          <Select value={f.group} onChange={(v) => f.set({ group: v })} label={t('matchCenter.group')}>
+            <option value="">{t('matchCenter.allGroups')}</option>
             {GROUP_LETTERS.map((g) => (
               <option key={g} value={g}>
-                Grupo {g}
+                {t('cards.group', { g })}
               </option>
             ))}
           </Select>
-          <Select value={f.team} onChange={(v) => f.set({ team: v })} label="Selección">
-            <option value="">Todas las selecciones</option>
-            {(teamsData?.items ?? []).map((t) => (
-              <option key={t.code} value={t.code}>
-                {t.name}
+          <Select value={f.team} onChange={(v) => f.set({ team: v })} label={t('matchCenter.team')}>
+            <option value="">{t('players.allTeams')}</option>
+            {(teamsData?.items ?? []).map((tm) => (
+              <option key={tm.code} value={tm.code}>
+                {tm.name}
               </option>
             ))}
           </Select>
-          <Select value={f.stage} onChange={(v) => f.set({ stage: v })} label="Fase">
-            <option value="">Todas las fases</option>
+          <Select value={f.stage} onChange={(v) => f.set({ stage: v })} label={t('matchCenter.stage')}>
+            <option value="">{t('matchCenter.allStages')}</option>
             {stages.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
           </Select>
-          <Select value={f.venue} onChange={(v) => f.set({ venue: v })} label="Sede">
-            <option value="">Todas las sedes</option>
+          <Select value={f.venue} onChange={(v) => f.set({ venue: v })} label={t('matchCenter.venue')}>
+            <option value="">{t('matchCenter.allVenues')}</option>
             {(venuesData?.items ?? []).map((v) => (
               <option key={v.id} value={v.id}>
                 {v.city}
               </option>
             ))}
           </Select>
-          <Select value={f.date} onChange={(v) => f.set({ date: v })} label="Fecha">
-            <option value="">Todas las fechas</option>
+          <Select value={f.date} onChange={(v) => f.set({ date: v })} label={t('matchCenter.date')}>
+            <option value="">{t('matchCenter.allDates')}</option>
             {dates.map((d) => (
               <option key={d} value={d}>
-                {new Date(d + 'T12:00:00').toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' })}
+                {new Date(d + 'T12:00:00').toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
               </option>
             ))}
           </Select>
@@ -119,15 +122,15 @@ export function MatchCenter() {
       </div>
 
       {isLoading ? (
-        <p className="muted" role="status" aria-live="polite">Cargando partidos…</p>
+        <p className="muted" role="status" aria-live="polite">{t('matchCenter.loading')}</p>
       ) : matches.length === 0 ? (
-        <Empty icon="calendar" title="Sin partidos" text="Ningún partido coincide con los filtros." />
+        <Empty icon="calendar" title={t('matchCenter.emptyTitle')} text={t('matchCenter.emptyText')} />
       ) : (
         Object.entries(byDate).map(([date, list]) => (
           <div key={date} style={{ marginBottom: 22 }}>
             <div className="section-title">
               <span className="mono-label">{date}</span>
-              <h2 style={{ fontSize: 14 }}>{list.length} partidos</h2>
+              <h2 style={{ fontSize: 14 }}>{t('matchCenter.matchesCount', { n: list.length })}</h2>
             </div>
             <div className={`grid match-center-grid${compact ? ' compact' : ''}`}>
               {list.map((m) => (
@@ -150,6 +153,7 @@ function MatchCenterCommand({
   compact: boolean;
   onToggleCompact: () => void;
 }) {
+  const t = useT();
   const upcoming = useMemo(
     () => [...matches].filter((m) => m.status === 'UPCOMING').sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)),
     [matches],
@@ -162,18 +166,18 @@ function MatchCenterCommand({
   return (
     <div className="match-center-command card">
       <div>
-        <span className="mono-label">Centro de partidos</span>
-        <strong>{next ? `${fmtFull(next.date)} · ${dayCount} partidos` : 'Calendario sin pendientes'}</strong>
-        <p>{next ? `Siguiente ventana: ${next.time} hora sede. Vista optimizada para revisar rápido y entrar a detalle.` : 'Revisa resultados y estadísticas cuando existan marcadores finales.'}</p>
+        <span className="mono-label">{t('titles.matches')}</span>
+        <strong>{next ? `${fmtFull(next.date)} · ${t('matchCenter.matchesCount', { n: dayCount })}` : t('matchCenter.noUpcoming')}</strong>
+        <p>{next ? t('matchCenter.nextWindow', { time: next.time }) : t('matchCenter.reviewResults')}</p>
       </div>
       <div className="match-center-metrics">
-        <span><b>{matches.length}</b><small>visibles</small></span>
-        <span><b>{liveCount}</b><small>en vivo</small></span>
-        <span><b>{finalCount}</b><small>finales</small></span>
+        <span><b>{matches.length}</b><small>{t('matchCenter.visible')}</small></span>
+        <span><b>{liveCount}</b><small>{t('matchCenter.liveSmall')}</small></span>
+        <span><b>{finalCount}</b><small>{t('matchCenter.finals')}</small></span>
       </div>
       <button type="button" className="btn ghost" onClick={onToggleCompact}>
         <Icon name={compact ? 'list' : 'grid'} size={14} />
-        {compact ? 'Ver completa' : 'Ver compacta'}
+        {compact ? t('matchCenter.seeFull') : t('matchCenter.seeCompact')}
       </button>
     </div>
   );
@@ -183,6 +187,7 @@ function CompactMatchCard({ m }: { m: Match }) {
   const navigate = useNavigate();
   const teams = useTeamsMap();
   const venues = useVenuesMap();
+  const t = useT();
   const teamItems = useMemo(() => Object.values(teams), [teams]);
   const rec = useMemo(() => recommendPick(m, teamItems), [m, teamItems]);
   const weather = weatherSummary(m.id);
@@ -197,7 +202,7 @@ function CompactMatchCard({ m }: { m: Match }) {
     >
       <div className="compact-match-top">
         <StatusBadge status={m.status} minute={m.minute} time={m.time} />
-        <span className="mono-label">{m.group ? `Grupo ${m.group}` : m.stage}</span>
+        <span className="mono-label">{m.group ? t('cards.group', { g: m.group }) : m.stage}</span>
       </div>
       <div className="compact-match-row">
         <span className="compact-team">
