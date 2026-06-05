@@ -4,6 +4,7 @@ import { doc, setDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
 import { Icon } from '@worldcup/ui';
 import type { PoolPick } from '@/store/pool';
 import { notifyWarning, notifyInfo } from '@/store/notifications';
+import { useT } from '@/i18n';
 
 type PeerPicks = Record<string, PoolPick>;
 
@@ -23,6 +24,7 @@ interface P2PSyncPanelProps {
 }
 
 export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanelProps) {
+  const t = useT();
   const [mode, setMode] = useState<'idle' | 'host' | 'join' | 'syncing' | 'success' | 'error'>('idle');
   const [hostCode, setHostCode] = useState('');
   const [inputCode, setInputCode] = useState('');
@@ -46,12 +48,12 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
   // Generate 4-digit code and become the Host
   const startHosting = async () => {
     if (!playerName.trim()) {
-      notifyWarning('Nombre requerido', 'Ingresa tu nombre de participante antes de sincronizar.');
+      notifyWarning(t('pool.nameRequired'), t('p2p.enterName'));
       return;
     }
-    
+
     setMode('syncing');
-    setStatusMessage('Generando canal de sincronización seguro...');
+    setStatusMessage(t('p2p.generatingChannel'));
     playHaptic([20]);
 
     // Generate random 4 digit code
@@ -68,7 +70,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
       });
 
       setMode('host');
-      setStatusMessage('Escaneando en busca de rivales locales...');
+      setStatusMessage(t('p2p.scanningRivals'));
 
       // Listen for peer connection
       unsubscribeRef.current = onSnapshot(docRef, async (docSnap) => {
@@ -79,7 +81,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
           const clientName = data.clientName;
           const clientPicks = data.clientPicks ?? {};
           setMode('syncing');
-          setStatusMessage(`¡Enlace establecido! Sincronizando picks con ${clientName}...`);
+          setStatusMessage(t('p2p.linkEstablished', { name: clientName }));
           playHaptic([40, 20, 40]);
           
           // Wait briefly for smooth animation feel
@@ -101,23 +103,23 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
     } catch (err) {
       console.error('[P2PSync] Failed to create host session:', err instanceof Error ? err.message : err);
       setMode('error');
-      setStatusMessage('Error al iniciar el canal local. Intenta nuevamente.');
+      setStatusMessage(t('p2p.hostError'));
     }
   };
 
   // Join an existing host session using 4 digit code
   const joinSession = async () => {
     if (!playerName.trim()) {
-      notifyWarning('Nombre requerido', 'Ingresa tu nombre de participante antes de sincronizar.');
+      notifyWarning(t('pool.nameRequired'), t('p2p.enterName'));
       return;
     }
     if (!inputCode.trim() || inputCode.length !== 4) {
-      notifyInfo('Código inválido', 'Ingresa un código de 4 dígitos válido.');
+      notifyInfo(t('p2p.invalidCode'), t('p2p.invalidCodeText'));
       return;
     }
 
     setMode('syncing');
-    setStatusMessage('Buscando señal de sincronización local...');
+    setStatusMessage(t('p2p.searchingSignal'));
     playHaptic([20]);
 
     try {
@@ -127,18 +129,18 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
       if (!docSnap.exists()) {
         playHaptic([100]);
         setMode('error');
-        setStatusMessage('Código incorrecto o canal expirado. Verifica el código e intenta.');
+        setStatusMessage(t('p2p.wrongCode'));
         return;
       }
 
       const data = docSnap.data() as SyncSession;
       if (data.status !== 'waiting') {
         setMode('error');
-        setStatusMessage('Este canal ya está ocupado por otra sincronización.');
+        setStatusMessage(t('p2p.channelBusy'));
         return;
       }
 
-      const hostName = data.hostName ?? 'Participante';
+      const hostName = data.hostName ?? t('pool.participant');
       const hostPicks = data.hostPicks ?? {};
       setPeerName(hostName);
 
@@ -150,7 +152,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         status: 'connected',
       });
 
-      setStatusMessage(`¡Conectado con ${hostName}! Intercambiando datos tácticos...`);
+      setStatusMessage(t('p2p.connectedWith', { name: hostName }));
       playHaptic([40, 20, 40]);
 
       setTimeout(() => {
@@ -162,7 +164,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
     } catch (err) {
       console.error('[P2PSync] Failed to join session:', err instanceof Error ? err.message : err);
       setMode('error');
-      setStatusMessage('Error al unirse a la sesión táctica.');
+      setStatusMessage(t('p2p.joinError'));
     }
   };
 
@@ -204,13 +206,13 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div className="row gap-8 align-center" style={{ marginBottom: 12 }}>
           <span style={{ fontSize: 20 }}>📶</span>
-          <h4 style={{ margin: 0, color: 'var(--gold)' }}>Sincronización por código</h4>
+          <h4 style={{ margin: 0, color: 'var(--gold)' }}>{t('p2p.title')}</h4>
         </div>
 
         {mode === 'idle' && (
           <div>
             <p className="muted" style={{ fontSize: 12.5, marginTop: 0, marginBottom: 16 }}>
-              Intercambia tus quinielas y compite al instante con amigos usando un canal temporal en Firestore.
+              {t('p2p.desc')}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <button
@@ -220,8 +222,8 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
                 style={{ padding: '10px', fontSize: 13, display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}
               >
                 <Icon name="swap" size={16} />
-                <span style={{ fontWeight: 700 }}>Ser Anfitrión</span>
-                <span className="muted" style={{ fontSize: 9.5, textTransform: 'none', fontWeight: 400 }}>Genera un código</span>
+                <span style={{ fontWeight: 700 }}>{t('p2p.beHost')}</span>
+                <span className="muted" style={{ fontSize: 9.5, textTransform: 'none', fontWeight: 400 }}>{t('p2p.generateCode')}</span>
               </button>
               <button
                 type="button"
@@ -230,8 +232,8 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
                 style={{ padding: '10px', fontSize: 13, display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center', borderColor: 'var(--gold-line)' }}
               >
                 <Icon name="pin" size={16} />
-                <span style={{ fontWeight: 700, color: 'var(--gold)' }}>Unirse a Canal</span>
-                <span className="muted" style={{ fontSize: 9.5, textTransform: 'none', fontWeight: 400 }}>Ingresa código de amigo</span>
+                <span style={{ fontWeight: 700, color: 'var(--gold)' }}>{t('p2p.joinChannel')}</span>
+                <span className="muted" style={{ fontSize: 9.5, textTransform: 'none', fontWeight: 400 }}>{t('p2p.enterFriendCode')}</span>
               </button>
             </div>
           </div>
@@ -240,7 +242,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         {mode === 'host' && (
           <div style={{ textAlign: 'center', padding: '10px 0' }}>
             <p className="muted" style={{ fontSize: 12, margin: '0 0 12px 0' }}>
-              Comparte este código con tu compañero para iniciar la sincronización:
+              {t('p2p.shareCode')}
             </p>
             <div
               className="tx-gold"
@@ -268,7 +270,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
               onClick={resetPanel}
               style={{ marginTop: 16, fontSize: 11, padding: '4px 12px' }}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
           </div>
         )}
@@ -276,7 +278,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
         {mode === 'join' && (
           <div>
             <p className="muted" style={{ fontSize: 12.5, marginTop: 0, marginBottom: 14 }}>
-              Ingresa el código de 4 dígitos generado en la pantalla de tu amigo:
+              {t('p2p.enterCode')}
             </p>
             <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
               <input
@@ -284,7 +286,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
                 maxLength={4}
                 value={inputCode}
                 onChange={(e) => setInputCode(e.target.value.replace(/\D/g, ''))}
-                placeholder="Código (Ej. 4892)"
+                placeholder={t('p2p.codePlaceholder')}
                 style={{
                   flex: 1,
                   textAlign: 'center',
@@ -301,7 +303,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
                 disabled={inputCode.length !== 4}
                 style={{ padding: '0 20px' }}
               >
-                Conectar
+                {t('p2p.connect')}
               </button>
             </div>
             <button
@@ -310,7 +312,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
               onClick={resetPanel}
               style={{ fontSize: 11, width: '100%' }}
             >
-              Volver
+              {t('common.back')}
             </button>
           </div>
         )}
@@ -329,9 +331,9 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
             <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '2px solid #10b981', color: '#10b981', fontSize: 20, marginBottom: 10 }}>
               ✓
             </div>
-            <h5 style={{ margin: '0 0 4px 0', fontSize: 15, color: '#10b981' }}>¡Sincronización Completa!</h5>
+            <h5 style={{ margin: '0 0 4px 0', fontSize: 15, color: '#10b981' }}>{t('p2p.syncComplete')}</h5>
             <p className="muted" style={{ fontSize: 12.5, margin: '0 0 16px 0' }}>
-              Los pronósticos de <strong>{peerName}</strong> se han sincronizado en tu cartelera táctica local.
+              {t('p2p.syncedPre')}<strong>{peerName}</strong>{t('p2p.syncedPost')}
             </p>
             <button
               type="button"
@@ -339,7 +341,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
               onClick={resetPanel}
               style={{ padding: '6px 20px', fontSize: 12 }}
             >
-              Entendido
+              {t('p2p.gotIt')}
             </button>
           </div>
         )}
@@ -349,7 +351,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
             <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(239, 68, 68, 0.1)', border: '2px solid #ef4444', color: '#ef4444', fontSize: 18, marginBottom: 10 }}>
               ✕
             </div>
-            <h5 style={{ margin: '0 0 4px 0', fontSize: 14, color: '#ef4444' }}>Error de Enlace</h5>
+            <h5 style={{ margin: '0 0 4px 0', fontSize: 14, color: '#ef4444' }}>{t('p2p.linkError')}</h5>
             <p className="muted" style={{ fontSize: 12.5, margin: '0 0 16px 0' }}>
               {statusMessage}
             </p>
@@ -359,7 +361,7 @@ export function P2PSyncPanel({ playerName, picks, onSyncComplete }: P2PSyncPanel
               onClick={resetPanel}
               style={{ padding: '6px 20px', fontSize: 12, borderColor: 'rgba(255,255,255,0.1)' }}
             >
-              Reintentar
+              {t('common.retry')}
             </button>
           </div>
         )}

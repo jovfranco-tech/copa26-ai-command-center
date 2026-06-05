@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@worldcup/ui';
 import { scanPoolPaper } from '@/lib/api';
 import { notifySuccess, notifyWarning } from '@/store/notifications';
+import { useT } from '@/i18n';
 
 interface ScannerProps {
   onClose: () => void;
@@ -10,6 +11,7 @@ interface ScannerProps {
 }
 
 export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProps) {
+  const t = useT();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -37,8 +39,8 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
       }
     } catch (err) {
       console.error('Camera access failed:', err);
-      notifyWarning('Cámara no disponible', 'No se pudo acceder a la cámara. Verifica los permisos.');
-      setError('No se pudo acceder a la cámara. Asegúrate de otorgar permisos de cámara en tu navegador.');
+      notifyWarning(t('scanner.cameraUnavailable'), t('scanner.cameraDenied'));
+      setError(t('scanner.cameraError'));
     }
   };
 
@@ -70,7 +72,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
     // Convert canvas image to base64 PNG
     const base64Data = canvas.toDataURL('image/png').split(',')[1];
     if (!base64Data) {
-      setError('Error al capturar la imagen de la quiniela.');
+      setError(t('scanner.captureError'));
       setScanning(false);
       return;
     }
@@ -80,16 +82,16 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
       if (res.ok && res.predictions && Object.keys(res.predictions).length > 0) {
         onScanSuccess(res.predictions);
         if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
-        notifySuccess('Quiniela escaneada', `Se cargaron marcadores para ${Object.keys(res.predictions).length} partidos.`);
+        notifySuccess(t('scanner.scanned'), t('scanner.scannedText', { n: Object.keys(res.predictions).length }));
         onClose();
       } else {
-        setError(res.reason === 'no-key' 
-          ? 'No se ha configurado la API Key del modelo de IA en tu cuenta.' 
-          : 'No se pudieron reconocer marcadores legibles en la foto. Intenta alinear mejor la hoja.');
+        setError(res.reason === 'no-key'
+          ? t('scanner.noKey')
+          : t('scanner.notRecognized'));
       }
     } catch (err) {
       console.error('OCR Processing error:', err);
-      setError('Ocurrió un error al procesar el escaneo táctico.');
+      setError(t('scanner.processError'));
     } finally {
       setScanning(false);
     }
@@ -127,7 +129,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
         {/* Header */}
         <div className="card-hd" style={{ borderBottom: '1px solid var(--line)', padding: '16px 20px' }}>
           <Icon name="camera" size={16} style={{ color: 'var(--gold)' }} />
-          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#fff' }}>Escanear Quiniela en Papel</h3>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#fff' }}>{t('scanner.title')}</h3>
           <span className="spacer" />
           <button
             type="button"
@@ -185,7 +187,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
               />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                <p className="muted" style={{ fontSize: 12.5 }}>Iniciando cámara táctica…</p>
+                <p className="muted" style={{ fontSize: 12.5 }}>{t('scanner.startingCamera')}</p>
               </div>
             )}
 
@@ -218,13 +220,13 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
                   borderRadius: 4,
                 }}
               >
-                Alinea tu quiniela de papel aquí
+                {t('scanner.alignHere')}
               </div>
             </div>
           </div>
 
           <p className="muted" style={{ fontSize: 11, textAlign: 'center', marginTop: 12, lineHeight: 1.5 }}>
-            Posiciona la cámara de forma que los nombres de las selecciones y tus marcadores manuscritos queden centrados y bien iluminados en la cuadrícula dorada.
+            {t('scanner.aimHint')}
           </p>
 
           <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -246,7 +248,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
             onClick={onClose}
             disabled={scanning}
           >
-            Cancelar
+            {t('common.cancel')}
           </button>
           <button
             type="button"
@@ -256,7 +258,7 @@ export function QuinielaScanner({ onClose, onScanSuccess, matches }: ScannerProp
             disabled={!stream || scanning}
           >
             <Icon name={scanning ? 'sparkSmall' : 'camera'} size={15} />
-            {scanning ? 'Procesando Quiniela (IA)…' : 'Escanear Quiniela'}
+            {scanning ? t('scanner.processing') : t('scanner.scanButton')}
           </button>
         </div>
       </div>

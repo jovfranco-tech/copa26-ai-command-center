@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, doc, addDoc, onSnapshot, updateDoc, increment } from 'firebase/firestore';
 import { notifyWarning, notifyInfo } from '@/store/notifications';
+import { useT } from '@/i18n';
 
 interface Challenge {
   id: string;
@@ -23,10 +24,11 @@ interface RetoRelampagoProps {
 }
 
 export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: RetoRelampagoProps) {
+  const t = useT();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [creating, setCreating] = useState(false);
-  const [newTitle, setNewTitle] = useState('¿Quién meterá el próximo gol?');
-  const [newOptions, setNewOptions] = useState<string[]>(['México', 'Argentina', 'Ninguno']);
+  const [newTitle, setNewTitle] = useState(() => t('reto.defaultQuestion'));
+  const [newOptions, setNewOptions] = useState<string[]>(() => ['México', 'Argentina', t('reto.none')]);
   const [customOption, setCustomOption] = useState('');
   const [votedIds, setVotedIds] = useState<Record<string, string>>({}); // challengeId -> option
 
@@ -61,15 +63,15 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
   // Create a new Flash Challenge in Firestore
   const handleCreateChallenge = async () => {
     if (!playerName.trim()) {
-      notifyWarning('Nombre requerido', 'Introduce tu nombre de participante para lanzar retos.');
+      notifyWarning(t('pool.nameRequired'), t('reto.enterNameChallenge'));
       return;
     }
     if (!newTitle.trim()) {
-      notifyInfo('Reto incompleto', 'El reto debe tener una pregunta.');
+      notifyInfo(t('reto.incompleteTitle'), t('reto.incompleteText'));
       return;
     }
     if (newOptions.filter(o => o.trim()).length < 2) {
-      notifyInfo('Opciones insuficientes', 'Debes proveer al menos 2 opciones.');
+      notifyInfo(t('reto.fewOptionsTitle'), t('reto.fewOptionsText'));
       return;
     }
 
@@ -93,8 +95,8 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
 
       playHaptic([40, 20]);
       setCreating(false);
-      setNewTitle('¿Quién meterá el próximo gol?');
-      setNewOptions(['México', 'Argentina', 'Ninguno']);
+      setNewTitle(t('reto.defaultQuestion'));
+      setNewOptions(['México', 'Argentina', t('reto.none')]);
     } catch (err) {
       console.error('Error creating challenge:', err);
     }
@@ -103,7 +105,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
   // Vote for a challenge option
   const handleVote = async (challengeId: string, option: string) => {
     if (!playerName.trim()) {
-      notifyWarning('Nombre requerido', 'Ingresa tu nombre de participante para votar.');
+      notifyWarning(t('pool.nameRequired'), t('reto.enterNameVote'));
       return;
     }
     if (votedIds[challengeId]) return;
@@ -159,7 +161,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
       <div className="row spread align-center" style={{ marginBottom: 12 }}>
         <div className="row gap-8 align-center">
           <span style={{ fontSize: 20 }}>⚡</span>
-          <h4 style={{ margin: 0, color: 'var(--gold)' }}>Reto Relámpago en Vivo ({activeMatchName})</h4>
+          <h4 style={{ margin: 0, color: 'var(--gold)' }}>{t('reto.title', { match: activeMatchName })}</h4>
         </div>
         {!creating && (
           <button
@@ -168,28 +170,28 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
             onClick={() => setCreating(true)}
             style={{ padding: '4px 10px', fontSize: 11 }}
           >
-            Lanzar Reto
+            {t('reto.launch')}
           </button>
         )}
       </div>
 
       {creating && (
         <div style={{ background: 'rgba(255,255,255,0.02)', padding: 12, borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', marginBottom: 14 }}>
-          <h5 style={{ margin: '0 0 10px 0', color: 'var(--gold-2)', fontSize: 13.5 }}>Crear Mini-Desafío en Tiempo Real</h5>
-          
+          <h5 style={{ margin: '0 0 10px 0', color: 'var(--gold-2)', fontSize: 13.5 }}>{t('reto.createMini')}</h5>
+
           <div style={{ marginBottom: 10 }}>
-            <label className="mono-label" style={{ fontSize: 9.5, marginBottom: 4, display: 'block' }}>Pregunta / Predicción</label>
+            <label className="mono-label" style={{ fontSize: 9.5, marginBottom: 4, display: 'block' }}>{t('reto.questionLabel')}</label>
             <input
               className="searchbox"
               style={{ width: '100%', fontSize: 12.5 }}
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Ej. ¿Quién recibirá la primera amarilla?"
+              placeholder={t('reto.questionPlaceholder')}
             />
           </div>
 
           <div style={{ marginBottom: 10 }}>
-            <label className="mono-label" style={{ fontSize: 9.5, marginBottom: 4, display: 'block' }}>Opciones del Reto</label>
+            <label className="mono-label" style={{ fontSize: 9.5, marginBottom: 4, display: 'block' }}>{t('reto.optionsLabel')}</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
               {newOptions.map((opt, i) => (
                 <div key={i} className="row spread align-center" style={{ background: 'rgba(0,0,0,0.2)', padding: '4px 8px', borderRadius: 8 }}>
@@ -213,7 +215,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                 style={{ flex: 1, fontSize: 11.5 }}
                 value={customOption}
                 onChange={(e) => setCustomOption(e.target.value)}
-                placeholder="Añadir opción..."
+                placeholder={t('reto.addOptionPlaceholder')}
                 onKeyDown={(e) => e.key === 'Enter' && addCustomOption()}
               />
               <button
@@ -222,7 +224,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                 onClick={addCustomOption}
                 style={{ fontSize: 11.5, borderColor: 'rgba(255,255,255,0.1)' }}
               >
-                Añadir
+                {t('reto.add')}
               </button>
             </div>
           </div>
@@ -234,7 +236,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
               onClick={() => setCreating(false)}
               style={{ fontSize: 11.5 }}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
             <button
               type="button"
@@ -242,7 +244,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
               onClick={handleCreateChallenge}
               style={{ fontSize: 11.5, padding: '4px 14px' }}
             >
-              Publicar Reto
+              {t('reto.publish')}
             </button>
           </div>
         </div>
@@ -250,7 +252,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
 
       {challenges.length === 0 ? (
         <p className="muted" style={{ fontSize: 12, textAlign: 'center', margin: '20px 0', fontStyle: 'italic' }}>
-          No hay retos relámpago activos para este partido. ¡Lanza el primero para competir con tus rivales en la sala!
+          {t('reto.empty')}
         </p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -271,7 +273,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
               >
                 <div className="row spread align-center" style={{ marginBottom: 8 }}>
                   <span className="mono-label" style={{ fontSize: 9, color: 'var(--gold-2)' }}>
-                    Lanzado por {c.createdBy}
+                    {t('reto.launchedBy', { name: c.createdBy })}
                   </span>
                   <span
                     className="live-badge"
@@ -283,7 +285,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                       animation: c.status === 'active' ? 'live-pulse-activity 2s infinite alternate' : 'none',
                     }}
                   >
-                    {c.status === 'active' ? 'EN VIVO' : 'RESUELTO'}
+                    {c.status === 'active' ? t('common.live') : t('reto.resolved')}
                   </span>
                 </div>
 
@@ -330,7 +332,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                             <span>{opt}</span>
                             {Boolean(userVote) && (
                               <span className="muted" style={{ fontSize: 10.5, fontWeight: 700 }}>
-                                {votes} v ({pct}%)
+                                {t('reto.votesShort', { v: votes, pct })}
                               </span>
                             )}
                           </button>
@@ -356,7 +358,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                               {opt} {isWinning && '🏆'}
                             </span>
                             <span style={{ fontSize: 10 }}>
-                              {votes} votos ({pct}%)
+                              {t('reto.votesLong', { v: votes, pct })}
                             </span>
                           </div>
                         )}
@@ -389,7 +391,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                 {isCreator && c.status === 'active' && (
                   <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 8 }}>
                     <span className="mono-label" style={{ fontSize: 8.5, display: 'block', marginBottom: 6 }}>
-                      Panel de Resolución (Tú creaste este reto)
+                      {t('reto.resolutionPanel')}
                     </span>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {c.options.map((opt) => (
@@ -405,7 +407,7 @@ export function RetoRelampago({ playerName, activeMatchId, activeMatchName }: Re
                             color: '#10b981',
                           }}
                         >
-                          Ganó: {opt}
+                          {t('reto.won', { opt })}
                         </button>
                       ))}
                     </div>
