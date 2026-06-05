@@ -7,6 +7,7 @@ import { isMatchLocked, lockLabel } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
 import { getBrowserAudioContext } from '@/lib/audioSynth';
 import { notifyInfo } from '@/store/notifications';
+import { useT, useLang } from '@/i18n';
 
 const playTick = () => {
   try {
@@ -31,13 +32,15 @@ const playTick = () => {
   }
 };
 
-const OUTCOMES: Array<{ id: PoolOutcome; label: string }> = [
-  { id: 'home', label: 'Local' },
-  { id: 'draw', label: 'Empate' },
-  { id: 'away', label: 'Visita' },
+const OUTCOMES: Array<{ id: PoolOutcome; key: string }> = [
+  { id: 'home', key: 'pool.pmHome' },
+  { id: 'draw', key: 'matchdayHero.draw' },
+  { id: 'away', key: 'pool.pmAway' },
 ];
 
 export function PoolMatch({ match, homeName, awayName }: { match: Match; homeName: string; awayName: string }) {
+  const t = useT();
+  const lang = useLang();
   const pick = usePool((s) => s.picks[match.id]);
   const setOutcome = usePool((s) => s.setOutcome);
   const setScore = usePool((s) => s.setScore);
@@ -48,23 +51,15 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
   const [isPlayingBrief, setIsPlayingBrief] = useState(false);
 
   const tacticalBriefingText = useMemo(() => {
-    let text = `Bienvenidos a El Minuto Táctico. Se enfrentan las selecciones de ${homeName} y ${awayName}. `;
-    const textOptions = [
-      `La pizarra táctica sugiere un duelo sumamente equilibrado en el mediocampo, donde la posesión y las transiciones rápidas por las bandas serán determinantes para inclinar la balanza.`,
-      `El analista deportivo de gala destaca que la solidez defensiva del conjunto visitante pondrá a prueba la creatividad e intensidad del ataque de los locales.`,
-      `Las alertas de tendencias indican una alta probabilidad de contragolpes de gala y jugadas a balón parado que podrían romper la paridad en cualquier minuto.`
-    ];
+    let text = t('pool.pmBriefIntro', { home: homeName, away: awayName });
+    const textOptions = [t('pool.pmBriefText1'), t('pool.pmBriefText2'), t('pool.pmBriefText3')];
     const hash = match.id.charCodeAt(0) + (match.id.charCodeAt(1) || 0);
-    text += textOptions[hash % textOptions.length] + " ";
-    const ragOptions = [
-      `Atención: los últimos reportes deportivos reportan un clima severo lluvioso en la sede del encuentro, lo que beneficiará el juego de pases rasos rápidos.`,
-      `Reportes de scouts señalan que la posible baja por acumulación de tarjetas en la defensa obligará a replantear el parado táctico inicial.`,
-      `El inyector RAG deportivo destaca que la motivación es máxima y se espera una asistencia récord que jugará un rol psicológico clave.`
-    ];
-    text += ragOptions[hash % ragOptions.length] + " ";
-    text += `¿Qué resultado colocarás en tu quiniela premium de gala?`;
+    text += textOptions[hash % textOptions.length] + ' ';
+    const ragOptions = [t('pool.pmBriefRag1'), t('pool.pmBriefRag2'), t('pool.pmBriefRag3')];
+    text += ragOptions[hash % ragOptions.length] + ' ';
+    text += t('pool.pmBriefOutro');
     return text;
-  }, [homeName, awayName, match.id]);
+  }, [homeName, awayName, match.id, t]);
 
   useEffect(() => {
     return () => {
@@ -81,11 +76,11 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
     } else {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(tacticalBriefingText);
-      utterance.lang = 'es-ES';
+      utterance.lang = lang === 'es' ? 'es-ES' : 'en-US';
       const voices = window.speechSynthesis.getVoices();
-      const spanishVoice = voices.find((v) => v.lang.startsWith('es'));
-      if (spanishVoice) {
-        utterance.voice = spanishVoice;
+      const preferredVoice = voices.find((v) => v.lang.startsWith(lang));
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
       }
       utterance.onend = () => setIsPlayingBrief(false);
       utterance.onerror = () => setIsPlayingBrief(false);
@@ -118,29 +113,29 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
     const isOutcomeCorrect = outcome === realOutcome;
 
     if (isExact) {
-      return { text: '+3 PTS', className: 'gold-badge', label: 'Marcador Exacto', icon: 'trophy' };
+      return { text: '+3 PTS', className: 'gold-badge', label: t('pool.pmExactScore'), icon: 'trophy' };
     } else if (isOutcomeCorrect) {
-      return { text: '+1 PT', className: 'green-badge', label: 'Resultado Correcto', icon: 'check' };
+      return { text: '+1 PT', className: 'green-badge', label: t('pool.pmCorrectResult'), icon: 'check' };
     } else {
-      return { text: '0 PTS', className: 'gray-badge', label: 'Predicción Incorrecta', icon: 'close' };
+      return { text: '0 PTS', className: 'gray-badge', label: t('pool.pmWrongPrediction'), icon: 'close' };
     }
-  }, [isLocked, outcome, homeGoals, awayGoals, match.homeGoals, match.awayGoals]);
+  }, [isLocked, outcome, homeGoals, awayGoals, match.homeGoals, match.awayGoals, t]);
 
   const sharePrediction = async () => {
     if (!outcome || homeGoals == null || awayGoals == null) {
-      notifyInfo('Pick incompleto', 'Primero captura ganador y marcador para compartir tu predicción.');
+      notifyInfo(t('pool.pickIncomplete'), t('pool.pmShareIncomplete'));
       return;
     }
     await shareTextCard({
       title: `${homeName} ${homeGoals} - ${awayGoals} ${awayName}`,
-      subtitle: `Mi prediccion · ${fmtDay(match.date)} ${match.time}`,
+      subtitle: `${t('pool.pmMyPrediction')} · ${fmtDay(match.date)} ${match.time}`,
       lines: [
-        `Partido: ${homeName} vs ${awayName}`,
-        `Resultado elegido: ${OUTCOMES.find((o) => o.id === outcome)?.label ?? outcome}`,
-        `Marcador: ${homeGoals}-${awayGoals}`,
-        lockLabel(match),
+        t('pool.pmMatchLine', { home: homeName, away: awayName }),
+        t('pool.pmChosenResult', { result: t(OUTCOMES.find((o) => o.id === outcome)?.key ?? 'pool.noWinner') }),
+        t('pool.pmScoreLine', { score: `${homeGoals}-${awayGoals}` }),
+        lockLabel(match, t),
       ],
-      footer: 'Quiniela Mundial 2026',
+      footer: t('pool.footerPool2026'),
       fileName: `prediccion-${match.id}.png`,
     });
   };
@@ -149,9 +144,9 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
     <div className={`card pool-match${isLocked ? ' is-locked' : ''}`}>
       <div className="pool-match-head">
         {match.status === 'LIVE' ? (
-          <span className="pool-match-status-pill live">En vivo</span>
+          <span className="pool-match-status-pill live">{t('matchCenter.live')}</span>
         ) : isLocked ? (
-          <span className="pool-match-status-pill ft">Finalizado</span>
+          <span className="pool-match-status-pill ft">{t('matchdayHero.finished')}</span>
         ) : (
           <span className="badge up">{match.time}</span>
         )}
@@ -171,8 +166,8 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
               justifyContent: 'center',
             }}
             onClick={togglePlayBriefing}
-            title={isPlayingBrief ? "Detener Minuto Táctico" : "Escuchar Minuto Táctico (IA)"}
-            aria-label="Minuto Táctico"
+            title={isPlayingBrief ? t('pool.pmStopBrief') : t('pool.pmPlayBrief')}
+            aria-label={t('pool.pmTacticalMinute')}
           >
             <Icon name={isPlayingBrief ? "sparkSmall" : "ai"} size={14} />
           </button>
@@ -184,10 +179,10 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
           </span>
         ) : !isLocked ? (
           <span className="row gap-6" style={{ marginLeft: 'auto' }}>
-            <button type="button" className="fav-btn" onClick={sharePrediction} aria-label="Compartir prediccion" title="Compartir prediccion">
+            <button type="button" className="fav-btn" onClick={sharePrediction} aria-label={t('pool.pmSharePredictionAria')} title={t('pool.pmSharePredictionAria')}>
               <Icon name="share" size={14} />
             </button>
-            <button type="button" className="fav-btn" onClick={() => clearMatch(match.id)} aria-label="Limpiar partido">
+            <button type="button" className="fav-btn" onClick={() => clearMatch(match.id)} aria-label={t('pool.pmClearMatch')}>
               <Icon name="close" size={14} />
             </button>
           </span>
@@ -206,7 +201,7 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
         </div>
         <TeamCrest code={match.away} size={34} />
       </div>
-      <div className="pool-picks" role="group" aria-label={`Pronóstico ${homeName} vs ${awayName}`}>
+      <div className="pool-picks" role="group" aria-label={t('pool.pmPredictionAria', { home: homeName, away: awayName })}>
         {OUTCOMES.map((o) => (
           <button
             key={o.id}
@@ -219,7 +214,7 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
             }}
             disabled={isLocked}
           >
-            {o.label}
+            {t(o.key)}
           </button>
         ))}
       </div>
@@ -234,11 +229,11 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
               playTick();
               if ('vibrate' in navigator) navigator.vibrate(6);
             }}
-            aria-label={`Goles ${homeName}`}
+            aria-label={t('pool.pmGoalsAria', { team: homeName })}
             disabled={isLocked}
           />
         </label>
-        <span className="mono-label">Predicho</span>
+        <span className="mono-label">{t('pool.pmPredicted')}</span>
         <label>
           <span className="mono-label">{match.away}</span>
           <input
@@ -249,7 +244,7 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
               playTick();
               if ('vibrate' in navigator) navigator.vibrate(6);
             }}
-            aria-label={`Goles ${awayName}`}
+            aria-label={t('pool.pmGoalsAria', { team: awayName })}
             disabled={isLocked}
           />
         </label>
@@ -257,12 +252,12 @@ export function PoolMatch({ match, homeName, awayName }: { match: Match; homeNam
 
       <div className="pool-lock-note">
         <Icon name={isLocked ? 'shield' : 'clock'} size={12} />
-        {lockLabel(match)}
+        {lockLabel(match, t)}
       </div>
 
       {isLocked && (
         <div className="pool-match-real-score">
-          <span>Resultado Real</span>
+          <span>{t('pool.pmRealResult')}</span>
           <strong>{match.homeGoals ?? 0} - {match.awayGoals ?? 0}</strong>
         </div>
       )}

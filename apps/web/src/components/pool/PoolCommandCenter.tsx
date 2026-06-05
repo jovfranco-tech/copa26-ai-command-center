@@ -1,5 +1,6 @@
 import { Icon, type IconName } from '@worldcup/ui';
 import { fmtTime } from '@worldcup/shared';
+import { useT } from '@/i18n';
 
 interface PoolAlert {
   icon: IconName;
@@ -36,14 +37,15 @@ export function PoolCommandCenter({
   onShareTable: () => void;
   onShareAchievement: () => void;
 }) {
+  const t = useT();
   const pct = total ? Math.round((picked / total) * 100) : 0;
   return (
     <div className="card pool-command-center">
       <div className="pool-command-head">
         <div>
-          <span className="mono-label">Centro de mando</span>
-          <strong>{pct}% de próximos partidos con pick</strong>
-          <p>{completeScores}/{total} marcadores completos. {lastSavedAt ? `Guardado ${fmtTime(lastSavedAt)}.` : 'Guardado remoto pendiente.'}</p>
+          <span className="mono-label">{t('nav.groupCommand')}</span>
+          <strong>{t('pool.pccPctWithPick', { pct })}</strong>
+          <p>{t('pool.pccScoresComplete', { n: completeScores, total })} {lastSavedAt ? t('pool.pccSavedAt', { time: fmtTime(lastSavedAt) }) : t('pool.pccSavePending')}</p>
         </div>
         <div className="pool-command-actions">
           <button type="button" className="btn gold" onClick={onSharePick}>
@@ -52,15 +54,15 @@ export function PoolCommandCenter({
           </button>
           <button type="button" className="btn ghost" onClick={onShareTable}>
             <Icon name="trophy" size={14} />
-            Tabla
+            {t('pool.tableTitle')}
           </button>
           <button type="button" className="btn ghost" onClick={onShareAchievement}>
             <Icon name="sparkSmall" size={14} />
-            Logro
+            {t('pool.pccAchievement')}
           </button>
         </div>
       </div>
-      <div className="pool-progress-track" aria-label={`Progreso ${pct}%`}>
+      <div className="pool-progress-track" aria-label={t('pool.pccProgress', { pct })}>
         <span style={{ width: `${pct}%` }} />
       </div>
       <div className="pool-alert-grid">

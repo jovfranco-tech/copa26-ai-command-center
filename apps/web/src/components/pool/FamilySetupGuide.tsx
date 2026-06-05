@@ -1,4 +1,5 @@
 import { Icon, type IconName } from '@worldcup/ui';
+import { useT } from '@/i18n';
 
 function SetupStep({ done, icon, title, text }: { done: boolean; icon: IconName; title: string; text: string }) {
   return (
@@ -29,23 +30,24 @@ export function FamilySetupGuide({
   inviteCopied: boolean;
   onInvite: () => void;
 }) {
+  const t = useT();
   const pickReady = total > 0 && picked > 0;
   return (
     <div className="card family-onboarding">
       <div className="family-onboarding-head">
         <div>
-          <span className="mono-label">Preparar grupo</span>
-          <strong>Lista corta para compartir la quiniela</strong>
+          <span className="mono-label">{t('pool.fsgPrepareGroup')}</span>
+          <strong>{t('pool.fsgShortList')}</strong>
         </div>
         <button type="button" className="btn ghost btn-sm" onClick={onInvite}>
-          <Icon name="share" size={13} /> {inviteCopied ? 'Link copiado' : 'Copiar invitación'}
+          <Icon name="share" size={13} /> {inviteCopied ? t('pool.fsgLinkCopied') : t('pool.fsgCopyInvite')}
         </button>
       </div>
       <div className="family-step-grid">
-        <SetupStep done={playerReady} icon="user" title="Alias y foto" text={playerReady ? 'Participante listo.' : 'Escribe tu alias y, si quieres, una URL de avatar.'} />
-        <SetupStep done={Boolean(groupId)} icon="shield" title="Grupo" text={`Grupo activo: ${groupId || 'familia-2026'}.`} />
-        <SetupStep done={pickReady} icon="target" title="Primeros picks" text={pickReady ? `${picked}/${total} partidos con pronóstico.` : 'Captura al menos un marcador para activar ranking.'} />
-        <SetupStep done={syncStatus === 'synced'} icon="cloud" title="Nube compartida" text={syncStatus === 'synced' ? 'Sincronizado en base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios...' : 'Se sincroniza al tener alias.'} />
+        <SetupStep done={playerReady} icon="user" title={t('pool.fsgAliasPhoto')} text={playerReady ? t('pool.fsgParticipantReady') : t('pool.fsgAliasHint')} />
+        <SetupStep done={Boolean(groupId)} icon="shield" title={t('pool.group')} text={t('pool.fsgActiveGroup', { g: groupId || 'familia-2026' })} />
+        <SetupStep done={pickReady} icon="target" title={t('pool.fsgFirstPicks')} text={pickReady ? t('pool.fsgPicksProgress', { picked, total }) : t('pool.fsgCaptureHint')} />
+        <SetupStep done={syncStatus === 'synced'} icon="cloud" title={t('pool.alertCloud')} text={syncStatus === 'synced' ? t('pool.fsgSynced') : syncStatus === 'syncing' ? t('pool.fsgSyncingChanges') : t('pool.fsgSyncOnAlias')} />
       </div>
     </div>
   );

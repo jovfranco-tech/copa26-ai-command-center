@@ -1,6 +1,7 @@
 import { Icon, type IconName } from '@worldcup/ui';
 import { type Match } from '@worldcup/shared';
 import { lockLabel } from '@/lib/matchMeta';
+import { useT } from '@/i18n';
 import { type PoolPick } from '@/store/pool';
 
 export function SummaryTile({ icon, label, value }: { icon: IconName; label: string; value: string }) {
@@ -22,14 +23,15 @@ export function PickHistoryPanel({
   picks: Record<string, PoolPick>;
   teams: Record<string, { name?: string } | undefined>;
 }) {
+  const t = useT();
   const picked = matches.filter((m) => picks[m.id]?.outcome).slice(0, 5);
   if (!picked.length) {
     return (
       <div className="card pick-history-panel empty">
         <Icon name="target" size={16} />
         <div>
-          <strong>Historial de picks</strong>
-          <p>Cuando captures pronósticos, aparecerá aquí tu resumen antes de la lista completa.</p>
+          <strong>{t('pool.pwHistory')}</strong>
+          <p>{t('pool.pwHistoryEmpty')}</p>
         </div>
       </div>
     );
@@ -37,8 +39,8 @@ export function PickHistoryPanel({
   return (
     <div className="card pick-history-panel">
       <div className="pick-history-head">
-        <span className="mono-label">Mis próximos picks</span>
-        <span className="badge gold">{picked.length} recientes</span>
+        <span className="mono-label">{t('pool.pwMyNextPicks')}</span>
+        <span className="badge gold">{t('pool.pwRecent', { n: picked.length })}</span>
       </div>
       <div className="pick-history-list">
         {picked.map((m) => {
@@ -47,7 +49,7 @@ export function PickHistoryPanel({
             <div key={m.id} className="pick-history-row">
               <span>{teams[m.home]?.name ?? m.home} vs {teams[m.away]?.name ?? m.away}</span>
               <strong className="num">{pick.homeGoals ?? '-'}-{pick.awayGoals ?? '-'}</strong>
-              <small>{lockLabel(m)}</small>
+              <small>{lockLabel(m, t)}</small>
             </div>
           );
         })}

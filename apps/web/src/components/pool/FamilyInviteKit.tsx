@@ -1,4 +1,5 @@
 import { Icon } from '@worldcup/ui';
+import { useT } from '@/i18n';
 
 function InviteMetric({ label, value }: { label: string; value: string }) {
   return (
@@ -26,26 +27,27 @@ export function FamilyInviteKit({
   onCopyInvite: () => void;
   onShareInvite: () => void;
 }) {
+  const t = useT();
   return (
     <div className="card family-invite-kit">
       <div className="family-invite-main">
-        <span className="mono-label">Invitación</span>
-        <strong>Grupo {groupId}</strong>
-        <p>Comparte el link, cada persona elige alias/foto y la tabla se arma con resultados reales cuando empiece el torneo.</p>
+        <span className="mono-label">{t('pool.fikInvitation')}</span>
+        <strong>{t('pool.groupSubtitle', { g: groupId })}</strong>
+        <p>{t('pool.fikShareDesc')}</p>
       </div>
       <div className="family-invite-metrics">
-        <InviteMetric label="Miembros" value={participantCount ? String(participantCount) : '0'} />
-        <InviteMetric label="Tus picks" value={`${picked}/${total}`} />
-        <InviteMetric label="Cierre" value="Al inicio" />
+        <InviteMetric label={t('pool.fikMembers')} value={participantCount ? String(participantCount) : '0'} />
+        <InviteMetric label={t('pool.fikYourPicks')} value={`${picked}/${total}`} />
+        <InviteMetric label={t('matchdayHero.closing')} value={t('pool.fikAtKickoff')} />
       </div>
       <div className="family-invite-actions">
         <button type="button" className="btn gold" onClick={onCopyInvite}>
           <Icon name="share" size={14} />
-          {inviteCopied ? 'Link copiado' : 'Copiar link'}
+          {inviteCopied ? t('pool.fsgLinkCopied') : t('pool.fikCopyLink')}
         </button>
         <button type="button" className="btn ghost" onClick={onShareInvite}>
           <Icon name="download" size={14} />
-          Tarjeta WhatsApp
+          {t('pool.fikWhatsappCard')}
         </button>
       </div>
     </div>

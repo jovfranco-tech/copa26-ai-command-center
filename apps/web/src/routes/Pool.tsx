@@ -7,6 +7,7 @@ import { usePoolSync } from '@/hooks/usePoolSync';
 import { useProactiveAI } from '@/hooks/useProactiveAI';
 import { usePool, type PoolOutcome, type PoolPick } from '@/store/pool';
 import { usePreferences } from '@/store/preferences';
+import { useT, type Translate } from '@/i18n';
 import { askPoolAgent } from '@/lib/aiClient';
 import { normalizePoolGroupId, type LeaderboardEntry } from '@/lib/api';
 import { isMatchLocked, lockLabel, weatherSummary } from '@/lib/matchMeta';
@@ -93,23 +94,23 @@ interface PoolAward {
   active: boolean;
 }
 
-function outcomeText(outcome?: PoolOutcome): string {
-  if (outcome === 'home') return 'Gana local';
-  if (outcome === 'away') return 'Gana visita';
-  if (outcome === 'draw') return 'Empate';
-  return 'Sin ganador';
+function outcomeText(outcome: PoolOutcome | undefined, t: Translate): string {
+  if (outcome === 'home') return t('matchdayHero.winHome');
+  if (outcome === 'away') return t('matchdayHero.winAway');
+  if (outcome === 'draw') return t('matchdayHero.draw');
+  return t('pool.noWinner');
 }
 
-function pickScoreText(pick?: PoolPick): string {
+function pickScoreText(pick: PoolPick | undefined, t: Translate): string {
   if (pick?.homeGoals != null && pick.awayGoals != null) return `${pick.homeGoals}-${pick.awayGoals}`;
-  return outcomeText(pick?.outcome);
+  return outcomeText(pick?.outcome, t);
 }
 
-function timeToKickoff(match: Match): string {
+function timeToKickoff(match: Match, t: Translate): string {
   const kickoff = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
-  if (!Number.isFinite(kickoff)) return 'Hora por confirmar';
+  if (!Number.isFinite(kickoff)) return t('pool.timeTBC');
   const diff = kickoff - Date.now();
-  if (diff <= 0) return 'Por iniciar';
+  if (diff <= 0) return t('matchdayHero.aboutToStart');
   const days = Math.floor(diff / 86_400_000);
   const hours = Math.floor((diff % 86_400_000) / 3_600_000);
   const minutes = Math.floor((diff % 3_600_000) / 60_000);
@@ -122,11 +123,13 @@ function buildPoolAlerts({
   picks,
   teams,
   syncStatus,
+  t,
 }: {
   upcomingMatches: Match[];
   picks: Record<string, PoolPick>;
   teams: Record<string, { name?: string } | undefined>;
   syncStatus: 'synced' | 'syncing' | 'error' | null;
+  t: Translate;
 }): PoolAlert[] {
   const nextOpen = upcomingMatches.find((match) => !isMatchLocked(match));
   const firstMissing = upcomingMatches.find((match) => !picks[match.id]?.outcome);
@@ -139,8 +142,8 @@ function buildPoolAlerts({
   if (nextOpen) {
     alerts.push({
       icon: 'clock',
-      title: 'Próximo cierre',
-      text: `${teams[nextOpen.home]?.name ?? nextOpen.home} vs ${teams[nextOpen.away]?.name ?? nextOpen.away} cierra en ${timeToKickoff(nextOpen)}.`,
+      title: t('pool.alertNextClose'),
+      text: t('pool.alertNextCloseText', { home: teams[nextOpen.home]?.name ?? nextOpen.home, away: teams[nextOpen.away]?.name ?? nextOpen.away, time: timeToKickoff(nextOpen, t) }),
       tone: firstMissing?.id === nextOpen.id ? 'warn' : 'info',
     });
   }
@@ -148,15 +151,15 @@ function buildPoolAlerts({
   if (firstMissing) {
     alerts.push({
       icon: 'target',
-      title: 'Pick pendiente',
-      text: `Falta ganador para ${teams[firstMissing.home]?.name ?? firstMissing.home} vs ${teams[firstMissing.away]?.name ?? firstMissing.away}.`,
+      title: t('pool.alertPickPending'),
+      text: t('pool.alertPickPendingText', { home: teams[firstMissing.home]?.name ?? firstMissing.home, away: teams[firstMissing.away]?.name ?? firstMissing.away }),
       tone: 'warn',
     });
   } else if (upcomingMatches.length) {
     alerts.push({
       icon: 'check',
-      title: 'Ganadores completos',
-      text: 'Todos los partidos pendientes tienen ganador/empate seleccionado.',
+      title: t('pool.alertWinnersComplete'),
+      text: t('pool.alertWinnersCompleteText'),
       tone: 'ok',
     });
   }
@@ -164,26 +167,26 @@ function buildPoolAlerts({
   if (firstMissingScore) {
     alerts.push({
       icon: 'activity',
-      title: 'Marcador por cerrar',
-      text: `Completa goles para convertir ${teams[firstMissingScore.home]?.name ?? firstMissingScore.home} vs ${teams[firstMissingScore.away]?.name ?? firstMissingScore.away} en pick compartible.`,
+      title: t('pool.alertScorePending'),
+      text: t('pool.alertScorePendingText', { home: teams[firstMissingScore.home]?.name ?? firstMissingScore.home, away: teams[firstMissingScore.away]?.name ?? firstMissingScore.away }),
       tone: 'warn',
     });
   }
 
   if (nextOpen) {
-    const weather = weatherSummary(nextOpen.id);
+    const weather = weatherSummary(nextOpen.id, t);
     alerts.push({
       icon: 'rain',
-      title: 'Clima del siguiente juego',
-      text: `${weather.label}. ${weather.confidence === 'Pendiente' ? 'Se actualizará con forecast cercano.' : weather.detail}`,
+      title: t('pool.alertWeather'),
+      text: `${weather.label}. ${weather.confidence === 'Pendiente' ? t('pool.alertWeatherUpdate') : weather.detail}`,
       tone: weather.confidence === 'Pendiente' ? 'warn' : 'info',
     });
   }
 
   alerts.push({
     icon: syncStatus === 'error' ? 'close' : syncStatus === 'syncing' ? 'cloud' : 'shield',
-    title: 'Nube compartida',
-    text: syncStatus === 'synced' ? 'Tus cambios están guardados en la base compartida.' : syncStatus === 'syncing' ? 'Guardando cambios en segundo plano.' : syncStatus === 'error' ? 'Sincronización pendiente; la app reintentará.' : 'Escribe tu alias para activar guardado.',
+    title: t('pool.alertCloud'),
+    text: syncStatus === 'synced' ? t('pool.cloudSynced') : syncStatus === 'syncing' ? t('pool.cloudSyncing') : syncStatus === 'error' ? t('pool.cloudError') : t('pool.cloudIdle'),
     tone: syncStatus === 'error' ? 'warn' : syncStatus === 'synced' ? 'ok' : 'info',
   });
 
@@ -196,43 +199,46 @@ function buildPoolAwards({
   totalPending,
   leaderboard,
   playerName,
+  t,
 }: {
   stats: { exactScores: number; efficiency: number; totalPoints: number };
   pickedPending: number;
   totalPending: number;
   leaderboard: LeaderboardEntry[];
   playerName: string;
+  t: Translate;
 }): PoolAward[] {
   const currentRank = leaderboard.findIndex((row) => row.playerName.trim().toLowerCase() === playerName.trim().toLowerCase()) + 1;
   return [
     {
       icon: 'check',
-      title: 'Constancia',
-      text: totalPending ? `${pickedPending}/${totalPending} próximos con pick.` : 'Lista para resultados.',
+      title: t('pool.awardConsistency'),
+      text: totalPending ? t('pool.awardConsistencyText', { picked: pickedPending, total: totalPending }) : t('pool.awardReadyForResults'),
       active: totalPending > 0 && pickedPending === totalPending,
     },
     {
       icon: 'target',
-      title: 'Marcador fino',
-      text: `${stats.exactScores} plenos exactos.`,
+      title: t('pool.awardFineScore'),
+      text: t('pool.awardFineScoreText', { n: stats.exactScores }),
       active: stats.exactScores > 0,
     },
     {
       icon: 'trophy',
-      title: 'Puntero del grupo',
-      text: currentRank > 0 ? `Puesto ${currentRank} con ${stats.totalPoints} pts.` : 'Aparece al sincronizar.',
+      title: t('pool.awardGroupLeader'),
+      text: currentRank > 0 ? t('pool.awardGroupLeaderText', { rank: currentRank, points: stats.totalPoints }) : t('pool.awardAppearsOnSync'),
       active: currentRank === 1,
     },
     {
       icon: 'activity',
-      title: 'Efectividad',
-      text: `${stats.efficiency}% en partidos jugados.`,
+      title: t('pool.awardEfficiency'),
+      text: t('pool.awardEfficiencyText', { n: stats.efficiency }),
       active: stats.efficiency >= 50,
     },
   ];
 }
 
 export function Pool() {
+  const t = useT();
   const { data, isLoading } = useMatches();
   const teams = useTeamsMap();
   const venues = useVenuesMap();
@@ -273,7 +279,7 @@ export function Pool() {
   const summonAgent = async (agentName: 'optimista' | 'stats' | 'contrarian') => {
     if (loadingAgent) return;
     if (role === 'guest') {
-      setAgentError('Modo invitado: los co-pilotos remotos están desactivados para proteger consumo.');
+      setAgentError(t('pool.guestAgents'));
       setAgentMeta(null);
       return;
     }
@@ -291,9 +297,9 @@ export function Pool() {
       time: m.time,
       stage: m.stage,
       venueName: venues[m.venue] ? `${venues[m.venue]?.stadium}, ${venues[m.venue]?.city}` : m.venue,
-      weatherLabel: weatherSummary(m.id).label,
-      weatherConfidence: weatherSummary(m.id).confidence,
-      dataConfidence: 'Calendario local confirmado',
+      weatherLabel: weatherSummary(m.id, t).label,
+      weatherConfidence: weatherSummary(m.id, t).confidence,
+      dataConfidence: t('pool.localCalendarConfirmed'),
     }));
 
     try {
@@ -303,21 +309,21 @@ export function Pool() {
         setActiveAgent(agentName);
         setAgentBrief(res.brief ?? null);
         setAgentMeta(res.meta ?? {
-          confidence: 'Media',
-          dataUsed: ['calendario', 'selecciones'],
-          ignoredData: ['noticias externas', 'lesiones', 'alineaciones'],
-          warning: 'Pronóstico previo sin noticias externas ni alineaciones confirmadas.',
+          confidence: t('sourceBadge.medium'),
+          dataUsed: [t('pool.dataCalendar'), t('pool.dataTeams')],
+          ignoredData: [t('pool.dataExternalNews'), t('pool.dataInjuries'), t('pool.dataLineups')],
+          warning: t('pool.metaWarningDefault'),
         });
       } else {
         setAgentError(
           res.reason === 'no-key'
-            ? 'No se ha configurado la clave del proveedor IA para habilitar co-pilotos.'
-            : 'Error al conectar con el co-piloto.',
+            ? t('pool.agentNoKey')
+            : t('pool.agentConnError'),
         );
         setAgentMeta(null);
       }
     } catch {
-      setAgentError('Error de red al invocar al co-piloto.');
+      setAgentError(t('pool.agentNetError'));
     } finally {
       setLoadingAgent(false);
     }
@@ -358,7 +364,7 @@ export function Pool() {
   const shareLeaderboardLogro = async () => {
     const userRow = leaderboard.find((row) => row.playerName.trim().toLowerCase() === pool.playerName.trim().toLowerCase());
     if (!userRow) {
-      notifyWarning('Nombre requerido', 'Registra tu nombre para compartir tu puesto.');
+      notifyWarning(t('pool.nameRequired'), t('pool.nameRequiredText'));
       return;
     }
 
@@ -391,11 +397,11 @@ export function Pool() {
     ctx.fillStyle = '#c9a24b';
     ctx.font = 'bold 20px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('COPA MUNDIAL DE LA FIFA 2026', 300, 50);
+    ctx.fillText(t('pool.canvasTitle'), 300, 50);
 
     ctx.fillStyle = 'rgba(255,255,255,0.4)';
     ctx.font = '10px monospace';
-    ctx.fillText('QUINIELA OFICIAL DE GALA', 300, 70);
+    ctx.fillText(t('pool.canvasSubtitle'), 300, 70);
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
     ctx.beginPath();
@@ -411,13 +417,13 @@ export function Pool() {
 
     ctx.fillStyle = '#c9a24b';
     ctx.font = 'bold 24px monospace';
-    ctx.fillText(`${medal} PUESTO Nº ${rankNum} ${medal ? '' : 'º'}`, 300, 185);
+    ctx.fillText(t('pool.canvasPlace', { medal, rank: rankNum, suffix: medal ? '' : 'º' }), 300, 185);
 
     ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.font = '12px monospace';
-    ctx.fillText('PUNTOS', 150, 230);
-    ctx.fillText('EFECTIVIDAD', 300, 230);
-    ctx.fillText('PLENOS (+3)', 450, 230);
+    ctx.fillText(t('pool.canvasPoints'), 150, 230);
+    ctx.fillText(t('pool.canvasEfficiency'), 300, 230);
+    ctx.fillText(t('pool.canvasExact'), 450, 230);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 32px sans-serif';
@@ -427,11 +433,11 @@ export function Pool() {
 
     ctx.fillStyle = 'rgba(201, 162, 75, 0.6)';
     ctx.font = 'italic 11px sans-serif';
-    ctx.fillText('¡Desafía a tus amigos en tiempo real en la quiniela!', 300, 340);
+    ctx.fillText(t('pool.canvasChallenge'), 300, 340);
 
     ctx.fillStyle = 'rgba(255,255,255,0.2)';
     ctx.font = '12px sans-serif';
-    ctx.fillText('✨ Quiniela IA Native ✨', 300, 365);
+    ctx.fillText(t('pool.canvasBrand'), 300, 365);
 
     canvas.toBlob(async (blob) => {
       if (!blob) return;
@@ -441,8 +447,8 @@ export function Pool() {
         try {
           await navigator.share({
             files: [file],
-            title: 'Mi Logro en la Quiniela FIFA 2026',
-            text: `Voy en el puesto ${rankNum} con ${userRow.points} puntos en la quiniela. ¿Quién me supera?`,
+            title: t('pool.shareAchTitle'),
+            text: t('pool.shareAchText', { rank: rankNum, points: userRow.points }),
           });
           if ('vibrate' in navigator) navigator.vibrate([15]);
         } catch (err) {
@@ -457,7 +463,7 @@ export function Pool() {
         a.click();
         URL.revokeObjectURL(url);
         if ('vibrate' in navigator) navigator.vibrate([15]);
-        notifySuccess('Descarga completa', 'Tu tarjeta de gala se ha descargado con éxito.');
+        notifySuccess(t('pool.downloadComplete'), t('pool.downloadCompleteText'));
       }
     }, 'image/png');
   };
@@ -516,7 +522,7 @@ export function Pool() {
 
   const exportCSV = () => {
     let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
-    csvContent += 'Partido,Fecha,Prediccion Local,Prediccion Visita,Resultado Real,Estado\n';
+    csvContent += t('pool.csvHeader') + '\n';
 
     const items = data?.items ?? [];
     for (const m of items) {
@@ -544,23 +550,22 @@ export function Pool() {
       setInviteCopied(true);
       window.setTimeout(() => setInviteCopied(false), 1800);
     } catch {
-      window.prompt('Copia este link de invitacion:', url);
+      window.prompt(t('pool.copyInvitePrompt'), url);
     }
   };
 
   const shareFamilyTable = async () => {
     if (!leaderboard.length) {
-      notifyInfo('Sin tabla', 'Todavía no hay tabla para compartir.');
+      notifyInfo(t('pool.noTable'), t('pool.noTableText'));
       return;
     }
     await shareTextCard({
-      title: 'Tabla',
-      subtitle: `Grupo ${normalizePoolGroupId(pool.groupId)}`,
-      lines: leaderboard.slice(0, 6).map((row, index) => {
-        const place = index + 1;
-        return `${place}. ${row.playerName}: ${row.points} pts, ${row.exactScores} plenos, ${row.efficiency}%`;
-      }),
-      footer: 'Quiniela Mundial 2026',
+      title: t('pool.tableTitle'),
+      subtitle: t('pool.groupSubtitle', { g: normalizePoolGroupId(pool.groupId) }),
+      lines: leaderboard.slice(0, 6).map((row, index) =>
+        t('pool.tableLine', { place: index + 1, name: row.playerName, points: row.points, exact: row.exactScores, eff: row.efficiency }),
+      ),
+      footer: t('pool.footerPool2026'),
       fileName: `tabla-${normalizePoolGroupId(pool.groupId)}.png`,
     });
   };
@@ -569,15 +574,15 @@ export function Pool() {
     const group = normalizePoolGroupId(pool.groupId);
     const url = `${window.location.origin}/pool?group=${encodeURIComponent(group)}`;
     await shareTextCard({
-      title: 'Únete a la quiniela',
-      subtitle: `Grupo ${group}`,
+      title: t('pool.joinTitle'),
+      subtitle: t('pool.groupSubtitle', { g: group }),
       lines: [
-        '1. Abre el link y escribe tu alias.',
-        '2. Captura tus marcadores antes de cada partido.',
-        '3. La tabla se actualiza con resultados reales.',
+        t('pool.joinStep1'),
+        t('pool.joinStep2'),
+        t('pool.joinStep3'),
         url,
       ],
-      footer: 'Mundial 2026',
+      footer: t('teamDetail.worldcup2026'),
       fileName: `invitacion-${group}.png`,
     });
   };
@@ -629,7 +634,7 @@ export function Pool() {
   // Compute live AI Trend Alerts based on the Leaderboard
   const trendAlert = useMemo(() => {
     if (!leaderboard || leaderboard.length === 0) {
-      return "Analista IA: registra tus pronósticos para comparar rendimiento con el grupo y con los co-pilotos tácticos.";
+      return t('pool.trendNoData');
     }
 
     const leader = leaderboard[0];
@@ -643,17 +648,17 @@ export function Pool() {
     const leaderEfficiency = leader.efficiency ?? 0;
 
     if (leaderName.startsWith(AI_AGENT_PREFIX)) {
-      return `Tendencia IA: ${leaderName} lidera el ranking del grupo con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Revisa sus picks antes de seguir esa estrategia.`;
+      return t('pool.trendAiLeads', { name: leaderName, points: leaderPoints, eff: leaderEfficiency });
     }
 
     if (userRow && userRow.playerName === leaderName) {
       const nextAi = aiRows[0];
-      const aiText = nextAi ? `, pero ${nextAi.playerName} te pisa los talones en la tabla` : '';
-      return `Vas liderando el ranking del grupo con ${leaderPoints} pts y ${leaderEfficiency}% de efectividad. Excelente consistencia táctica${aiText}.`;
+      const aiText = nextAi ? t('pool.trendYouLeadAi', { name: nextAi.playerName }) : '';
+      return t('pool.trendYouLead', { points: leaderPoints, eff: leaderEfficiency, aiText });
     }
 
-    return `Tendencia del líder: ${leaderName} lidera la tabla con ${leaderPoints} pts. Te recomendamos invocar al Simulador Estadístico para afinar tu puntería defensiva.`;
-  }, [leaderboard, pool.playerName]);
+    return t('pool.trendLeader', { name: leaderName, points: leaderPoints });
+  }, [leaderboard, pool.playerName, t]);
 
   // Determine what is visible in the active tab
   const visible = useMemo(() => {
@@ -669,16 +674,16 @@ export function Pool() {
     return p?.homeGoals != null && p?.awayGoals != null;
   }).length;
   const poolAlerts = useMemo(
-    () => buildPoolAlerts({ upcomingMatches, picks: pool.picks, teams, syncStatus }),
-    [upcomingMatches, pool.picks, teams, syncStatus],
+    () => buildPoolAlerts({ upcomingMatches, picks: pool.picks, teams, syncStatus, t }),
+    [upcomingMatches, pool.picks, teams, syncStatus, t],
   );
   const poolAwards = useMemo(
-    () => buildPoolAwards({ stats, pickedPending, totalPending: upcomingMatches.length, leaderboard, playerName: pool.playerName }),
-    [stats, pickedPending, upcomingMatches.length, leaderboard, pool.playerName],
+    () => buildPoolAwards({ stats, pickedPending, totalPending: upcomingMatches.length, leaderboard, playerName: pool.playerName, t }),
+    [stats, pickedPending, upcomingMatches.length, leaderboard, pool.playerName, t],
   );
   const poolDiagnostics = useMemo(
-    () => buildPoolDiagnostics(data?.items ?? [], pool.picks, leaderboard, pool.playerName),
-    [data?.items, pool.picks, leaderboard, pool.playerName],
+    () => buildPoolDiagnostics(data?.items ?? [], pool.picks, leaderboard, pool.playerName, t),
+    [data?.items, pool.picks, leaderboard, pool.playerName, t],
   );
 
   // Proactive AI notifications (fires once per session)
@@ -690,24 +695,24 @@ export function Pool() {
       return pick?.homeGoals != null && pick.awayGoals != null;
     }) ?? upcomingMatches[0];
     if (!match) {
-      notifyInfo('Sin partidos', 'No hay partidos pendientes para compartir.');
+      notifyInfo(t('pool.noMatchesShare'), t('pool.noMatchesShareText'));
       return;
     }
     const pick = pool.picks[match.id];
     if (!pick?.outcome) {
-      notifyInfo('Pick incompleto', 'Captura al menos un ganador o empate para compartir.');
+      notifyInfo(t('pool.pickIncomplete'), t('pool.pickIncompleteText'));
       return;
     }
     await shareTextCard({
       title: `${teams[match.home]?.name ?? match.home} vs ${teams[match.away]?.name ?? match.away}`,
-      subtitle: `Predicción de ${pool.playerName || 'jugador'} · ${fmtDay(match.date)} ${match.time}`,
+      subtitle: t('pool.sharePickSubtitle', { name: pool.playerName || t('pool.defaultPlayer'), date: fmtDay(match.date), time: match.time }),
       lines: [
-        `Pick: ${pickScoreText(pick)}`,
-        `Ganador: ${outcomeText(pick.outcome)}`,
-        lockLabel(match),
-        `Grupo: ${normalizePoolGroupId(pool.groupId)}`,
+        t('pool.sharePickLine', { pick: pickScoreText(pick, t) }),
+        t('pool.sharePickWinner', { winner: outcomeText(pick.outcome, t) }),
+        lockLabel(match, t),
+        t('pool.sharePickGroup', { g: normalizePoolGroupId(pool.groupId) }),
       ],
-      footer: 'Quiniela Mundial 2026',
+      footer: t('pool.footerPool2026'),
       fileName: `prediccion-${match.id}-${normalizePoolGroupId(pool.groupId)}.png`,
     });
   };
@@ -721,16 +726,13 @@ export function Pool() {
           <img src="/brand/fwc26-emblem.svg" alt="Copa 2026" loading="lazy" decoding="async" />
         </div>
         <div className="pool-copy">
-          <span className="mono-label">Quiniela</span>
-          <h2>Pronósticos para compartir en casa</h2>
-          <p>
-            Guarda tus picks en la nube compartida. Cuando empiece el torneo, los resultados reales servirán para
-            comparar aciertos entre todos.
-          </p>
+          <span className="mono-label">{t('pool.title')}</span>
+          <h2>{t('pool.heroTitle')}</h2>
+          <p>{t('pool.heroDesc')}</p>
         </div>
         <div className="pool-profile">
           <label className="mono-label" htmlFor="pool-name" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>Participante</span>
+            <span>{t('pool.participant')}</span>
             {syncStatus && (
               <span
                 style={{
@@ -744,7 +746,7 @@ export function Pool() {
                 }}
               >
                 <Icon name={syncStatus === 'synced' ? 'check' : syncStatus === 'syncing' ? 'sparkSmall' : 'close'} size={11} />
-                {syncStatus === 'synced' ? 'Guardado en nube' : syncStatus === 'syncing' ? 'Sincronizando…' : 'Sin conexión'}
+                {syncStatus === 'synced' ? t('pool.savedCloud') : syncStatus === 'syncing' ? t('pool.syncingShort') : t('pool.offline')}
               </span>
             )}
           </label>
@@ -753,7 +755,7 @@ export function Pool() {
               id="pool-name"
               value={pool.playerName}
               onChange={(e) => pool.setPlayerName(e.target.value)}
-              placeholder="Tu nombre"
+              placeholder={t('pool.yourName')}
               style={{ flex: 1, minWidth: '120px' }}
             />
             {/* Accent Theme Color Dot Selector */}
@@ -782,7 +784,7 @@ export function Pool() {
                       transition: 'all 0.2s ease',
                       padding: 0,
                     }}
-                    title={`Acento ${acc === 'gold' ? 'Dorado' : acc === 'emerald' ? 'Esmeralda' : 'Carmesí'}`}
+                    title={t('pool.accentTitle', { name: acc === 'gold' ? t('pool.accentGold') : acc === 'emerald' ? t('pool.accentEmerald') : t('pool.accentCrimson') })}
                   />
                 );
               })}
@@ -806,46 +808,46 @@ export function Pool() {
                 padding: 0,
                 flexShrink: 0
               }}
-              title={theme === 'dark' ? 'Activar tema claro' : 'Activar tema oscuro'}
+              title={theme === 'dark' ? t('pool.themeLight') : t('pool.themeDark')}
             >
               <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
             </button>
           </div>
           <div className="pool-family-panel">
             <div className="pool-avatar-preview">
-              {pool.avatarUrl ? <img src={pool.avatarUrl} alt={pool.playerName || 'Participante'} loading="lazy" /> : <Icon name="user" size={18} />}
+              {pool.avatarUrl ? <img src={pool.avatarUrl} alt={pool.playerName || t('pool.participant')} loading="lazy" /> : <Icon name="user" size={18} />}
             </div>
             <input
               value={pool.avatarUrl}
               onChange={(e) => pool.setAvatarUrl(e.target.value)}
-              placeholder="URL de foto/avatar"
-              aria-label="URL de foto/avatar"
+              placeholder={t('pool.avatarUrl')}
+              aria-label={t('pool.avatarUrl')}
             />
           </div>
           <div className="pool-family-panel">
             <label className="mono-label" htmlFor="pool-group" style={{ margin: 0 }}>
-              Grupo
+              {t('pool.group')}
             </label>
             <input
               id="pool-group"
               value={pool.groupId}
               onChange={(e) => pool.setGroupId(normalizePoolGroupId(e.target.value))}
               placeholder="familia-2026"
-              aria-label="Grupo"
+              aria-label={t('pool.group')}
             />
             <button type="button" className="btn ghost btn-sm" onClick={copyInviteLink}>
               <Icon name="share" size={13} />
-              {inviteCopied ? 'Copiado' : 'Invitar'}
+              {inviteCopied ? t('pool.copied') : t('pool.invite')}
             </button>
           </div>
         </div>
       </div>
 
       <div className="pool-rules-strip">
-        <span><Icon name="trophy" size={13} /> Marcador exacto +3</span>
-        <span><Icon name="check" size={13} /> Ganador/empate correcto +1</span>
-        <span><Icon name="clock" size={13} /> Pronosticos cierran al inicio del partido</span>
-        <span><Icon name="shield" size={13} /> Grupo: {normalizePoolGroupId(pool.groupId)}</span>
+        <span><Icon name="trophy" size={13} /> {t('pool.ruleExact')}</span>
+        <span><Icon name="check" size={13} /> {t('pool.ruleWinner')}</span>
+        <span><Icon name="clock" size={13} /> {t('pool.ruleClose')}</span>
+        <span><Icon name="shield" size={13} /> {t('pool.ruleGroup', { g: normalizePoolGroupId(pool.groupId) })}</span>
       </div>
 
       <FamilySetupGuide
@@ -880,7 +882,7 @@ export function Pool() {
         onShareAchievement={shareLeaderboardLogro}
       />
 
-      <div className="pool-tabs" role="tablist" aria-label="Secciones de la quiniela">
+      <div className="pool-tabs" role="tablist" aria-label={t('pool.poolSections')}>
         <button
           type="button"
           role="tab"
@@ -891,7 +893,7 @@ export function Pool() {
           onClick={() => { setActiveTab('predict'); playTick(); }}
         >
           <Icon name="calendar" size={15} />
-          Pronosticar
+          {t('pool.tabPredict')}
           <span className="pool-tab-badge">{upcomingMatches.length}</span>
         </button>
         <button
@@ -904,7 +906,7 @@ export function Pool() {
           onClick={() => { setActiveTab('results'); playTick(); }}
         >
           <Icon name="trophy" size={15} />
-          Resultados y Aciertos
+          {t('pool.tabResults')}
           <span className="pool-tab-badge">{playedMatches.length}</span>
         </button>
       </div>
@@ -953,44 +955,44 @@ export function Pool() {
 
       {activeTab === 'predict' ? (
         <div className="pool-summary">
-          <SummaryTile icon="check" label="Partidos elegidos" value={`${pickedPending}/${upcomingMatches.length}`} />
-          <SummaryTile icon="target" label="Marcadores" value={`${completeScoresPending}/${upcomingMatches.length}`} />
-          <SummaryTile icon="calendar" label="Vista" value={view === 'next' ? 'Próximos 12' : 'Completa'} />
+          <SummaryTile icon="check" label={t('pool.matchesChosen')} value={`${pickedPending}/${upcomingMatches.length}`} />
+          <SummaryTile icon="target" label={t('pool.scores')} value={`${completeScoresPending}/${upcomingMatches.length}`} />
+          <SummaryTile icon="calendar" label={t('pool.viewLabel')} value={view === 'next' ? t('pool.viewNext12') : t('pool.viewFull')} />
           <div className="card card-pad pool-actions" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button type="button" className="btn gold" onClick={() => setView(view === 'next' ? 'all' : 'next')}>
               <Icon name={view === 'next' ? 'list' : 'calendar'} size={15} />
-              {view === 'next' ? 'Ver todo' : 'Ver próximos'}
+              {view === 'next' ? t('pool.viewAll') : t('pool.viewNext')}
             </button>
             <button type="button" className="btn ghost" onClick={() => pool.reset()}>
               <Icon name="close" size={15} />
-              Reiniciar
+              {t('pool.reset')}
             </button>
-            <button type="button" className="btn ghost" onClick={exportCSV} title="Exportar predicciones a CSV">
+            <button type="button" className="btn ghost" onClick={exportCSV} title={t('pool.exportCsvTitle')}>
               <Icon name="download" size={15} />
-              Exportar CSV
+              {t('pool.exportCsv')}
             </button>
-            <button type="button" className="btn ghost" onClick={() => window.print()} title="Imprimir reporte de quiniela en PDF">
+            <button type="button" className="btn ghost" onClick={() => window.print()} title={t('pool.printPdfTitle')}>
               <Icon name="print" size={15} />
-              Imprimir PDF
+              {t('pool.printPdf')}
             </button>
             <button
               type="button"
               className="btn ghost animate-fade-in"
               onClick={() => setShowScanner(true)}
-              title="Escanear quiniela física manuscrita con cámara"
+              title={t('pool.scanPaperTitle')}
               disabled={role === 'guest'}
             >
               <Icon name="camera" size={15} style={{ color: 'var(--gold)' }} />
-              Escanear Papel
+              {t('pool.scanPaper')}
             </button>
           </div>
         </div>
       ) : (
         <div className="pool-summary">
-          <SummaryTile icon="trophy" label="Puntos Totales" value={`${stats.totalPoints} pts`} />
-          <SummaryTile icon="activity" label="Efectividad" value={`${stats.efficiency}%`} />
-          <SummaryTile icon="target" label="Predicciones jugadas" value={`${stats.playedWithPrediction}/${playedMatches.length}`} />
-          <SummaryTile icon="check" label="Plenos exactos (+3)" value={`${stats.exactScores}`} />
+          <SummaryTile icon="trophy" label={t('pool.totalPoints')} value={`${stats.totalPoints} pts`} />
+          <SummaryTile icon="activity" label={t('pool.efficiency')} value={`${stats.efficiency}%`} />
+          <SummaryTile icon="target" label={t('pool.playedPredictions')} value={`${stats.playedWithPrediction}/${playedMatches.length}`} />
+          <SummaryTile icon="check" label={t('pool.exactScores')} value={`${stats.exactScores}`} />
         </div>
       )}
 
@@ -998,20 +1000,20 @@ export function Pool() {
         <div className="copilot-section" id="pool-panel-predict" role="tabpanel" aria-labelledby="pool-tab-predict">
           <div className="row gap-8" style={{ alignItems: 'center' }}>
             <Icon name="ai" size={16} style={{ color: 'var(--gold)' }} />
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Co-pilotos Tácticos IA</h3>
-            <span className="badge gold">Beta</span>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>{t('pool.copilots')}</h3>
+            <span className="badge gold">{t('pool.beta')}</span>
           </div>
           <p className="muted" style={{ margin: '0 0 4px 0', fontSize: 12 }}>
-            Invoca a un asistente de IA táctico para que rellene automáticamente tu quiniela con su filosofía de juego y te dé su justificación.
+            {t('pool.copilotsDesc')}
           </p>
           <div className="ai-guard-note">
             <Icon name="shield" size={13} />
-            Co-pilotos basados en calendario, sede y clima base; no usan noticias externas, lesiones ni alineaciones no verificadas.
+            {t('pool.copilotsGuard')}
           </div>
           {role === 'guest' && (
             <div className="ai-guard-note">
               <Icon name="shield" size={13} />
-              Modo invitado activo: co-pilotos y scanner quedan en pausa para proteger consumo y permisos.
+              {t('pool.guestGuard')}
             </div>
           )}
 
@@ -1038,8 +1040,8 @@ export function Pool() {
               <div className="row gap-12" style={{ alignItems: 'center' }}>
                 <div className="copilot-avatar">GO</div>
                 <div className="copilot-meta">
-                  <h3>El Analista Optimista</h3>
-                  <p>"El fútbol se gana metiendo goles." Predice goleadas, partidos abiertos y confía en superpotencias.</p>
+                  <h3>{t('pool.agentOptimistName')}</h3>
+                  <p>{t('pool.agentOptimistDesc')}</p>
                 </div>
               </div>
               <button
@@ -1049,7 +1051,7 @@ export function Pool() {
                 onClick={() => summonAgent('optimista')}
                 disabled={loadingAgent || role === 'guest'}
               >
-                {loadingAgent && activeAgent === 'optimista' ? 'Convocando…' : activeAgent === 'optimista' ? 'Activo' : 'Invocar Optimista'}
+                {loadingAgent && activeAgent === 'optimista' ? t('pool.summoning') : activeAgent === 'optimista' ? t('pool.active') : t('pool.summonOptimist')}
               </button>
             </div>
 
@@ -1057,8 +1059,8 @@ export function Pool() {
               <div className="row gap-12" style={{ alignItems: 'center' }}>
                 <div className="copilot-avatar">ES</div>
                 <div className="copilot-meta">
-                  <h3>El Simulador Estadístico</h3>
-                  <p>"Las defensas ganan campeonatos." Predice marcadores cerrados y orden táctico estricto.</p>
+                  <h3>{t('pool.agentStatsName')}</h3>
+                  <p>{t('pool.agentStatsDesc')}</p>
                 </div>
               </div>
               <button
@@ -1068,7 +1070,7 @@ export function Pool() {
                 onClick={() => summonAgent('stats')}
                 disabled={loadingAgent || role === 'guest'}
               >
-                {loadingAgent && activeAgent === 'stats' ? 'Convocando…' : activeAgent === 'stats' ? 'Activo' : 'Invocar Estadístico'}
+                {loadingAgent && activeAgent === 'stats' ? t('pool.summoning') : activeAgent === 'stats' ? t('pool.active') : t('pool.summonStats')}
               </button>
             </div>
 
@@ -1076,8 +1078,8 @@ export function Pool() {
               <div className="row gap-12" style={{ alignItems: 'center' }}>
                 <div className="copilot-avatar">UP</div>
                 <div className="copilot-meta">
-                  <h3>El Agente Contrarian</h3>
-                  <p>"Épica de David contra Goliat." Predice sorpresas de selecciones débiles y resultados atrevidos.</p>
+                  <h3>{t('pool.agentContrarianName')}</h3>
+                  <p>{t('pool.agentContrarianDesc')}</p>
                 </div>
               </div>
               <button
@@ -1087,7 +1089,7 @@ export function Pool() {
                 onClick={() => summonAgent('contrarian')}
                 disabled={loadingAgent || role === 'guest'}
               >
-                {loadingAgent && activeAgent === 'contrarian' ? 'Convocando…' : activeAgent === 'contrarian' ? 'Activo' : 'Invocar Contrarian'}
+                {loadingAgent && activeAgent === 'contrarian' ? t('pool.summoning') : activeAgent === 'contrarian' ? t('pool.active') : t('pool.summonContrarian')}
               </button>
             </div>
           </div>
@@ -1097,20 +1099,20 @@ export function Pool() {
               <Icon name="ai" size={18} style={{ color: 'var(--gold)' }} />
               <div>
                 <span className="mono-label" style={{ display: 'block', marginBottom: 4, color: 'var(--gold)' }}>
-                  Informe Táctico del Co-piloto ({activeAgent === 'optimista' ? 'Optimista' : activeAgent === 'stats' ? 'Estadístico' : 'Contrarian'})
+                  {t('pool.briefTitle', { agent: activeAgent === 'optimista' ? t('pool.agentOptimist') : activeAgent === 'stats' ? t('pool.agentStats') : t('pool.agentContrarian') })}
                 </span>
                 <p className="copilot-brief-text">{agentBrief}</p>
                 <details className="copilot-trace" style={{ marginTop: 8 }}>
                   <summary style={{ cursor: 'pointer', fontSize: 11, color: 'var(--tx-3)', fontWeight: 600, marginBottom: 4 }}>
-                    <Icon name="info" size={11} /> ¿Por qué esta predicción? (explainability)
+                    <Icon name="info" size={11} /> {t('pool.whyPrediction')}
                   </summary>
                   <div style={{ paddingTop: 6, fontSize: 11, color: 'var(--tx-3)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <span><strong>Confianza:</strong> {agentMeta?.confidence ?? 'Media'}</span>
-                    <span><strong>Datos utilizados:</strong> {(agentMeta?.dataUsed ?? ['calendario', 'selecciones']).join(', ')}</span>
-                    <span><strong>Datos NO utilizados:</strong> {(agentMeta?.ignoredData ?? ['noticias externas', 'lesiones', 'alineaciones']).join(', ')}</span>
-                    {agentMeta?.warning && <span><strong>Limitación:</strong> {agentMeta.warning}</span>}
+                    <span><strong>{t('pool.confidence')}</strong> {agentMeta?.confidence ?? t('sourceBadge.medium')}</span>
+                    <span><strong>{t('pool.dataUsed')}</strong> {(agentMeta?.dataUsed ?? [t('pool.dataCalendar'), t('pool.dataTeams')]).join(', ')}</span>
+                    <span><strong>{t('pool.dataNotUsed')}</strong> {(agentMeta?.ignoredData ?? [t('pool.dataExternalNews'), t('pool.dataInjuries'), t('pool.dataLineups')]).join(', ')}</span>
+                    {agentMeta?.warning && <span><strong>{t('pool.limitation')}</strong> {agentMeta.warning}</span>}
                     <span style={{ marginTop: 4, fontStyle: 'italic', opacity: 0.7 }}>
-                      Esta predicción se basa exclusivamente en rankings FIFA, calendario y sede. No refleja forma actual, lesiones ni convocatorias.
+                      {t('pool.briefDisclaimer')}
                     </span>
                   </div>
                 </details>
@@ -1125,8 +1127,8 @@ export function Pool() {
           <div className="row spread align-center animate-fade-in" style={{ marginBottom: 6 }}>
             <div className="row gap-8 align-center">
               <Icon name="trophy" size={16} style={{ color: 'var(--gold)' }} />
-              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>Ranking (Leaderboard)</h3>
-              <span className="badge gold">Compartido</span>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--tx)' }}>{t('pool.ranking')}</h3>
+              <span className="badge gold">{t('pool.shared')}</span>
             </div>
             {leaderboard.length > 0 && (
               <div className="row gap-6 wrap">
@@ -1136,7 +1138,7 @@ export function Pool() {
                   style={{ height: 26, fontSize: 11, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 4 }}
                   onClick={shareLeaderboardLogro}
                 >
-                  <Icon name="share" size={11} /> Compartir logro
+                  <Icon name="share" size={11} /> {t('pool.shareAchievement')}
                 </button>
                 <button
                   type="button"
@@ -1144,20 +1146,20 @@ export function Pool() {
                   style={{ height: 26, fontSize: 11, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 4 }}
                   onClick={shareFamilyTable}
                 >
-                  <Icon name="list" size={11} /> Compartir tabla
+                  <Icon name="list" size={11} /> {t('pool.shareTable')}
                 </button>
               </div>
             )}
           </div>
           <p className="muted" style={{ margin: '0 0 12px 0', fontSize: 12 }}>
-            Puntuaciones en tiempo real de todos los participantes basándose en Firestore y los resultados del torneo.
+            {t('pool.rankingDesc')}
           </p>
 
           {loadingLeaderboard ? (
-            <p className="muted" role="status" aria-live="polite" style={{ fontSize: 13 }}>Cargando tabla de posiciones…</p>
+            <p className="muted" role="status" aria-live="polite" style={{ fontSize: 13 }}>{t('pool.loadingTable')}</p>
           ) : !leaderboard.length ? (
             <div className="card card-pad muted" style={{ fontSize: 13, textAlign: 'center' }}>
-              No hay predicciones sincronizadas todavía. Escribe tu nombre y guarda algunos marcadores.
+              {t('pool.noSyncedPredictions')}
             </div>
           ) : (
             <div className="card" style={{ overflowX: 'auto', border: '1px solid var(--gold-line)' }}>
@@ -1173,14 +1175,14 @@ export function Pool() {
                 if (isLeading) return (
                   <div className="card card-pad" style={{ background: 'rgba(56,211,154,0.06)', border: '1px solid rgba(56,211,154,0.2)', marginBottom: 12, fontSize: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
                     <Icon name="trophy" size={14} style={{ color: 'var(--color-success)' }} />
-                    <span>Vas liderando. Mantén la ventaja cerrando todos los picks pendientes.</span>
+                    <span>{t('pool.youLeading')}</span>
                   </div>
                 );
 
                 if (gap <= 6) return (
                   <div className="card card-pad" style={{ background: 'rgba(201,162,75,0.06)', border: '1px solid var(--gold-line)', marginBottom: 12, fontSize: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
                     <Icon name="ai" size={14} style={{ color: 'var(--gold)' }} />
-                    <span>A {gap} pts de {aheadName ?? 'la cima'}. Dos marcadores exactos te dan +6 — es alcanzable.</span>
+                    <span>{t('pool.gapHint', { gap, name: aheadName ?? t('pool.theTop') })}</span>
                   </div>
                 );
 
@@ -1189,13 +1191,13 @@ export function Pool() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, textAlign: 'left' }}>
                 <thead>
                   <tr style={{ background: 'var(--bg-2)', borderBottom: '1px solid var(--line)' }}>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700 }}>Pos</th>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700 }}>Participante</th>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Puntos</th>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Plenos (+3)</th>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Aciertos (+1)</th>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Efectividad</th>
-                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>Picks</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700 }}>{t('pool.colPos')}</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700 }}>{t('pool.colParticipant')}</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>{t('pool.colPoints')}</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>{t('pool.colExact')}</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>{t('pool.colHits')}</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>{t('pool.colEfficiency')}</th>
+                    <th style={{ padding: '10px 14px', color: 'var(--tx-3)', fontWeight: 700, textAlign: 'center' }}>{t('pool.colPicks')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1229,7 +1231,7 @@ export function Pool() {
                               <span className="pool-avatar-mini">{row.playerName.slice(0, 1).toUpperCase()}</span>
                             )}
                             {row.playerName}
-                            {isCurrentUser && <span className="badge gold" style={{ fontSize: 9 }}>Tú</span>}
+                            {isCurrentUser && <span className="badge gold" style={{ fontSize: 9 }}>{t('pool.you')}</span>}
                           </span>
                         </td>
                         <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 'bold', fontSize: 14 }}>{row.points}</td>
@@ -1248,15 +1250,15 @@ export function Pool() {
       )}
 
       {isLoading ? (
-        <p className="muted" role="status" aria-live="polite">Cargando quiniela…</p>
+        <p className="muted" role="status" aria-live="polite">{t('pool.loadingPool')}</p>
       ) : !visible.length ? (
         <Empty
           icon="trophy"
-          title={activeTab === 'predict' ? 'Sin partidos para pronosticar' : 'Sin partidos terminados'}
+          title={activeTab === 'predict' ? t('pool.emptyPredictTitle') : t('pool.emptyResultsTitle')}
           text={
             activeTab === 'predict'
-              ? 'Cuando haya calendario pendiente aparecerá aquí.'
-              : 'Cuando se jueguen partidos verás los resultados aquí.'
+              ? t('pool.emptyPredictText')
+              : t('pool.emptyResultsText')
           }
         />
       ) : (
