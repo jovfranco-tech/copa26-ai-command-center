@@ -5,6 +5,7 @@ import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tool
 import { MatchRow, PlayerCard, TeamCard } from '@/components/cards';
 import { MockBanner } from '@/components/MockBanner';
 import { useMatches, usePlayers, useStandings, useTeams } from '@/hooks';
+import { useT } from '@/i18n';
 import { useFavorites, type TacticalNote } from '@/store/favorites';
 
 type Tab = 'teams' | 'players' | 'matches' | 'notes';
@@ -51,6 +52,7 @@ export function Favorites() {
   const tacticalNotes = useFavorites((s) => s.tacticalNotes ?? []);
   const removeNote = useFavorites((s) => s.removeTacticalNote);
   const [tab, setTab] = useState<Tab>('teams');
+  const t = useT();
 
   const { data: teamsData } = useTeams();
   const { data: playersData } = usePlayers();
@@ -69,28 +71,28 @@ export function Favorites() {
       <MockBanner />
       <div className="row gap-6 wrap" style={{ marginBottom: 16 }}>
         <Pill on={tab === 'teams'} onClick={() => setTab('teams')}>
-          Selecciones {favTeams.length}
+          {t('favorites.teams')} {favTeams.length}
         </Pill>
         <Pill on={tab === 'players'} onClick={() => setTab('players')}>
-          Jugadores {favPlayers.length}
+          {t('favorites.players')} {favPlayers.length}
         </Pill>
         <Pill on={tab === 'matches'} onClick={() => setTab('matches')}>
-          Partidos {favMatches.length}
+          {t('favorites.matches')} {favMatches.length}
         </Pill>
         <Pill on={tab === 'notes'} onClick={() => setTab('notes')}>
-          Notas
+          {t('favorites.notes')}
         </Pill>
       </div>
 
       {tab === 'teams' &&
         (teams.length ? (
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))' }}>
-            {teams.map((t) => (
-              <TeamCard key={t.code} code={t.code} standing={standingByCode[t.code]} />
+            {teams.map((team) => (
+              <TeamCard key={team.code} code={team.code} standing={standingByCode[team.code]} />
             ))}
           </div>
         ) : (
-          <Empty icon="star" title="Sin selecciones favoritas" text="Marca una selección con la estrella en cualquier tarjeta." />
+          <Empty icon="star" title={t('favorites.noTeamsTitle')} text={t('favorites.noTeamsText')} />
         ))}
 
       {tab === 'players' &&
@@ -101,7 +103,7 @@ export function Favorites() {
             ))}
           </div>
         ) : (
-          <Empty icon="star" title="Sin jugadores favoritos" text="Marca un jugador con la estrella en cualquier tarjeta." />
+          <Empty icon="star" title={t('favorites.noPlayersTitle')} text={t('favorites.noPlayersText')} />
         ))}
 
       {tab === 'matches' &&
@@ -112,7 +114,7 @@ export function Favorites() {
             ))}
           </div>
         ) : (
-          <Empty icon="star" title="Sin partidos guardados" text="Guarda un partido desde su página de detalle." />
+          <Empty icon="star" title={t('favorites.noMatchesTitle')} text={t('favorites.noMatchesText')} />
         ))}
 
       {tab === 'notes' && (
@@ -120,12 +122,12 @@ export function Favorites() {
           {/* Personal notes textbox */}
           <div className="card card-pad">
             <div className="mono-label" style={{ marginBottom: 8 }}>
-              Notas personales · editables
+              {t('favorites.personalNotes')}
             </div>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Apuntes, predicciones, cosas a seguir…"
+              placeholder={t('favorites.notesPlaceholder')}
               rows={5}
               style={{
                 width: '100%',
@@ -145,15 +147,15 @@ export function Favorites() {
           {/* AI saved notes */}
           <div className="row spread" style={{ marginTop: 10 }}>
             <span className="mono-label" style={{ fontSize: 13, fontWeight: 700, color: 'var(--gold)' }}>
-              Notas tácticas IA
+              {t('favorites.aiNotes')}
             </span>
           </div>
 
           {tacticalNotes.length === 0 ? (
             <Empty
               icon="ai"
-              title="Sin análisis guardados"
-              text="Hazle preguntas tácticas al Analista IA y pulsa en la estrella de guardar para archivarlas aquí de forma permanente."
+              title={t('favorites.noSavedTitle')}
+              text={t('favorites.noSavedText')}
             />
           ) : (
             <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
@@ -161,7 +163,7 @@ export function Favorites() {
                 <div key={n.id} className="card card-pad" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <div className="row spread" style={{ alignItems: 'flex-start' }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <span className="mono-label" style={{ fontSize: 10, color: 'var(--gold)' }}>Pregunta:</span>
+                      <span className="mono-label" style={{ fontSize: 10, color: 'var(--gold)' }}>{t('favorites.question')}</span>
                       <h4 style={{ margin: '2px 0 0 0', fontSize: 13, fontWeight: 700, color: 'var(--tx)' }}>
                         "{n.query}"
                       </h4>
@@ -170,14 +172,14 @@ export function Favorites() {
                       onClick={() => removeNote(n.id)}
                       className="fav-btn"
                       style={{ padding: 4, marginLeft: 8, color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                      title="Eliminar nota"
+                      title={t('favorites.deleteNote')}
                     >
                       <Icon name="close" size={14} />
                     </button>
                   </div>
                   
                   <div style={{ flex: 1 }}>
-                    <span className="mono-label" style={{ fontSize: 10, color: 'var(--tx-3)' }}>Análisis:</span>
+                    <span className="mono-label" style={{ fontSize: 10, color: 'var(--tx-3)' }}>{t('favorites.analysis')}</span>
                     <p style={{ margin: '4px 0 0 0', fontSize: 12.5, lineHeight: 1.5, color: 'var(--tx-2)' }}>
                       {n.response}
                     </p>
@@ -186,7 +188,7 @@ export function Favorites() {
                   </div>
                   
                   <div className="mono-label" style={{ fontSize: 10, textAlign: 'right', marginTop: 4 }}>
-                    Guardado: {n.timestamp}
+                    {t('favorites.saved')} {n.timestamp}
                   </div>
                 </div>
               ))}

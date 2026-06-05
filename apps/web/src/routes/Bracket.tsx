@@ -5,12 +5,14 @@ import { mock } from '@worldcup/shared';
 import { TeamCrest } from '@/components/identity';
 import { MockBanner } from '@/components/MockBanner';
 import { useTeamsMap } from '@/hooks';
+import { useT } from '@/i18n';
 
-const ROUND_NAMES = ['Dieciseisavos', 'Octavos', 'Cuartos', 'Semifinales', 'Final'];
+const ROUND_KEYS = ['bracket.r32', 'bracket.r16', 'bracket.qf', 'bracket.sf', 'bracket.f'];
 
 export function Bracket() {
   const navigate = useNavigate();
   const teams = useTeamsMap();
+  const t = useT();
 
   const [zoom, setZoom] = useState(100);
   const [panX, setPanX] = useState(0);
@@ -98,8 +100,8 @@ export function Bracket() {
         <MockBanner />
         <Empty
           icon="bracket"
-          title="Eliminatorias — por definir"
-          text="Los dieciseisavos se definen tras la fase de grupos (desde el 28 de junio de 2026). Aparecerán aquí cuando haya resultados."
+          title={t('bracket.emptyTitle')}
+          text={t('bracket.emptyText')}
         />
       </div>
     );
@@ -111,20 +113,20 @@ export function Bracket() {
 
       <div className="card card-pad" style={{ marginBottom: 16, background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.25)', display: 'flex', gap: 10, alignItems: 'center', fontSize: 12, color: 'var(--tx-2)' }}>
         <Icon name="info" size={16} style={{ color: '#f59e0b', flexShrink: 0 }} />
-        <span><strong>Proyección simulada.</strong> Este bracket muestra resultados estimados basados en rankings FIFA. No son resultados reales. Se actualizará con datos oficiales cuando concluya la fase de grupos.</span>
+        <span><strong>{t('bracket.simProjection')}</strong> {t('bracket.simNote')}</span>
       </div>
 
       <div className="card card-pad" style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
         <Icon name="grid" size={15} style={{ color: 'var(--gold)' }} />
         <span className="mono-label" style={{ flex: 1, margin: 0 }}>
-          Eliminatoria proyectada · Arrastra para mover · Usa el zoom para ampliar
+          {t('bracket.panHint')}
         </span>
         <div className="row gap-8" style={{ alignItems: 'center' }}>
-          <button type="button" className="btn ghost btn-sm" onClick={() => setZoom(z => Math.max(50, z - 10))} title="Alejar" style={{ padding: '0 10px', height: 28, fontWeight: 700 }}>
+          <button type="button" className="btn ghost btn-sm" onClick={() => setZoom(z => Math.max(50, z - 10))} title={t('bracket.zoomOut')} style={{ padding: '0 10px', height: 28, fontWeight: 700 }}>
             -
           </button>
           <span className="num" style={{ fontSize: 12, minWidth: 44, textAlign: 'center', fontWeight: 700 }}>{zoom}%</span>
-          <button type="button" className="btn ghost btn-sm" onClick={() => setZoom(z => Math.min(150, z + 10))} title="Acercar" style={{ padding: '0 10px', height: 28, fontWeight: 700 }}>
+          <button type="button" className="btn ghost btn-sm" onClick={() => setZoom(z => Math.min(150, z + 10))} title={t('bracket.zoomIn')} style={{ padding: '0 10px', height: 28, fontWeight: 700 }}>
             +
           </button>
           <input
@@ -136,7 +138,7 @@ export function Bracket() {
             style={{ width: 100, height: 4, cursor: 'pointer' }}
           />
           <button type="button" className="btn ghost btn-sm" onClick={resetZoomPan} style={{ height: 28, padding: '0 12px', fontSize: 12, fontWeight: 600 }}>
-            Restablecer
+            {t('bracket.reset')}
           </button>
         </div>
       </div>
@@ -176,7 +178,7 @@ export function Bracket() {
           <div className="bracket" style={{ padding: 0 }}>
             {rounds.map((round, ri) => (
               <div key={ri} className="bk-col">
-                <div className="bk-round mono-label">{ROUND_NAMES[ri] ?? `Round ${ri + 1}`}</div>
+                <div className="bk-round mono-label">{ROUND_KEYS[ri] ? t(ROUND_KEYS[ri]) : t('bracket.round', { n: ri + 1 })}</div>
                 {round.map(([a, b], mi) => {
                   const ra = teams[a]?.ranking ?? 999;
                   const rb = teams[b]?.ranking ?? 999;
@@ -193,7 +195,7 @@ export function Bracket() {
             ))}
 
             <div className="bk-col" style={{ justifyContent: 'center' }}>
-              <div className="bk-round mono-label">Campeón</div>
+              <div className="bk-round mono-label">{t('bracket.champion')}</div>
               <div className="card bk-champ">
                 <img className="bk-cup" src="/brand/fwc26-emblem.svg" alt="Copa 2026 trophy" loading="lazy" />
                 {champion ? (
@@ -204,7 +206,7 @@ export function Bracket() {
                 ) : (
                   <span className="muted">TBD</span>
                 )}
-                <span className="mono-label">Campeón proyectado (simulado)</span>
+                <span className="mono-label">{t('bracket.projectedChampion')}</span>
               </div>
             </div>
           </div>

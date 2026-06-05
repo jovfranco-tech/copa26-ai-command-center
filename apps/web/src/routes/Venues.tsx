@@ -6,17 +6,19 @@ import { MockBanner } from '@/components/MockBanner';
 import { downloadedVenuePhotoExts, matchWeather, venueExtras, venuePhotoCredits } from '@/generated/intelPacks';
 import { venueGalleryImages } from '@/generated/venueGallery';
 import { useAsset, useMatches, useVenues } from '@/hooks';
+import { useT } from '@/i18n';
 import { venueImage } from '@/lib/venueImages';
 
 export function Venues() {
+  const t = useT();
   const { data, isLoading } = useVenues();
   const { data: matchData } = useMatches();
   const [open, setOpen] = useState<string | null>(null);
 
-  if (isLoading) return <p className="muted">Cargando sedes…</p>;
+  if (isLoading) return <p className="muted">{t('venues.loading')}</p>;
   const venues = data?.items ?? [];
   const matches = matchData?.items ?? [];
-  if (!venues.length) return <Empty icon="venues" title="Sin sedes" text="No hay sedes en el dataset." />;
+  if (!venues.length) return <Empty icon="venues" title={t('venues.emptyTitle')} text={t('venues.emptyText')} />;
 
   return (
     <div className="page-fade">
@@ -39,14 +41,14 @@ export function Venues() {
                   </div>
                 </div>
                 <div className="row" style={{ marginTop: 12, justifyContent: 'space-between' }}>
-                  <Meta label="Aforo" value={fmtInt(v.capacity)} />
-                  <Meta label="Superficie" value={v.surface} />
-                  <Meta label="Partidos" value={fixtures.length} />
+                  <Meta label={t('venues.capacity')} value={fmtInt(v.capacity)} />
+                  <Meta label={t('venues.surface')} value={v.surface} />
+                  <Meta label={t('venues.matches')} value={fixtures.length} />
                 </div>
                 <div className="row" style={{ marginTop: 10, justifyContent: 'space-between' }}>
-                  <Meta label="Zona" value={venueExtras[v.id]?.timezone ?? '—'} />
-                  <Meta label="Lat/Lon" value={formatCoords(v.id)} />
-                  <Meta label="Clima" value={weatherLabel(fixtures[0]?.id)} />
+                  <Meta label={t('venues.zone')} value={venueExtras[v.id]?.timezone ?? '—'} />
+                  <Meta label={t('venues.latlon')} value={formatCoords(v.id)} />
+                  <Meta label={t('venues.weather')} value={weatherLabel(fixtures[0]?.id)} />
                 </div>
                 <VenueGallery id={v.id} city={v.city} />
                 <button
@@ -55,7 +57,7 @@ export function Venues() {
                   style={{ width: '100%', justifyContent: 'center', marginTop: 12 }}
                   onClick={() => setOpen(isOpen ? null : v.id)}
                 >
-                  {isOpen ? 'Ocultar partidos' : 'Ver partidos'} <Icon name={isOpen ? 'chevD' : 'chevR'} size={13} />
+                  {isOpen ? t('venues.hideMatches') : t('venues.showMatches')} <Icon name={isOpen ? 'chevD' : 'chevR'} size={13} />
                 </button>
                 {isOpen && (
                   <div style={{ marginTop: 8 }}>
@@ -78,7 +80,7 @@ export function Venues() {
                       ))
                     ) : (
                       <p className="muted" style={{ fontSize: 12.5 }}>
-                        Sin partidos asignados.
+                        {t('venues.noMatches')}
                       </p>
                     )}
                   </div>
@@ -107,6 +109,7 @@ function VenueGallery({ id, city }: { id: string; city: string }) {
 }
 
 function VenueImage({ assetId, id, city }: { assetId: string | null | undefined; id: string; city: string }) {
+  const t = useT();
   const localUrl = useAsset(assetId);
   const wiki = venueImage(id);
   const staticExt = downloadedVenuePhotoExts[id];
@@ -119,7 +122,7 @@ function VenueImage({ assetId, id, city }: { assetId: string | null | undefined;
       <div style={{ position: 'relative', height: 132 }}>
         <img
           src={src}
-          alt={`Estadio en ${city}`}
+          alt={t('venues.stadiumIn', { city })}
           loading="lazy"
           decoding="async"
           onError={() => setImgOk(false)}
@@ -152,7 +155,7 @@ function VenueImage({ assetId, id, city }: { assetId: string | null | undefined;
   // Stylized stadium illustration fallback (original artwork).
   return (
     <div style={{ height: 132, background: 'linear-gradient(180deg, #0e1626, #0a111d)', position: 'relative', overflow: 'hidden' }}>
-      <svg viewBox="0 0 320 132" width="100%" height="132" preserveAspectRatio="xMidYMid slice" aria-label={`Estadio en ${city}`}>
+      <svg viewBox="0 0 320 132" width="100%" height="132" preserveAspectRatio="xMidYMid slice" aria-label={t('venues.stadiumIn', { city })}>
         <defs>
           <radialGradient id="vlight" cx="50%" cy="20%" r="80%">
             <stop offset="0%" stopColor="rgba(201,162,75,0.18)" />

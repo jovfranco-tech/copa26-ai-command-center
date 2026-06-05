@@ -12,6 +12,7 @@ import { useMatches, useStandings, useStats, useSyncStatus, useTeams } from '@/h
 import { focusMatch, lockLabel, weatherSummary } from '@/lib/matchMeta';
 import { useFavorites } from '@/store/favorites';
 import { usePool } from '@/store/pool';
+import { useT } from '@/i18n';
 
 /** Derive the tournament "focus day": a live day, else latest played, else next up. */
 function focusDate(matches: Match[]): string {
@@ -24,6 +25,7 @@ function focusDate(matches: Match[]): string {
 }
 
 export function Dashboard() {
+  const t = useT();
   const navigate = useNavigate();
   const { data: matchData, isLoading } = useMatches();
   const { data: stats } = useStats();
@@ -73,39 +75,39 @@ export function Dashboard() {
         />
 
         <div className="stat-strip" style={{ marginBottom: 18 }}>
-        <StatTile icon="ball" label="Goles" value={goals} sub="Torneo" spark={[40, 55, 38, 70, 62, 90, 100]} />
-        <StatTile icon="whistle" label="Jugados" value={played} sub={`de ${matches.length}`} />
-        <StatTile icon="flame" label="Goles/partido" value={avg(goals, played)} sub="Fase de grupos" accent="var(--pos)" />
+        <StatTile icon="ball" label={t('dashboard.goals')} value={goals} sub={t('dashboard.tournament')} spark={[40, 55, 38, 70, 62, 90, 100]} />
+        <StatTile icon="whistle" label={t('dashboard.played')} value={played} sub={`${t('dashboard.of')} ${matches.length}`} />
+        <StatTile icon="flame" label={t('dashboard.goalsPerMatch')} value={avg(goals, played)} sub={t('dashboard.groupStage')} accent="var(--pos)" />
         <StatTile
           icon="target"
-          label="En vivo"
+          label={t('dashboard.live')}
           value={live.length}
-          sub={live.length ? 'En juego' : 'Ninguno'}
+          sub={live.length ? t('dashboard.inPlay') : t('dashboard.none')}
           accent={live.length ? 'var(--live)' : undefined}
         />
-        <StatTile icon="star" label="Seguimiento" value={favTeams.length + favPlayers.length} sub="Selecciones + jugadores" />
+        <StatTile icon="star" label={t('dashboard.tracking')} value={favTeams.length + favPlayers.length} sub={t('dashboard.teamsPlayers')} />
       </div>
 
       <div className="home-grid">
         <div className="grid">
           <AIBrief day={day} todayCount={today.length} liveCount={live.length} />
 
-          <Section title="En vivo y hoy" label="Marcador">
+          <Section title={t('dashboard.liveToday')} label={t('dashboard.scoreLabel')}>
             {tickerItems.length ? (
               <Ticker items={tickerItems} />
             ) : (
               <p className="muted" style={{ fontSize: 12.5 }}>
-                Sin partidos para el día destacado.
+                {t('dashboard.noFocusMatches')}
               </p>
             )}
           </Section>
 
           <Section
-            title="Partidos de hoy"
+            title={t('dashboard.todayMatches')}
             label={day}
             action={
               <button type="button" className="card-link" onClick={() => navigate({ to: '/matches' })}>
-                Centro de partidos <Icon name="chevR" size={13} />
+                {t('dashboard.matchCenter')} <Icon name="chevR" size={13} />
               </button>
             }
           >
@@ -119,16 +121,16 @@ export function Dashboard() {
           <div className="card">
             <div className="card-hd">
               <Icon name="target" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Mi seguimiento</h3>
+              <h3>{t('dashboard.myTracking')}</h3>
               <span className="spacer" />
               <button type="button" className="card-link" onClick={() => navigate({ to: '/favorites' })}>
-                Gestionar
+                {t('dashboard.manage')}
               </button>
             </div>
             <div className="card-pad" style={{ paddingTop: 8 }}>
               {favTeams.length + favPlayers.length + favMatches.length === 0 ? (
                 <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                  Marca selecciones, jugadores y partidos para armar tu seguimiento.
+                  {t('dashboard.trackingEmpty')}
                 </p>
               ) : (
                 <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))' }}>
@@ -150,13 +152,13 @@ export function Dashboard() {
             </div>
           </div>
 
-          <Section title="Últimos resultados" label="Final">
+          <Section title={t('dashboard.lastResults')} label={t('dashboard.finalLabel')}>
             <div className="card card-pad">
               {results.length ? (
                 results.map((m) => <MatchRow key={m.id} m={m} />)
               ) : (
                 <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                  Aún no se ha jugado ningún partido.
+                  {t('dashboard.noMatchesPlayed')}
                 </p>
               )}
             </div>
@@ -174,10 +176,10 @@ export function Dashboard() {
             <div className="card">
               <div className="card-hd">
                 <Icon name="standings" size={15} style={{ color: 'var(--gold)' }} />
-                <h3>Resumen de grupo</h3>
+                <h3>{t('dashboard.groupSummary')}</h3>
                 <span className="spacer" />
                 <button type="button" className="card-link" onClick={() => navigate({ to: '/standings' })}>
-                  Tablas completas
+                  {t('dashboard.fullTables')}
                 </button>
               </div>
               <div className="card-pad" style={{ paddingTop: 4 }}>
@@ -208,10 +210,10 @@ export function Dashboard() {
           <div className="card">
             <div className="card-hd">
               <Icon name="ball" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Goleadores</h3>
+              <h3>{t('dashboard.scorers')}</h3>
               <span className="spacer" />
               <button type="button" className="card-link" onClick={() => navigate({ to: '/stats' })}>
-                Todos
+                {t('dashboard.all')}
               </button>
             </div>
             <div className="card-pad" style={{ paddingTop: 6 }}>
@@ -221,7 +223,7 @@ export function Dashboard() {
                 ))
               ) : (
                 <p className="muted" style={{ fontSize: 12.5, margin: 0 }}>
-                  Sin goleadores todavía.
+                  {t('dashboard.noScorers')}
                 </p>
               )}
             </div>
@@ -230,10 +232,10 @@ export function Dashboard() {
           <div className="card">
             <div className="card-hd">
               <Icon name="clock" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Próximos</h3>
+              <h3>{t('dashboard.upcoming')}</h3>
               <span className="spacer" />
               <button type="button" className="card-link" onClick={() => navigate({ to: '/matches' })}>
-                Calendario
+                {t('dashboard.calendar')}
               </button>
             </div>
             <div className="card-pad" style={{ paddingTop: 4 }}>
@@ -257,6 +259,7 @@ function ProactiveAlerts({
   picks: Record<string, { outcome?: string; homeGoals?: number; awayGoals?: number }>;
   favoritesCount: number;
 }) {
+  const t = useT();
   const navigate = useNavigate();
   if (!match) return null;
   const pick = picks[match.id];
@@ -264,30 +267,30 @@ function ProactiveAlerts({
   const alerts = [
     {
       icon: 'target' as const,
-      title: pick?.outcome ? 'Pick activo' : 'Pick pendiente',
-      text: pick?.homeGoals != null && pick.awayGoals != null ? `Tu marcador: ${pick.homeGoals}-${pick.awayGoals}` : 'Captura marcador antes del cierre.',
-      action: 'Abrir quiniela',
+      title: pick?.outcome ? t('dashboard.pickActive') : t('dashboard.pickPending'),
+      text: pick?.homeGoals != null && pick.awayGoals != null ? t('dashboard.yourScore', { score: `${pick.homeGoals}-${pick.awayGoals}` }) : t('dashboard.capturePick'),
+      action: t('dashboard.openPool'),
       to: '/pool' as const,
     },
     {
       icon: 'rain' as const,
-      title: 'Clima a vigilar',
+      title: t('dashboard.weatherWatch'),
       text: `${weather.label} · ${weather.confidence}`,
-      action: 'Ver partido',
+      action: t('dashboard.viewMatch'),
       to: '/matches' as const,
     },
     {
       icon: 'star' as const,
-      title: 'Seguimiento',
-      text: favoritesCount ? `${favoritesCount} favoritos activos.` : 'Marca equipos o jugadores para alertas más útiles.',
-      action: 'Favoritos',
+      title: t('dashboard.tracking'),
+      text: favoritesCount ? t('dashboard.favoritesActive', { n: favoritesCount }) : t('dashboard.trackingHint'),
+      action: t('dashboard.favorites'),
       to: '/favorites' as const,
     },
   ];
   return (
     <div className="proactive-alert-strip">
       <div>
-        <span className="mono-label">Alertas proactivas</span>
+        <span className="mono-label">{t('dashboard.proactiveAlerts')}</span>
         <strong>{lockLabel(match)}</strong>
       </div>
       {alerts.map((alert) => (
@@ -305,6 +308,7 @@ function ProactiveAlerts({
 }
 
 function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) {
+  const t = useT();
   const navigate = useNavigate();
   const meta = sync?.meta;
   const isMock = sync?.source === 'mock';
@@ -312,39 +316,39 @@ function SyncCard({ sync }: { sync: ReturnType<typeof useSyncStatus>['data'] }) 
     <div className="card">
       <div className="card-hd">
         <span className={isMock ? 'dot-warn' : 'dot-ok'} />
-        <h3>Datos locales</h3>
+        <h3>{t('dashboard.localData')}</h3>
         <span className="spacer" />
         <button type="button" className="card-link" onClick={() => navigate({ to: '/data' })}>
-          Revisar
+          {t('dashboard.review')}
         </button>
       </div>
       <div className="card-pad" style={{ paddingTop: 4 }}>
         <div className="sync-row">
-          <span className="k">Estado</span>
-          <span className="badge gold">{meta?.cacheStatus ?? 'Datos abiertos'}</span>
+          <span className="k">{t('dashboard.status')}</span>
+          <span className="badge gold">{meta?.cacheStatus ?? t('dashboard.openData')}</span>
         </div>
         <div className="sync-row">
-          <span className="k">Fuente</span>
+          <span className="k">{t('dashboard.source')}</span>
           <span className="num" style={{ fontSize: 12 }}>
-            {sync?.source === 'sqlite' ? 'SQLite local' : 'Datos del torneo'}
+            {sync?.source === 'sqlite' ? t('dashboard.sqliteLocal') : t('dashboard.tournamentData')}
           </span>
         </div>
         <div className="sync-row">
-          <span className="k">Actualizado</span>
+          <span className="k">{t('dashboard.updated')}</span>
           <span className="num" style={{ fontSize: 12 }}>
             {meta?.lastSync ?? '—'}
           </span>
         </div>
         <div className="sync-row">
-          <span className="k">Dataset</span>
+          <span className="k">{t('dashboard.dataset')}</span>
           <span className="num" style={{ fontSize: 12 }}>
             {meta?.db ?? '—'}
           </span>
         </div>
         <div className="sync-row">
-          <span className="k">Banderas</span>
+          <span className="k">{t('dashboard.flags')}</span>
           <span className="num" style={{ fontSize: 12 }}>
-            {meta ? `${meta.assets.flags} selecciones` : '0'}
+            {meta ? t('dashboard.flagsCount', { n: meta.assets.flags }) : '0'}
           </span>
         </div>
       </div>

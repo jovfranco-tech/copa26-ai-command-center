@@ -1,4 +1,5 @@
 import { Icon } from '@worldcup/ui';
+import { useT } from '@/i18n';
 
 /**
  * Forward-looking banner for data-dependent pages (stats, standings) while the
@@ -7,9 +8,12 @@ import { Icon } from '@worldcup/ui';
  */
 const OPENING_ISO = '2026-06-11T11:00:00-06:00';
 
-export function PreTournamentNotice({ context = 'Las estadísticas' }: { context?: string }) {
+export function PreTournamentNotice({ contextKey = 'stats' }: { contextKey?: 'standings' | 'stats' }) {
+  const t = useT();
   const days = Math.max(0, Math.ceil((new Date(OPENING_ISO).getTime() - Date.now()) / 86_400_000));
   if (days <= 0) return null;
+
+  const context = contextKey === 'standings' ? t('preTournament.contextStandings') : t('preTournament.contextStats');
 
   return (
     <div
@@ -39,11 +43,13 @@ export function PreTournamentNotice({ context = 'Las estadísticas' }: { context
         <Icon name="trophy" size={22} />
       </div>
       <div style={{ minWidth: 0 }}>
-        <div style={{ fontWeight: 800, fontSize: 15 }}>{context} se activan el 11 de junio</div>
+        <div style={{ fontWeight: 800, fontSize: 15 }}>{t('preTournament.activate', { context })}</div>
         <div className="muted" style={{ fontSize: 12.5, marginTop: 2, lineHeight: 1.45 }}>
-          Faltan <strong style={{ color: 'var(--gold)' }}>{days} día{days === 1 ? '' : 's'}</strong> para el
-          arranque del Mundial 2026. Goleadores, asistencias, tarjetas y la tabla se llenan automáticamente
-          conforme se juegan los partidos.
+          {t('preTournament.countdownPrefix')}
+          <strong style={{ color: 'var(--gold)' }}>
+            {days} {days === 1 ? t('preTournament.day') : t('preTournament.days')}
+          </strong>{' '}
+          {t('preTournament.countdownSuffix')}
         </div>
       </div>
     </div>

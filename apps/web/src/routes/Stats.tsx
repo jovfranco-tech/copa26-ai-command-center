@@ -149,7 +149,7 @@ export function Stats() {
   return (
     <div className="page-fade">
       <MockBanner />
-      <PreTournamentNotice context="Las estadísticas y la tabla" />
+      <PreTournamentNotice contextKey="stats" />
       <div className="source-strip">
         <DataSourceBadge
           label="Estadisticas de torneo"
