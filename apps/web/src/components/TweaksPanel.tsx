@@ -2,12 +2,14 @@
 import { useEffect, useState } from 'react';
 import { Icon, Pill } from '@worldcup/ui';
 import { FONT_PRESETS, usePreferences } from '@/store/preferences';
+import { useT } from '@/i18n';
 
 const GOLDS = ['#c9a24b', '#d8b15e', '#b8863a', '#cbb27a', '#c08a4e'];
 
 export function TweaksPanel() {
   const [open, setOpen] = useState(false);
   const p = usePreferences();
+  const t = useT();
 
   useEffect(() => {
     if (!open) return;
@@ -23,7 +25,7 @@ export function TweaksPanel() {
       <button
         type="button"
         className="icon-btn tweaks-toggle-btn"
-        title="Apariencia"
+        title={t('tweaks.appearance')}
         onClick={() => setOpen((v) => !v)}
         style={{ position: 'fixed', right: 18, bottom: 18, zIndex: 70, width: 44, height: 44 }}
       >
@@ -47,12 +49,12 @@ export function TweaksPanel() {
           >
             <div className="card-hd">
               <Icon name="settings" size={15} style={{ color: 'var(--gold)' }} />
-              <h3>Ajustes</h3>
+              <h3>{t('tweaks.title')}</h3>
               <span className="spacer" />
               <button
                 type="button"
                 className="icon-btn"
-                aria-label="Cerrar ajustes"
+                aria-label={t('tweaks.closeAria')}
                 style={{ width: 30, height: 30 }}
                 onClick={() => setOpen(false)}
               >
@@ -60,28 +62,28 @@ export function TweaksPanel() {
               </button>
             </div>
             <div className="card-pad" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <Field label="Tema">
+              <Field label={t('tweaks.theme')}>
                 {(['dark', 'light'] as const).map((v) => (
                   <Pill key={v} on={p.theme === v} onClick={() => p.set('theme', v)}>
-                    {v === 'dark' ? 'Oscuro' : 'Claro'}
+                    {v === 'dark' ? t('tweaks.dark') : t('tweaks.light')}
                   </Pill>
                 ))}
               </Field>
-              <Field label="Densidad">
+              <Field label={t('tweaks.density')}>
                 {(['compact', 'regular', 'comfy'] as const).map((v) => (
                   <Pill key={v} on={p.density === v} onClick={() => p.set('density', v)}>
-                    {v === 'compact' ? 'Compacta' : v === 'regular' ? 'Normal' : 'Amplia'}
+                    {v === 'compact' ? t('tweaks.compact') : v === 'regular' ? t('tweaks.regular') : t('tweaks.comfy')}
                   </Pill>
                 ))}
               </Field>
-              <Field label="Rol de uso">
+              <Field label={t('role.label')}>
                 {(['admin', 'family', 'guest'] as const).map((v) => (
                   <Pill key={v} on={p.role === v} onClick={() => p.set('role', v)}>
-                    {v === 'admin' ? 'Admin' : v === 'family' ? 'Estándar' : 'Invitado'}
+                    {t(`role.${v}`)}
                   </Pill>
                 ))}
               </Field>
-              <Field label="Esquinas">
+              <Field label={t('tweaks.corners')}>
                 <input
                   type="range"
                   min={4}
@@ -94,7 +96,7 @@ export function TweaksPanel() {
                   {p.radius}px
                 </span>
               </Field>
-              <Field label="Tono dorado">
+              <Field label={t('tweaks.goldTone')}>
                 {GOLDS.map((c) => (
                   <button
                     key={c}
@@ -112,7 +114,7 @@ export function TweaksPanel() {
                   />
                 ))}
               </Field>
-              <Field label="Intensidad">
+              <Field label={t('tweaks.intensity')}>
                 <input
                   type="range"
                   min={0}
@@ -125,7 +127,7 @@ export function TweaksPanel() {
                   {p.goldAmt}%
                 </span>
               </Field>
-              <Field label="Tipografía">
+              <Field label={t('tweaks.typography')}>
                 {Object.keys(FONT_PRESETS).map((f) => (
                   <Pill key={f} on={p.font === f} onClick={() => p.set('font', f as keyof typeof FONT_PRESETS)}>
                     {f}
@@ -133,7 +135,7 @@ export function TweaksPanel() {
                 ))}
               </Field>
               <button type="button" className="btn ghost btn-sm" onClick={p.reset}>
-                Restablecer
+                {t('bracket.reset')}
               </button>
             </div>
           </div>

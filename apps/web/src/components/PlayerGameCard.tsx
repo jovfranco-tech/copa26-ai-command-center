@@ -1,20 +1,23 @@
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts';
 import type { Player } from '@worldcup/shared';
-import { attrColor, attrLabelsFor, playerRatings, ratingSourceText } from '@/lib/ratings';
+import { attrColor, attrLabelsFor, playerRatings } from '@/lib/ratings';
 import { PlayerAvatar, TeamFlag } from './identity';
 import { useTeamsMap } from '@/hooks';
+import { useT, useLang } from '@/i18n';
 
 /** Game-card style view: overall + power gauge + radar + attribute bars. */
 export function PlayerGameCard({ p }: { p: Player }) {
+  const t = useT();
+  const lang = useLang();
   const teams = useTeamsMap();
-  const t = teams[p.team];
+  const team = teams[p.team];
   const r = playerRatings(p);
   const labels = attrLabelsFor(p);
-  const radarData = labels.map((a) => ({ label: a.short, value: r[a.key] }));
+  const radarData = labels.map((a) => ({ label: lang === 'es' ? a.short : a.shortEn, value: r[a.key] }));
 
   return (
     <div className="card" style={{ overflow: 'hidden' }}>
-      <div style={{ height: 5, background: `linear-gradient(90deg, ${t?.colorA ?? '#888'}, ${t?.colorB ?? '#888'})` }} />
+      <div style={{ height: 5, background: `linear-gradient(90deg, ${team?.colorA ?? '#888'}, ${team?.colorB ?? '#888'})` }} />
       <div className="card-pad">
         <div className="row gap-16 wrap" style={{ alignItems: 'flex-start' }}>
           {/* identity + power gauge */}
@@ -52,7 +55,7 @@ export function PlayerGameCard({ p }: { p: Player }) {
               <span className="mono-label" style={{ margin: 0 }}>
                 #{p.number ?? '—'} · {p.club}
               </span>
-              <span className={`rating-source ${r.source}`}>{r.source === 'fc26' ? 'FC 26' : 'Estimado'}</span>
+              <span className={`rating-source ${r.source}`}>{r.source === 'fc26' ? 'FC 26' : t('cards.estimated')}</span>
             </div>
             <ResponsiveContainer width="100%" height={210}>
               <RadarChart data={radarData} outerRadius="72%">
@@ -72,7 +75,7 @@ export function PlayerGameCard({ p }: { p: Player }) {
               <div key={a.key}>
                 <div className="row" style={{ justifyContent: 'space-between', marginBottom: 3 }}>
                   <span className="mono-label" style={{ margin: 0 }}>
-                    {a.es}
+                    {lang === 'es' ? a.es : a.en}
                   </span>
                   <span className="num" style={{ fontWeight: 700, color: attrColor(v) }}>
                     {v}
@@ -87,8 +90,12 @@ export function PlayerGameCard({ p }: { p: Player }) {
         </div>
 
         <div className="mono-label" style={{ marginTop: 12 }}>
-          {ratingSourceText(r)}
-          {r.source === 'fc26' ? ' · actualizar antes del torneo' : ' · sin ficha pública FC 26 encontrada'}
+          {r.source === 'fc26'
+            ? r.providerName
+              ? t('attrs.fc26Provider', { provider: r.providerName })
+              : t('attrs.fc26')
+            : t('attrs.estimateText')}
+          {r.source === 'fc26' ? t('playerGameCard.updateBefore') : t('playerGameCard.noFc26')}
         </div>
       </div>
     </div>
@@ -97,6 +104,7 @@ export function PlayerGameCard({ p }: { p: Player }) {
 
 /** Circular power gauge for the overall. */
 function Gauge({ value }: { value: number }) {
+  const t = useT();
   const pct = Math.min(100, Math.max(0, value));
   return (
     <div
@@ -124,7 +132,7 @@ function Gauge({ value }: { value: number }) {
           {value}
         </span>
         <span className="mono-label" style={{ margin: 0, fontSize: 8 }}>
-          GENERAL
+          {t('playerGameCard.overall')}
         </span>
       </div>
     </div>

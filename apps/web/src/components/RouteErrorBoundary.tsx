@@ -1,4 +1,6 @@
 import { Component, type ReactNode } from 'react';
+import { translate } from '@/i18n';
+import { usePreferences } from '@/store/preferences';
 
 interface Props {
   children: ReactNode;
@@ -22,12 +24,14 @@ export class RouteErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      // Class component: read the current language synchronously at render time.
+      const lang = usePreferences.getState().lang;
       return (
         <div className="page-fade" style={{ padding: 32, textAlign: 'center', maxWidth: 480, margin: '80px auto' }}>
           <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.4 }}>⚠</div>
-          <h2 style={{ color: 'var(--tx)', marginBottom: 8 }}>Error inesperado</h2>
+          <h2 style={{ color: 'var(--tx)', marginBottom: 8 }}>{translate(lang, 'states.errorTitle')}</h2>
           <p style={{ color: 'var(--tx-2)', fontSize: 14, marginBottom: 20, lineHeight: 1.5 }}>
-            Algo salió mal al cargar esta sección. Intenta recargar la página.
+            {translate(lang, 'states.errorBody')}
           </p>
           {this.state.error && (
             <pre style={{ fontSize: 11, color: 'var(--tx-3)', background: 'var(--bg-2)', padding: 12, borderRadius: 8, textAlign: 'left', overflow: 'auto', maxHeight: 120 }}>
@@ -43,7 +47,7 @@ export class RouteErrorBoundary extends Component<Props, State> {
             }}
             style={{ marginTop: 16 }}
           >
-            Recargar página
+            {translate(lang, 'states.reload')}
           </button>
         </div>
       );

@@ -28,7 +28,8 @@ export function markThemeExplicit(): void {
 
 /** Detect the initial theme: respect explicit choice, otherwise follow system. */
 function getSystemTheme(): Theme {
-  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+  // Guard matchMedia: it is absent in SSR and some test environments (jsdom).
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: light)').matches) {
     return 'light';
   }
   return 'dark';

@@ -1,4 +1,5 @@
 import { useNotifications, type AppNotification } from '@/store/notifications';
+import { useT } from '@/i18n';
 
 const TYPE_STYLES: Record<AppNotification['type'], { bg: string; border: string; icon: string }> = {
   success: { bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.35)', icon: '✓' },
@@ -10,6 +11,7 @@ const TYPE_STYLES: Record<AppNotification['type'], { bg: string; border: string;
 
 function Toast({ notif }: { notif: AppNotification }) {
   const dismiss = useNotifications((s) => s.dismiss);
+  const t = useT();
   const style = TYPE_STYLES[notif.type];
 
   return (
@@ -36,7 +38,7 @@ function Toast({ notif }: { notif: AppNotification }) {
         type="button"
         className="notif-toast-close"
         onClick={() => dismiss(notif.id)}
-        aria-label="Cerrar notificación"
+        aria-label={t('notif.closeAria')}
       >
         ×
       </button>
@@ -46,13 +48,14 @@ function Toast({ notif }: { notif: AppNotification }) {
 
 export function NotificationToastStack() {
   const notifications = useNotifications((s) => s.notifications);
+  const t = useT();
   // Show only the 4 most recent unread toasts
   const visible = notifications.filter((n) => !n.read).slice(0, 4);
 
   if (!visible.length) return null;
 
   return (
-    <div className="notif-toast-stack" aria-label="Notificaciones">
+    <div className="notif-toast-stack" aria-label={t('notif.stackAria')}>
       {visible.map((n) => (
         <Toast key={n.id} notif={n} />
       ))}

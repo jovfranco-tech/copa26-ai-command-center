@@ -4,23 +4,35 @@ import { Icon, StatusBadge } from '@worldcup/ui';
 import { fmtFull, type Match } from '@worldcup/shared';
 import { TeamCrest, TeamFlag, TeamKit } from '@/components/identity';
 import { useTeamsMap, useVenuesMap } from '@/hooks';
+import { useT, type Translate } from '@/i18n';
 import { h2hSummary, isMatchLocked, lockLabel, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
 import { shareTextCard } from '@/lib/shareCards';
 import { usePool } from '@/store/pool';
 import { DataSourceBadge } from './DataSourceBadge';
 
+function confLabel(confidence: string, t: Translate): string {
+  return confidence === 'Alta'
+    ? t('sourceBadge.high')
+    : confidence === 'Media'
+      ? t('sourceBadge.medium')
+      : confidence === 'Manual'
+        ? t('sourceBadge.manual')
+        : t('sourceBadge.pending');
+}
+
 export function MatchdayHero({ match, variant = 'featured' }: { match: Match | null; variant?: 'featured' | 'compact' }) {
   const navigate = useNavigate();
+  const t = useT();
   const teams = useTeamsMap();
   const venues = useVenuesMap();
   const [sharing, setSharing] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   const picks = usePool((s) => s.picks);
 
-  const meta = useMemo(() => (match ? matchSourceInfo(match) : null), [match]);
-  const weather = useMemo(() => (match ? weatherSummary(match.id) : null), [match]);
-  const h2h = useMemo(() => (match ? h2hSummary(match.home, match.away) : null), [match]);
-  const countdown = useMemo(() => (match ? countdownLabel(match, now) : ''), [match, now]);
+  const meta = useMemo(() => (match ? matchSourceInfo(match, t) : null), [match, t]);
+  const weather = useMemo(() => (match ? weatherSummary(match.id, t) : null), [match, t]);
+  const h2h = useMemo(() => (match ? h2hSummary(match.home, match.away, t) : null), [match, t]);
+  const countdown = useMemo(() => (match ? countdownLabel(match, now, t) : ''), [match, now, t]);
 
   useEffect(() => {
     const id = window.setInterval(() => setNow(Date.now()), 60000);
@@ -40,9 +52,9 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
   const pickLabel = pickComplete
     ? `${pick.homeGoals}-${pick.awayGoals}`
     : pick?.outcome
-      ? outcomeName(pick.outcome)
-      : 'Pendiente';
-  const nextAction = played ? 'Revisar resultado' : pickComplete ? 'Ajustar predicción' : 'Capturar pick';
+      ? outcomeName(pick.outcome, t)
+      : t('data.pending');
+  const nextAction = played ? t('matchdayHero.reviewResult') : pickComplete ? t('matchdayHero.adjustPrediction') : t('matchdayHero.capturePick');
   const goNextAction = () => {
     if (played) {
       navigate({ to: '/matches/$matchId', params: { matchId: match.id } });
@@ -56,14 +68,14 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
     try {
       await shareTextCard({
         title: `${home?.name ?? match.home} vs ${away?.name ?? match.away}`,
-        subtitle: `${fmtFull(match.date)} · ${venueTimeLabel(match)}`,
+        subtitle: `${fmtFull(match.date)} · ${venueTimeLabel(match, t)}`,
         lines: [
-          `${venue?.stadium ?? 'Sede por confirmar'}, ${venue?.city ?? ''}`,
-          weather ? `Clima: ${weather.label}` : 'Clima pendiente',
-          h2h?.label ?? 'Historial pendiente',
-          played ? `Marcador: ${match.homeGoals ?? 0}-${match.awayGoals ?? 0}` : 'Listo para quiniela',
+          `${venue?.stadium ?? t('matchdayHero.venueTBC')}, ${venue?.city ?? ''}`,
+          weather ? t('matchdayHero.weatherLine', { label: weather.label }) : t('matchMeta.weatherPending'),
+          h2h?.label ?? t('matchdayHero.h2hLinePending'),
+          played ? t('matchdayHero.scoreLine', { score: `${match.homeGoals ?? 0}-${match.awayGoals ?? 0}` }) : t('matchdayHero.readyForPool'),
         ],
-        fileName: `partido-${match.id}.png`,
+        fileName: `match-${match.id}.png`,
       });
     } finally {
       setSharing(false);
@@ -80,12 +92,12 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
             <span className="mono-label">{match.stage} · {match.round}</span>
             {meta && <DataSourceBadge {...meta} compact />}
           </div>
-          <h2>Día de partido</h2>
-          <p>{venue?.stadium ?? 'Sede por confirmar'} · {venue?.city ?? 'Ciudad por confirmar'} · {fmtFull(match.date)}</p>
+          <h2>{t('matchdayHero.matchday')}</h2>
+          <p>{venue?.stadium ?? t('matchdayHero.venueTBC')} · {venue?.city ?? t('matchdayHero.cityTBC')} · {fmtFull(match.date)}</p>
           <div className="matchday-command-strip">
-            <span><Icon name="clock" size={13} /> Cuenta regresiva <strong>{countdown}</strong></span>
-            <span><Icon name="rain" size={13} /> {weather?.label ?? 'Clima pendiente'}</span>
-            <span><Icon name="shield" size={13} /> {meta?.confidence ?? 'Confianza pendiente'}</span>
+            <span><Icon name="clock" size={13} /> {t('matchdayHero.countdown')} <strong>{countdown}</strong></span>
+            <span><Icon name="rain" size={13} /> {weather?.label ?? t('matchMeta.weatherPending')}</span>
+            <span><Icon name="shield" size={13} /> {meta ? confLabel(meta.confidence, t) : t('matchdayHero.confidencePending')}</span>
           </div>
         </div>
 
@@ -102,7 +114,7 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
             ) : (
               <>
                 <span className="matchday-time num">{match.time}</span>
-                <span className="mono-label">{venueTimeLabel(match)}</span>
+                <span className="mono-label">{venueTimeLabel(match, t)}</span>
               </>
             )}
           </div>
@@ -115,26 +127,26 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
         </div>
 
         <div className="matchday-intel">
-          <InfoTile icon="rain" label="Clima" value={weather?.label ?? 'Pendiente'} sub={weather?.detail ?? 'Forecast cercano pendiente'} />
-          <InfoTile icon="pin" label="Sede" value={venue?.stadium ?? 'Por confirmar'} sub={venue?.city ?? 'Ciudad pendiente'} />
-          <InfoTile icon="activity" label="Historial" value={h2h?.label ?? 'Pendiente'} sub={h2h?.source ?? 'Pipeline H2H'} />
+          <InfoTile icon="rain" label={t('matchdayHero.labelWeather')} value={weather?.label ?? t('data.pending')} sub={weather?.detail ?? t('matchdayHero.forecastNearPending')} />
+          <InfoTile icon="pin" label={t('matchdayHero.labelVenue')} value={venue?.stadium ?? t('matchdayHero.tbc')} sub={venue?.city ?? t('matchdayHero.cityPending')} />
+          <InfoTile icon="activity" label={t('matchdayHero.labelH2h')} value={h2h?.label ?? t('data.pending')} sub={h2h?.source ?? t('matchdayHero.h2hPipeline')} />
         </div>
 
         <div className="matchday-focus-panel">
           <div>
-            <span className="mono-label">Tu quiniela</span>
+            <span className="mono-label">{t('matchdayHero.yourPool')}</span>
             <strong>{pickLabel}</strong>
-            <small>{pickComplete ? 'Lista para compartir' : 'Falta cerrar ganador y marcador'}</small>
+            <small>{pickComplete ? t('matchdayHero.readyToShare') : t('matchdayHero.needComplete')}</small>
           </div>
           <div>
-            <span className="mono-label">Cierre</span>
-            <strong>{locked || played ? 'Cerrado' : 'Abierto'}</strong>
-            <small>{lockLabel(match)}</small>
+            <span className="mono-label">{t('matchdayHero.closing')}</span>
+            <strong>{locked || played ? t('matchdayHero.closed') : t('matchdayHero.open')}</strong>
+            <small>{lockLabel(match, t)}</small>
           </div>
           <div>
-            <span className="mono-label">Confianza datos</span>
-            <strong>{meta?.confidence ?? 'Pendiente'}</strong>
-            <small>{meta?.source ?? 'Dataset local'}</small>
+            <span className="mono-label">{t('matchdayHero.dataConfidence')}</span>
+            <strong>{meta ? confLabel(meta.confidence, t) : t('data.pending')}</strong>
+            <small>{meta?.source ?? t('standings.localDataset')}</small>
           </div>
           <button type="button" className="btn gold" onClick={goNextAction}>
             <Icon name={played ? 'calendar' : 'target'} size={15} />
@@ -144,16 +156,16 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
 
         <div className="matchday-actions">
           <button type="button" className="btn gold" onClick={() => navigate({ to: '/pool' })}>
-            <Icon name="trophy" size={15} /> Ir a quiniela
+            <Icon name="trophy" size={15} /> {t('matchdayHero.goToPool')}
           </button>
           <button type="button" className="btn ghost" onClick={() => navigate({ to: '/matches/$matchId', params: { matchId: match.id } })}>
-            <Icon name="calendar" size={15} /> Ver partido
+            <Icon name="calendar" size={15} /> {t('common.viewMatch')}
           </button>
           <button type="button" className="btn ghost" onClick={() => navigate({ to: '/tv' })}>
-            <Icon name="present" size={15} /> Modo TV
+            <Icon name="present" size={15} /> {t('titles.tv')}
           </button>
           <button type="button" className="btn ghost" onClick={shareMatch} disabled={sharing}>
-            <Icon name="share" size={15} /> {sharing ? 'Creando...' : 'Compartir'}
+            <Icon name="share" size={15} /> {sharing ? t('matchdayHero.creating') : t('common.share')}
           </button>
         </div>
       </div>
@@ -161,19 +173,19 @@ export function MatchdayHero({ match, variant = 'featured' }: { match: Match | n
   );
 }
 
-function outcomeName(outcome: 'home' | 'draw' | 'away'): string {
-  if (outcome === 'home') return 'Gana local';
-  if (outcome === 'away') return 'Gana visita';
-  return 'Empate';
+function outcomeName(outcome: 'home' | 'draw' | 'away', t: Translate): string {
+  if (outcome === 'home') return t('matchdayHero.winHome');
+  if (outcome === 'away') return t('matchdayHero.winAway');
+  return t('matchdayHero.draw');
 }
 
-function countdownLabel(match: Match, now: number): string {
-  if (match.status === 'LIVE') return 'En juego';
-  if (match.status === 'FT') return 'Finalizado';
+function countdownLabel(match: Match, now: number, t: Translate): string {
+  if (match.status === 'LIVE') return t('matchdayHero.inPlay');
+  if (match.status === 'FT') return t('matchdayHero.finished');
   const kickoff = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
-  if (!Number.isFinite(kickoff)) return 'Por confirmar';
+  if (!Number.isFinite(kickoff)) return t('matchdayHero.tbc');
   const diff = kickoff - now;
-  if (diff <= 0) return 'Por iniciar';
+  if (diff <= 0) return t('matchdayHero.aboutToStart');
   const days = Math.floor(diff / 86_400_000);
   const hours = Math.floor((diff % 86_400_000) / 3_600_000);
   const minutes = Math.floor((diff % 3_600_000) / 60_000);
