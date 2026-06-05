@@ -455,43 +455,43 @@ export function buildPoolDiagnostics(
   };
 }
 
-export function buildDataReadiness(input: DataReadinessInput): DataReadiness {
+export function buildDataReadiness(input: DataReadinessInput, t: Translate = tEs): DataReadiness {
   const checks: DataReadiness['checks'] = [
     {
       id: 'calendar',
-      label: 'Calendario',
+      label: t('dataReadiness.calendar'),
       status: input.matches >= 100 && input.teams >= 48 ? 'ok' : 'warn',
-      detail: `${input.matches} partidos · ${input.teams} selecciones`,
+      detail: t('dataReadiness.calendarDetail', { matches: input.matches, teams: input.teams }),
     },
     {
       id: 'assets',
-      label: 'Assets base',
+      label: t('dataReadiness.assets'),
       status: input.venues >= 16 && input.players >= 200 ? 'ok' : 'warn',
-      detail: `${input.venues} sedes · ${input.players} jugadores`,
+      detail: t('dataReadiness.assetsDetail', { venues: input.venues, players: input.players }),
     },
     {
       id: 'ratings',
-      label: 'Ratings',
+      label: t('dataReadiness.ratings'),
       status: input.estimatedRatings === 0 ? 'ok' : input.estimatedRatings <= 48 ? 'info' : 'warn',
-      detail: input.estimatedRatings ? `${input.estimatedRatings} estimados por revisar` : 'Ratings cubiertos',
+      detail: input.estimatedRatings ? t('dataReadiness.ratingsEstimated', { n: input.estimatedRatings }) : t('dataReadiness.ratingsCovered'),
     },
     {
       id: 'results',
-      label: 'Resultados',
+      label: t('dataReadiness.results'),
       status: input.resultsSource === 'configured' ? 'ok' : 'warn',
-      detail: input.resultsSource === 'configured' ? 'Feed conectado' : 'Feed real pendiente',
+      detail: input.resultsSource === 'configured' ? t('dataReadiness.feedConnected') : t('dataReadiness.feedPending'),
     },
     {
       id: 'pool',
-      label: 'Quiniela',
+      label: t('dataReadiness.pool'),
       status: input.poolDurable ? 'ok' : 'warn',
-      detail: input.poolDurable ? 'Persistencia durable' : 'Persistencia por verificar',
+      detail: input.poolDurable ? t('dataReadiness.poolDurable') : t('dataReadiness.poolToVerify'),
     },
     {
       id: 'ai',
-      label: 'IA',
+      label: t('dataReadiness.ai'),
       status: input.aiConfigured ? 'ok' : 'info',
-      detail: input.aiConfigured ? 'Proveedor configurado' : 'Fallback local disponible',
+      detail: input.aiConfigured ? t('dataReadiness.aiConfigured') : t('dataReadiness.aiFallback'),
     },
   ];
 
@@ -503,18 +503,18 @@ export function buildDataReadiness(input: DataReadinessInput): DataReadiness {
     .filter((check) => check.status !== 'ok')
     .slice(0, 3)
     .map((check) => {
-      if (check.id === 'results') return 'Conectar feed autorizado de resultados al iniciar el torneo.';
-      if (check.id === 'ratings') return 'Revisar jugadores con rating estimado tras convocatorias finales.';
-      if (check.id === 'pool') return 'Verificar Firestore y reglas antes de compartir masivamente.';
-      if (check.id === 'ai') return 'Mantener límites y fallback local para invitados.';
-      return `Revisar ${check.label.toLowerCase()}.`;
+      if (check.id === 'results') return t('dataReadiness.actionResults');
+      if (check.id === 'ratings') return t('dataReadiness.actionRatings');
+      if (check.id === 'pool') return t('dataReadiness.actionPool');
+      if (check.id === 'ai') return t('dataReadiness.actionAi');
+      return t('dataReadiness.actionGeneric', { label: check.label.toLowerCase() });
     });
 
   return {
     score,
-    label: score >= 88 ? 'Listo para compartir' : score >= 70 ? 'Operativo con pendientes' : 'Requiere revisión',
+    label: score >= 88 ? t('dataReadiness.labelReady') : score >= 70 ? t('dataReadiness.labelOperational') : t('dataReadiness.labelNeedsReview'),
     status: score >= 88 ? 'ok' : score >= 70 ? 'info' : 'warn',
     checks,
-    nextActions: nextActions.length ? nextActions : ['Monitorear cron diario y resultados reales.'],
+    nextActions: nextActions.length ? nextActions : [t('dataReadiness.fallbackAction')],
   };
 }

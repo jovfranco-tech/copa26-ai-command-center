@@ -14,10 +14,16 @@ import {
   type PoolPersistenceStatus,
 } from '@/lib/api';
 import { useMatches, usePlayers, useSyncStatus, useTeams, useVenues } from '@/hooks';
+import { useT, type Translate } from '@/i18n';
 import { buildDataReadiness, type DataReadiness } from '@/lib/opsIntelligence';
 import { usePreferences } from '@/store/preferences';
 
+function confLabel(c: string, t: Translate): string {
+  return c === 'Alta' ? t('sourceBadge.high') : c === 'Media' ? t('sourceBadge.medium') : c === 'Manual' ? t('sourceBadge.manual') : t('sourceBadge.pending');
+}
+
 export function DataCenter() {
+  const t = useT();
   const { data: sync } = useSyncStatus();
   const { data: matches } = useMatches();
   const { data: teams } = useTeams();
@@ -47,7 +53,7 @@ export function DataCenter() {
         poolDurable: poolStatus?.durable,
         aiConfigured: monitoring?.ai.configured,
         errors: check?.errors?.length ?? 0,
-      }),
+      }, t),
     [
       teams?.count,
       matches?.count,
@@ -58,15 +64,16 @@ export function DataCenter() {
       check?.errors?.length,
       poolStatus?.durable,
       monitoring?.ai.configured,
+      t,
     ],
   );
   const roleUsage = useMemo(
     () => [
-      { role: 'Admin', access: 'IA remota + revisión manual', limit: monitoring?.limits.analyst ?? '12 / 10 min', usage: aiCallsToday },
-      { role: 'Estándar', access: 'Co-piloto limitado + quiniela', limit: monitoring?.limits.poolAgent ?? '8 / 10 min', usage: poolAgentCallsToday },
-      { role: 'Invitado', access: 'Solo motor local', limit: '0 llamadas remotas', usage: 0 },
+      { role: t('role.admin'), access: t('dc.accessAdmin'), limit: monitoring?.limits.analyst ?? '12 / 10 min', usage: aiCallsToday },
+      { role: t('role.family'), access: t('dc.accessStandard'), limit: monitoring?.limits.poolAgent ?? '8 / 10 min', usage: poolAgentCallsToday },
+      { role: t('role.guest'), access: t('dc.accessGuest'), limit: t('dc.noRemoteCalls'), usage: 0 },
     ],
-    [aiCallsToday, poolAgentCallsToday, monitoring?.limits.analyst, monitoring?.limits.poolAgent],
+    [aiCallsToday, poolAgentCallsToday, monitoring?.limits.analyst, monitoring?.limits.poolAgent, t],
   );
 
   const runCheck = async () => {
@@ -95,66 +102,57 @@ export function DataCenter() {
     <div className="page-fade">
       <div className="data-hero card">
         <div>
-          <span className="mono-label">Centro de datos</span>
-          <h2>Actualizaciones claras antes y durante el Mundial</h2>
-          <p>
-            El calendario base vive en el dataset local. El cron diario revisa salud del flujo; cuando haya resultados,
-            se reingestan datos y se redeploya para actualizar tablas, estadísticas y analista.
-          </p>
+          <span className="mono-label">{t('titles.data')}</span>
+          <h2>{t('dc.heroTitle')}</h2>
+          <p>{t('dc.heroDesc')}</p>
         </div>
         <button type="button" className="btn gold" onClick={runCheck} disabled={checking}>
           <Icon name={checking ? 'activity' : 'cloud'} size={15} />
-          {checking ? 'Revisando…' : 'Actualizar ahora'}
+          {checking ? t('dc.checking') : t('dc.refreshNow')}
         </button>
       </div>
 
       <DataReadinessPanel readiness={readiness} checking={checking} onRunCheck={runCheck} />
 
       <div className="data-grid">
-        <DataTile icon="teams" label="Selecciones" value={teams?.count ?? 0} note="Calendario 2026" />
-        <DataTile icon="calendar" label="Partidos" value={matches?.count ?? 0} note={`${played} jugados · ${upcoming} pendientes`} />
-        <DataTile icon="players" label="Jugadores" value={players?.count ?? 0} note="Plantillas editables" />
-        <DataTile icon="venues" label="Sedes" value={venues?.count ?? 0} note="Fotos y estadios" />
+        <DataTile icon="teams" label={t('dc.teams')} value={teams?.count ?? 0} note={t('dc.calendar2026')} />
+        <DataTile icon="calendar" label={t('dc.matches')} value={matches?.count ?? 0} note={t('dc.playedPending', { played, upcoming })} />
+        <DataTile icon="players" label={t('dc.players')} value={players?.count ?? 0} note={t('dc.editableSquads')} />
+        <DataTile icon="venues" label={t('dc.venues')} value={venues?.count ?? 0} note={t('dc.photosStadiums')} />
       </div>
 
       <div className="data-command-grid">
         <div className="card card-pad data-command-card">
           <Icon name="route" size={16} style={{ color: 'var(--gold)' }} />
-          <span className="mono-label">Pipeline de resultados</span>
-          <h3>Preparado para feed real</h3>
-          <p>
-            El cron revisa salud todos los dias. Cuando exista un feed autorizado, `RESULTS_SOURCE_URL` activa ingesta,
-            recalculo de tablas, historial y tarjetas de partido.
-          </p>
+          <span className="mono-label">{t('dc.resultsPipeline')}</span>
+          <h3>{t('dc.readyForFeed')}</h3>
+          <p>{t('dc.cronDesc')}</p>
           <div className="ops-metrics">
-            <OpsMetric label="Cron" value="12:00 UTC" />
-            <OpsMetric label="Endpoint" value="/api/data-sync" />
-            <OpsMetric label="Errores" value={String(check?.errors?.length ?? 0)} />
+            <OpsMetric label={t('dc.cron')} value="12:00 UTC" />
+            <OpsMetric label={t('dc.endpoint')} value="/api/data-sync" />
+            <OpsMetric label={t('dc.errors')} value={String(check?.errors?.length ?? 0)} />
           </div>
         </div>
         <div className="card card-pad data-command-card">
           <Icon name="shield" size={16} style={{ color: 'var(--gold)' }} />
-          <span className="mono-label">Origen y confianza</span>
-          <h3>Fuentes visibles por módulo</h3>
+          <span className="mono-label">{t('dc.sourceTrust')}</span>
+          <h3>{t('dc.sourcesByModule')}</h3>
           <div className="trust-source-list">
-            <TrustSource label="Calendario" source="Dataset local verificado" confidence="Alta" />
-            <TrustSource label="Ratings" source={playerRatingMeta.source} confidence={estimatedRatings ? 'Media' : 'Alta'} />
-            <TrustSource label="Rankings" source="FIFA API · abril 2026" confidence="Alta" />
-            <TrustSource label="Clima" source="Baseline historico por sede" confidence="Media" />
+            <TrustSource label={t('dc.calendar')} source={t('dc.localVerified')} confidence="Alta" />
+            <TrustSource label={t('dc.ratings')} source={playerRatingMeta.source} confidence={estimatedRatings ? 'Media' : 'Alta'} />
+            <TrustSource label={t('dc.rankings')} source={t('dc.fifaApril')} confidence="Alta" />
+            <TrustSource label={t('dc.weather')} source={t('dc.weatherBaseline')} confidence="Media" />
           </div>
         </div>
         <div className="card card-pad data-command-card">
           <Icon name="activity" size={16} style={{ color: 'var(--gold)' }} />
-          <span className="mono-label">Acceso público</span>
-          <h3>Guardrails visibles</h3>
-          <p>
-            La app ya no usa password. Los endpoints de IA quedan limitados por sesión/IP y el modo invitado fuerza
-            respuestas locales para proteger consumo.
-          </p>
+          <span className="mono-label">{t('dc.publicAccess')}</span>
+          <h3>{t('dc.visibleGuardrails')}</h3>
+          <p>{t('dc.guardrailsDesc')}</p>
           <div className="ops-metrics">
-            <OpsMetric label="Analista" value={monitoring?.limits.analyst ?? '12 / 10 min'} />
-            <OpsMetric label="Co-piloto" value={monitoring?.limits.poolAgent ?? '8 / 10 min'} />
-            <OpsMetric label="Scanner" value={monitoring?.limits.poolScan ?? '6 / 10 min'} />
+            <OpsMetric label={t('dc.analyst')} value={monitoring?.limits.analyst ?? '12 / 10 min'} />
+            <OpsMetric label={t('dc.copilot')} value={monitoring?.limits.poolAgent ?? '8 / 10 min'} />
+            <OpsMetric label={t('dc.scanner')} value={monitoring?.limits.poolScan ?? '6 / 10 min'} />
           </div>
         </div>
       </div>
@@ -162,16 +160,16 @@ export function DataCenter() {
       <div className="card data-ops-plan">
         <div className="card-hd">
           <Icon name="route" size={15} style={{ color: 'var(--gold)' }} />
-          <h3>Plan de actualización real</h3>
+          <h3>{t('dc.updatePlan')}</h3>
           <span className="spacer" />
-          <span className="mono-label">Listo para torneo en vivo</span>
+          <span className="mono-label">{t('dc.readyLiveTournament')}</span>
         </div>
         <div className="card-pad data-ops-grid">
-          <OpsPlanItem status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Resultados oficiales" source={check?.resultsSource === 'configured' ? 'Feed autorizado conectado' : 'RESULTS_SOURCE_URL pendiente'} action={check?.nextAction ?? 'Conectar feed cuando exista proveedor confiable.'} />
-          <OpsPlanItem status={estimatedRatings ? 'wait' : 'ok'} title="Convocatorias finales" source="Plantillas locales editables" action="Reemplazar jugadores cuando cada selección publique lista final." />
-          <OpsPlanItem status="wait" title="H2H y árbitros" source="Pipeline preparado" action="Cargar fuente autorizada; no se inventan árbitros ni historial." />
-          <OpsPlanItem status="ok" title="Clima y sedes" source={`${weatherMeta.matchesCovered} partidos con baseline`} action="Cambiar a forecast cercano cuando falten menos días." />
-          <OpsPlanItem status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela multi-dispositivo" source={poolStatus?.label ?? 'Sin revisar'} action={poolStatus?.durable ? 'Lista para el grupo; monitorear reglas y consumo.' : 'Verificar persistencia antes de compartir.'} />
+          <OpsPlanItem status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title={t('dc.officialResults')} source={check?.resultsSource === 'configured' ? t('dc.feedConnected') : t('dc.feedUrlPending')} action={check?.nextAction ?? t('dc.connectFeedAction')} />
+          <OpsPlanItem status={estimatedRatings ? 'wait' : 'ok'} title={t('dc.finalCallups')} source={t('dc.localEditableSquads')} action={t('dc.replacePlayersAction')} />
+          <OpsPlanItem status="wait" title={t('dc.h2hRefs')} source={t('dc.pipelineReady')} action={t('dc.loadAuthorizedAction')} />
+          <OpsPlanItem status="ok" title={t('dc.weatherVenues')} source={t('dc.matchesBaseline', { n: weatherMeta.matchesCovered })} action={t('dc.forecastAction')} />
+          <OpsPlanItem status={poolStatus?.durable ? 'ok' : 'wait'} title={t('dc.poolMultiDevice')} source={poolStatus?.label ?? t('dc.notReviewed')} action={poolStatus?.durable ? t('dc.poolReadyAction') : t('dc.poolVerifyAction')} />
         </div>
       </div>
 
@@ -180,16 +178,16 @@ export function DataCenter() {
       <div className="card ai-native-ops">
         <div className="card-hd">
           <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
-          <h3>AI native operativo</h3>
+          <h3>{t('dc.aiNativeOps')}</h3>
           <span className="spacer" />
-          <span className="badge gold">{role === 'admin' ? 'Admin' : role === 'family' ? 'Estándar' : 'Invitado'}</span>
+          <span className="badge gold">{t(`role.${role}`)}</span>
         </div>
         <div className="card-pad ai-native-grid">
-          <AINativeTile label="Modelo" value={monitoring?.ai.configured ? 'IA remota' : 'Local fallback'} note={monitoring?.ai.configured ? 'Proveedor remoto configurado.' : 'Responde con analista local si falta clave.'} />
-          <AINativeTile label="Limite analista" value={monitoring?.limits.analyst ?? '30 / 10 min'} note={role === 'guest' ? 'Modo invitado usa motor local.' : 'Protege consumo cuando compartes link.'} />
-          <AINativeTile label="Herramientas" value="7 conectadas" note="Calendario, equipos, jugadores, sedes, tablas, adjuntos y memoria." />
-          <AINativeTile label="Guardrail" value="Sin noticias simuladas" note="Co-pilotos declaran datos usados, ignorados y confianza." />
-          <AINativeTile label="Uso hoy" value={String(monitoring?.usage.items?.['ai.analyst'] ?? 0)} note={`Proveedor de métricas: ${monitoring?.usage.provider ?? 'memory'}.`} />
+          <AINativeTile label={t('dc.model')} value={monitoring?.ai.configured ? t('dc.remoteAi') : t('dc.localFallback')} note={monitoring?.ai.configured ? t('dc.remoteConfigured') : t('dc.localIfNoKey')} />
+          <AINativeTile label={t('dc.analystLimit')} value={monitoring?.limits.analyst ?? '30 / 10 min'} note={role === 'guest' ? t('dc.guestLocalEngine') : t('dc.protectUsage')} />
+          <AINativeTile label={t('dc.tools')} value={t('dc.sevenConnected')} note={t('dc.toolsList')} />
+          <AINativeTile label={t('dc.guardrail')} value={t('dc.noSimNews')} note={t('dc.copilotsDeclare')} />
+          <AINativeTile label={t('dc.usageToday')} value={String(monitoring?.usage.items?.['ai.analyst'] ?? 0)} note={t('dc.metricsProvider', { provider: monitoring?.usage.provider ?? 'memory' })} />
         </div>
         <div className="card-pad role-usage-grid">
           {roleUsage.map((item) => (
@@ -201,16 +199,16 @@ export function DataCenter() {
       <div className="card data-exec">
         <div className="card-hd">
           <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
-          <h3>Semaforo ejecutivo</h3>
+          <h3>{t('dc.execTrafficLight')}</h3>
           <span className="spacer" />
-          <span className="mono-label">Fuente · fecha · confianza</span>
+          <span className="mono-label">{t('dc.sourceDateConfidence')}</span>
         </div>
         <div className="card-pad exec-grid">
-          <ExecSignal status="ok" title="Calendario" source="Dataset local del torneo" date="2026-05-31" confidence="Alta" />
-          <ExecSignal status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Resultados" source={check?.resultsSource === 'configured' ? 'Feed autorizado' : 'RESULTS_SOURCE_URL pendiente'} date={check?.checkedAt ?? 'Sin revision'} confidence={check?.resultsSource === 'configured' ? 'Alta' : 'Pendiente'} />
-          <ExecSignal status={estimatedRatings ? 'wait' : 'ok'} title="Ratings" source={playerRatingMeta.source} date={playerRatingMeta.downloadedAt.slice(0, 10)} confidence={estimatedRatings ? 'Media' : 'Alta'} />
-          <ExecSignal status={poolStatus?.durable ? 'ok' : 'wait'} title="Quiniela" source={poolStatus?.label ?? 'Sin revisar'} date={check?.checkedAt ?? 'Sin revision'} confidence={poolStatus?.durable ? 'Alta' : 'Pendiente'} />
-          <ExecSignal status={monitoring?.ai.configured ? 'ok' : 'wait'} title="IA" source={monitoring?.ai.configured ? 'IA remota' : 'Proveedor pendiente'} date={monitoring?.usage.day ?? 'Sin revision'} confidence={monitoring?.ai.configured ? 'Media' : 'Pendiente'} />
+          <ExecSignal status="ok" title={t('dc.calendar')} source={t('matchMeta.localTournamentDataset')} date="2026-05-31" confidence="Alta" />
+          <ExecSignal status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title={t('dc.results')} source={check?.resultsSource === 'configured' ? t('dc.feedAuthorized') : t('dc.feedUrlPending')} date={check?.checkedAt ?? t('dc.notReviewedDate')} confidence={check?.resultsSource === 'configured' ? 'Alta' : 'Pendiente'} />
+          <ExecSignal status={estimatedRatings ? 'wait' : 'ok'} title={t('dc.ratings')} source={playerRatingMeta.source} date={playerRatingMeta.downloadedAt.slice(0, 10)} confidence={estimatedRatings ? 'Media' : 'Alta'} />
+          <ExecSignal status={poolStatus?.durable ? 'ok' : 'wait'} title={t('dc.pool')} source={poolStatus?.label ?? t('dc.notReviewed')} date={check?.checkedAt ?? t('dc.notReviewedDate')} confidence={poolStatus?.durable ? 'Alta' : 'Pendiente'} />
+          <ExecSignal status={monitoring?.ai.configured ? 'ok' : 'wait'} title={t('dc.ai')} source={monitoring?.ai.configured ? t('dc.remoteAi') : t('dc.providerPending')} date={monitoring?.usage.day ?? t('dc.notReviewedDate')} confidence={monitoring?.ai.configured ? 'Media' : 'Pendiente'} />
         </div>
       </div>
 
@@ -218,46 +216,46 @@ export function DataCenter() {
         <div className="card">
           <div className="card-hd">
             <Icon name="cloud" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Flujo de actualización</h3>
+            <h3>{t('dc.updateFlow')}</h3>
           </div>
           <div className="card-pad">
-            <UpdateStep status="ok" title="Calendario" text={`Snapshot local de datos con ${matches?.count ?? 0} partidos y ${venues?.count ?? 0} sedes.`} />
-            <UpdateStep status={played ? 'ok' : 'wait'} title="Resultados" text="Se activan cuando empiecen los partidos del 11 de junio de 2026." />
-            <UpdateStep status={played ? 'ok' : 'wait'} title="Tablas y estadísticas" text="Se recalculan desde resultados reales cuando existan marcadores." />
-            <UpdateStep status="ok" title="Cron Vercel" text="Revisión diaria a las 12:00 UTC en producción." />
-            <UpdateStep status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title="Feed real" text={check?.nextAction ?? 'Preparado para RESULTS_SOURCE_URL cuando exista un feed autorizado.'} />
+            <UpdateStep status="ok" title={t('dc.calendar')} text={t('dc.snapshotLocal', { matches: matches?.count ?? 0, venues: venues?.count ?? 0 })} />
+            <UpdateStep status={played ? 'ok' : 'wait'} title={t('dc.results')} text={t('dc.resultsActivate')} />
+            <UpdateStep status={played ? 'ok' : 'wait'} title={t('dc.tablesStats')} text={t('dc.recalcFromResults')} />
+            <UpdateStep status="ok" title={t('dc.vercelCron')} text={t('dc.dailyReviewUtc')} />
+            <UpdateStep status={check?.resultsSource === 'configured' ? 'ok' : 'wait'} title={t('dc.realFeed')} text={check?.nextAction ?? t('dc.feedPreparedAction')} />
           </div>
         </div>
 
         <div className="card">
           <div className="card-hd">
             <Icon name="shield" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Confiabilidad</h3>
+            <h3>{t('dc.reliability')}</h3>
           </div>
           <div className="card-pad">
             <div className="sync-row">
-              <span className="k">Fuente base</span>
-              <span className="num">{sync?.source === 'sqlite' ? 'SQLite local' : 'Dataset local'}</span>
+              <span className="k">{t('dc.baseSource')}</span>
+              <span className="num">{sync?.source === 'sqlite' ? t('dashboard.sqliteLocal') : t('standings.localDataset')}</span>
             </div>
             <div className="sync-row">
-              <span className="k">Última sync</span>
+              <span className="k">{t('dc.lastSync')}</span>
               <span className="num">{sync?.meta.lastSync ?? '—'}</span>
             </div>
             <div className="sync-row">
-              <span className="k">Ratings FC 26</span>
+              <span className="k">{t('dc.ratingsFc26')}</span>
               <span className="num">{playerRatingMeta.resolved}/{playerRatingMeta.total}</span>
             </div>
             <div className="sync-row">
-              <span className="k">Estimados</span>
+              <span className="k">{t('dc.estimatedRow')}</span>
               <span className="num">{estimatedRatings}</span>
             </div>
             <div className="sync-row">
-              <span className="k">Quiniela</span>
-              <span className="num">{poolStatus?.label ?? 'Sin revisar'}</span>
+              <span className="k">{t('dc.pool')}</span>
+              <span className="num">{poolStatus?.label ?? t('dc.notReviewed')}</span>
             </div>
             <div className="sync-row">
-              <span className="k">IA</span>
-              <span className="num">{monitoring?.ai.configured ? 'IA remota' : 'No verificada'}</span>
+              <span className="k">{t('dc.ai')}</span>
+              <span className="num">{monitoring?.ai.configured ? t('dc.remoteAi') : t('dc.notVerified')}</span>
             </div>
           </div>
         </div>
@@ -266,7 +264,7 @@ export function DataCenter() {
       <div className="card data-packs">
         <div className="card-hd">
           <Icon name="download" size={15} style={{ color: 'var(--gold)' }} />
-          <h3>Descargas y datos preparados</h3>
+          <h3>{t('dc.downloadsData')}</h3>
           <span className="spacer" />
           <span className="mono-label">{fmtDateTime(intelGeneratedAt)}</span>
         </div>
@@ -288,24 +286,24 @@ export function DataCenter() {
         <div className="card">
           <div className="card-hd">
             <Icon name="database" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Quiniela persistente</h3>
+            <h3>{t('dc.persistentPool')}</h3>
           </div>
           <div className="card-pad">
             <p className="muted" style={{ marginTop: 0 }}>
-              {poolStatus?.detail ?? 'Pulsa actualizar ahora para verificar si producción ya tiene una base remota durable.'}
+              {poolStatus?.detail ?? t('dc.poolStatusFallback')}
             </p>
-            <UpdateStep status={poolStatus?.durable ? 'ok' : 'wait'} title="Base compartida" text={poolStatus?.durable ? 'Lista para varios dispositivos.' : 'Revisa las reglas de Firestore antes de compartir el link.'} />
+            <UpdateStep status={poolStatus?.durable ? 'ok' : 'wait'} title={t('dc.sharedBase')} text={poolStatus?.durable ? t('dc.sharedReady') : t('dc.sharedVerify')} />
           </div>
         </div>
 
         <div className="card">
           <div className="card-hd">
             <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Monitoreo</h3>
+            <h3>{t('dc.monitoring')}</h3>
           </div>
           <div className="card-pad">
             <div className="sync-row">
-              <span className="k">Proveedor</span>
+              <span className="k">{t('dc.provider')}</span>
               <span className="num">{monitoring?.usage.provider ?? '—'}</span>
             </div>
             {Object.entries(monitoring?.usage.items ?? {}).slice(0, 5).map(([key, value]) => (
@@ -315,7 +313,7 @@ export function DataCenter() {
               </div>
             ))}
             <p className="muted" style={{ marginBottom: 0 }}>
-              {weatherMeta.matchesCovered} partidos con clima base; cron y endpoints emiten métricas para logs/KV.
+              {t('dc.weatherMetricsNote', { n: weatherMeta.matchesCovered })}
             </p>
           </div>
         </div>
@@ -325,41 +323,41 @@ export function DataCenter() {
         <div className="card data-result">
           <div className="card-hd">
             <Icon name="check" size={15} style={{ color: 'var(--pos)' }} />
-            <h3>Última revisión manual</h3>
+            <h3>{t('dc.lastManualCheck')}</h3>
             <span className="spacer" />
             <span className="mono-label">{fmtDateTime(check.checkedAt)}</span>
           </div>
           <div className="card-pad data-result-grid">
             <div>
-              <span className="mono-label">Estado</span>
+              <span className="mono-label">{t('dc.statusLabel')}</span>
               <strong>{check.status}</strong>
             </div>
             <div>
-              <span className="mono-label">Cron</span>
+              <span className="mono-label">{t('dc.cron')}</span>
               <strong>{check.cron}</strong>
             </div>
             <div>
-              <span className="mono-label">Resultados</span>
+              <span className="mono-label">{t('dc.results')}</span>
               <strong>{check.results}</strong>
             </div>
             <div>
-              <span className="mono-label">Siguiente acción</span>
+              <span className="mono-label">{t('dc.nextActionLabel')}</span>
               <strong>{check.nextAction ?? '—'}</strong>
             </div>
           </div>
         </div>
       ) : (
-        <Empty icon="cloud" title="Sin revisión manual todavía" text="Pulsa actualizar ahora para comprobar el flujo de datos desde producción." />
+        <Empty icon="cloud" title={t('dc.noManualCheckTitle')} text={t('dc.noManualCheckText')} />
       )}
 
       <div className="grid data-columns" style={{ marginTop: 18 }}>
         <div className="card">
           <div className="card-hd">
             <Icon name="list" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Log de actualizacion</h3>
+            <h3>{t('dc.updateLog')}</h3>
           </div>
           <div className="card-pad">
-            {(check?.logs?.length ? check.logs : ['Sin log remoto todavia. Ejecuta Actualizar ahora.']).map((line) => (
+            {(check?.logs?.length ? check.logs : [t('dc.noRemoteLog')]).map((line) => (
               <div key={line} className="data-log-row">{line}</div>
             ))}
             {check?.errors?.length ? (
@@ -373,13 +371,13 @@ export function DataCenter() {
         <div className="card">
           <div className="card-hd">
             <Icon name="clock" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Historial de cambios</h3>
+            <h3>{t('dc.changeHistory')}</h3>
           </div>
           <div className="card-pad">
-            <ChangeItem title="Assets e intel" date={intelGeneratedAt} text="Fotos, kits, clima, sedes, entrenadores y packs de datos regenerados." />
-            <ChangeItem title="Ratings" date={playerRatingMeta.downloadedAt} text={`${playerRatingMeta.resolved}/${playerRatingMeta.total} ratings FC 26 cargados; el resto queda estimado.`} />
-            <ChangeItem title="Clima" date={weatherMeta.generatedAt} text={`${weatherMeta.matchesCovered} partidos con baseline historico.`} />
-            <ChangeItem title="Sync" date={sync?.meta.lastSync ?? 'Sin fecha'} text="Calendario base y tablas se recalculan desde resultados cuando existan marcadores." />
+            <ChangeItem title={t('dc.assetsIntel')} date={intelGeneratedAt} text={t('dc.assetsIntelText')} />
+            <ChangeItem title={t('dc.ratings')} date={playerRatingMeta.downloadedAt} text={t('dc.ratingsChangeText', { resolved: playerRatingMeta.resolved, total: playerRatingMeta.total })} />
+            <ChangeItem title={t('dc.weather')} date={weatherMeta.generatedAt} text={t('dc.weatherChangeText', { n: weatherMeta.matchesCovered })} />
+            <ChangeItem title={t('dc.syncChange')} date={sync?.meta.lastSync ?? t('dc.noDate')} text={t('dc.syncChangeText')} />
           </div>
         </div>
       </div>
@@ -396,15 +394,16 @@ function DataReadinessPanel({
   checking: boolean;
   onRunCheck: () => void;
 }) {
+  const t = useT();
   return (
     <section className={`data-readiness-panel ${readiness.status}`}>
       <div className="data-readiness-score">
-        <span className="mono-label">Preparación operativa</span>
+        <span className="mono-label">{t('dc.operationalReadiness')}</span>
         <strong>{readiness.score}</strong>
         <p>{readiness.label}</p>
         <button type="button" className="btn gold" onClick={onRunCheck} disabled={checking}>
           <Icon name={checking ? 'activity' : 'cloud'} size={14} />
-          {checking ? 'Revisando...' : 'Revisar ahora'}
+          {checking ? t('dc.checking') : t('dc.checkNow')}
         </button>
       </div>
       <div className="data-readiness-checks">
@@ -419,7 +418,7 @@ function DataReadinessPanel({
         ))}
       </div>
       <div className="data-readiness-actions">
-        <span className="mono-label">Siguientes pasos</span>
+        <span className="mono-label">{t('dc.nextSteps')}</span>
         {readiness.nextActions.map((action) => (
           <p key={action}>{action}</p>
         ))}
@@ -441,13 +440,14 @@ function ExecSignal({
   date: string;
   confidence: string;
 }) {
+  const t = useT();
   return (
     <div className="exec-signal">
       <span className={status === 'ok' ? 'dot-ok' : 'dot-warn'} />
       <strong>{title}</strong>
       <span>{source}</span>
       <span className="mono-label">{date}</span>
-      <span className="badge">{confidence}</span>
+      <span className="badge">{confLabel(confidence, t)}</span>
     </div>
   );
 }
@@ -472,6 +472,7 @@ function OpsMetric({ label, value }: { label: string; value: string }) {
 }
 
 function TrustSource({ label, source, confidence }: { label: string; source: string; confidence: string }) {
+  const t = useT();
   const ok = confidence === 'Alta';
   return (
     <div className="trust-source-row">
@@ -480,7 +481,7 @@ function TrustSource({ label, source, confidence }: { label: string; source: str
         <strong>{label}</strong>
         <p>{source}</p>
       </div>
-      <span className="badge">{confidence}</span>
+      <span className="badge">{confLabel(confidence, t)}</span>
     </div>
   );
 }
@@ -506,6 +507,7 @@ function AdminOpsPanel({
   checking: boolean;
   onRunCheck: () => void;
 }) {
+  const t = useT();
   const errors = check?.errors ?? [];
   const ready = adminOps?.summary.ready ?? 0;
   const pending = adminOps?.summary.pending ?? 0;
@@ -513,22 +515,22 @@ function AdminOpsPanel({
   return (
     <div className="card admin-ops-panel">
       <div className="admin-ops-main">
-        <span className="mono-label">Admin de datos</span>
-        <strong>{check?.status ?? 'Sin revisión manual'}</strong>
-        <p>{check?.nextAction ?? 'Ejecuta una revisión para validar cron, feed, Firestore y límites de IA.'}</p>
+        <span className="mono-label">{t('dc.dataAdmin')}</span>
+        <strong>{check?.status ?? t('dc.noManualCheck')}</strong>
+        <p>{check?.nextAction ?? t('dc.runCheckAction')}</p>
       </div>
       <div className="admin-ops-grid">
-        <OpsMetric label="Última revisión" value={check ? fmtTime(check.checkedAt) : 'Pendiente'} />
-        <OpsMetric label="Listas" value={String(ready)} />
-        <OpsMetric label="Pendientes" value={`${pending}/${blocked}`} />
+        <OpsMetric label={t('dc.lastCheck')} value={check ? fmtTime(check.checkedAt) : t('data.pending')} />
+        <OpsMetric label={t('dc.ready')} value={String(ready)} />
+        <OpsMetric label={t('dc.pending')} value={`${pending}/${blocked}`} />
       </div>
       <div className="admin-ops-actions">
         <button type="button" className="btn gold" onClick={onRunCheck} disabled={checking}>
           <Icon name={checking ? 'activity' : 'cloud'} size={14} />
-          {checking ? 'Revisando...' : 'Forzar revisión'}
+          {checking ? t('dc.checking') : t('dc.forceCheck')}
         </button>
         <span className={errors.length ? 'admin-ops-error' : 'admin-ops-ok'}>
-          {errors.length ? errors.slice(0, 2).join(' · ') : 'Sin errores reportados'}
+          {errors.length ? errors.slice(0, 2).join(' · ') : t('dc.noErrors')}
         </span>
       </div>
       {check?.phases?.length ? (
@@ -560,7 +562,7 @@ function AdminOpsPanel({
       ) : null}
       {adminOps?.dataGaps.length ? (
         <div className="admin-gap-grid">
-          <span className="mono-label">Pendientes oficiales</span>
+          <span className="mono-label">{t('dc.officialPending')}</span>
           {adminOps.dataGaps.map((gap) => (
             <div key={gap.id} className="admin-gap-row">
               <strong>{gap.label}</strong>
@@ -574,10 +576,11 @@ function AdminOpsPanel({
 }
 
 function RoleUsageTile({ role, access, limit, usage }: { role: string; access: string; limit: string; usage: number }) {
+  const t = useT();
   return (
     <div className="role-usage-tile">
       <span className="mono-label">{role}</span>
-      <strong>{usage} llamadas hoy</strong>
+      <strong>{t('dc.callsToday', { n: usage })}</strong>
       <p>{access}</p>
       <small>{limit}</small>
     </div>
