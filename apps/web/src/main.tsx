@@ -5,6 +5,8 @@ import { RouterProvider } from '@tanstack/react-router';
 import { queryClient } from '@/lib/query';
 import { router } from '@/router';
 import { summarizeOldMemory } from '@/lib/aiMemory';
+import { translate } from '@/i18n';
+import { usePreferences } from '@/store/preferences';
 import { reportWebVitals } from '@/lib/webVitals';
 import './styles/index.css';
 import './styles/pool.css';
@@ -82,7 +84,8 @@ if ('serviceWorker' in navigator) {
               const toast = document.createElement('div');
               toast.setAttribute('role', 'alert');
               toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a1a2e;border:1px solid rgba(201,162,75,0.4);color:#f4efe2;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4);backdrop-filter:blur(8px)';
-              toast.innerHTML = '<span style="color:#c9a24b">●</span> Nueva versión disponible <button style="background:#c9a24b;color:#0a0a0a;border:none;padding:4px 12px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;margin-left:8px" id="sw-reload">Actualizar</button>';
+              const swLang = usePreferences.getState().lang;
+              toast.innerHTML = `<span style="color:#c9a24b">●</span> ${translate(swLang, 'proactive.swUpdate')} <button style="background:#c9a24b;color:#0a0a0a;border:none;padding:4px 12px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;margin-left:8px" id="sw-reload">${translate(swLang, 'proactive.swReload')}</button>`;
               document.body.appendChild(toast);
               document.getElementById('sw-reload')?.addEventListener('click', () => {
                 newWorker.postMessage({ type: 'SKIP_WAITING' });

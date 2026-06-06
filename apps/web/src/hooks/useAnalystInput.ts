@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import { translate } from '@/i18n';
+import { usePreferences } from '@/store/preferences';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -136,7 +138,7 @@ export function useAudioRecording(): UseAudioRecordingReturn {
       setRecording(true);
       if ('vibrate' in navigator) navigator.vibrate([20]);
     } catch {
-      alert('No se pudo acceder al micrófono. Asegúrate de dar los permisos necesarios.');
+      alert(translate(usePreferences.getState().lang, 'proactive.micError'));
     }
   }, []);
 
@@ -177,7 +179,7 @@ export function usePdfUpload(): UsePdfUploadReturn {
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      alert('Por favor, selecciona un archivo PDF de gala válido.');
+      alert(translate(usePreferences.getState().lang, 'proactive.pdfError'));
       return;
     }
 

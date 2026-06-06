@@ -3,6 +3,8 @@ import { fetchPoolPicks, normalizePoolGroupId, syncPoolPicks, type LeaderboardEn
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { notifySuccess, notifyWarning } from '@/store/notifications';
+import { translate } from '@/i18n';
+import { usePreferences } from '@/store/preferences';
 import type { PoolPick } from '@/store/pool';
 
 interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
@@ -78,16 +80,19 @@ export function usePoolSync(options: UsePoolSyncOptions): UsePoolSyncReturn {
           setSyncStatus('synced');
           setLastSavedAt(new Date().toISOString());
           onSyncSuccess?.();
-          notifySuccess('Quiniela guardada', 'Tus picks se sincronizaron en la nube compartida.');
+          const lang = usePreferences.getState().lang;
+          notifySuccess(translate(lang, 'proactive.poolSaved'), translate(lang, 'proactive.poolSavedText'));
         } else {
           setSyncStatus('error');
           registerPoolBackgroundSync().catch(() => {});
-          notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
+          const lang = usePreferences.getState().lang;
+          notifyWarning(translate(lang, 'proactive.offlineTitle'), translate(lang, 'proactive.offlineText'));
         }
       } catch {
         setSyncStatus('error');
         registerPoolBackgroundSync().catch(() => {});
-        notifyWarning('Sin conexión', 'La quiniela se guardará automáticamente cuando se restaure la red.');
+        const lang = usePreferences.getState().lang;
+        notifyWarning(translate(lang, 'proactive.offlineTitle'), translate(lang, 'proactive.offlineText'));
       }
     }, 1000);
 

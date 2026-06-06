@@ -1675,6 +1675,27 @@ export const es = {
     pressFeedback: '**RUEDA DE PRENSA: EVALUACIÓN DEL COMENTARIO TÁCTICO**\n\n*   **Pregunta de:** {reporter}\n*   **Tu respuesta:** "{response}"\n\n⚽ **Nivel de Aprobación de la Prensa:** {score}%\n\n*   **Comentario del Panel:** Tu análisis destaca por una sólida comprensión del parado táctico y la diferencia física. Sin embargo, algunos redactores señalan que subestimas las jugadas a balón parado. ¡Una rueda de prensa sumamente elocuente!',
     respondPress: '🎙️ Responder a la Prensa',
   },
+
+  proactive: {
+    picksPendingTitle: 'Picks pendientes hoy',
+    matchWord: 'partido',
+    matchesWord: 'partidos',
+    picksPendingText: 'Tienes {n} {m} hoy sin pronóstico. Cierra tus picks antes del inicio.',
+    goPool: 'Ir a Quiniela',
+    opportunityTitle: 'Oportunidad táctica',
+    opportunityText: 'Estás a solo {gap} pts del puntero ({leader}). Un par de aciertos exactos te ponen en la cima.',
+    viewPool: 'Ver quiniela',
+    nextNoPickTitle: 'Próximo partido sin pick',
+    nextNoPickText: '{home} vs {away} ({date}) aún no tiene pronóstico. Consulta al analista IA para decidir.',
+    poolSaved: 'Quiniela guardada',
+    poolSavedText: 'Tus picks se sincronizaron en la nube compartida.',
+    offlineTitle: 'Sin conexión',
+    offlineText: 'La quiniela se guardará automáticamente cuando se restaure la red.',
+    micError: 'No se pudo acceder al micrófono. Asegúrate de dar los permisos necesarios.',
+    pdfError: 'Por favor, selecciona un archivo PDF de gala válido.',
+    swUpdate: 'Nueva versión disponible',
+    swReload: 'Actualizar',
+  },
 };
 
 export type Dict = typeof es;
