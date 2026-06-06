@@ -58,6 +58,18 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy prebuilt output to production
-        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        id: deploy
+        run: |
+          DEPLOY_URL="$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")"
+          echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+          echo "Deployed to $DEPLOY_URL"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Keep the canonical production domain following the latest deploy. The
+      # project's auto-domain carries a team-scope suffix, so the clean
+      # copa26-command-center.vercel.app is re-aliased here on every deploy.
+      - name: Point copa26-command-center.vercel.app at the new production deploy
+        run: vercel alias set "${{ steps.deploy.outputs.url }}" copa26-command-center.vercel.app --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
