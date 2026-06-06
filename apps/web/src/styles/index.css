@@ -4651,15 +4651,14 @@ h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
   }
 }
 
-/* Aloria attribution badge (footer, bottom-right) */
+/* Aloria attribution — subtle, premium pill. Never sponsor-like or dominant. */
 .aloria-badge {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  padding: 8px 12px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 999px;
   background: var(--bg-2);
   text-decoration: none;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -4670,18 +4669,23 @@ h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
   transform: translateY(-1px);
   box-shadow: var(--gold-soft) 0 0 0 1px;
 }
-.aloria-badge-by {
-  font-size: 11px;
+.aloria-badge-text {
+  font-size: 11.5px;
+  font-weight: 600;
   color: var(--tx-3);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
-.aloria-badge-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
+.aloria-badge:hover .aloria-badge-text,
+.aloria-badge:focus-visible .aloria-badge-text {
+  color: var(--tx-2);
+}
+.aloria-badge-arrow {
+  font-size: 11px;
   font-weight: 700;
   color: var(--gold);
+  line-height: 1;
 }
 /* Fixed desktop badge: bottom-right, just left of the Tweaks FAB (right:18, 44px wide). */
 .aloria-badge--fixed {
@@ -4689,8 +4693,9 @@ h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
   right: 72px;
   bottom: 18px;
   z-index: 60;
-  background: color-mix(in srgb, var(--bg-1) 88%, transparent);
-  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--bg-1) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   box-shadow: var(--shadow-lg, 0 8px 32px rgba(0, 0, 0, 0.4));
 }
 /* Mobile footer wrapper (the fixed badge is hidden on small screens). */
@@ -4702,4 +4707,18 @@ h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
 @media (max-width: 960px) {
   .aloria-badge--fixed { display: none; }
   .aloria-footer-wrap { display: flex; }
+}
+/* Footer transparency / independence disclaimer — quiet fine print. */
+.footer-transparency {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 760px;
+}
+.footer-transparency p {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--tx-3);
 }

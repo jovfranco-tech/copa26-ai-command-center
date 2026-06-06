@@ -3,6 +3,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
 import { useMatches, useLiveOverlaySync, usePWAInstall } from '@/hooks';
 import { useT } from '@/i18n';
+import { ALORIA_URL } from '@/lib/aloria';
 import { usePreferences, applyPreferences, isThemeExplicit, setSystemThemePreference, type AppRole } from '@/store/preferences';
 import { usePlayerFilters } from '@/store/filters';
 import { TweaksPanel } from './TweaksPanel';
@@ -192,20 +193,19 @@ export function AppShell({ children }: { children: ReactNode }) {
     </>
   );
 
-  // Aloria attribution badge — fixed bottom-right on desktop (always visible,
-  // left of the Tweaks FAB), in the footer on mobile (where the bottom bar lives).
+  // Aloria attribution — subtle, premium, never sponsor-like. Fixed bottom-right
+  // on desktop (left of the Tweaks FAB), in the footer on mobile (where the bottom
+  // bar lives). Independent fan experience: no tournament-affiliation language.
   const AloriaBadge = ({ fixed }: { fixed?: boolean }) => (
     <a
-      href="https://www.aloria.mx"
+      href={ALORIA_URL}
       target="_blank"
       rel="noopener noreferrer"
       className={`aloria-badge${fixed ? ' aloria-badge--fixed' : ''}`}
       aria-label={t('footer.aloriaVisit')}
     >
-      <span className="aloria-badge-by">{t('footer.aloriaBy')}</span>
-      <span className="aloria-badge-cta">
-        <span aria-hidden="true">↗</span> {t('footer.aloriaVisit')}
-      </span>
+      <span className="aloria-badge-text">{t('footer.aloriaBy')}</span>
+      <span className="aloria-badge-arrow" aria-hidden="true">↗</span>
     </a>
   );
 
@@ -371,6 +371,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                   desktop badge is hidden on small screens to clear the bottom bar) */}
               <div className="aloria-footer-wrap">
                 <AloriaBadge />
+              </div>
+
+              {/* Independence / transparency disclaimer + studio description */}
+              <div className="footer-transparency">
+                <p>{t('footer.aloriaDisclaimer')}</p>
+                <p>{t('footer.aloriaAbout')}</p>
               </div>
             </footer>
           </div>

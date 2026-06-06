@@ -85,8 +85,12 @@ export const es = {
     calendar: 'Calendario del Torneo',
     privateNote: 'Dashboard privado.',
     notForDistribution: 'No es para distribución pública.',
-    aloriaBy: 'Experiencia IA para la afición, por Aloria',
-    aloriaVisit: 'Visitar Aloria',
+    aloriaBy: 'Experiencia fan con IA por Aloria',
+    aloriaVisit: 'Visitar el sitio web de Aloria',
+    aloriaDisclaimer:
+      'Esta es una experiencia independiente de fan engagement con IA creada por Aloria. No está afiliada, respaldada, patrocinada ni conectada oficialmente con FIFA, la Copa Mundial, ninguna federación de fútbol, selección nacional, sede u organizador del torneo.',
+    aloriaAbout:
+      'Aloria diseña experiencias digitales AI-native de comercio, engagement y automatización para negocios locales, marcas, comunidades y eventos privados.',
   },
 
   data: {

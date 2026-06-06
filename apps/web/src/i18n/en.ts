@@ -87,7 +87,11 @@ export const en: Dict = {
     privateNote: 'Private dashboard.',
     notForDistribution: 'Not for public distribution.',
     aloriaBy: 'AI Fan Experience by Aloria',
-    aloriaVisit: 'Visit Aloria',
+    aloriaVisit: 'Visit Aloria website',
+    aloriaDisclaimer:
+      'This is an independent AI-powered fan engagement experience created by Aloria. It is not affiliated with, endorsed by, sponsored by, or officially connected to FIFA, the World Cup, any football federation, national team, venue, or tournament organizer.',
+    aloriaAbout:
+      'Aloria designs AI-native digital commerce and engagement experiences for local businesses, brands, communities, and private events.',
   },
 
   data: {

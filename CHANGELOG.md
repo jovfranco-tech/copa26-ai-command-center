@@ -5,6 +5,18 @@ This is a private personal/family project. Not intended for commercial distribut
 
 ---
 
+## [0.3.0] — 2026-06-06
+
+### ✨ Attribution & Transparency
+- Added subtle Aloria attribution, external link, and independent fan experience transparency disclaimer.
+- Footer badge ("AI Fan Experience by Aloria ↗" / "Experiencia fan con IA por Aloria ↗") links to https://aloria.mx (new tab, `rel="noopener noreferrer"`), fixed bottom-right on desktop, in the footer on mobile.
+- Centralized the link as `ALORIA_URL` (`apps/web/src/lib/aloria.ts`); copy lives in the EN/ES i18n files (`footer.aloria*`).
+
+### 🌐 Internationalization
+- Full ES/EN localization across the dashboard, including the 3D stadium tactical layer (roles, zones, AI insights).
+
+---
+
 ## [0.2.0] — 2026-06-03
 
 ### 🌟 Major: Estadio 3D — Real Match Schedule Integration
