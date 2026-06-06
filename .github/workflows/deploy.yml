@@ -73,3 +73,13 @@ jobs:
         run: vercel alias set "${{ steps.deploy.outputs.url }}" copa26-command-center.vercel.app --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # The legacy "fifa-private-world-cup-dashboard" project name still has its
+      # old auto-domain, which `--prod` re-attaches on every deploy. Retire it
+      # (copyright) by removing the alias each run. Tolerant: it's fine if it's
+      # already gone. For a permanent removal, also delete it in the Vercel
+      # dashboard (Project → Settings → Domains).
+      - name: Retire the legacy fifa-named domain
+        run: vercel alias rm fifa-private-world-cup-dashboard.vercel.app --yes --token="$VERCEL_TOKEN" || true
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
