@@ -192,6 +192,23 @@ export function AppShell({ children }: { children: ReactNode }) {
     </>
   );
 
+  // Aloria attribution badge — fixed bottom-right on desktop (always visible,
+  // left of the Tweaks FAB), in the footer on mobile (where the bottom bar lives).
+  const AloriaBadge = ({ fixed }: { fixed?: boolean }) => (
+    <a
+      href="https://www.aloria.mx"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`aloria-badge${fixed ? ' aloria-badge--fixed' : ''}`}
+      aria-label={t('footer.aloriaVisit')}
+    >
+      <span className="aloria-badge-by">{t('footer.aloriaBy')}</span>
+      <span className="aloria-badge-cta">
+        <span aria-hidden="true">↗</span> {t('footer.aloriaVisit')}
+      </span>
+    </a>
+  );
+
   return (
     <div className="app-bg">
       <a href="#main-content" className="skip-to-content">{t('common.skipToContent')}</a>
@@ -350,20 +367,10 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="mono-label">{t('footer.calendar')}</span>
               </div>
 
-              {/* Aloria attribution badge — bottom-right */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                <a
-                  href="https://www.aloria.mx"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="aloria-badge"
-                  aria-label={t('footer.aloriaVisit')}
-                >
-                  <span className="aloria-badge-by">{t('footer.aloriaBy')}</span>
-                  <span className="aloria-badge-cta">
-                    <span aria-hidden="true">↗</span> {t('footer.aloriaVisit')}
-                  </span>
-                </a>
+              {/* Aloria attribution badge — shown here on mobile (the fixed
+                  desktop badge is hidden on small screens to clear the bottom bar) */}
+              <div className="aloria-footer-wrap">
+                <AloriaBadge />
               </div>
             </footer>
           </div>
@@ -406,6 +413,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       )}
 
       <TweaksPanel />
+      <AloriaBadge fixed />
       <NotificationToastStack />
     </div>
   );
