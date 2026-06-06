@@ -3,14 +3,16 @@ import { fmtDateTime, type Match as WorldCupMatch, type Team as WorldCupTeam } f
 import { buildDayBrief } from '@/lib/opsIntelligence';
 import { type AIMemoryRecord, type AICitation, type AIStructuredAnswer } from '@/lib/aiMemory';
 import { type PoolPick } from '@/store/pool';
+import { useT } from '@/i18n';
 
 export function StructuredAnswerPanel({ structured }: { structured?: AIStructuredAnswer }) {
+  const t = useT();
   if (!structured) return null;
   const cards: Array<{ key: keyof AIStructuredAnswer; label: string; icon: IconName; value?: string }> = [
-    { key: 'prediction', label: 'Lectura', icon: 'target', value: structured.prediction },
-    { key: 'risk', label: 'Riesgo', icon: 'shield', value: structured.risk },
-    { key: 'confidence', label: 'Confianza', icon: 'activity', value: structured.confidence },
-    { key: 'nextAction', label: 'Siguiente acción', icon: 'check', value: structured.nextAction },
+    { key: 'prediction', label: t('ap.reading'), icon: 'target', value: structured.prediction },
+    { key: 'risk', label: t('matchDetail.risk'), icon: 'shield', value: structured.risk },
+    { key: 'confidence', label: t('matchDetail.confidence'), icon: 'activity', value: structured.confidence },
+    { key: 'nextAction', label: t('dc.nextActionLabel'), icon: 'check', value: structured.nextAction },
   ];
 
   return (
@@ -25,7 +27,7 @@ export function StructuredAnswerPanel({ structured }: { structured?: AIStructure
       {structured.dataUsed?.length ? (
         <div className="structured-answer-card data-used">
           <Icon name="database" size={14} />
-          <span className="mono-label">Datos usados</span>
+          <span className="mono-label">{t('ap.dataUsed')}</span>
           <div className="row gap-6 wrap">
             {structured.dataUsed.map((item) => (
               <span key={item} className="cite">{item}</span>
@@ -36,7 +38,7 @@ export function StructuredAnswerPanel({ structured }: { structured?: AIStructure
       {structured.ignoredData?.length || structured.rationale ? (
         <div className="structured-answer-card traceability">
           <Icon name="shield" size={14} />
-          <span className="mono-label">Trazabilidad</span>
+          <span className="mono-label">{t('ap.traceability')}</span>
           {structured.rationale ? <strong>{structured.rationale}</strong> : null}
           {structured.ignoredData?.length ? (
             <div className="row gap-6 wrap">
@@ -50,7 +52,7 @@ export function StructuredAnswerPanel({ structured }: { structured?: AIStructure
       {structured.quality ? (
         <div className="structured-answer-card quality-check">
           <Icon name="check" size={14} />
-          <span className="mono-label">Evaluación automática</span>
+          <span className="mono-label">{t('ap.autoEval')}</span>
           <strong>{structured.quality.score}/100 · {structured.quality.label}</strong>
           <div className="row gap-6 wrap">
             {structured.quality.flags.slice(0, 3).map((flag) => (
@@ -93,14 +95,15 @@ export function DailyBriefPanel({
   picks: Record<string, PoolPick>;
   onRun: () => void;
 }) {
-  const brief = buildDayBrief(matches, teams, picks);
+  const t = useT();
+  const brief = buildDayBrief(matches, teams, picks, t);
   return (
     <div className="card ai-daily-brief">
       <div className="card-hd">
         <Icon name="sparkSmall" size={15} style={{ color: 'var(--gold)' }} />
-        <h3>Brief diario</h3>
+        <h3>{t('ap.dailyBrief')}</h3>
         <span className="spacer" />
-        <button type="button" className="card-link" onClick={onRun}>Generar</button>
+        <button type="button" className="card-link" onClick={onRun}>{t('ap.generate')}</button>
       </div>
       <div className="card-pad">
         <strong>{brief.title}</strong>
@@ -122,17 +125,18 @@ export function AIQualityHistory({ records }: { records: AIMemoryRecord[] }) {
     ? Math.round(scored.reduce((sum, record) => sum + (record.structured?.quality?.score ?? 0), 0) / scored.length)
     : 0;
   const flags = scored.flatMap((record) => record.structured?.quality?.flags ?? []).slice(0, 4);
+  const t = useT();
   return (
     <div className="card ai-quality-history">
       <div className="card-hd">
         <Icon name="check" size={15} style={{ color: 'var(--gold)' }} />
-        <h3>Calidad IA</h3>
+        <h3>{t('ap.aiQuality')}</h3>
       </div>
       <div className="card-pad">
         <div className="ai-quality-score">
-          <span className="mono-label">Historial</span>
-          <strong>{scored.length ? `${average}/100` : 'Sin datos'}</strong>
-          <p>{scored.length ? `${scored.length} respuestas evaluadas.` : 'Se activa con acciones y respuestas estructuradas.'}</p>
+          <span className="mono-label">{t('ap.history')}</span>
+          <strong>{scored.length ? `${average}/100` : t('ap.noData')}</strong>
+          <p>{scored.length ? t('ap.evaluated', { n: scored.length }) : t('ap.qualityActivates')}</p>
         </div>
         {flags.length ? (
           <div className="row gap-6 wrap" style={{ marginTop: 8 }}>
@@ -147,16 +151,17 @@ export function AIQualityHistory({ records }: { records: AIMemoryRecord[] }) {
 }
 
 export function EntityInsightsPanel({ records, context }: { records: AIMemoryRecord[]; context: string }) {
+  const t = useT();
   return (
     <div className="card ai-entity-panel">
       <div className="card-hd">
         <Icon name="activity" size={15} style={{ color: 'var(--gold)' }} />
-        <h3>Insights del contexto</h3>
+        <h3>{t('ap.contextInsights')}</h3>
       </div>
       <div className="card-pad">
         {!records.length ? (
           <p className="muted" style={{ margin: 0, fontSize: 12.5 }}>
-            Pregunta sobre este {context.toLowerCase()} para guardar una lectura reutilizable.
+            {t('ap.askAbout', { context: context.toLowerCase() })}
           </p>
         ) : (
           <div className="entity-insight-list">

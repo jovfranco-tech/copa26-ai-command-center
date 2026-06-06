@@ -1,9 +1,9 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Icon, Pill } from '@worldcup/ui';
-import { ANALYST_DISCLAIMER } from '@worldcup/shared';
 import { useMatches, usePlayers, useStandings, useTeams, useVenues } from '@/hooks';
 import { useVoiceInput, useAudioRecording, usePdfUpload } from '@/hooks/useAnalystInput';
-import { buildAnalystAnswer, SUGGESTED_QUESTIONS, type AnalystAnswer } from '@/lib/analyst';
+import { buildAnalystAnswer, getSuggestedQuestions, type AnalystAnswer } from '@/lib/analyst';
+import { useT, useLang } from '@/i18n';
 import { askAI, buildAIContext, type AIResult } from '@/lib/aiClient';
 import { clearAIMemory, createAIMemoryRecord, entityMemory, getMemoryStats, readAIMemory, saveAIMemoryRecord, type AIMemoryRecord } from '@/lib/aiMemory';
 import { listenCloudAIInsights, saveCloudAIInsight } from '@/lib/aiCloudMemory';
@@ -41,16 +41,18 @@ import {
 
 type Ctx = 'tournament' | 'match' | 'team' | 'player' | 'hawkeye' | 'pressroom';
 
-const CTX_ES: Record<Ctx, string> = {
-  tournament: 'Torneo',
-  match: 'Partido',
-  team: 'Selección',
-  player: 'Jugador',
-  hawkeye: 'Halcón IA',
-  pressroom: 'Prensa IA',
+const CTX_KEYS: Record<Ctx, string> = {
+  tournament: 'aiAnalyst.ctxTournament',
+  match: 'aiAnalyst.ctxMatch',
+  team: 'aiAnalyst.ctxTeam',
+  player: 'aiAnalyst.ctxPlayer',
+  hawkeye: 'aiAnalyst.ctxHawkeye',
+  pressroom: 'aiAnalyst.ctxPressroom',
 };
 
 export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: string }) {
+  const t = useT();
+  const lang = useLang();
   const { data: teamsData } = useTeams();
   const { data: playersData } = usePlayers();
   const { data: matchData } = useMatches();
@@ -117,7 +119,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
   }, [matchData]);
 
   const dynamicSuggestedQuestions = useMemo(() => {
-    const list = [...SUGGESTED_QUESTIONS];
+    const list = getSuggestedQuestions(t);
     const matchItems = matchData?.items ?? [];
     
     // Find the last finished match
@@ -131,17 +133,17 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       const aName = teamsData?.items.find((t) => t.code === lastMatch.away)?.name ?? lastMatch.away;
       
       // Inject dynamic questions about the last match
-      list[2] = `¿Qué análisis táctico nos dejas del último ${hName} vs ${aName}?`;
-      list[3] = `¿Cuál es el balance ofensivo y posesión de ${hName}?`;
+      list[2] = t('aiAnalyst.dynQ3', { home: hName, away: aName });
+      list[3] = t('aiAnalyst.dynQ4', { home: hName });
     }
 
     if (leaderName) {
       // Inject dynamic question about the leaderboard trend
-      list[4] = `¿Quién va ganando la quiniela y cómo rinde el puntero ${leaderName}?`;
+      list[4] = t('aiAnalyst.dynQ5', { leader: leaderName });
     }
 
     return list;
-  }, [matchData, teamsData, leaderName]);
+  }, [matchData, teamsData, leaderName, t]);
 
   const [ctx, setCtx] = useState<Ctx>((ctxProp as Ctx) ?? 'tournament');
   const [id, setId] = useState<string>(idProp ?? '');
@@ -246,9 +248,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       question: q,
       answer: next.text,
       mode,
-      context: CTX_ES[ctx],
+      context: t(CTX_KEYS[ctx]),
       sources: next.sources,
-      confidence: meta?.confidence ?? (mode === 'local' ? 'Alta local' : 'Media'),
+      confidence: meta?.confidence ?? (mode === 'local' ? t('aiAnalyst.confHighLocal') : t('sourceBadge.medium')),
       model: meta?.model,
       tools: meta?.tools,
       entityType: memoryEntityType,
@@ -282,15 +284,15 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       ctx: (ctx === 'hawkeye' || ctx === 'pressroom') ? 'tournament' : ctx,
       id: cid,
       ...data,
-    });
+    }, t);
 
     const contextText = buildAIContext(ctx, cid, data);
     if (role === 'guest') {
-      commitAnswer(q, { ...local, sources: [...local.sources, 'modo invitado local'] }, 'local', {
+      commitAnswer(q, { ...local, sources: [...local.sources, t('aiAnalyst.guestLocalMode')] }, 'local', {
         provider: 'local',
-        confidence: 'Alta local',
+        confidence: t('aiAnalyst.confHighLocal'),
         contextChars: contextText.length,
-        tools: ['calendario', 'partidos', 'selecciones', 'jugadores', 'sedes'],
+        tools: [t('aiAnalyst.toolSchedule'), t('aiAnalyst.toolMatches'), t('aiAnalyst.toolTeams'), t('aiAnalyst.toolPlayers'), t('aiAnalyst.toolVenues')],
       });
       setAttachedPdf(null);
       setAttachedAudio(null);
@@ -328,7 +330,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         q,
         {
           text: ai.answer,
-          sources: ai.meta?.sources ?? ['IA', 'datos locales'],
+          sources: ai.meta?.sources ?? [t('aiAnalyst.ai'), t('aiAnalyst.localData')],
           structured: local.structured,
           citations: local.citations,
         },
@@ -336,7 +338,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         ai.meta,
       );
     } else {
-      const reason = ai.reason === 'rate-limit' ? `limite IA ${ai.retryAfter ?? ''}s` : 'fallback local';
+      const reason = ai.reason === 'rate-limit' ? t('aiAnalyst.aiLimit', { s: ai.retryAfter ?? '' }) : t('aiAnalyst.localFallback');
       commitAnswer(q, { ...local, sources: [...local.sources, reason] }, 'local', ai.meta);
     }
   };
@@ -386,116 +388,116 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
     const upcomingMatches = matchItems
       .filter((m) => m.status === 'UPCOMING')
       .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
-    const diagnostics = buildPoolDiagnostics(matchItems, pool.picks, [], pool.playerName);
-    const dayBrief = buildDayBrief(matchItems, teamItems, pool.picks);
+    const diagnostics = buildPoolDiagnostics(matchItems, pool.picks, [], pool.playerName, t);
+    const dayBrief = buildDayBrief(matchItems, teamItems, pool.picks, t);
 
     if (action === 'conservative-pool') {
       const picks = buildRecommendedPicks(matchItems, teamItems, 24);
       const nextAnswer: AnalystAnswer = {
-        text: `Preparé ${Object.keys(picks).length} picks pendientes con una lógica conservadora: ranking más fuerte gana por margen corto; partidos parejos quedan 1-1. Revisa la previsualización antes de aplicarlos.`,
-        sources: ['ranking local', 'calendario', 'quiniela'],
+        text: t('aiAnalyst.naConsText', { n: Object.keys(picks).length }),
+        sources: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolSchedule'), t('aiAnalyst.toolPool')],
         structured: {
-          prediction: 'Quiniela conservadora preparada para próximos partidos.',
-          risk: 'No considera lesiones, convocatoria final ni forma reciente.',
-          confidence: 'Media',
-          dataUsed: ['Ranking de selecciones', 'Calendario pendiente'],
-          ignoredData: ['Noticias', 'lesiones', 'once inicial'],
-          rationale: 'Los picks se generan por diferencia de ranking y marcadores de baja varianza.',
-          nextAction: 'Aplicar solo si quieres sobrescribir/llenar picks actuales.',
+          prediction: t('aiAnalyst.naConsPred'),
+          risk: t('aiAnalyst.naConsRisk'),
+          confidence: t('sourceBadge.medium'),
+          dataUsed: t('aiAnalyst.naConsData').split(', '),
+          ignoredData: t('aiAnalyst.naConsIgn').split(', '),
+          rationale: t('aiAnalyst.naConsRat'),
+          nextAction: t('aiAnalyst.naConsNext'),
           quality: {
             score: 76,
-            label: 'Propuesta local revisable',
-            flags: ['No usa llamada remota', 'Requiere confirmación antes de aplicar'],
+            label: t('aiAnalyst.naConsQLabel'),
+            flags: t('aiAnalyst.naConsFlags').split(', '),
             checkedAt: new Date().toISOString(),
           },
         },
         citations: [
           {
-            label: 'Picks preparados',
-            value: `${Object.keys(picks).length} próximos partidos`,
-            source: 'Motor local de quiniela conservadora',
+            label: t('aiAnalyst.naConsCiteLabel'),
+            value: t('aiAnalyst.naConsCiteVal', { n: Object.keys(picks).length }),
+            source: t('aiAnalyst.naConsCiteSrc'),
             date: new Date().toISOString().slice(0, 10),
-            confidence: 'Media',
+            confidence: t('sourceBadge.medium'),
           },
         ],
       };
       setPendingNativeAction({
         id: action,
-        title: 'Previsualización de quiniela conservadora',
-        detail: `${Object.keys(picks).length} picks listos. No se aplican hasta confirmar.`,
+        title: t('aiAnalyst.naConsPendTitle'),
+        detail: t('aiAnalyst.naConsPendDetail', { n: Object.keys(picks).length }),
         picks,
-        question: 'Acción IA: rellenar quiniela conservadora',
+        question: t('aiAnalyst.naConsQ'),
         answer: nextAnswer,
-        meta: { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'quiniela'] },
+        meta: { provider: 'local-action', confidence: t('sourceBadge.medium'), tools: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolPool')] },
       });
       setAnswer(nextAnswer);
       setUsedAI(true);
-      setLastAiMeta({ provider: 'local-action', confidence: 'Media', tools: ['ranking', 'quiniela'] });
+      setLastAiMeta({ provider: 'local-action', confidence: t('sourceBadge.medium'), tools: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolPool')] });
       return;
     }
 
     if (action === 'day-brief') {
       const next = upcomingMatches[0];
-      const rec = next ? recommendPick(next, teamItems) : null;
+      const rec = next ? recommendPick(next, teamItems, t) : null;
       commitAnswer(
-        'Acción IA: resumen operativo del día',
+        t('aiAnalyst.naDayQ'),
         {
-          text: `${dayBrief.title}. ${dayBrief.highlights.join(' ')} Siguiente acción: ${dayBrief.nextAction}`,
-          sources: ['calendario', 'quiniela', 'ranking local'],
+          text: t('aiAnalyst.naDayText', { title: dayBrief.title, highlights: dayBrief.highlights.join(' '), next: dayBrief.nextAction }),
+          sources: [t('aiAnalyst.toolSchedule'), t('aiAnalyst.toolPool'), t('aiAnalyst.toolRanking')],
           structured: {
-            prediction: rec ? `Pick sugerido para el siguiente juego: ${rec.label}.` : dayBrief.title,
-            risk: rec?.risk ?? 'Sin partido pendiente para proyectar.',
-            confidence: rec?.confidence ?? 'Alta local',
-            dataUsed: ['Partidos pendientes', 'picks locales', 'ranking de selecciones'],
-            ignoredData: ['Convocatorias finales', 'lesiones', 'alineaciones confirmadas'],
-            rationale: rec?.rationale ?? 'El resumen prioriza el siguiente partido y huecos de quiniela.',
+            prediction: rec ? t('aiAnalyst.naDayPredRec', { label: rec.label }) : dayBrief.title,
+            risk: rec?.risk ?? t('aiAnalyst.naDayRiskNone'),
+            confidence: rec?.confidence ?? t('aiAnalyst.confHighLocal'),
+            dataUsed: t('aiAnalyst.naDayData').split(', '),
+            ignoredData: t('aiAnalyst.naDayIgn').split(', '),
+            rationale: rec?.rationale ?? t('aiAnalyst.naDayRat'),
             nextAction: dayBrief.nextAction,
             quality: {
               score: rec?.confidence === 'Alta' ? 86 : 78,
-              label: 'Brief operativo',
-              flags: ['Actualizado desde datos locales', 'No requiere llamada remota'],
+              label: t('aiAnalyst.naDayQLabel'),
+              flags: t('aiAnalyst.naDayFlags').split(', '),
               checkedAt: new Date().toISOString(),
             },
           },
           citations: dayBrief.highlights.map((highlight, index) => ({
-            label: `Señal ${index + 1}`,
+            label: t('aiAnalyst.naDaySignal', { n: index + 1 }),
             value: highlight,
-            source: 'Motor operativo local',
+            source: t('aiAnalyst.naDaySignalSrc'),
             date: new Date().toISOString().slice(0, 10),
-            confidence: index === 0 ? 'Alta' : 'Media',
+            confidence: index === 0 ? t('analyst.confHigh') : t('sourceBadge.medium'),
           })),
         },
         'simulation',
-        { provider: 'local-action', confidence: rec?.confidence ?? 'Alta local', tools: ['calendario', 'quiniela', 'ranking'] },
+        { provider: 'local-action', confidence: rec?.confidence ?? t('aiAnalyst.confHighLocal'), tools: [t('aiAnalyst.toolSchedule'), t('aiAnalyst.toolPool'), t('aiAnalyst.toolRanking')] },
       );
       return;
     }
 
     if (action === 'compare-family') {
-      const leader = leaderName || 'sin líder todavía';
+      const leader = leaderName || t('aiAnalyst.naCmpFamNoLeader');
       commitAnswer(
-        'Acción IA: comparar mi quiniela con el grupo',
+        t('aiAnalyst.naCmpFamQ'),
         {
-          text: `${pool.playerName || 'Tu perfil'} tiene ${diagnostics.pickedPending}/${diagnostics.totalPending} ganadores y ${diagnostics.completeScores}/${diagnostics.totalPending} marcadores completos. Líder del grupo actual: ${leader}. ${diagnostics.familySignal}`,
-          sources: ['quiniela local', 'tabla'],
+          text: t('aiAnalyst.naCmpFamText', { name: pool.playerName || t('aiAnalyst.naCmpFamProfile'), pw: diagnostics.pickedPending, tp: diagnostics.totalPending, sc: diagnostics.completeScores, leader, signal: diagnostics.familySignal }),
+          sources: [t('aiAnalyst.toolPool'), t('analyst.cTable')],
           structured: {
-            prediction: diagnostics.pickedPending ? 'Ya hay base para competir en la tabla.' : 'Falta capturar picks antes de comparar rendimiento.',
-            risk: 'La comparación será más útil cuando existan resultados reales.',
-            confidence: 'Alta local',
-            dataUsed: ['Picks locales', 'grupo', 'leaderboard Firestore'],
-            ignoredData: ['Picks de otros miembros no sincronizados'],
-            rationale: 'La acción compara cobertura de picks y líder visible sin leer datos sensibles fuera del grupo.',
+            prediction: diagnostics.pickedPending ? t('aiAnalyst.naCmpFamPredHas') : t('aiAnalyst.naCmpFamPredNone'),
+            risk: t('aiAnalyst.naCmpFamRisk'),
+            confidence: t('aiAnalyst.confHighLocal'),
+            dataUsed: t('aiAnalyst.naCmpFamData').split(', '),
+            ignoredData: t('aiAnalyst.naCmpFamIgn').split(', '),
+            rationale: t('aiAnalyst.naCmpFamRat'),
             nextAction: diagnostics.recommendedAction,
             quality: {
               score: 90,
-              label: 'Comparación local',
-              flags: ['Basado en Firestore si hay sincronización', 'Sin resultados reales aún'],
+              label: t('aiAnalyst.naCmpFamQLabel'),
+              flags: t('aiAnalyst.naCmpFamFlags').split(', '),
               checkedAt: new Date().toISOString(),
             },
           },
         },
         'simulation',
-        { provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'leaderboard'] },
+        { provider: 'local-action', confidence: t('aiAnalyst.confHighLocal'), tools: [t('aiAnalyst.toolPool'), 'leaderboard'] },
       );
       return;
     }
@@ -512,180 +514,181 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       }
       const nextAnswer: AnalystAnswer = {
         text: Object.keys(fixes).length
-          ? `Detecté ${diagnostics.missingScore} marcadores incompletos y propuse cerrar ${Object.keys(fixes).length} con marcadores bajos coherentes con el ganador elegido.`
-          : `No encontré marcadores incompletos para reparar. Cobertura actual: ${diagnostics.coveragePct}% ganadores y ${diagnostics.scorePct}% marcadores.`,
-        sources: ['quiniela local', 'reglas de cierre'],
+          ? t('aiAnalyst.naAuditTextFix', { ms: diagnostics.missingScore, n: Object.keys(fixes).length })
+          : t('aiAnalyst.naAuditTextNone', { cp: diagnostics.coveragePct, sp: diagnostics.scorePct }),
+        sources: [t('aiAnalyst.toolPool'), t('aiAnalyst.toolAuditor')],
         structured: {
-          prediction: Object.keys(fixes).length ? 'Picks listos para reparación con marcador mínimo.' : 'Quiniela sin reparaciones automáticas necesarias.',
-          risk: 'Los marcadores bajos son seguros pero pueden perder plenos si el partido se abre.',
-          confidence: 'Alta local',
-          dataUsed: ['Picks activos', 'partidos pendientes', 'reglas de marcador'],
-          ignoredData: ['Táctica específica del rival', 'momento competitivo del grupo'],
-          rationale: 'La auditoría no cambia ganadores existentes; solo completa goles faltantes con una regla coherente.',
-          nextAction: Object.keys(fixes).length ? 'Aplicar reparación si estás de acuerdo.' : diagnostics.recommendedAction,
+          prediction: Object.keys(fixes).length ? t('aiAnalyst.naAuditPredFix') : t('aiAnalyst.naAuditPredNone'),
+          risk: t('aiAnalyst.naAuditRisk'),
+          confidence: t('aiAnalyst.confHighLocal'),
+          dataUsed: t('aiAnalyst.naAuditData').split(', '),
+          ignoredData: t('aiAnalyst.naAuditIgn').split(', '),
+          rationale: t('aiAnalyst.naAuditRat'),
+          nextAction: Object.keys(fixes).length ? t('aiAnalyst.naAuditNextFix') : diagnostics.recommendedAction,
           quality: {
             score: 88,
-            label: 'Auditoría determinística',
-            flags: ['No sobrescribe picks completos', 'Solo completa goles faltantes'],
+            label: t('aiAnalyst.naAuditQLabel'),
+            flags: t('aiAnalyst.naAuditFlags').split(', '),
             checkedAt: new Date().toISOString(),
           },
         },
         citations: [
           {
-            label: 'Reparaciones propuestas',
-            value: `${Object.keys(fixes).length} marcadores`,
-            source: 'Auditor de quiniela local',
+            label: t('aiAnalyst.naAuditCiteLabel'),
+            value: t('aiAnalyst.naAuditCiteVal', { n: Object.keys(fixes).length }),
+            source: t('aiAnalyst.naAuditCiteSrc'),
             date: new Date().toISOString().slice(0, 10),
-            confidence: 'Alta',
+            confidence: t('analyst.confHigh'),
           },
         ],
       };
       if (Object.keys(fixes).length) {
         setPendingNativeAction({
           id: action,
-          title: 'Previsualización de auditoría',
-          detail: `${Object.keys(fixes).length} marcadores se completarían sin cambiar ganadores.`,
+          title: t('aiAnalyst.naAuditPendTitle'),
+          detail: t('aiAnalyst.naAuditPendDetail', { n: Object.keys(fixes).length }),
           picks: fixes as Parameters<typeof pool.importPicks>[0],
-          question: 'Acción IA: auditar picks incompletos',
+          question: t('aiAnalyst.naAuditQ'),
           answer: nextAnswer,
-          meta: { provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'auditor'] },
+          meta: { provider: 'local-action', confidence: t('aiAnalyst.confHighLocal'), tools: [t('aiAnalyst.toolPool'), t('aiAnalyst.toolAuditor')] },
         });
       } else {
         setPendingNativeAction(null);
       }
       setAnswer(nextAnswer);
       setUsedAI(true);
-      setLastAiMeta({ provider: 'local-action', confidence: 'Alta local', tools: ['quiniela', 'auditor'] });
+      setLastAiMeta({ provider: 'local-action', confidence: t('aiAnalyst.confHighLocal'), tools: [t('aiAnalyst.toolPool'), t('aiAnalyst.toolAuditor')] });
       return;
     }
 
     if (action === 'family-learning') {
       commitAnswer(
-        'Acción IA: aprender estilo del grupo',
+        t('aiAnalyst.naLearnQ'),
         {
-          text: `Lectura de estilo: ${diagnostics.styleLabel}. ${diagnostics.styleDetail} Señal del grupo: ${diagnostics.familySignal}`,
-          sources: ['picks locales', 'memoria IA', 'grupo'],
+          text: t('aiAnalyst.naLearnText', { style: diagnostics.styleLabel, detail: diagnostics.styleDetail, signal: diagnostics.familySignal }),
+          sources: [t('aiAnalyst.toolPool'), t('aiAnalyst.aiMemory'), t('analyst.cTable')],
           structured: {
-            prediction: `Tu perfil operativo actual es ${diagnostics.styleLabel.toLowerCase()}.`,
-            risk: 'El aprendizaje mejora cuando haya más miembros sincronizados y resultados reales.',
-            confidence: diagnostics.pickedPending >= 8 ? 'Media' : 'Baja',
-            dataUsed: ['Patrón de marcadores', 'cobertura de picks', 'memoria compartida'],
-            ignoredData: ['Picks no sincronizados de otros dispositivos', 'sesgos personales no observados'],
-            rationale: 'La app clasifica estilo por promedio de goles, frecuencia de empates y cobertura de quiniela.',
+            prediction: t('aiAnalyst.naLearnPred', { style: diagnostics.styleLabel.toLowerCase() }),
+            risk: t('aiAnalyst.naLearnRisk'),
+            confidence: diagnostics.pickedPending >= 8 ? t('sourceBadge.medium') : t('opsIntel.confLow'),
+            dataUsed: t('aiAnalyst.naLearnData').split(', '),
+            ignoredData: t('aiAnalyst.naLearnIgn').split(', '),
+            rationale: t('aiAnalyst.naLearnRat'),
             nextAction: diagnostics.recommendedAction,
             quality: {
               score: diagnostics.pickedPending >= 8 ? 79 : 62,
-              label: 'Aprendizaje temprano',
-              flags: ['Se recalibra con cada pick', 'Más fuerte tras resultados reales'],
+              label: t('aiAnalyst.naLearnQLabel'),
+              flags: t('aiAnalyst.naLearnFlags').split(', '),
               checkedAt: new Date().toISOString(),
             },
           },
         },
         'simulation',
-        { provider: 'local-action', confidence: diagnostics.pickedPending >= 8 ? 'Media' : 'Baja', tools: ['memoria', 'quiniela'] },
+        { provider: 'local-action', confidence: diagnostics.pickedPending >= 8 ? t('sourceBadge.medium') : t('opsIntel.confLow'), tools: [t('aiAnalyst.toolMemory'), t('aiAnalyst.toolPool')] },
       );
       return;
     }
 
     if (action === 'compare-strategies') {
-      const strategies = comparePickStrategies(matchItems, teamItems, 6);
+      const strategies = comparePickStrategies(matchItems, teamItems, 6, t);
+      const confL = (c: string) => c === 'Alta' ? t('opsIntel.confHigh') : c === 'Media' ? t('opsIntel.confMed') : t('opsIntel.confLow');
       const lines = strategies.map(
         (strategy) =>
-          `${strategy.label}: ${strategy.picks.slice(0, 3).map((pick) => `${pick.matchLabel} ${pick.prediction}`).join('; ')}`,
+          t('aiAnalyst.naCmpStratLine', { label: strategy.label, picks: strategy.picks.slice(0, 3).map((pick) => `${pick.matchLabel} ${pick.prediction}`).join('; ') }),
       );
       commitAnswer(
-        'Acción IA: comparar estrategias de quiniela',
+        t('aiAnalyst.naCmpStratQ'),
         {
           text: strategies.length
-            ? `Comparé tres estilos para los próximos partidos. ${lines.join(' ')}`
-            : 'No hay partidos pendientes para comparar estrategias.',
-          sources: ['ranking local', 'calendario', 'motor de estrategias'],
+            ? t('aiAnalyst.naCmpStratText', { lines: lines.join(' ') })
+            : t('aiAnalyst.naCmpStratTextNone'),
+          sources: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolSchedule'), t('aiAnalyst.toolStrategies')],
           structured: {
-            prediction: 'La estrategia conservadora queda como default; agresiva y contraria sirven para remontar o diferenciarte.',
-            risk: 'Las estrategias alternativas necesitan revisar alineaciones y noticias reales antes del cierre.',
-            confidence: 'Media',
-            dataUsed: ['Ranking de selecciones', 'calendario pendiente', 'reglas de quiniela'],
-            ignoredData: ['Lesiones', 'alineaciones confirmadas', 'mercados de apuesta'],
-            rationale: 'Se comparan tres modelos locales con distinto apetito de riesgo para que el usuario elija contexto, no solo un pick único.',
-            nextAction: 'Usar conservadora como base y revisar contraria solo en cruces de baja confianza.',
+            prediction: t('aiAnalyst.naCmpStratPred'),
+            risk: t('aiAnalyst.naCmpStratRisk'),
+            confidence: t('sourceBadge.medium'),
+            dataUsed: t('aiAnalyst.naCmpStratData').split(', '),
+            ignoredData: t('aiAnalyst.naCmpStratIgn').split(', '),
+            rationale: t('aiAnalyst.naCmpStratRat'),
+            nextAction: t('aiAnalyst.naCmpStratNext'),
             quality: {
               score: 82,
-              label: 'Comparador multi-estrategia',
-              flags: ['Sin llamada remota', 'No aplica cambios automáticamente'],
+              label: t('aiAnalyst.naCmpStratQLabel'),
+              flags: t('aiAnalyst.naCmpStratFlags').split(', '),
               checkedAt: new Date().toISOString(),
             },
           },
           citations: strategies.map((strategy) => ({
             label: strategy.label,
-            value: `${strategy.picks.length} picks · confianza ${strategy.confidence}`,
+            value: t('aiAnalyst.naCmpStratCiteVal', { n: strategy.picks.length, conf: confL(strategy.confidence) }),
             source: strategy.summary,
             date: new Date().toISOString().slice(0, 10),
-            confidence: strategy.confidence,
+            confidence: confL(strategy.confidence),
           })),
         },
         'simulation',
-        { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'estrategias', 'quiniela'] },
+        { provider: 'local-action', confidence: t('sourceBadge.medium'), tools: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolStrategies'), t('aiAnalyst.toolPool')] },
       );
       return;
     }
 
     if (action === 'ai-scorecard') {
-      const scorecard = evaluateAIStrategyOutcomes(matchItems, teamItems);
+      const scorecard = evaluateAIStrategyOutcomes(matchItems, teamItems, t);
       commitAnswer(
-        'Acción IA: scorecard de estrategias',
+        t('aiAnalyst.naScoreQ'),
         {
-          text: `${scorecard.summary} Mejor lectura actual: ${scorecard.bestLabel}. ${scorecard.strategies.map((row) => `${row.label}: ${row.points} pts, ${row.efficiency}%`).join(' · ')}`,
-          sources: ['resultados reales cuando existan', 'motor local de estrategias'],
+          text: t('aiAnalyst.naScoreText', { summary: scorecard.summary, best: scorecard.bestLabel, rows: scorecard.strategies.map((row) => t('aiAnalyst.naScoreRow', { label: row.label, pts: row.points, eff: row.efficiency })).join(' · ') }),
+          sources: [t('aiAnalyst.toolResults'), t('aiAnalyst.toolStrategies')],
           structured: {
-            prediction: scorecard.played ? `Estrategia líder: ${scorecard.bestLabel}.` : 'La evaluación está lista pero aún no hay resultados finales.',
-            risk: scorecard.played ? 'El tamaño de muestra inicial puede ser pequeño.' : 'No se inventan aciertos antes de partidos oficiales.',
-            confidence: scorecard.played >= 8 ? 'Alta local' : scorecard.played ? 'Media' : 'Alta local',
-            dataUsed: ['Marcadores finales', 'reglas de puntaje', 'picks simulados por estrategia'],
-            ignoredData: ['Partidos sin marcador final'],
-            rationale: 'Cada estrategia se vuelve a proyectar contra partidos finalizados y se puntúa como quiniela: pleno +3, ganador +1.',
-            nextAction: scorecard.played ? 'Revisar estrategia líder antes de rellenar nuevos picks.' : 'Esperar resultados o conectar feed real.',
+            prediction: scorecard.played ? t('aiAnalyst.naScorePredHas', { best: scorecard.bestLabel }) : t('aiAnalyst.naScorePredNone'),
+            risk: scorecard.played ? t('aiAnalyst.naScoreRiskHas') : t('aiAnalyst.naScoreRiskNone'),
+            confidence: scorecard.played >= 8 ? t('aiAnalyst.confHighLocal') : scorecard.played ? t('sourceBadge.medium') : t('aiAnalyst.confHighLocal'),
+            dataUsed: t('aiAnalyst.naScoreData').split(', '),
+            ignoredData: t('aiAnalyst.naScoreIgn').split(', '),
+            rationale: t('aiAnalyst.naScoreRat'),
+            nextAction: scorecard.played ? t('aiAnalyst.naScoreNextHas') : t('aiAnalyst.naScoreNextNone'),
             quality: {
               score: scorecard.played ? 86 : 78,
-              label: 'Scorecard activable',
-              flags: scorecard.played ? ['Basado en FT reales'] : ['Sin resultados oficiales todavía', 'No inventa métricas'],
+              label: t('aiAnalyst.naScoreQLabel'),
+              flags: scorecard.played ? [t('aiAnalyst.naScoreFlagsHas')] : t('aiAnalyst.naScoreFlagsNone').split(', '),
               checkedAt: new Date().toISOString(),
             },
           },
           citations: scorecard.strategies.map((row) => ({
             label: row.label,
-            value: `${row.points} pts · ${row.exactScores} plenos · ${row.outcomeHits} ganadores`,
-            source: 'Scorecard local de IA',
+            value: t('aiAnalyst.naScoreCiteVal', { pts: row.points, exact: row.exactScores, hits: row.outcomeHits }),
+            source: t('aiAnalyst.naScoreCiteSrc'),
             date: new Date().toISOString().slice(0, 10),
-            confidence: scorecard.played ? 'Media' : 'Alta',
+            confidence: scorecard.played ? t('sourceBadge.medium') : t('analyst.confHigh'),
           })),
         },
         'simulation',
-        { provider: 'local-action', confidence: scorecard.played ? 'Media' : 'Alta local', tools: ['scorecard', 'resultados', 'estrategias'] },
+        { provider: 'local-action', confidence: scorecard.played ? t('sourceBadge.medium') : t('aiAnalyst.confHighLocal'), tools: [t('aiAnalyst.toolScorecard'), t('aiAnalyst.toolResults'), t('aiAnalyst.toolStrategies')] },
       );
       return;
     }
 
     if (action === 'change-radar') {
-      const hints = buildPickChangeHints(matchItems, teamItems, pool.picks, 6);
+      const hints = buildPickChangeHints(matchItems, teamItems, pool.picks, 6, t);
       commitAnswer(
-        'Acción IA: explicar cambios de recomendación',
+        t('aiAnalyst.naRadarQ'),
         {
           text: hints.length
-            ? `Encontré ${hints.length} picks donde tu selección difiere del modelo local. ${hints.map((hint) => `${hint.matchLabel}: tienes ${hint.current}, modelo ${hint.recommended}; ${hint.rationale}`).join(' ')}`
-            : 'No detecté picks actuales que difieran de la recomendación local, o todavía faltan picks para comparar.',
-          sources: ['quiniela local', 'ranking local', 'motor de recomendación'],
+            ? t('aiAnalyst.naRadarTextHas', { n: hints.length, hints: hints.map((hint) => t('aiAnalyst.naRadarHint', { label: hint.matchLabel, current: hint.current, recommended: hint.recommended, rationale: hint.rationale })).join(' ') })
+            : t('aiAnalyst.naRadarTextNone'),
+          sources: [t('aiAnalyst.toolPool'), t('aiAnalyst.toolRanking'), t('aiAnalyst.toolRadar')],
           structured: {
-            prediction: hints.length ? 'Hay diferencias revisables antes del cierre.' : 'No hay cambios de criterio pendientes.',
-            risk: 'Una diferencia no significa error; puede ser una decisión de riesgo del grupo.',
-            confidence: hints.length ? 'Media' : 'Alta local',
-            dataUsed: ['Picks actuales', 'ranking', 'partidos pendientes'],
-            ignoredData: ['Noticias', 'alineaciones', 'lesiones'],
-            rationale: 'El radar compara tu pick visible contra la recomendación conservadora actual y explica el motivo del cambio.',
-            nextAction: hints.length ? 'Revisar diferencias de baja confianza antes de compartir.' : diagnostics.recommendedAction,
+            prediction: hints.length ? t('aiAnalyst.naRadarPredHas') : t('aiAnalyst.naRadarPredNone'),
+            risk: t('aiAnalyst.naRadarRisk'),
+            confidence: hints.length ? t('sourceBadge.medium') : t('aiAnalyst.confHighLocal'),
+            dataUsed: t('aiAnalyst.naRadarData').split(', '),
+            ignoredData: t('aiAnalyst.naRadarIgn').split(', '),
+            rationale: t('aiAnalyst.naRadarRat'),
+            nextAction: hints.length ? t('aiAnalyst.naRadarNextHas') : diagnostics.recommendedAction,
             quality: {
               score: hints.length ? 80 : 88,
-              label: 'Radar de cambios',
-              flags: ['No modifica picks', 'Explica diferencias visibles'],
+              label: t('aiAnalyst.naRadarQLabel'),
+              flags: t('aiAnalyst.naRadarFlags').split(', '),
               checkedAt: new Date().toISOString(),
             },
           },
@@ -694,11 +697,11 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
             value: `${hint.current} -> ${hint.recommended}`,
             source: hint.rationale,
             date: new Date().toISOString().slice(0, 10),
-            confidence: 'Media',
+            confidence: t('sourceBadge.medium'),
           })),
         },
         'simulation',
-        { provider: 'local-action', confidence: hints.length ? 'Media' : 'Alta local', tools: ['quiniela', 'radar-cambios'] },
+        { provider: 'local-action', confidence: hints.length ? t('sourceBadge.medium') : t('aiAnalyst.confHighLocal'), tools: [t('aiAnalyst.toolPool'), t('aiAnalyst.toolRadar')] },
       );
       return;
     }
@@ -711,30 +714,30 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
       .sort((a, b) => a.diff - b.diff)
       .slice(0, 5);
     commitAnswer(
-      'Acción IA: detectar partidos inciertos',
+      t('aiAnalyst.naUncertainQ'),
       {
         text: uncertain.length
-          ? `Partidos más inciertos por ranking cercano: ${uncertain.map(({ match, diff }) => `${match.home}-${match.away} (dif. ${diff})`).join(', ')}.`
-          : 'No hay partidos pendientes para analizar incertidumbre.',
-        sources: ['ranking local', 'calendario'],
+          ? t('aiAnalyst.naUncertainTextHas', { list: uncertain.map(({ match, diff }) => t('aiAnalyst.naUncertainItem', { home: match.home, away: match.away, diff })).join(', ') })
+          : t('aiAnalyst.naUncertainTextNone'),
+        sources: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolSchedule')],
         structured: {
-          prediction: 'Los cruces con ranking más cercano son candidatos a empate o marcador corto.',
-          risk: 'El ranking no captura lesiones, localía real, rotaciones ni presión del grupo.',
-          confidence: 'Media',
-          dataUsed: ['Ranking de selecciones', 'partidos pendientes'],
-          ignoredData: ['Forma reciente', 'alineaciones', 'probabilidades de mercado'],
-          rationale: 'La incertidumbre se estima por cercanía de ranking; menor diferencia implica menor separación previa.',
-          nextAction: 'Revisar esos partidos antes de aceptar picks automáticos.',
+          prediction: t('aiAnalyst.naUncertainPred'),
+          risk: t('aiAnalyst.naUncertainRisk'),
+          confidence: t('sourceBadge.medium'),
+          dataUsed: t('aiAnalyst.naUncertainData').split(', '),
+          ignoredData: t('aiAnalyst.naUncertainIgn').split(', '),
+          rationale: t('aiAnalyst.naUncertainRat'),
+          nextAction: t('aiAnalyst.naUncertainNext'),
           quality: {
             score: 74,
-            label: 'Estimación heurística',
-            flags: ['No sustituye análisis humano', 'Sin feed vivo de lesiones'],
+            label: t('aiAnalyst.naUncertainQLabel'),
+            flags: t('aiAnalyst.naUncertainFlags').split(', '),
             checkedAt: new Date().toISOString(),
           },
         },
       },
       'simulation',
-      { provider: 'local-action', confidence: 'Media', tools: ['ranking', 'calendario'] },
+      { provider: 'local-action', confidence: t('sourceBadge.medium'), tools: [t('aiAnalyst.toolRanking'), t('aiAnalyst.toolSchedule')] },
     );
   };
 
@@ -749,7 +752,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               >
                 <Icon name="ai" size={15} />
               </span>
-              <h3>Analista de partidos</h3>
+              <h3>{t('aiAnalyst.title')}</h3>
             </div>
               <div className="card-pad brief-body">
                 <div className="row gap-6 wrap" style={{ marginBottom: 10 }}>
@@ -762,7 +765,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                       setId('');
                     }}
                   >
-                    {CTX_ES[c]}
+                    {t(CTX_KEYS[c])}
                   </Pill>
                 ))}
               </div>
@@ -774,7 +777,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   className="pill"
                   style={{ color: 'var(--tx)', marginBottom: 10, maxWidth: 320 }}
                 >
-                  <option value="">Elige {ctx === 'player' ? 'un jugador' : ctx === 'team' ? 'una selección' : 'un partido'}…</option>
+                  <option value="">{t('aiAnalyst.chooseLabel', { what: ctx === 'player' ? t('aiAnalyst.choosePlayer') : ctx === 'team' ? t('aiAnalyst.chooseTeam') : t('aiAnalyst.chooseMatch') })}</option>
                   {ctx === 'match' &&
                     (matchData?.items ?? []).map((m) => (
                       <option key={m.id} value={m.id}>
@@ -782,9 +785,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                       </option>
                     ))}
                   {ctx === 'team' &&
-                    (teamsData?.items ?? []).map((t) => (
-                      <option key={t.code} value={t.code}>
-                        {t.name}
+                    (teamsData?.items ?? []).map((tm) => (
+                      <option key={tm.code} value={tm.code}>
+                        {tm.name}
                       </option>
                     ))}
                   {ctx === 'player' &&
@@ -804,7 +807,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     className="pill"
                     style={{ color: 'var(--tx)', marginBottom: 10, maxWidth: 320 }}
                   >
-                    <option value="">Elige un partido para la Rueda de Prensa…</option>
+                    <option value="">{t('aiAnalyst.choosePressMatch')}</option>
                     {(matchData?.items ?? []).map((m) => (
                       <option key={m.id} value={m.id}>
                         {m.home} vs {m.away} · {m.date}
@@ -816,16 +819,16 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
               <div className="ai-native-strip">
                 <div>
-                  <span className="mono-label">Rol activo</span>
-                  <strong>{role === 'admin' ? 'Admin' : role === 'family' ? 'Estándar' : 'Invitado local'}</strong>
+                  <span className="mono-label">{t('role.active')}</span>
+                  <strong>{role === 'admin' ? t('role.admin') : role === 'family' ? t('role.family') : t('aiAnalyst.guestLocal')}</strong>
                 </div>
                 <div>
-                  <span className="mono-label">Herramientas</span>
-                  <strong>Datos · Adjuntos · Voz · Memoria</strong>
+                  <span className="mono-label">{t('aiAnalyst.tools')}</span>
+                  <strong>{t('aiAnalyst.toolsList')}</strong>
                 </div>
                 <div>
-                  <span className="mono-label">Consumo IA</span>
-                  <strong>{role === 'guest' ? 'Bloqueado remoto' : 'Limitado por sesión'}</strong>
+                  <span className="mono-label">{t('aiAnalyst.aiUsage')}</span>
+                  <strong>{role === 'guest' ? t('aiAnalyst.blockedRemote') : t('aiAnalyst.limitedSession')}</strong>
                 </div>
               </div>
 
@@ -849,9 +852,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     className="pill"
                     style={{ color: 'var(--tx)', flex: 1 }}
                   >
-                    <option value="">Local…</option>
-                    {(teamsData?.items ?? []).map((t) => (
-                      <option key={t.code} value={t.name}>{t.name}</option>
+                    <option value="">{t('aiAnalyst.homeOpt')}</option>
+                    {(teamsData?.items ?? []).map((tm) => (
+                      <option key={tm.code} value={tm.name}>{tm.name}</option>
                     ))}
                   </select>
                   <span className="muted" style={{ alignSelf: 'center' }}>vs</span>
@@ -861,9 +864,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     className="pill"
                     style={{ color: 'var(--tx)', flex: 1 }}
                   >
-                    <option value="">Visita…</option>
-                    {(teamsData?.items ?? []).map((t) => (
-                      <option key={t.code} value={t.name}>{t.name}</option>
+                    <option value="">{t('aiAnalyst.awayOpt')}</option>
+                    {(teamsData?.items ?? []).map((tm) => (
+                      <option key={tm.code} value={tm.name}>{tm.name}</option>
                     ))}
                   </select>
                 </div>
@@ -876,10 +879,10 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   simulating={busy}
                   onSimulate={(report) => {
                     commitAnswer(
-                      `Simulación táctica ${scanHomeTeam} vs ${scanAwayTeam}`,
-                      { text: report, sources: ['IA (Ojo de Halcón)', 'datos tácticos'] },
+                      t('aiAnalyst.simTitle', { home: scanHomeTeam, away: scanAwayTeam }),
+                      { text: report, sources: [t('aiAnalyst.simSrcHawk'), t('aiAnalyst.simSrcTactical')] },
                       'simulation',
-                      { provider: 'local-simulation', confidence: 'Media', tools: ['pizarra táctica'] },
+                      { provider: 'local-simulation', confidence: t('sourceBadge.medium'), tools: [t('aiAnalyst.simToolBoard')] },
                     );
                   }}
                 />
@@ -892,10 +895,10 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   answering={busy}
                   onAnswer={(report) => {
                     commitAnswer(
-                      'Sala de prensa',
-                      { text: report, sources: ['Prensa deportiva', 'opinión táctica'] },
+                      t('aiAnalyst.pressTitle'),
+                      { text: report, sources: [t('aiAnalyst.pressSrcMedia'), t('aiAnalyst.pressSrcOpinion')] },
                       'simulation',
-                      { provider: 'local-simulation', confidence: 'Media', tools: ['preguntas guiadas'] },
+                      { provider: 'local-simulation', confidence: t('sourceBadge.medium'), tools: [t('aiAnalyst.pressToolGuided')] },
                     );
                   }}
                 />
@@ -934,7 +937,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                             padding: 2,
                             marginLeft: 4
                           }}
-                          title="Quitar PDF"
+                          title={t('aiAnalyst.removePdf')}
                         >
                           <Icon name="close" size={11} />
                         </button>
@@ -971,7 +974,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                             padding: 2,
                             marginLeft: 4
                           }}
-                          title="Quitar audio"
+                          title={t('aiAnalyst.removeAudio')}
                         >
                           <Icon name="close" size={11} />
                         </button>
@@ -990,7 +993,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                       <input
                         className="searchbox"
                         style={{ flex: 1, marginLeft: 0, paddingRight: voiceInput.supported ? '94px' : '68px' }}
-                        placeholder={recordingAudio ? "Grabando tu voz táctica... Presiona el micrófono para finalizar" : "Escribe una pregunta táctica..."}
+                        placeholder={recordingAudio ? t('aiAnalyst.recording') : t('aiAnalyst.askPlaceholder')}
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         disabled={recordingAudio}
@@ -1014,7 +1017,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                           transition: 'all 0.2s ease',
                           animation: recordingAudio ? 'pulse-microphone 1s infinite alternate' : 'none',
                         }}
-                        title={recordingAudio ? 'Detener grabación de audio' : 'Grabar nota de voz táctica para el modelo IA'}
+                        title={recordingAudio ? t('aiAnalyst.stopRecording') : t('aiAnalyst.recordVoice')}
                       >
                         <Icon name="mic" size={14} style={{ color: recordingAudio ? '#ef4444' : attachedAudio ? 'var(--gold)' : 'var(--tx-3)' }} />
                       </button>
@@ -1034,7 +1037,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                           borderRadius: '50%',
                           transition: 'all 0.2s ease',
                         }}
-                        title="Adjuntar reporte táctico (PDF)"
+                        title={t('aiAnalyst.attachPdf')}
                       >
                         <input
                           type="file"
@@ -1064,14 +1067,14 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                             transition: 'all 0.2s ease',
                             animation: listening ? 'pulse-microphone 1s infinite alternate' : 'none',
                           }}
-                          title={listening ? 'Escuchando... Haz clic para detener' : 'Preguntar con la voz'}
+                          title={listening ? t('aiAnalyst.listeningTitle') : t('aiAnalyst.askByVoice')}
                         >
                           <Icon name={listening ? 'sparkSmall' : 'ai'} size={18} />
                         </button>
                       )}
                     </div>
                     <button type="submit" className="btn gold" disabled={busy || recordingAudio}>
-                      <Icon name={busy ? 'sparkSmall' : 'send'} size={14} /> {busy ? 'Pensando…' : 'Preguntar'}
+                      <Icon name={busy ? 'sparkSmall' : 'send'} size={14} /> {busy ? t('aiAnalyst.thinking') : t('aiAnalyst.ask')}
                     </button>
                   </form>
                 </>
@@ -1085,13 +1088,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               <div className="row gap-8" style={{ alignItems: 'center', marginBottom: 10 }}>
                 <Icon name="sparkSmall" size={15} style={{ color: 'var(--gold)' }} />
                 <span className="mono-label" style={{ margin: 0 }}>
-                  Analista IA · escribiendo…
+                  {t('aiAnalyst.writing')}
                 </span>
-                <span className="badge gold">EN VIVO</span>
+                <span className="badge gold">{t('common.live')}</span>
               </div>
               <span style={{ fontSize: 11, color: 'var(--tx-3)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                 <Icon name="ai" size={12} style={{ color: 'var(--gold)' }} />
-                {streamingProvider ? `Respondiendo via ${streamingProvider}...` : 'Conectando con IA...'}
+                {streamingProvider ? t('aiAnalyst.respondingVia', { provider: streamingProvider }) : t('aiAnalyst.connecting')}
               </span>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                 {streamingText.replace(/```json[\s\S]*$/, '').trim()}
@@ -1107,9 +1110,9 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 <div className="row gap-8" style={{ alignItems: 'center' }}>
                   <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
                   <span className="mono-label" style={{ margin: 0 }}>
-                    {usedAI ? 'Analista IA' : 'Analista local'}
+                    {usedAI ? t('aiAnalyst.aiAnalyst') : t('aiAnalyst.localAnalyst')}
                   </span>
-                  {usedAI && <span className="badge gold">IA</span>}
+                  {usedAI && <span className="badge gold">{t('aiAnalyst.aiBadge')}</span>}
                   {lastAiMeta?.confidence && (
                     <span className={`badge ${lastAiMeta.confidence === 'Alta' || lastAiMeta.confidence === 'Alta local' ? 'gold' : ''}`} style={{ fontSize: 10 }}>
                       {lastAiMeta.confidence}
@@ -1132,7 +1135,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                   disabled={isNoteSaved}
                 >
                   <Icon name="star" size={11} style={{ color: isNoteSaved ? 'var(--gold)' : 'var(--tx-3)' }} />
-                  {isNoteSaved ? 'Guardada' : 'Guardar en Notas'}
+                  {isNoteSaved ? t('aiAnalyst.saved') : t('aiAnalyst.saveToNotes')}
                 </button>
                 <button
                   type="button"
@@ -1149,16 +1152,16 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                     if (!answer) return;
                     window.speechSynthesis.cancel();
                     const utterance = new SpeechSynthesisUtterance(answer.text.slice(0, 500));
-                    utterance.lang = 'es-ES';
+                    utterance.lang = lang === 'es' ? 'es-ES' : 'en-US';
                     const voices = window.speechSynthesis.getVoices();
-                    const esVoice = voices.find(v => v.lang.startsWith('es'));
-                    if (esVoice) utterance.voice = esVoice;
+                    const preferred = voices.find(v => v.lang.startsWith(lang));
+                    if (preferred) utterance.voice = preferred;
                     window.speechSynthesis.speak(utterance);
                   }}
-                  title="Escuchar respuesta"
+                  title={t('aiAnalyst.listenAnswer')}
                 >
                   <Icon name="ai" size={13} />
-                  Escuchar
+                  {t('aiAnalyst.listen')}
                 </button>
               </div>
               <p style={{ marginTop: 0, fontSize: 14, lineHeight: 1.6 }}>{parsed.text}</p>
@@ -1170,21 +1173,21 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
 
               <div className="analyst-source-grid">
                 <div>
-                  <span className="mono-label">Modo</span>
-                  <strong>{usedAI ? (lastAiMeta?.model ?? 'Proveedor IA') : role === 'guest' ? 'Invitado local' : 'Motor local'}</strong>
+                  <span className="mono-label">{t('aiAnalyst.mode')}</span>
+                  <strong>{usedAI ? (lastAiMeta?.model ?? t('aiAnalyst.aiProvider')) : role === 'guest' ? t('aiAnalyst.guestLocal') : t('aiAnalyst.localEngine')}</strong>
                 </div>
                 <div>
-                  <span className="mono-label">Datos enviados</span>
-                  <strong>{lastAiMeta?.contextChars ? `${lastAiMeta.contextChars} chars` : 'Contexto resumido'}</strong>
+                  <span className="mono-label">{t('aiAnalyst.dataSent')}</span>
+                  <strong>{lastAiMeta?.contextChars ? t('aiAnalyst.chars', { n: lastAiMeta.contextChars }) : t('aiAnalyst.contextSummary')}</strong>
                 </div>
                 <div>
-                  <span className="mono-label">Confianza</span>
-                  <strong>{lastAiMeta?.confidence ?? (usedAI ? 'Media' : 'Alta local')}</strong>
+                  <span className="mono-label">{t('matchDetail.confidence')}</span>
+                  <strong>{lastAiMeta?.confidence ?? (usedAI ? t('sourceBadge.medium') : t('aiAnalyst.confHighLocal'))}</strong>
                 </div>
               </div>
               {lastAiMeta?.tools?.length ? (
                 <div className="row gap-6 wrap" style={{ marginTop: 10 }}>
-                  <span className="mono-label">Herramientas:</span>
+                  <span className="mono-label">{t('aiAnalyst.toolsColon')}</span>
                   {lastAiMeta.tools.map((tool) => (
                     <span key={tool} className="cite">{tool}</span>
                   ))}
@@ -1193,7 +1196,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               
               <div className="row gap-6 wrap" style={{ marginTop: 14 }}>
                 <span className="mono-label" style={{ margin: 0 }}>
-                  Fuentes:
+                  {t('aiAnalyst.sources')}
                 </span>
                 {answer.sources.map((s) => (
                   <span key={s} className="cite">
@@ -1202,7 +1205,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 ))}
               </div>
               <div className="mono-label" style={{ marginTop: 12 }}>
-                {ANALYST_DISCLAIMER}
+                {t('disclaimer.full')}
               </div>
             </div>
           )}
@@ -1211,7 +1214,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
         <div className="card">
           <div className="card-hd">
             <Icon name="sparkSmall" size={15} style={{ color: 'var(--gold)' }} />
-            <h3>Sugeridas</h3>
+            <h3>{t('aiAnalyst.suggested')}</h3>
           </div>
           <div className="card-pad" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {dynamicSuggestedQuestions.map((s) => (
@@ -1226,13 +1229,13 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
               </button>
             ))}
             <div className="mono-label" style={{ marginTop: 6 }}>
-              {ANALYST_DISCLAIMER}
+              {t('disclaimer.full')}
             </div>
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 11 }}>
-          <span className="mono-label">Memoria IA</span>
+          <span className="mono-label">{t('aiAnalyst.aiMemory')}</span>
           <div style={{ flex: 1, maxWidth: 120, height: 4, background: 'var(--bg-3)', borderRadius: 2, overflow: 'hidden' }}>
             <div style={{ width: `${memStats.percentFull}%`, height: '100%', background: memStats.percentFull > 80 ? '#ef4444' : 'var(--gold)', borderRadius: 2, transition: 'width 0.3s' }} />
           </div>
@@ -1245,7 +1248,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 const lines = combinedMemory.map((r) =>
                   `[${r.createdAt}] (${r.mode}) Q: ${r.question}\nA: ${r.answer}\n---`
                 ).join('\n');
-                const header = `Historial IA — Mundial 2026\nExportado: ${new Date().toLocaleString('es-MX')}\nTotal: ${combinedMemory.length} consultas\n${'='.repeat(50)}\n\n`;
+                const header = `${t('aiAnalyst.exportHeader', { date: new Date().toLocaleString(lang === 'es' ? 'es-MX' : 'en-US'), n: combinedMemory.length })}\n${'='.repeat(50)}\n\n`;
                 const blob = new Blob([header + lines], { type: 'text/plain;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1254,10 +1257,10 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
                 a.click();
                 URL.revokeObjectURL(url);
               }}
-              title="Exportar historial de conversación IA"
+              title={t('aiAnalyst.exportTitle')}
             >
               <Icon name="download" size={13} />
-              Exportar
+              {t('aiAnalyst.export')}
             </button>
           )}
         </div>
@@ -1278,7 +1281,7 @@ export function Analyst({ ctx: ctxProp, id: idProp }: { ctx?: string; id?: strin
           onRun={() => runNativeAction('day-brief')}
         />
         <AIQualityHistory records={combinedMemory} />
-        <EntityInsightsPanel records={focusedMemory} context={CTX_ES[ctx]} />
+        <EntityInsightsPanel records={focusedMemory} context={t(CTX_KEYS[ctx])} />
       </div>
     </div>
   );

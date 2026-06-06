@@ -2,6 +2,7 @@ import { useMemo, useState, useRef } from 'react';
 import { Icon } from '@worldcup/ui';
 import { type Match as WorldCupMatch } from '@worldcup/shared';
 import { notifyInfo } from '@/store/notifications';
+import { useT } from '@/i18n';
 
 export function HawkEyePitch({
   homeTeam,
@@ -14,15 +15,16 @@ export function HawkEyePitch({
   onSimulate: (report: string) => void;
   simulating: boolean;
 }) {
-  const [homePlayers, setHomePlayers] = useState([
-    { id: 'h1', role: 'Delantero', x: 120, y: 80, label: 'Delantero Centro' },
-    { id: 'h2', role: 'Mediocentro', x: 80, y: 150, label: 'Volante Creativo' },
-    { id: 'h3', role: 'Defensa', x: 120, y: 220, label: 'Cierre Defensivo' },
+  const t = useT();
+  const [homePlayers, setHomePlayers] = useState(() => [
+    { id: 'h1', role: t('asm.roleFwd'), x: 120, y: 80, label: t('asm.lblFwdCenter') },
+    { id: 'h2', role: t('asm.roleMid'), x: 80, y: 150, label: t('asm.lblPlaymaker') },
+    { id: 'h3', role: t('asm.roleDef'), x: 120, y: 220, label: t('asm.lblDefAnchor') },
   ]);
-  const [awayPlayers, setAwayPlayers] = useState([
-    { id: 'a1', role: 'Delantero', x: 120, y: 320, label: 'Punta Veloz' },
-    { id: 'a2', role: 'Mediocentro', x: 180, y: 250, label: 'Contención' },
-    { id: 'a3', role: 'Defensa', x: 120, y: 180, label: 'Líbero' },
+  const [awayPlayers, setAwayPlayers] = useState(() => [
+    { id: 'a1', role: t('asm.roleFwd'), x: 120, y: 320, label: t('asm.lblFastStriker') },
+    { id: 'a2', role: t('asm.roleMid'), x: 180, y: 250, label: t('asm.lblHolding') },
+    { id: 'a3', role: t('asm.roleDef'), x: 120, y: 180, label: t('asm.lblSweeper') },
   ]);
 
   const [activePlayer, setActivePlayer] = useState<{ id: string; team: 'home' | 'away' } | null>(null);
@@ -51,9 +53,9 @@ export function HawkEyePitch({
 
   return (
     <div className="card card-pad animate-fade-in" style={{ background: 'rgba(10, 20, 12, 0.9)', border: '1px solid var(--gold-line)' }}>
-      <h4 style={{ margin: '0 0 10px 0', color: 'var(--gold)' }}>🦅 Pizarra del Analista: Ojo del Halcón IA</h4>
+      <h4 style={{ margin: '0 0 10px 0', color: 'var(--gold)' }}>{t('asm.hawkTitle')}</h4>
       <p className="muted" style={{ fontSize: 11.5, marginTop: 0, marginBottom: 14 }}>
-        Arrastra las fichas tácticas doradas ({homeTeam || 'Local'}) y verdes ({awayTeam || 'Visita'}) en el césped táctico para planificar su enfrentamiento en vivo.
+        {t('asm.hawkDesc', { home: homeTeam || t('pool.pmHome'), away: awayTeam || t('pool.pmAway') })}
       </p>
 
       <div
@@ -180,24 +182,27 @@ export function HawkEyePitch({
       </div>
 
       <div className="row spread align-center" style={{ marginTop: 14 }}>
-        <span className="mono-label" style={{ fontSize: 10.5 }}>Configuración activa: 3 vs 3 táctico</span>
+        <span className="mono-label" style={{ fontSize: 10.5 }}>{t('asm.config3v3')}</span>
         <button
           type="button"
           className="btn gold"
           style={{ padding: '6px 14px', fontSize: 12.5 }}
           onClick={() => {
-            const report =
-              `**ANÁLISIS HAWK-EYE TÁCTICO (${homeTeam} vs ${awayTeam}):**\n\n` +
-              `1. **Disposición Local (${homeTeam}):** Con un delantero centro posicionado ofensivamente en (${homePlayers[0].x}, ${homePlayers[0].y}) y soporte creativo, logran un carril de aproximación rápido en el flanco izquierdo.\n` +
-              `2. **Bloque Defensivo de ${awayTeam}:** El líbero ubicado en (${awayPlayers[2].x}, ${awayPlayers[2].y}) intercepta eficazmente el juego aéreo, forzando disparos de media distancia.\n` +
-              `3. **Veredicto del Analista:** El posicionamiento favorece un contragolpe rápido de ${awayTeam} debido al adelantamiento de líneas locales. Resultado estimado: 1-2 a favor de ${awayTeam}.`;
+            const report = t('asm.hawkReport', {
+              home: homeTeam,
+              away: awayTeam,
+              hx: homePlayers[0].x,
+              hy: homePlayers[0].y,
+              ax: awayPlayers[2].x,
+              ay: awayPlayers[2].y,
+            });
             onSimulate(report);
             if ('vibrate' in navigator) navigator.vibrate([20, 40, 20]);
           }}
           disabled={simulating || !homeTeam || !awayTeam}
         >
           <Icon name={simulating ? 'sparkSmall' : 'ai'} size={13} />
-          {simulating ? 'Computando...' : 'Simular Choque'}
+          {simulating ? t('asm.computing') : t('asm.simulateClash')}
         </button>
       </div>
     </div>
@@ -215,6 +220,7 @@ export function PressRoom({
   onAnswer: (text: string) => void;
   answering: boolean;
 }) {
+  const t = useT();
   const [activeJournalist, setActiveJournalist] = useState<'jeanluc' | 'gary' | 'diego'>('jeanluc');
   const [userResponse, setUserResponse] = useState('');
 
@@ -225,21 +231,21 @@ export function PressRoom({
     const h = selectedMatch.home;
     const a = selectedMatch.away;
     return {
-      jeanluc: `¿Crees que el planteamiento defensivo de ${h} será suficiente para anular la fluidez táctica de ${a}?`,
-      gary: `Los modelos de Expected Goals (xG) otorgan a ${a} una ventaja del 64%. ¿Cuál es tu argumento analítico para tu pick?`,
-      diego: `¡Che! ¿Realmente pensás que la pasión de ${h} alcanzará para arrebatarle el resultado a ${a} en este partido de gala?`,
+      jeanluc: t('asm.qJeanluc', { h, a }),
+      gary: t('asm.qGary', { a }),
+      diego: t('asm.qDiego', { h, a }),
     };
-  }, [selectedMatch]);
+  }, [selectedMatch, t]);
 
   return (
     <div className="card card-pad animate-fade-in" style={{ background: 'rgba(15, 15, 20, 0.95)', border: '1px solid var(--gold-line)' }}>
       <div className="row gap-8 align-center" style={{ marginBottom: 12 }}>
         <span style={{ fontSize: 22 }}>🎙️</span>
-        <h4 style={{ margin: 0, color: 'var(--gold)' }}>Sala de Prensa Oficial: Copa del Mundo</h4>
+        <h4 style={{ margin: 0, color: 'var(--gold)' }}>{t('asm.pressTitle')}</h4>
       </div>
 
       <p className="muted" style={{ fontSize: 12, marginTop: 0, marginBottom: 16 }}>
-        Responde a las preguntas de la prensa deportiva internacional sobre el partido {selectedMatch ? `${selectedMatch.home} vs ${selectedMatch.away}` : 'destacado'}.
+        {t('asm.pressDesc', { match: selectedMatch ? `${selectedMatch.home} vs ${selectedMatch.away}` : t('asm.featured') })}
       </p>
 
       <div className="row gap-6" style={{ marginBottom: 14 }}>
@@ -349,37 +355,31 @@ export function PressRoom({
           className="searchbox"
           rows={3}
           style={{ width: '100%', height: 'auto', resize: 'none', padding: '10px 14px', borderRadius: 12, fontSize: 13 }}
-          placeholder="Escribe tu justificación táctica para la prensa..."
+          placeholder={t('asm.pressPlaceholder')}
           value={userResponse}
           onChange={(e) => setUserResponse(e.target.value)}
         />
         <div className="row spread align-center">
-          <span className="mono-label" style={{ fontSize: 10 }}>Filtro de prensa activo: Moderado</span>
+          <span className="mono-label" style={{ fontSize: 10 }}>{t('asm.pressFilter')}</span>
           <button
             type="button"
             className="btn gold"
             style={{ padding: '6px 14px', fontSize: 12.5 }}
             onClick={() => {
               if (!userResponse.trim()) {
-                notifyInfo('Campo vacío', 'Escribe una respuesta para responder a la prensa.');
+                notifyInfo(t('asm.emptyField'), t('asm.emptyFieldText'));
                 return;
               }
               const score = Math.floor(Math.random() * 20) + 80;
               const reporterName = activeJournalist === 'jeanluc' ? "Jean-Luc (L'Equipe)" : activeJournalist === 'gary' ? "Gary (The Athletic)" : "Diego (TyC Sports)";
-              const feedback =
-                `**RUEDA DE PRENSA: EVALUACIÓN DEL COMENTARIO TÁCTICO**\n\n` +
-                `*   **Pregunta de:** ${reporterName}\n` +
-                `*   **Tu respuesta:** "${userResponse}"\n\n` +
-                `⚽ **Nivel de Aprobación de la Prensa:** ${score}%\n\n` +
-                `*   **Comentario del Panel:** Tu análisis destaca por una sólida comprensión del parado táctico y la diferencia física. ` +
-                `Sin embargo, algunos redactores señalan que subestimas las jugadas a balón parado. ¡Una rueda de prensa sumamente elocuente!`;
+              const feedback = t('asm.pressFeedback', { reporter: reporterName, response: userResponse, score });
               onAnswer(feedback);
               setUserResponse('');
               if ('vibrate' in navigator) navigator.vibrate([30, 10, 30]);
             }}
             disabled={answering}
           >
-            🎙️ Responder a la Prensa
+            {t('asm.respondPress')}
           </button>
         </div>
       </div>

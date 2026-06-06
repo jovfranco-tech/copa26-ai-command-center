@@ -2,6 +2,7 @@ import { Icon, type IconName } from '@worldcup/ui';
 import { type PoolPick } from '@/store/pool';
 import { type AnalystAnswer } from '@/lib/analyst';
 import { type AIResult } from '@/lib/aiClient';
+import { useT } from '@/i18n';
 
 export type NativeAIAction =
   | 'conservative-pool'
@@ -33,26 +34,27 @@ export function AIActionPanel({
   cloudStatus: 'syncing' | 'synced' | 'error';
   onRun: (action: NativeAIAction) => void;
 }) {
+  const t = useT();
   const actions: Array<{ id: NativeAIAction; icon: IconName; title: string; text: string }> = [
-    { id: 'day-brief', icon: 'sparkSmall', title: 'Resumen del día', text: 'Prioriza partido, clima, picks y acción.' },
-    { id: 'conservative-pool', icon: 'target', title: 'Rellenar conservadora', text: 'Aplica picks de baja varianza por ranking.' },
-    { id: 'audit-picks', icon: 'check', title: 'Auditar picks', text: 'Completa marcadores sin sobrescribir.' },
-    { id: 'compare-family', icon: 'trophy', title: 'Comparar grupo', text: 'Resume cobertura y tabla visible.' },
-    { id: 'family-learning', icon: 'database', title: 'Aprender estilo', text: 'Detecta patrón de riesgo del grupo.' },
-    { id: 'compare-strategies', icon: 'stats', title: 'Comparar estrategias', text: 'Conservadora, agresiva y contraria.' },
-    { id: 'change-radar', icon: 'activity', title: 'Radar de cambios', text: 'Explica por qué difiere un pick.' },
-    { id: 'ai-scorecard', icon: 'shield', title: 'Medir IA', text: 'Puntúa estrategias cuando haya FT.' },
-    { id: 'uncertain-matches', icon: 'activity', title: 'Detectar inciertos', text: 'Encuentra cruces parejos para revisar.' },
+    { id: 'day-brief', icon: 'sparkSmall', title: t('aap.actDayBriefT'), text: t('aap.actDayBriefX') },
+    { id: 'conservative-pool', icon: 'target', title: t('aap.actConsT'), text: t('aap.actConsX') },
+    { id: 'audit-picks', icon: 'check', title: t('aap.actAuditT'), text: t('aap.actAuditX') },
+    { id: 'compare-family', icon: 'trophy', title: t('aap.actCmpFamT'), text: t('aap.actCmpFamX') },
+    { id: 'family-learning', icon: 'database', title: t('aap.actLearnT'), text: t('aap.actLearnX') },
+    { id: 'compare-strategies', icon: 'stats', title: t('aap.actCmpStratT'), text: t('aap.actCmpStratX') },
+    { id: 'change-radar', icon: 'activity', title: t('aap.actRadarT'), text: t('aap.actRadarX') },
+    { id: 'ai-scorecard', icon: 'shield', title: t('aap.actScoreT'), text: t('aap.actScoreX') },
+    { id: 'uncertain-matches', icon: 'activity', title: t('aap.actUncertainT'), text: t('aap.actUncertainX') },
   ];
   return (
     <div className="ai-action-panel">
       <div className="ai-action-head">
         <div>
-          <span className="mono-label">Acciones AI-native</span>
-          <strong>Opera sobre quiniela y datos locales</strong>
+          <span className="mono-label">{t('aap.title')}</span>
+          <strong>{t('aap.subtitle')}</strong>
         </div>
         <span className={`badge ${cloudStatus === 'synced' ? 'gold' : ''}`}>
-          {cloudStatus === 'synced' ? `Memoria compartida · ${groupId}` : cloudStatus === 'syncing' ? 'Sincronizando memoria' : 'Memoria local activa'}
+          {cloudStatus === 'synced' ? t('aap.sharedMemory', { g: groupId }) : cloudStatus === 'syncing' ? t('aap.syncingMemory') : t('aap.localMemory')}
         </span>
       </div>
       <div className="ai-action-grid">
@@ -77,6 +79,7 @@ export function PendingNativeActionPanel({
   onApply: () => void;
   onCancel: () => void;
 }) {
+  const t = useT();
   if (!pending) return null;
   const entries = Object.entries(pending.picks ?? {});
   return (
@@ -84,7 +87,7 @@ export function PendingNativeActionPanel({
       <div className="pending-ai-action-main">
         <Icon name="shield" size={15} />
         <div>
-          <span className="mono-label">Previsualización antes de aplicar</span>
+          <span className="mono-label">{t('aap.previewBeforeApply')}</span>
           <strong>{pending.title}</strong>
           <p>{pending.detail}</p>
         </div>
@@ -93,18 +96,18 @@ export function PendingNativeActionPanel({
         <div className="pending-pick-strip">
           {entries.slice(0, 5).map(([matchId, pick]) => (
             <span key={matchId}>
-              <strong>{matchId}</strong> {pick.homeGoals ?? '-'}-{pick.awayGoals ?? '-'} · {pick.outcome ?? 'sin ganador'}
+              <strong>{matchId}</strong> {pick.homeGoals ?? '-'}-{pick.awayGoals ?? '-'} · {pick.outcome ?? t('pool.noWinner')}
             </span>
           ))}
-          {entries.length > 5 ? <span>+{entries.length - 5} más</span> : null}
+          {entries.length > 5 ? <span>{t('aap.more', { n: entries.length - 5 })}</span> : null}
         </div>
       ) : null}
       <div className="pending-ai-actions">
         <button type="button" className="btn gold" onClick={onApply}>
-          <Icon name="check" size={14} /> Aplicar cambios
+          <Icon name="check" size={14} /> {t('aap.applyChanges')}
         </button>
         <button type="button" className="btn ghost" onClick={onCancel}>
-          <Icon name="close" size={14} /> Cancelar
+          <Icon name="close" size={14} /> {t('common.cancel')}
         </button>
       </div>
     </div>
