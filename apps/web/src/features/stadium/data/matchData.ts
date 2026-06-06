@@ -51,6 +51,8 @@ export interface Match {
   liveTime?: string;
   spectators: string;
   pitchZoneInsights: PitchZoneInsights;
+  /** English variant of pitchZoneInsights, shown when the active language is 'en'. */
+  pitchZoneInsightsEn?: PitchZoneInsights;
   analytics: MatchAnalytics;
   /** true when pitchZoneInsights/analytics come from curated demo data */
   isDemo?: boolean;
@@ -67,6 +69,44 @@ export const PLACEHOLDER_INSIGHTS: PitchZoneInsights = {
   field: 'Análisis táctico del terreno de juego — datos pendientes.',
   screens: 'Estadísticas y transmisión — pendiente de inicio del partido.',
   lights: 'Condiciones de iluminación — disponibles al acercarse el partido.',
+};
+
+export const PLACEHOLDER_INSIGHTS_EN: PitchZoneInsights = {
+  stands: 'Atmosphere and crowd information available soon.',
+  field: 'Tactical pitch analysis — data pending.',
+  screens: 'Stats and broadcast — pending match kick-off.',
+  lights: 'Lighting conditions — available as the match approaches.',
+};
+
+/**
+ * English variants of the curated demo pitch-zone insights, keyed by "HOME-AWAY".
+ * Kept parallel to DEMO_MATCH_ANALYTICS so the rich Spanish prose stays untouched.
+ */
+export const DEMO_PITCH_INSIGHTS_EN: Record<string, PitchZoneInsights> = {
+  'MEX-RSA': {
+    stands: 'The Santa Úrsula colossus roars with Mexico’s chant and the buzz of South African vuvuzelas behind the goals. A spectacular tricolour mosaic fills the east stand.',
+    field: 'Mexico presses high to suffocate the build-up. South Africa exploits pace down the flanks on the fast turf.',
+    screens: 'Showing replay: a powerful header from Santiago Giménez onto a precise cross from the right wing.',
+    lights: 'An electric atmosphere under the sky of the Mexican capital. The LED lighting brings out the deep green of the pitch.',
+  },
+  'ARG-FRA': {
+    stands: 'The Argentine support owns the south curve with deafening chants. The French fans in the north stand look tense but expectant.',
+    field: 'Intense midfield battle. Argentina exploits the interior spaces in Zone 14. France replies with quick wide transitions.',
+    screens: 'Showing tactical replay of the last goal: a rapid one-touch passing sequence finished with a crossed volley.',
+    lights: 'Floodlights at full power. Reflectors cast sharp shadows, highlighting the physical effort of the players on every sprint.',
+  },
+  'BRA-GER': {
+    stands: 'The stands turn green and yellow with smoke and massed batucadas. The German support packs in tightly behind the north goal.',
+    field: 'Fast, slick turf from the heavy tropical rain. Slide tackles will be high-risk but high-reward.',
+    screens: 'Pre-match graphics showing the lineups: Brazil deploy a hugely attacking 4-2-4; Germany reply with an orderly 3-5-2.',
+    lights: 'The sunset flashes golden tones through the clouds. The stadium light ring glows with green and yellow accents.',
+  },
+  'ESP-NED': {
+    stands: 'Effusive Dutch celebrations in the east end. The Spanish section stays quiet, poring over the final stats of the match.',
+    field: 'Spain held 72% possession but could not break the low block. The Netherlands struck three times vertically on transitions.',
+    screens: 'Final Score: SPAIN 1 - 3 NETHERLANDS. Replay highlighting Van Persie’s spectacular diving header.',
+    lights: 'The shadows of the day dissolve under thick fog. The stadium’s powerful floodlights cut through the mist with white halos.',
+  },
 };
 
 export const PLACEHOLDER_ANALYTICS: MatchAnalytics = {
@@ -242,6 +282,7 @@ export const MATCH_FIXTURES: Match[] = [
     score: { home: 0, away: 0 },
     spectators: '83,000 (Estadio Azteca)',
     pitchZoneInsights: DEMO_MATCH_ANALYTICS['MEX-RSA'].pitchZoneInsights,
+    pitchZoneInsightsEn: DEMO_PITCH_INSIGHTS_EN['MEX-RSA'],
     analytics: DEMO_MATCH_ANALYTICS['MEX-RSA'].analytics,
     isDemo: true,
   },
@@ -266,6 +307,7 @@ export const MATCH_FIXTURES: Match[] = [
     liveTime: "82'",
     spectators: '82,500 (MetLife Stadium)',
     pitchZoneInsights: DEMO_MATCH_ANALYTICS['ARG-FRA'].pitchZoneInsights,
+    pitchZoneInsightsEn: DEMO_PITCH_INSIGHTS_EN['ARG-FRA'],
     analytics: DEMO_MATCH_ANALYTICS['ARG-FRA'].analytics,
     isDemo: true,
   },
@@ -289,6 +331,7 @@ export const MATCH_FIXTURES: Match[] = [
     score: { home: 0, away: 0 },
     spectators: '72,000 (NRG Stadium)',
     pitchZoneInsights: DEMO_MATCH_ANALYTICS['BRA-GER'].pitchZoneInsights,
+    pitchZoneInsightsEn: DEMO_PITCH_INSIGHTS_EN['BRA-GER'],
     analytics: DEMO_MATCH_ANALYTICS['BRA-GER'].analytics,
     isDemo: true,
   },
@@ -312,6 +355,7 @@ export const MATCH_FIXTURES: Match[] = [
     score: { home: 1, away: 3 },
     spectators: '94,000 (AT&T Stadium)',
     pitchZoneInsights: DEMO_MATCH_ANALYTICS['ESP-NED'].pitchZoneInsights,
+    pitchZoneInsightsEn: DEMO_PITCH_INSIGHTS_EN['ESP-NED'],
     analytics: DEMO_MATCH_ANALYTICS['ESP-NED'].analytics,
     isDemo: true,
   },

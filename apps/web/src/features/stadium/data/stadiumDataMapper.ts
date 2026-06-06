@@ -1,4 +1,5 @@
 import { playerRatings, type PlayerRatings } from '@/lib/ratings';
+import { translate, type Lang } from '@/i18n';
 import type { Player as DbPlayer } from '@worldcup/shared';
 import { type Player as StadiumPlayer, type TeamLineup, type MatchLineups } from './lineups';
 import { getTeamVisualIdentity } from './teamVisualIdentity';
@@ -158,41 +159,40 @@ const TEAM_INFO: Record<string, TeamInfo> = {
 
 /**
  * Deterministic generator for AI tactical insights based on real database stats.
+ * Localized via the i18n dict; defaults to Spanish so non-React callers / tests
+ * stay on the app default without passing a language.
  */
-export function generateDeterministicInsight(p: StadiumPlayer, ratings: PlayerRatings): string {
+export function generateDeterministicInsight(p: StadiumPlayer, ratings: PlayerRatings, lang: Lang = 'es'): string {
+  const t = (key: string, vars?: Record<string, string | number>) => translate(lang, `estadio3d.${key}`, vars);
   const name = p.displayName;
   let text = '';
 
   if (p.position === 'GK') {
-    text = `Seguridad bajo presión: ${name} (Rating ${ratings.overall}) se destaca por su ${ratings.dribbling >= 78 ? 'alto nivel de reflejos y rapidez mental' : 'solidez posicional'}. `;
-    text += `Su capacidad física (${ratings.physical}) le permite controlar el área en balones aéreos y juego aéreo.`;
+    const trait = t(ratings.dribbling >= 78 ? 'insightGkReflex' : 'insightGkSolid');
+    text = t('insightGk', { name, ovr: ratings.overall, trait, phy: ratings.physical });
   } else if (p.position === 'DF') {
-    text = `Cobertura táctica: ${name} aprovecha su capacidad defensiva de ${ratings.defending} y físico de ${ratings.physical} para dominar los duelos terrestres. `;
-    if (ratings.pace >= 74) {
-      text += `Su alta velocidad (${ratings.pace}) le facilita realizar transiciones de repliegue y coberturas de banda eficientes.`;
-    } else {
-      text += `Mantiene una sólida vigilancia posicional en bloque bajo para compensar su velocidad.`;
-    }
+    const tail = t(ratings.pace >= 74 ? 'insightDfFast' : 'insightDfSlow', { pace: ratings.pace });
+    text = t('insightDf', { name, def: ratings.defending, phy: ratings.physical, tail });
   } else if (p.position === 'MF') {
     if (ratings.passing >= 80 && ratings.dribbling >= 80) {
-      text = `Creador entre líneas: ${name} es el motor creativo con PAS ${ratings.passing} y REG ${ratings.dribbling}. Explota los espacios interiores en tres cuartos de campo, distribuyendo balones con alta precisión.`;
+      text = t('insightMfCreator', { name, pas: ratings.passing, dri: ratings.dribbling });
     } else if (ratings.defending >= 72) {
-      text = `Pivote de equilibrio: Con DEF ${ratings.defending} y FIS ${ratings.physical}, ${name} actúa como un destructor táctico, recuperando balones y protegiendo el carril central de contraataques rivales.`;
+      text = t('insightMfPivote', { name, def: ratings.defending, phy: ratings.physical });
     } else {
-      text = `Mediocampista de enlace: Conecta las líneas mediante pases cortos y apoyos posicionales constantes, manteniendo un nivel de influencia de ${ratings.overall}.`;
+      text = t('insightMfLink', { name, ovr: ratings.overall });
     }
   } else { // FW
     if (ratings.pace >= 80 && ratings.shooting >= 80) {
-      text = `Amenaza al espacio: ${name} combina velocidad explosiva (${ratings.pace}) y contundencia de remate (${ratings.shooting}). Ataca las espaldas de la zaga y busca desequilibrio individual en velocidad.`;
+      text = t('insightFwSpace', { name, pace: ratings.pace, sho: ratings.shooting });
     } else if (ratings.dribbling >= 82) {
-      text = `Generador en aislamiento: Con un regate de ${ratings.dribbling}, ${name} busca duelos de 1v1 en banda para ensanchar el campo y generar superioridad ofensiva.`;
+      text = t('insightFwDribble', { name, dri: ratings.dribbling });
     } else {
-      text = `Pivote ofensivo de área: Fija centrales rivales gracias a su físico de ${ratings.physical} y finaliza jugadas colectivas con un tiro de ${ratings.shooting}.`;
+      text = t('insightFwTarget', { name, phy: ratings.physical, sho: ratings.shooting });
     }
   }
 
   if (ratings.physical < 65) {
-    text += ` Su bajo físico (${ratings.physical}) representa un ligero riesgo de fatiga en tramos finales de presión alta.`;
+    text += t('insightLowPhysical', { phy: ratings.physical });
   }
 
   return text;
@@ -322,7 +322,10 @@ export function mapDatabasePlayersToLineups(
   matchId: string,
   matchStatus: 'pre-match' | 'live' | 'post-match' = 'pre-match',
   matchMinute: number = 0,
+  lang: Lang = 'es',
 ): MatchLineups {
+  const t = (key: string, vars?: Record<string, string | number>) => translate(lang, `estadio3d.${key}`, vars);
+  const srcLabel = (source: string) => (source === 'fc26' ? 'EA SPORTS FC 26' : t('srcEstimated'));
   const getTeamSlots = (teamCode: string, side: 'home' | 'away'): SlotDefinition[] => {
     return (
       SLOT_TEMPLATES[teamCode] ||
@@ -376,7 +379,7 @@ export function mapDatabasePlayersToLineups(
           influenceScore: ratings.overall,
           stamina: ratings.physical,
           riskLevel: ratings.defending < 50 ? 'alto' : ratings.defending < 70 ? 'medio' : 'bajo',
-          notes: `Jugador real del dashboard (${matchedDb.club}). Calificación de rendimiento ${ratings.overall} (${ratings.source === 'fc26' ? 'EA SPORTS FC 26' : 'Estimada'}).`,
+          notes: t('noteMatched', { club: matchedDb.club ?? '', ovr: ratings.overall, src: srcLabel(ratings.source) }),
           pos: matchedDb.pos,
           club: matchedDb.club,
           age: matchedDb.age,
@@ -427,7 +430,7 @@ export function mapDatabasePlayersToLineups(
           influenceScore: ratings.overall,
           stamina: ratings.physical,
           riskLevel: ratings.defending < 50 ? 'alto' : ratings.defending < 70 ? 'medio' : 'bajo',
-          notes: `Rol táctico asignado dinámicamente (${bestCandidate.club}).`,
+          notes: t('noteDynamic', { club: bestCandidate.club ?? '' }),
           pos: bestCandidate.pos,
           club: bestCandidate.club,
           age: bestCandidate.age,
@@ -450,7 +453,7 @@ export function mapDatabasePlayersToLineups(
           influenceScore: 75,
           stamina: 80,
           riskLevel: 'medio',
-          notes: `Jugador de plantilla (${info.name}).`,
+          notes: t('noteSquad', { team: info.name }),
           slotId: slot.slotId,
         });
       }
@@ -495,6 +498,7 @@ function officialEntryToPlayer(
   slot: SlotDefinition,
   teamCode: string,
   db: DbPlayer | undefined,
+  lang: Lang = 'es',
 ): StadiumPlayer {
   const ratings = db ? playerRatings(db) : null;
   return {
@@ -512,8 +516,12 @@ function officialEntryToPlayer(
     stamina: ratings?.physical ?? 80,
     riskLevel: ratings ? (ratings.defending < 50 ? 'alto' : ratings.defending < 70 ? 'medio' : 'bajo') : 'medio',
     notes: db
-      ? `Alineación oficial confirmada · ${db.club}. Calificación ${ratings!.overall} (${ratings!.source === 'fc26' ? 'EA SPORTS FC 26' : 'Estimada'}).`
-      : 'Titular de la alineación oficial confirmada.',
+      ? translate(lang, 'estadio3d.noteOfficial', {
+          club: db.club ?? '',
+          ovr: ratings!.overall,
+          src: ratings!.source === 'fc26' ? 'EA SPORTS FC 26' : translate(lang, 'estadio3d.srcEstimated'),
+        })
+      : translate(lang, 'estadio3d.noteOfficialStarter'),
     pos: entry.pos,
     club: db?.club,
     age: db?.age ?? null,
@@ -533,6 +541,7 @@ function applyOfficialSheet(
   side: 'home' | 'away',
   sheet: OfficialTeamSheet,
   dbPlayers: DbPlayer[],
+  lang: Lang = 'es',
 ): TeamLineup {
   const slots = generateSlotsFromFormation(teamCode, side, sheet.formation);
   const teamDbPlayers = dbPlayers.filter((p) => p.team === teamCode);
@@ -550,7 +559,7 @@ function applyOfficialSheet(
           ? teamDbPlayers.find((p) => p.id === entry.playerId && !usedDbIds.has(p.id))
           : undefined;
         if (db) usedDbIds.add(db.id);
-        players.push(officialEntryToPlayer(entry, slot, teamCode, db));
+        players.push(officialEntryToPlayer(entry, slot, teamCode, db, lang));
       } else {
         // Sheet has fewer players in this line than the formation implies — keep
         // the slot visible with a neutral placeholder rather than dropping it.
@@ -568,7 +577,7 @@ function applyOfficialSheet(
           influenceScore: 75,
           stamina: 80,
           riskLevel: 'medio',
-          notes: 'Plaza de formación oficial sin titular asignado.',
+          notes: translate(lang, 'estadio3d.notePlaceholderOfficial'),
           slotId: slot.slotId,
         });
       }
@@ -602,16 +611,17 @@ export function buildMatchLineups(
   matchStatus: 'pre-match' | 'live' | 'post-match' = 'pre-match',
   matchMinute: number = 0,
   officialSource: Record<string, OfficialMatchLineup> = OFFICIAL_LINEUPS,
+  lang: Lang = 'es',
 ): MatchLineups {
-  const base = mapDatabasePlayersToLineups(dbPlayers, homeCode, awayCode, matchId, matchStatus, matchMinute);
+  const base = mapDatabasePlayersToLineups(dbPlayers, homeCode, awayCode, matchId, matchStatus, matchMinute, lang);
   const official = officialSource[matchId];
   if (!official) return base;
 
   const home = official.home
-    ? applyOfficialSheet(base.teams.home, homeCode, 'home', official.home, dbPlayers)
+    ? applyOfficialSheet(base.teams.home, homeCode, 'home', official.home, dbPlayers, lang)
     : base.teams.home;
   const away = official.away
-    ? applyOfficialSheet(base.teams.away, awayCode, 'away', official.away, dbPlayers)
+    ? applyOfficialSheet(base.teams.away, awayCode, 'away', official.away, dbPlayers, lang)
     : base.teams.away;
 
   const officialCount = (official.home ? 1 : 0) + (official.away ? 1 : 0);

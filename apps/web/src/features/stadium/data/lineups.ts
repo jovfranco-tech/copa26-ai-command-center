@@ -1,3 +1,5 @@
+import { translate, type Lang } from '@/i18n';
+
 export interface Player {
   id: string;
   name: string;
@@ -427,24 +429,25 @@ export const MATCH_LINEUPS: MatchLineups = {
   }
 };
 
-export const getTacticalZoneType = (player: Player): string => {
-  if (player.id === 'arg-ss') return 'Zona de Influencia entre Líneas';
-  if (player.id === 'fra-lw') return 'Zona de Amenaza al Espacio';
-  if (player.id === 'fra-dm-r') return 'Zona de Cobertura Defensiva Central';
-  if (player.position === 'GK') return 'Área de Cobertura y Cierre';
+export const getTacticalZoneType = (player: Player, lang: Lang = 'es'): string => {
+  const z = (key: string) => translate(lang, `estadio3d.${key}`);
+  if (player.id === 'arg-ss') return z('zoneBetweenLines');
+  if (player.id === 'fra-lw') return z('zoneSpaceThreat');
+  if (player.id === 'fra-dm-r') return z('zoneCentralCover');
+  if (player.position === 'GK') return z('zoneGkCover');
   if (player.position === 'DF') {
     if (player.id === 'arg-rb' || player.id === 'fra-lb' || player.id === 'fra-rb' || player.id === 'arg-lb') {
-      return 'Carril de Progresión Lateral';
+      return z('zoneLateralProgress');
     }
-    return 'Zona de Cobertura y Anticipación';
+    return z('zoneCoverAnticipate');
   }
   if (player.position === 'MF') {
-    if (player.id === 'arg-dm') return 'Zona de Distribución e Influencia (Zona 14)';
-    return 'Zona de Presión y Recuperación';
+    if (player.id === 'arg-dm') return z('zoneDistribution');
+    return z('zonePressRecover');
   }
   if (player.position === 'FW') {
-    if (player.id === 'arg-rw' || player.id === 'fra-rw') return 'Zona de Amenaza por Banda';
-    return 'Zona de Fijación y Presión de Área';
+    if (player.id === 'arg-rw' || player.id === 'fra-rw') return z('zoneWingThreat');
+    return z('zoneBoxPress');
   }
-  return 'Zona de Influencia Táctica';
+  return z('zoneDefault');
 };

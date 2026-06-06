@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
 import './index.css';
-import { MATCH_FIXTURES, getDemoAnalytics, PLACEHOLDER_INSIGHTS, PLACEHOLDER_ANALYTICS } from './data/matchData';
+import { MATCH_FIXTURES, getDemoAnalytics, PLACEHOLDER_INSIGHTS, PLACEHOLDER_INSIGHTS_EN, DEMO_PITCH_INSIGHTS_EN, PLACEHOLDER_ANALYTICS } from './data/matchData';
 import type { Match } from './data/matchData';
+import { useT, useLang, type Translate } from '@/i18n';
 import { StadiumScene } from './components/StadiumScene';
 import { Tactical2DMap } from './components/Tactical2DMap';
 import { WebGLBoundary } from './components/WebGLBoundary';
@@ -35,6 +36,7 @@ function bridgeRealMatch(
   real: SharedMatch,
   teamName: (code: string) => string,
   venueName: (id: string) => string,
+  t: Translate,
 ): Match {
   const homeVisual = getTeamVisualIdentity(real.home, true);
   const awayVisual = getTeamVisualIdentity(real.away, false);
@@ -53,6 +55,8 @@ function bridgeRealMatch(
 
   // Get curated demo analytics if available
   const { entry, isDemo } = getDemoAnalytics(real.home, real.away);
+  const demoKey = `${real.home.toUpperCase()}-${real.away.toUpperCase()}`;
+  const venueTbd = t('estadio3d.venueTbd');
 
   return {
     id: real.id,
@@ -73,8 +77,9 @@ function bridgeRealMatch(
     status,
     score: { home: real.homeGoals ?? 0, away: real.awayGoals ?? 0 },
     liveTime: real.minute != null ? `${real.minute}'` : undefined,
-    spectators: venueName(real.venue) !== 'Sede por confirmar' ? venueName(real.venue) : 'Aforo local',
+    spectators: venueName(real.venue) !== venueTbd ? venueName(real.venue) : t('estadio3d.localCapacity'),
     pitchZoneInsights: entry?.pitchZoneInsights ?? PLACEHOLDER_INSIGHTS,
+    pitchZoneInsightsEn: DEMO_PITCH_INSIGHTS_EN[demoKey] ?? PLACEHOLDER_INSIGHTS_EN,
     analytics: entry?.analytics ?? PLACEHOLDER_ANALYTICS,
     isDemo,
     isPending: !isDemo,
@@ -82,6 +87,8 @@ function bridgeRealMatch(
 }
 
 function App() {
+  const t = useT();
+  const lang = useLang();
   const { data: dbPlayersData } = usePlayers();
   const { data: matchesData, isLoading: matchesLoading } = useMatches();
   const teamsMap = useTeamsMap();
@@ -114,20 +121,20 @@ function App() {
   const venueName = useCallback(
     (id: string) => {
       const v = venuesMap[id];
-      return v ? v.stadium : 'Sede por confirmar';
+      return v ? v.stadium : t('estadio3d.venueTbd');
     },
-    [venuesMap],
+    [venuesMap, t],
   );
 
   // ── Build stadium match list from real API data (fallback to MATCH_FIXTURES) ─
   const fixtures = useMemo<Match[]>(() => {
     const realMatches = matchesData?.items ?? [];
     if (realMatches.length > 0) {
-      return realMatches.map((m) => bridgeRealMatch(m, teamName, venueName));
+      return realMatches.map((m) => bridgeRealMatch(m, teamName, venueName, t));
     }
     // Emergency offline fallback — clearly labeled in matchData.ts
     return MATCH_FIXTURES;
-  }, [matchesData, teamName, venueName]);
+  }, [matchesData, teamName, venueName, t]);
 
   // Apply per-match user overrides (weather / time of day)
   const fixturesWithOverrides = useMemo<Match[]>(() => {
@@ -168,8 +175,9 @@ function App() {
       statusMap[currentMatch.status],
       minute,
       officialSource,
+      lang,
     );
-  }, [dbPlayers, currentMatch, officialSource]);
+  }, [dbPlayers, currentMatch, officialSource, lang]);
 
   // ── Match change handler ────────────────────────────────────────────────────
   const handleMatchChange = (matchId: string) => {
@@ -186,6 +194,7 @@ function App() {
       nextMatch.status === 'live' ? 'live' : nextMatch.status === 'post-match' ? 'post-match' : 'pre-match',
       nextMinute,
       officialSource,
+      lang,
     );
 
     if (selectedPlayer) {
@@ -253,15 +262,17 @@ function App() {
 
   // ── Zone overlay ────────────────────────────────────────────────────────────
   function getZoneTitleAndInfo() {
+    const insights =
+      lang === 'en' ? currentMatch.pitchZoneInsightsEn ?? currentMatch.pitchZoneInsights : currentMatch.pitchZoneInsights;
     switch (activeZone) {
       case 'field':
-        return { title: 'Estrategia y Táctica del Campo', info: currentMatch.pitchZoneInsights.field, accent: 'var(--accent-emerald)' };
+        return { title: t('estadio3d.zoneFieldTitle'), info: insights.field, accent: 'var(--accent-emerald)' };
       case 'stands':
-        return { title: 'Energía de la Afición y Gradas', info: currentMatch.pitchZoneInsights.stands, accent: 'var(--accent-blue)' };
+        return { title: t('estadio3d.zoneStandsTitle'), info: insights.stands, accent: 'var(--accent-blue)' };
       case 'screens':
-        return { title: 'Marcador y Transmisión de Pantallas', info: currentMatch.pitchZoneInsights.screens, accent: 'var(--accent-violet)' };
+        return { title: t('estadio3d.zoneScreensTitle'), info: insights.screens, accent: 'var(--accent-violet)' };
       case 'lights':
-        return { title: 'Torres de Iluminación del Estadio', info: currentMatch.pitchZoneInsights.lights, accent: 'var(--accent-cyan)' };
+        return { title: t('estadio3d.zoneLightsTitle'), info: insights.lights, accent: 'var(--accent-cyan)' };
       default:
         return null;
     }
@@ -273,14 +284,14 @@ function App() {
   const getWeatherDetails = () => {
     switch (currentMatch.weather) {
       case 'rain':
-        return { icon: <CloudRain size={16} style={{ color: 'var(--accent-blue)' }} />, label: 'Lluvia intensa', temp: '14°C' };
+        return { icon: <CloudRain size={16} style={{ color: 'var(--accent-blue)' }} />, label: t('estadio3d.weatherRain'), temp: '14°C' };
       case 'fog':
-        return { icon: <CloudFog size={16} style={{ color: 'var(--text-muted)' }} />, label: 'Niebla densa', temp: '8°C' };
+        return { icon: <CloudFog size={16} style={{ color: 'var(--text-muted)' }} />, label: t('estadio3d.weatherFog'), temp: '8°C' };
       case 'snow':
-        return { icon: <Snowflake size={16} style={{ color: '#ffffff' }} />, label: 'Nieve ligera', temp: '1°C' };
+        return { icon: <Snowflake size={16} style={{ color: '#ffffff' }} />, label: t('estadio3d.weatherSnow'), temp: '1°C' };
       case 'clear':
       default:
-        return { icon: <Moon size={16} style={{ color: 'var(--accent-cyan)' }} />, label: 'Cielo despejado', temp: '22°C' };
+        return { icon: <Moon size={16} style={{ color: 'var(--accent-cyan)' }} />, label: t('estadio3d.weatherClear'), temp: '22°C' };
     }
   };
   const weatherDetails = getWeatherDetails();
@@ -294,7 +305,7 @@ function App() {
   // ── Group matches by stage for dropdown display ─────────────────────────────
   const matchLabel = (m: Match) => `${m.teams.home} vs ${m.teams.away}`;
 
-  const statusLabel = currentMatch.status === 'live' ? 'En Vivo' : currentMatch.status === 'pre-match' ? 'Pre-partido' : 'Finalizado';
+  const statusLabel = currentMatch.status === 'live' ? t('estadio3d.live') : currentMatch.status === 'pre-match' ? t('estadio3d.preMatch') : t('estadio3d.finished');
   const statusBg = currentMatch.status === 'live' ? 'rgba(16,185,129,0.12)' : 'rgba(94,163,184,0.12)';
   const statusBorder = currentMatch.status === 'live' ? 'rgba(16,185,129,0.3)' : 'rgba(94,163,184,0.3)';
   const statusColor = currentMatch.status === 'live' ? 'var(--accent-emerald)' : 'var(--tx-2)';
@@ -309,32 +320,32 @@ function App() {
         {/* ═══════════ ZONE 1: Header + Toolbar ═══════════ */}
         <div className="stadium-header-card">
           <div className="stadium-title-row">
-            <span className="stadium-title-label">Análisis táctico en cancha</span>
-            {matchesLoading && <span className="stadium-status-tag">Cargando calendario…</span>}
-            {!matchesLoading && currentMatch.isPending && <span className="stadium-status-tag">Calendario local</span>}
+            <span className="stadium-title-label">{t('estadio3d.title')}</span>
+            {matchesLoading && <span className="stadium-status-tag">{t('estadio3d.loadingSchedule')}</span>}
+            {!matchesLoading && currentMatch.isPending && <span className="stadium-status-tag">{t('estadio3d.localSchedule')}</span>}
           </div>
           <div className="stadium-toolbar-grid">
             <div className="segmented-control">
-              <button type="button" className={`segmented-btn ${!modoInmersivo ? 'active' : ''}`} onClick={() => setModoInmersivo(false)}>Claro</button>
-              <button type="button" className={`segmented-btn ${modoInmersivo ? 'active' : ''}`} onClick={() => setModoInmersivo(true)}>Inmersivo</button>
+              <button type="button" className={`segmented-btn ${!modoInmersivo ? 'active' : ''}`} onClick={() => setModoInmersivo(false)}>{t('estadio3d.modeClear')}</button>
+              <button type="button" className={`segmented-btn ${modoInmersivo ? 'active' : ''}`} onClick={() => setModoInmersivo(true)}>{t('estadio3d.modeImmersive')}</button>
             </div>
             <div className="segmented-control">
               <button type="button" className={`segmented-btn ${!webGlFallback ? 'active' : ''}`} onClick={() => setWebGlFallback(false)}>3D</button>
               <button type="button" className={`segmented-btn ${webGlFallback ? 'active' : ''}`} onClick={() => setWebGlFallback(true)}>2D</button>
             </div>
             <div className="segmented-control">
-              <button type="button" className={`segmented-btn ${currentMatch.timeOfDay === 'day' ? 'active' : ''}`} onClick={() => handleTimeChange('day')}><Sun size={11} /> Día</button>
-              <button type="button" className={`segmented-btn ${currentMatch.timeOfDay === 'night' ? 'active' : ''}`} onClick={() => handleTimeChange('night')}><Moon size={11} /> Noche</button>
+              <button type="button" className={`segmented-btn ${currentMatch.timeOfDay === 'day' ? 'active' : ''}`} onClick={() => handleTimeChange('day')}><Sun size={11} /> {t('estadio3d.day')}</button>
+              <button type="button" className={`segmented-btn ${currentMatch.timeOfDay === 'night' ? 'active' : ''}`} onClick={() => handleTimeChange('night')}><Moon size={11} /> {t('estadio3d.night')}</button>
             </div>
             <div className="segmented-control" style={{ opacity: webGlFallback ? 0.4 : 1, pointerEvents: webGlFallback ? 'none' : 'auto' }}>
               <button type="button" className={`segmented-btn ${!reduceEffects ? 'active' : ''}`} onClick={() => setReduceEffects(false)}><Eye size={11} /> FX</button>
               <button type="button" className={`segmented-btn ${reduceEffects ? 'active' : ''}`} onClick={() => setReduceEffects(true)}><EyeOff size={11} /> Lite</button>
             </div>
             <button type="button" className={`stadium-btn-sm ${shareFeedback ? 'active' : ''}`} onClick={handleShare}>
-              <Share2 size={11} />{shareFeedback ? '¡Copiado!' : 'Compartir'}
+              <Share2 size={11} />{shareFeedback ? t('estadio3d.copied') : t('estadio3d.share')}
             </button>
-            <button type="button" className={`stadium-btn-sm ${shareFeedback ? 'active' : ''}`} onClick={handleScreenshot} title="Descargar captura del estadio">
-              <Share2 size={11} />Captura
+            <button type="button" className={`stadium-btn-sm ${shareFeedback ? 'active' : ''}`} onClick={handleScreenshot} title={t('estadio3d.screenshotTitle')}>
+              <Share2 size={11} />{t('estadio3d.screenshot')}
             </button>
           </div>
         </div>
@@ -360,8 +371,8 @@ function App() {
             </select>
             <span className="match-context-label">
               {currentMatch.group} · {statusLabel}
-              {currentMatch.isPending && ' · Calendario local'}
-              {currentMatch.isDemo && ' · Datos demo'}
+              {currentMatch.isPending && ` · ${t('estadio3d.localSchedule')}`}
+              {currentMatch.isDemo && ` · ${t('estadio3d.demoData')}`}
             </span>
           </div>
 
@@ -372,16 +383,16 @@ function App() {
 
           <span className="match-status-badge" style={{ background: statusBg, borderColor: statusBorder, color: statusColor }}>
             <span className="status-dot-mini" style={{ backgroundColor: statusColor }} />
-            {currentMatch.status === 'live' ? 'En Vivo' : currentMatch.status === 'pre-match' ? 'Previa' : 'Final'}
+            {currentMatch.status === 'live' ? t('estadio3d.live') : currentMatch.status === 'pre-match' ? t('estadio3d.preview') : t('estadio3d.final')}
           </span>
 
           {/* Camera controls — in same bar, far right, never collides */}
           <div className="camera-controls-row">
             <button className={`camera-toggle-btn ${cameraView === 'tactica' ? 'active' : ''}`} onClick={() => setCameraView('tactica')}>
-              {cameraView === 'tactica' && <span className="toggle-dot" />}Táctica
+              {cameraView === 'tactica' && <span className="toggle-dot" />}{t('estadio3d.tactical')}
             </button>
             <button className={`camera-toggle-btn ${cameraView === 'transmision' ? 'active' : ''}`} onClick={() => setCameraView('transmision')}>
-              {cameraView === 'transmision' && <span className="toggle-dot" />}TV
+              {cameraView === 'transmision' && <span className="toggle-dot" />}{t('estadio3d.tv')}
             </button>
           </div>
         </div>
@@ -394,7 +405,7 @@ function App() {
             <div className="stadium-canvas-shell" ref={stadiumCanvasRef}>
               {/* Only tiny overlay hints inside canvas — no major UI */}
               <div className="canvas-hint-pill">
-                Arrastra para orbitar · Rueda para zoom
+                {t('estadio3d.canvasHint')}
               </div>
 
               {!webGlFallback ? (
@@ -402,7 +413,7 @@ function App() {
                   fallback={
                     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                       <div className="webgl-error-banner">
-                        ⚠️ <strong>Fallo 3D:</strong> Se activó la vista 2D.
+                        ⚠️ <strong>{t('estadio3d.webglFailTitle')}</strong> {t('estadio3d.webglFailBody')}
                       </div>
                       <Tactical2DMap
                         match={currentMatch}
@@ -455,8 +466,8 @@ function App() {
                   <Info size={10} />
                   <span>
                     {currentMatch.isPending
-                      ? 'Datos pendientes — disponibles cuando comience el partido.'
-                      : 'Interactúa con las zonas en 3D para ver telemetría.'}
+                      ? t('estadio3d.zoneHintPending')
+                      : t('estadio3d.zoneHintLive')}
                   </span>
                 </div>
               </div>
@@ -494,7 +505,7 @@ function App() {
         <div className="stadium-tactical-grid">
           <div className="tactical-widget-card">
             <div>
-              <span className="widget-label">Posesión estimada</span>
+              <span className="widget-label">{t('estadio3d.possession')}</span>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '4px' }}>
                 <span className="num" style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>• 52%</span>
                 <span className="num" style={{ fontSize: '0.85rem', fontWeight: 700, color: '#3b82f6' }}>• 48%</span>
@@ -510,8 +521,8 @@ function App() {
 
           <div className="tactical-widget-card">
             <div>
-              <span className="widget-label">Presión actual</span>
-              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--tx)', marginTop: '4px' }}>Alta</div>
+              <span className="widget-label">{t('estadio3d.pressure')}</span>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--tx)', marginTop: '4px' }}>{t('estadio3d.pressureHigh')}</div>
             </div>
             <div className="signal-bars">
               <span className="bar filled" /><span className="bar filled" /><span className="bar filled" /><span className="bar filled" /><span className="bar" />
@@ -519,23 +530,23 @@ function App() {
           </div>
 
           <div className="tactical-widget-card">
-            <div><span className="widget-label">Mentalidad</span></div>
+            <div><span className="widget-label">{t('estadio3d.mentality')}</span></div>
             <div className="toggle-group">
               <button className={`toggle-btn ${mentalidad === 'equilibrada' ? 'active' : ''}`} onClick={() => setMentalidad('equilibrada')}>
-                <span className="bullet" />Equilibrada
+                <span className="bullet" />{t('estadio3d.mentalityBalanced')}
               </button>
               <button className={`toggle-btn ${mentalidad === 'ofensiva' ? 'active' : ''}`} onClick={() => setMentalidad('ofensiva')}>
-                <span className="bullet" />Ofensiva
+                <span className="bullet" />{t('estadio3d.mentalityOffensive')}
               </button>
             </div>
           </div>
 
           <div className="tactical-widget-card">
             <div>
-              <span className="widget-label">Ritmo</span>
+              <span className="widget-label">{t('estadio3d.tempo')}</span>
               <div className="toggle-group">
-                <button className={`toggle-btn ${ritmo === 'moderado' ? 'active' : ''}`} onClick={() => setRitmo('moderado')}>Moderado</button>
-                <button className={`toggle-btn ${ritmo === 'alto' ? 'active' : ''}`} onClick={() => setRitmo('alto')}>Alto</button>
+                <button className={`toggle-btn ${ritmo === 'moderado' ? 'active' : ''}`} onClick={() => setRitmo('moderado')}>{t('estadio3d.tempoModerate')}</button>
+                <button className={`toggle-btn ${ritmo === 'alto' ? 'active' : ''}`} onClick={() => setRitmo('alto')}>{t('estadio3d.tempoHigh')}</button>
               </div>
             </div>
             <div className="widget-chart-wrapper">
@@ -548,9 +559,9 @@ function App() {
             </div>
           </div>
 
-          <div className="tactical-widget-card interactive-card" onClick={cycleWeather} style={{ cursor: 'pointer' }} title="Clic para alternar climas">
+          <div className="tactical-widget-card interactive-card" onClick={cycleWeather} style={{ cursor: 'pointer' }} title={t('estadio3d.weatherToggleTitle')}>
             <div>
-              <span className="widget-label">Clima</span>
+              <span className="widget-label">{t('estadio3d.weather')}</span>
               <div style={{ fontSize: '0.68rem', color: 'var(--tx-2)', marginTop: '2px', fontWeight: 600 }}>{weatherDetails.label}</div>
               <div style={{ fontSize: '0.72rem', color: 'var(--tx)', fontWeight: 700 }}>{weatherDetails.temp}</div>
             </div>

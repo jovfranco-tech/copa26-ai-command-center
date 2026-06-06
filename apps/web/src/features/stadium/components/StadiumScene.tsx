@@ -9,6 +9,7 @@ import { type Player, MATCH_LINEUPS } from '../data/lineups';
 
 // Note: Standard import for Drei
 import { OrbitControls as OrbitControlsDrei, Html as HtmlDrei, Sparkles as SparklesDrei } from '@react-three/drei';
+import { useT } from '@/i18n';
 
 // Seedable pseudo-random number generator for React render purity compliance
 const createPureRandom = (seed: number) => {
@@ -51,6 +52,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
   ritmo,
   lineups = MATCH_LINEUPS
 }) => {
+  const t = useT();
   const { homeColor, awayColor, homeStandsColor, awayStandsColor } = match.teams;
   const weather = match.weather;
   const timeOfDay = match.timeOfDay;
@@ -669,7 +671,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '6px', borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: '2px' }}>
                   <span>{match.stadiumName}</span>
-                  <span style={{ color: 'var(--accent-cyan)', animation: 'pulse-slow 1.5s infinite' }}>EN VIVO</span>
+                  <span style={{ color: 'var(--accent-cyan)', animation: 'pulse-slow 1.5s infinite' }}>{t('estadio3d.liveUpper')}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', margin: '3px 0' }}>
                   <div style={{ textAlign: 'center' }}>
@@ -683,7 +685,7 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
                   </div>
                 </div>
                 <div style={{ textAlign: 'center', fontSize: '5.5px', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)', padding: '1px' }}>
-                  Modo de Prototipo Táctico
+                  {t('estadio3d.prototypeMode')}
                 </div>
               </div>
             </HtmlDrei>
@@ -725,27 +727,27 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
                 border: activeZone === 'screens' ? '2px solid var(--accent-cyan)' : '1px solid rgba(255,255,255,0.1)'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '6px', borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: '2px' }}>
-                  <span>ANÁLISIS DE PARTIDO IA</span>
-                  <span style={{ color: 'var(--accent-emerald)' }}>ACTIVO</span>
+                  <span>{t('estadio3d.aiMatchAnalysis')}</span>
+                  <span style={{ color: 'var(--accent-emerald)' }}>{t('estadio3d.active')}</span>
                 </div>
                 <div style={{ margin: '3px 0', fontSize: '6px', color: 'var(--text-secondary)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5px' }}>
-                    <span>Certeza de Predicción:</span>
+                    <span>{t('estadio3d.predictionCertainty')}</span>
                     <strong style={{ color: '#fff' }}>{match.analytics.confidence}%</strong>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5px' }}>
-                    <span>Riesgo Táctico:</span>
+                    <span>{t('estadio3d.tacticalRiskLabel')}</span>
                     <strong style={{ color: 'var(--accent-orange)' }}>{match.analytics.tacticalRisk}%</strong>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Clima del Terreno:</span>
+                    <span>{t('estadio3d.pitchWeather')}</span>
                     <strong style={{ color: '#fff' }}>
-                      {weather === 'clear' ? 'Despejado' : weather === 'rain' ? 'Lluvia' : weather === 'snow' ? 'Nieve' : 'Niebla'}
+                      {weather === 'clear' ? t('estadio3d.wxClear') : weather === 'rain' ? t('estadio3d.wxRain') : weather === 'snow' ? t('estadio3d.wxSnow') : t('estadio3d.wxFog')}
                     </strong>
                   </div>
                 </div>
                 <div style={{ textAlign: 'center', fontSize: '6px', color: 'var(--accent-cyan)', fontWeight: 'bold' }}>
-                  RADAR ESPACIAL CONECTADO
+                  {t('estadio3d.spatialRadar')}
                 </div>
               </div>
             </HtmlDrei>
@@ -999,6 +1001,7 @@ const SoccerGoal: React.FC<SoccerGoalProps> = ({ position, facing }) => {
 
 // Main Export Component exposing the Canvas and Controls
 export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
+  const t = useT();
   const isMobileOuter = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
   const [webglLost, setWebglLost] = useState(false);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -1022,7 +1025,7 @@ export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
       {webglLost && (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', zIndex: 10, borderRadius: 8 }}>
           <p style={{ color: 'var(--tx-2)', fontSize: 13, textAlign: 'center', padding: 24 }}>
-            El contexto 3D se perdió. <button type="button" className="btn gold btn-sm" onClick={() => { setWebglLost(false); window.location.reload(); }}>Recargar</button>
+            {t('estadio3d.contextLost')} <button type="button" className="btn gold btn-sm" onClick={() => { setWebglLost(false); window.location.reload(); }}>{t('estadio3d.reload')}</button>
           </p>
         </div>
       )}

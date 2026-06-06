@@ -2,6 +2,7 @@ import React from 'react';
 import type { Match } from '../data/matchData';
 import type { MatchLineups, Player } from '../data/lineups';
 import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
+import { useT } from '@/i18n';
 
 interface FormationOverlayProps {
   match: Match;
@@ -136,6 +137,7 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
   selectedPlayerId,
   lineups,
 }) => {
+  const t = useT();
   // Safely resolve lineups — fall back to empty arrays if not provided
   const homePlayers = lineups?.teams?.home?.players ?? [];
   const awayPlayers = lineups?.teams?.away?.players ?? [];
@@ -269,26 +271,26 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
       {/* Sidebar Top Title Header matching Mockup */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h4 style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', margin: 0 }}>
-          Estadio 3D · Resumen
+          {t('estadio3d.summary')}
         </h4>
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
           {(() => {
             const ds = lineups?.dataSource ?? 'estimated';
             if (ds === 'official')
               return (
-                <span title="Alineación oficial confirmada" style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--accent-emerald)', background: 'rgba(16, 185, 129, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
-                  XI Oficial
+                <span title={t('estadio3d.officialTitle')} style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--accent-emerald)', background: 'rgba(16, 185, 129, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                  {t('estadio3d.xiOfficial')}
                 </span>
               );
             if (ds === 'mixed')
               return (
-                <span title="Una alineación oficial confirmada; la otra es estimada" style={{ fontSize: '0.6rem', fontWeight: 800, color: '#d97706', background: 'rgba(217, 119, 6, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
-                  XI Oficial · parcial
+                <span title={t('estadio3d.mixedTitle')} style={{ fontSize: '0.6rem', fontWeight: 800, color: '#d97706', background: 'rgba(217, 119, 6, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
+                  {t('estadio3d.xiOfficialPartial')}
                 </span>
               );
             return (
-              <span title="XI estimado a partir de la plantilla y una formación característica (no oficial)" style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--text-muted)', background: 'rgba(100, 116, 139, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(100, 116, 139, 0.2)' }}>
-                XI Estimado
+              <span title={t('estadio3d.estimatedTitle')} style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--text-muted)', background: 'rgba(100, 116, 139, 0.12)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', border: '1px solid rgba(100, 116, 139, 0.2)' }}>
+                {t('estadio3d.xiEstimated')}
               </span>
             );
           })()}
@@ -307,7 +309,7 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
             }}
           >
             <span style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent-emerald)' }}></span>
-            {match.status === 'live' ? 'En Vivo' : match.status === 'pre-match' ? 'Pre-partido' : 'Finalizado'}
+            {match.status === 'live' ? t('estadio3d.live') : match.status === 'pre-match' ? t('estadio3d.preMatch') : t('estadio3d.finished')}
           </span>
         </div>
       </div>
@@ -315,10 +317,10 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
       {/* Main Title & Subtitle */}
       <div>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-          Alineaciones en cancha {match.status === 'live' && `(${match.liveTime || "82'"})`}
+          {t('estadio3d.lineupsTitle')} {match.status === 'live' && `(${match.liveTime || "82'"})`}
         </h2>
         <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '4px', lineHeight: '1.3' }}>
-          Posiciones y formaciones actuales de ambos equipos en tiempo real.
+          {t('estadio3d.lineupsSubtitle')}
         </p>
       </div>
 
@@ -357,7 +359,7 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
 
       {/* Spanish Licensing Disclaimer */}
       <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.3', marginTop: '12px', borderTop: '1px solid var(--border-subtle)', paddingTop: '8px', flexShrink: 0 }}>
-        Prototipo privado no oficial de análisis deportivo. No está afiliado a FIFA, organizadores del torneo, selecciones ni sedes oficiales.
+        {t('estadio3d.fullDisclaimer')}
       </div>
 
     </div>

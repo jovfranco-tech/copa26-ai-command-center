@@ -3,6 +3,7 @@ import type { Match } from '../data/matchData';
 import { MATCH_LINEUPS } from '../data/lineups';
 import type { Player } from '../data/lineups';
 import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
+import { useT } from '@/i18n';
 
 interface Tactical2DMapProps {
   match: Match;
@@ -21,6 +22,7 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
   onSelectPlayer,
   lineups = MATCH_LINEUPS
 }) => {
+  const t = useT();
   const { homeColor, awayColor } = match.teams;
 
   const homePlayers = lineups.teams.home.players;
@@ -44,16 +46,23 @@ export const Tactical2DMap: React.FC<Tactical2DMapProps> = ({
         <div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: homeColor }}></span>
-            Pizarrón Táctico 2D
+            {t('estadio3d.board2d')}
           </h3>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-            Esquema de formaciones y alineación en {match.status === 'live' ? `vivo (Min ${match.liveTime || '0\''})` : match.status === 'pre-match' ? 'pre-partido' : 'finalizado'}
+            {t('estadio3d.boardSchemePrefix', {
+              state:
+                match.status === 'live'
+                  ? t('estadio3d.boardSchemeLive', { min: match.liveTime || "0'" })
+                  : match.status === 'pre-match'
+                  ? t('estadio3d.boardSchemePre')
+                  : t('estadio3d.boardSchemeFinal'),
+            })}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <span className="status-indicator status-live" style={{ fontSize: '0.7rem' }}>
             <span className="status-dot"></span>
-            ESQUEMA EN VIVO
+            {t('estadio3d.liveScheme')}
           </span>
         </div>
       </div>

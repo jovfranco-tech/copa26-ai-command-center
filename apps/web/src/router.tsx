@@ -208,8 +208,9 @@ const estadio3DRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/estadio-3d',
   component: function Estadio3DRoute() {
+    const lang = usePreferences.getState().lang;
     return (
-      <Suspense fallback={<div className="muted" style={{ padding: 24 }}>Cargando Estadio 3D...</div>}>
+      <Suspense fallback={<div className="muted" style={{ padding: 24 }}>{translate(lang, 'estadio3d.loading')}</div>}>
         <LazyEstadio3D />
       </Suspense>
     );

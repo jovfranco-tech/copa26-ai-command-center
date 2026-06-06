@@ -2,9 +2,11 @@ import React, { useMemo } from 'react';
 import type { Player } from '../data/lineups';
 import { Activity, Flame, X, ChevronLeft, Award } from 'lucide-react';
 import { getTacticalZoneType } from '../data/lineups';
+import { localizeRole } from '../data/tacticalI18n';
 import { playerRatings, attrLabelsFor, attrColor, ratingSourceText } from '../../../lib/ratings';
 import { generateDeterministicInsight } from '../data/stadiumDataMapper';
 import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
+import { useT, useLang } from '@/i18n';
 import { PlayerAvatar, TeamFlag, TeamCrest } from '../../../components/identity';
 import { DataSourceBadge } from '../../../components/DataSourceBadge';
 import { playerRatingMeta } from '../../../generated/playerRatings';
@@ -23,6 +25,7 @@ const PlayerIdentityCard: React.FC<{
   ratings: ReturnType<typeof playerRatings>;
   teamGlowColor: string;
 }> = ({ player, ratings, teamGlowColor }) => {
+  const t = useT();
   const teamIdentity = getTeamVisualIdentity(player.team);
   
   // Dynamic gradient based on team uniform colors
@@ -130,7 +133,7 @@ const PlayerIdentityCard: React.FC<{
 
           {/* Confidence Badge (DataSourceBadge) */}
           <DataSourceBadge
-            label={ratings.source === 'fc26' ? 'Rating FC 26' : 'Rating estimado'}
+            label={ratings.source === 'fc26' ? t('estadio3d.ratingFc26') : t('estadio3d.ratingEstimated')}
             source={ratings.sourceLabel}
             date={ratings.source === 'fc26' ? playerRatingMeta.downloadedAt.slice(0, 10) : '2026-05-30'}
             confidence={ratings.source === 'fc26' ? 'Alta' : 'Media'}
@@ -173,7 +176,7 @@ const PlayerIdentityCard: React.FC<{
             lineHeight: 1,
             flexShrink: 0
           }}
-          title="Valoración General"
+          title={t('estadio3d.ovrTitle')}
         >
           {ratings.overall} GRL
         </span>
@@ -188,18 +191,20 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
   weather: _weather,
   status: _status
 }) => {
+  const t = useT();
+  const lang = useLang();
   const ratings = useMemo(() => playerRatings({
     ...player,
     pos: player.pos || player.position
   }), [player]);
-  
+
   const labels = useMemo(() => attrLabelsFor({
     pos: player.pos || player.position
   }), [player]);
 
   const aiInsight = useMemo(() => {
-    return generateDeterministicInsight(player, ratings);
-  }, [player, ratings]);
+    return generateDeterministicInsight(player, ratings, lang);
+  }, [player, ratings, lang]);
 
   const riskColor = useMemo(() => {
     switch (player.riskLevel) {
@@ -243,12 +248,12 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           className="stadium-btn"
           style={{ padding: '3px 6px', fontSize: '0.68rem', display: 'flex', alignItems: 'center', gap: '3px', height: '22px', borderRadius: '4px' }}
         >
-          <ChevronLeft size={10} /> Volver
+          <ChevronLeft size={10} /> {t('estadio3d.back')}
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <TeamCrest code={player.team} size={18} />
           <h3 className="panel-title" style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', margin: 0 }}>
-            Ficha del Jugador
+            {t('estadio3d.playerCard')}
           </h3>
         </div>
         <button 
@@ -293,7 +298,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           }}
         >
           <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>
-            Atributos Reales
+            {t('estadio3d.realAttributes')}
           </div>
           <div className="row player-attrs" style={{ borderTop: 'none', paddingTop: 0, marginTop: 0, justifyContent: 'space-between', gap: '6px' }}>
             {labels.map((a) => (
@@ -315,7 +320,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}15`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Activity size={10} style={{ color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }} />
-              Condición
+              {t('estadio3d.condition')}
             </span>
             <span className="num" style={{ fontSize: '1.1rem', fontWeight: 800, color: player.stamina < 70 ? 'var(--color-neon-red)' : 'var(--accent-emerald)' }}>
               {player.stamina}%
@@ -333,7 +338,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}20`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Award size={10} style={{ color: teamGlowColor }} />
-              Influencia
+              {t('estadio3d.influence')}
             </span>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
               <span className="num" style={{ fontSize: '1.1rem', fontWeight: 800, color: teamGlowColor }}>
@@ -353,7 +358,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           {/* Riesgo Badge */}
           <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}15`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
-              Riesgo
+              {t('estadio3d.risk')}
             </span>
             <span 
               className="brand-badge" 
@@ -371,14 +376,14 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                 marginTop: 'auto'
               }}
             >
-              {player.riskLevel.toUpperCase()}
+              {t(`estadio3d.riskLevel${player.riskLevel.charAt(0).toUpperCase()}${player.riskLevel.slice(1)}`).toUpperCase()}
             </span>
           </div>
 
           {/* Estado del Jugador */}
           <div className="stadium-card" style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', background: 'var(--bg-card)', border: `1px solid ${teamGlowColor}15`, borderRadius: '8px' }}>
             <span style={{ fontSize: '0.58rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>
-              Estado
+              {t('estadio3d.status')}
             </span>
             <span 
               className="brand-badge" 
@@ -408,7 +413,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                 marginTop: 'auto'
               }}
             >
-              {player.stamina < 70 ? 'FATIGA' : player.influenceScore > 88 ? 'CLAVE' : 'ESTABLE'}
+              {player.stamina < 70 ? t('estadio3d.fatigue') : player.influenceScore > 88 ? t('estadio3d.keyPlayer') : t('estadio3d.stable')}
             </span>
           </div>
         </div>
@@ -430,7 +435,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
         >
           <span style={{ fontSize: '0.68rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Activity size={12} style={{ color: teamGlowColor }} />
-            {player.position === 'DF' || player.position === 'GK' || player.id === 'fra-dm-r' || player.id === 'arg-dm' ? 'Cobertura Táctica' : 'Presión Generada'}
+            {player.position === 'DF' || player.position === 'GK' || player.id === 'fra-dm-r' || player.id === 'arg-dm' ? t('estadio3d.tacticalCoverage') : t('estadio3d.pressureGenerated')}
           </span>
           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             {Math.round(player.influenceScore * 0.85 + player.stamina * 0.15)}%
@@ -453,7 +458,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Flame size={12} style={{ color: teamGlowColor }} />
             <span style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', color: teamGlowColor, letterSpacing: '0.05em' }}>
-              Análisis Táctico IA
+              {t('estadio3d.aiTacticalAnalysis')}
             </span>
           </div>
           <p style={{ fontSize: '0.72rem', lineHeight: '1.4', color: 'var(--text-primary)', margin: 0 }}>
@@ -477,12 +482,12 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
           }}
         >
           <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Acciones Contextuales
+            {t('estadio3d.contextualActions')}
           </span>
-          
+
           {/* Tactical role & zone */}
           <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginTop: '1px', marginBottom: '6px' }}>
-            Rol: <span style={{ color: teamGlowColor }}>{player.tacticalRole}</span> · Zona: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player)}</span>
+            {t('estadio3d.roleLabel')}: <span style={{ color: teamGlowColor }}>{localizeRole(player.tacticalRole, lang)}</span> · {t('estadio3d.zoneLabelShort')}: <span style={{ color: 'var(--text-primary)' }}>{getTacticalZoneType(player, lang)}</span>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -500,7 +505,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
               }}
             >
               <span style={{ display: 'inline-block', width: '5px', height: '5px', borderRadius: '50%', background: teamGlowColor, marginRight: '4px' }}></span>
-              Ver Radar de Pases
+              {t('estadio3d.viewPassRadar')}
             </button>
 
             <button 
@@ -514,7 +519,7 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                 height: '30px'
               }}
             >
-              Ver Zona de Influencia
+              {t('estadio3d.viewInfluenceZone')}
             </button>
 
             <button 
@@ -528,12 +533,12 @@ export const SelectedPlayerPanel: React.FC<SelectedPlayerPanelProps> = ({
                 height: '30px'
               }}
             >
-              Comparar Duelo Directo
+              {t('estadio3d.compareDuel')}
             </button>
           </div>
 
           <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.3, marginTop: '4px', borderTop: '1px solid var(--border-subtle)', paddingTop: '6px' }}>
-            Prototipo privado no oficial de análisis deportivo. No está afiliado a FIFA, organizadores del torneo, selecciones ni sedes oficiales.
+            {t('estadio3d.fullDisclaimer')}
           </div>
         </div>
       </div>

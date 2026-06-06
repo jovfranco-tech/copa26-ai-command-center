@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { MATCH_LINEUPS, getTacticalZoneType } from '../data/lineups';
 import type { Player } from '../data/lineups';
 import { getTeamVisualIdentity } from '../data/teamVisualIdentity';
+import { localizeRole } from '../data/tacticalI18n';
+import { useT, useLang } from '@/i18n';
 
 interface LineupLayerProps {
   selectedPlayerId: string | null;
@@ -292,6 +294,8 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
   zoneTexture,
   ritmo
 }) => {
+  const t = useT();
+  const lang = useLang();
   const [hovered, setHovered] = useState(false);
   const visual = getTeamVisualIdentity(player.team);
   const teamColor = visual.primaryColor;
@@ -620,35 +624,35 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
               
               <div className="detail-body" style={{ padding: '10px 12px' }}>
                 <div className="detail-role-container">
-                  <span className="detail-role-label">Rol Táctico</span>
-                  <span className="detail-role-value">{player.tacticalRole}</span>
+                  <span className="detail-role-label">{t('estadio3d.tacticalRoleLabel')}</span>
+                  <span className="detail-role-value">{localizeRole(player.tacticalRole, lang)}</span>
                 </div>
-                
+
                 <div className="detail-role-container" style={{ marginTop: '6px' }}>
-                  <span className="detail-role-label">Zona Táctica</span>
-                  <span className="detail-role-value" style={{ color: teamAccent }}>{getTacticalZoneType(player)}</span>
+                  <span className="detail-role-label">{t('estadio3d.tacticalZoneLabel')}</span>
+                  <span className="detail-role-value" style={{ color: teamAccent }}>{getTacticalZoneType(player, lang)}</span>
                 </div>
-                
+
                 {/* Premium Chips styling for metrics (3 metrics) */}
                 <div className="detail-chips-container">
                   {/* Stamina Chip */}
                   <div className={`detail-chip stamina ${player.stamina < 70 ? 'low' : ''}`}>
-                    🔋 {player.stamina}% Cond.
+                    🔋 {player.stamina}% {t('estadio3d.staminaChip')}
                   </div>
-                  
+
                   {/* Influence Chip */}
                   <div className="detail-chip influence">
-                    ⭐ {player.influenceScore} Infl.
+                    ⭐ {player.influenceScore} {t('estadio3d.influenceChip')}
                   </div>
 
                   {/* Risk Level Chip */}
                   <div className={`detail-chip risk ${player.riskLevel}`}>
-                    🎯 {isHome ? 'Riesgo' : 'Riesgo rival'}: {player.riskLevel.toUpperCase()}
+                    🎯 {isHome ? t('estadio3d.riskChip') : t('estadio3d.riskRivalChip')}: {t(`estadio3d.riskLevel${player.riskLevel.charAt(0).toUpperCase()}${player.riskLevel.slice(1)}`).toUpperCase()}
                   </div>
                 </div>
 
                 <div className="detail-insight-box">
-                  <span className="insight-title" style={{ fontSize: '0.52rem', color: teamAccent, fontWeight: 800, textTransform: 'uppercase' }}>💡 ANALÍTICA IA</span>
+                  <span className="insight-title" style={{ fontSize: '0.52rem', color: teamAccent, fontWeight: 800, textTransform: 'uppercase' }}>💡 {t('estadio3d.aiAnalytics')}</span>
                   <p className="insight-text" style={{ fontSize: '0.65rem', color: '#cbd5e1', lineHeight: '1.35', margin: 0 }}>
                     {player.notes.length > 65 ? player.notes.substring(0, 62) + '...' : player.notes}
                   </p>
