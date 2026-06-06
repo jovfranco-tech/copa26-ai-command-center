@@ -4650,3 +4650,36 @@ h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
     border-color: var(--gold);
   }
 }
+
+/* Aloria attribution badge (footer, bottom-right) */
+.aloria-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-2);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.aloria-badge:hover,
+.aloria-badge:focus-visible {
+  border-color: var(--gold-line);
+  transform: translateY(-1px);
+  box-shadow: var(--gold-soft) 0 0 0 1px;
+}
+.aloria-badge-by {
+  font-size: 11px;
+  color: var(--tx-3);
+  letter-spacing: 0.02em;
+}
+.aloria-badge-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+}

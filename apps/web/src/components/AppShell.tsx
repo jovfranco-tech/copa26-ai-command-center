@@ -349,6 +349,22 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="mono-label">{t('disclaimer.footer')}</span>
                 <span className="mono-label">{t('footer.calendar')}</span>
               </div>
+
+              {/* Aloria attribution badge — bottom-right */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                <a
+                  href="https://www.aloria.mx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="aloria-badge"
+                  aria-label={t('footer.aloriaVisit')}
+                >
+                  <span className="aloria-badge-by">{t('footer.aloriaBy')}</span>
+                  <span className="aloria-badge-cta">
+                    <span aria-hidden="true">↗</span> {t('footer.aloriaVisit')}
+                  </span>
+                </a>
+              </div>
             </footer>
           </div>
         </div>

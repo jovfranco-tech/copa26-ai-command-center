@@ -85,6 +85,8 @@ export const es = {
     calendar: 'Calendario del Torneo',
     privateNote: 'Dashboard privado.',
     notForDistribution: 'No es para distribución pública.',
+    aloriaBy: 'Experiencia IA para la afición, por Aloria',
+    aloriaVisit: 'Visitar Aloria',
   },
 
   data: {

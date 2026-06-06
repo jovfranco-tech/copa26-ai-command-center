@@ -86,6 +86,8 @@ export const en: Dict = {
     calendar: 'Tournament calendar',
     privateNote: 'Private dashboard.',
     notForDistribution: 'Not for public distribution.',
+    aloriaBy: 'AI Fan Experience by Aloria',
+    aloriaVisit: 'Visit Aloria',
   },
 
   data: {
