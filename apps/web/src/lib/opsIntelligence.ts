@@ -118,12 +118,12 @@ function sortedUpcoming(matches: Match[]): Match[] {
     .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
 }
 
-function pickText(pick: PoolPick): string {
+function pickText(pick: PoolPick, t: Translate = tEs): string {
   if (pick.homeGoals != null && pick.awayGoals != null) return `${pick.homeGoals}-${pick.awayGoals}`;
-  if (pick.outcome === 'home') return 'Gana local';
-  if (pick.outcome === 'away') return 'Gana visita';
-  if (pick.outcome === 'draw') return 'Empate';
-  return 'Sin pick';
+  if (pick.outcome === 'home') return t('matchdayHero.winHome');
+  if (pick.outcome === 'away') return t('matchdayHero.winAway');
+  if (pick.outcome === 'draw') return t('matchdayHero.draw');
+  return t('opsIntel.noPick');
 }
 
 export function recommendPick(match: Match, teams: Team[], t: Translate = tEs): RecommendedPick {
@@ -168,7 +168,7 @@ export function buildRecommendedPicks(matches: Match[], teams: Team[], limit = 2
   );
 }
 
-function strategyPick(match: Match, teams: Team[], strategy: PickStrategyId): { pick: PoolPick; rationale: string } {
+function strategyPick(match: Match, teams: Team[], strategy: PickStrategyId, t: Translate = tEs): { pick: PoolPick; rationale: string } {
   const homeRank = rankOf(teams, match.home);
   const awayRank = rankOf(teams, match.away);
   const diff = awayRank - homeRank;
@@ -177,7 +177,7 @@ function strategyPick(match: Match, teams: Team[], strategy: PickStrategyId): { 
   const underdogOutcome = homeBetter ? 'away' : 'home';
 
   if (strategy === 'conservative') {
-    const rec = recommendPick(match, teams);
+    const rec = recommendPick(match, teams, t);
     return { pick: rec.pick, rationale: rec.rationale };
   }
 
@@ -185,40 +185,40 @@ function strategyPick(match: Match, teams: Team[], strategy: PickStrategyId): { 
     if (absDiff <= 4) {
       return {
         pick: { outcome: 'draw', homeGoals: 2, awayGoals: 2 },
-        rationale: 'Partido parejo; estrategia arriesgada busca más goles para perseguir pleno.',
+        rationale: t('opsIntel.stratAggDraw'),
       };
     }
     if (homeBetter) {
       return {
         pick: { outcome: 'home', homeGoals: absDiff >= 18 ? 3 : 2, awayGoals: 1 },
-        rationale: 'Favorito local; se sube margen para capturar marcadores más valiosos.',
+        rationale: t('opsIntel.stratAggHome'),
       };
     }
     return {
       pick: { outcome: 'away', homeGoals: 1, awayGoals: absDiff >= 18 ? 3 : 2 },
-      rationale: 'Favorito visitante; se sube margen para capturar marcadores más valiosos.',
+      rationale: t('opsIntel.stratAggAway'),
     };
   }
 
   if (absDiff <= 6) {
     return {
       pick: { outcome: 'draw', homeGoals: 0, awayGoals: 0 },
-      rationale: 'Cruce cercano; la alternativa contraria protege un empate cerrado.',
+      rationale: t('opsIntel.stratContraDraw'),
     };
   }
   if (underdogOutcome === 'home') {
     return {
       pick: { outcome: 'home', homeGoals: 1, awayGoals: 0 },
-      rationale: 'Contraria al ranking: opta por sorpresa local de margen mínimo.',
+      rationale: t('opsIntel.stratContraHome'),
     };
   }
   return {
     pick: { outcome: 'away', homeGoals: 0, awayGoals: 1 },
-    rationale: 'Contraria al ranking: opta por sorpresa visitante de margen mínimo.',
+    rationale: t('opsIntel.stratContraAway'),
   };
 }
 
-export function comparePickStrategies(matches: Match[], teams: Team[], limit = 8): StrategyPreview[] {
+export function comparePickStrategies(matches: Match[], teams: Team[], limit = 8, t: Translate = tEs): StrategyPreview[] {
   const upcoming = sortedUpcoming(matches).slice(0, limit);
   const strategies: Array<{
     id: PickStrategyId;
@@ -229,23 +229,23 @@ export function comparePickStrategies(matches: Match[], teams: Team[], limit = 8
   }> = [
     {
       id: 'conservative',
-      label: 'Conservadora',
-      summary: 'Baja varianza: favorito por ranking y empates en cruces muy cerrados.',
-      risk: 'Puede quedarse corta si el partido se rompe temprano.',
+      label: t('opsIntel.stratConservative'),
+      summary: t('opsIntel.stratConsSummary'),
+      risk: t('opsIntel.stratConsRisk'),
       confidence: 'Media',
     },
     {
       id: 'aggressive',
-      label: 'Agresiva',
-      summary: 'Busca plenos con marcadores más altos cuando hay favorito claro.',
-      risk: 'Más volatilidad; útil para remontar en la tabla.',
+      label: t('opsIntel.stratAggressive'),
+      summary: t('opsIntel.stratAggSummary'),
+      risk: t('opsIntel.stratAggRisk'),
       confidence: 'Baja',
     },
     {
       id: 'contrarian',
-      label: 'Contraria',
-      summary: 'Identifica empates o sorpresas para diferenciarse del consenso.',
-      risk: 'Es la más sensible a información real de alineaciones y lesiones.',
+      label: t('opsIntel.stratContrarian'),
+      summary: t('opsIntel.stratContraSummary'),
+      risk: t('opsIntel.stratContraRisk'),
       confidence: 'Baja',
     },
   ];
@@ -257,25 +257,25 @@ export function comparePickStrategies(matches: Match[], teams: Team[], limit = 8
     risk: strategy.risk,
     confidence: strategy.confidence,
     picks: upcoming.map((match) => {
-      const preview = strategyPick(match, teams, strategy.id);
+      const preview = strategyPick(match, teams, strategy.id, t);
       return {
         matchId: match.id,
         matchLabel: matchLabel(match, teams),
-        prediction: pickText(preview.pick),
+        prediction: pickText(preview.pick, t),
         rationale: preview.rationale,
       };
     }),
   }));
 }
 
-export function evaluateAIStrategyOutcomes(matches: Match[], teams: Team[]): StrategyScorecard {
+export function evaluateAIStrategyOutcomes(matches: Match[], teams: Team[], t: Translate = tEs): StrategyScorecard {
   const played = matches.filter(
     (match) => match.status === 'FT' && match.homeGoals != null && match.awayGoals != null,
   );
   const labels: Record<PickStrategyId, string> = {
-    conservative: 'Conservadora',
-    aggressive: 'Agresiva',
-    contrarian: 'Contraria',
+    conservative: t('opsIntel.stratConservative'),
+    aggressive: t('opsIntel.stratAggressive'),
+    contrarian: t('opsIntel.stratContrarian'),
   };
   const strategies: PickStrategyId[] = ['conservative', 'aggressive', 'contrarian'];
   const rows = strategies.map((strategy) => {
@@ -284,7 +284,7 @@ export function evaluateAIStrategyOutcomes(matches: Match[], teams: Team[]): Str
     let outcomeHits = 0;
     let misses = 0;
     for (const match of played) {
-      const { pick } = strategyPick(match, teams, strategy);
+      const { pick } = strategyPick(match, teams, strategy, t);
       const realHome = match.homeGoals ?? 0;
       const realAway = match.awayGoals ?? 0;
       const realOutcome: PoolPick['outcome'] = realHome > realAway ? 'home' : realHome < realAway ? 'away' : 'draw';
@@ -314,9 +314,9 @@ export function evaluateAIStrategyOutcomes(matches: Match[], teams: Team[]): Str
   return {
     played: played.length,
     summary: played.length
-      ? `${played.length} partidos finalizados evaluados con reglas de quiniela.`
-      : 'Scorecard preparado; se activará cuando existan marcadores finales reales.',
-    bestLabel: best && played.length ? `${best.label} · ${best.points} pts` : 'Esperando resultados',
+      ? t('opsIntel.scorecardSummary', { n: played.length })
+      : t('opsIntel.scorecardEmpty'),
+    bestLabel: best && played.length ? t('opsIntel.scorecardBest', { label: best.label, pts: best.points }) : t('opsIntel.scorecardWaiting'),
     strategies: rows,
   };
 }
@@ -326,20 +326,21 @@ export function buildPickChangeHints(
   teams: Team[],
   picks: Record<string, PoolPick>,
   limit = 6,
+  t: Translate = tEs,
 ): PickChangeHint[] {
   return sortedUpcoming(matches)
     .map((match) => {
       const current = picks[match.id];
       if (!current?.outcome) return null;
-      const rec = recommendPick(match, teams);
+      const rec = recommendPick(match, teams, t);
       const sameOutcome = current.outcome === rec.pick.outcome;
       const sameScore = current.homeGoals === rec.pick.homeGoals && current.awayGoals === rec.pick.awayGoals;
       if (sameOutcome && sameScore) return null;
       return {
         matchId: match.id,
         matchLabel: matchLabel(match, teams),
-        current: pickText(current),
-        recommended: pickText(rec.pick),
+        current: pickText(current, t),
+        recommended: pickText(rec.pick, t),
         rationale: rec.rationale,
       };
     })
