@@ -1,7 +1,22 @@
-# Changelog — Private World Cup 2026 Dashboard
+# Changelog — Copa 2026 Dashboard
 
 All notable changes to this project are documented in this file.
 This is a private personal/family project. Not intended for commercial distribution.
+
+---
+
+## [0.5.0] — 2026-06-07
+
+### ⚡ Performance — lazy English dictionary
+- Split the English i18n dictionary into its own chunk (~26 kB gzip) loaded on demand. Spanish (default + fallback) ships in the main bundle; the en chunk loads before the language flips (boot for a persisted 'en', and the toggle) so there's no flash. Initial `index` JS now ~132 kB gzip (was ~268 kB before this round of work — Recharts + en splits combined).
+
+### 🛡️ Brand safety — generic event language
+- Replaced generic "World Cup" / "Mundial" references in visible copy with "Copa 2026" / "the tournament" (notably the on-pitch canvas title, previously "FIFA WORLD CUP 2026", and a stray "Official Press Room"). The independence disclaimers still name FIFA / the World Cup — only to disclaim affiliation. No new affiliation language anywhere.
+
+### 🧪 Tests & accessibility
+- Added i18n unit tests (lazy-en fallback-then-swap, interpolation, missing-key, brand-safe disclaimer) and a LanguageToggle component test asserting the ARIA segmented-group semantics (role, accessible name, aria-pressed). 149 → 158 tests.
+- Fixed the e2e smoke script (correct production domain + page title).
+- Verified WCAG AA contrast for the touched controls (attribution badge 4.7–5.8:1, language toggle 8.3:1).
 
 ---
 

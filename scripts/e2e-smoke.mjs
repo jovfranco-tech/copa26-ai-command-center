@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-const baseUrl = (process.env.APP_BASE_URL || 'https://fifa-private-world-cup-dashboard.vercel.app').replace(/\/$/, '');
+const baseUrl = (process.env.APP_BASE_URL || 'https://copa26-command-center.vercel.app').replace(/\/$/, '');
 
 const routes = ['/', '/data', '/pool', '/analyst'];
 const apiRoutes = ['/api/data-sync?manual=1', '/api/admin-ops'];
 const requiredText = {
-  '/': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
-  '/data': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
-  '/pool': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
-  '/analyst': ['FIFA World Cup 26 · Centro de mando', '<div id="root"></div>'],
+  '/': ['Copa 2026 · AI Command Center', '<div id="root"></div>'],
+  '/data': ['Copa 2026 · AI Command Center', '<div id="root"></div>'],
+  '/pool': ['Copa 2026 · AI Command Center', '<div id="root"></div>'],
+  '/analyst': ['Copa 2026 · AI Command Center', '<div id="root"></div>'],
 };
 
 let failures = 0;

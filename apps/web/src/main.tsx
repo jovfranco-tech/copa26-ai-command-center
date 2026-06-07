@@ -5,7 +5,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { queryClient } from '@/lib/query';
 import { router } from '@/router';
 import { summarizeOldMemory } from '@/lib/aiMemory';
-import { translate } from '@/i18n';
+import { translate, ensureEnglish } from '@/i18n';
 import { usePreferences } from '@/store/preferences';
 import { reportWebVitals } from '@/lib/webVitals';
 import './styles/index.css';
@@ -20,13 +20,22 @@ reportWebVitals();
 const el = document.getElementById('root');
 if (!el) throw new Error('Root element #root not found');
 
-createRoot(el).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </StrictMode>,
-);
+const renderApp = () =>
+  createRoot(el).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>,
+  );
+
+// Spanish (default) renders immediately. If the user persisted English, load its
+// dictionary chunk first so the first paint is already in English — no flash.
+if (usePreferences.getState().lang === 'en') {
+  ensureEnglish().finally(renderApp);
+} else {
+  renderApp();
+}
 
 // Global error reporting — sends unhandled errors to monitoring endpoint
 if (typeof window !== 'undefined') {
