@@ -5,6 +5,16 @@ This is a private personal/family project. Not intended for commercial distribut
 
 ---
 
+## [0.3.1] — 2026-06-06
+
+### 💅 Attribution polish
+- Refined Aloria attribution, bilingual footer copy, independent project disclaimer, spacing, accessibility, and external link behavior.
+- Spanish badge copy localized to "Experiencia de fans con IA por Aloria ↗" (EN: "AI Fan Experience by Aloria ↗").
+- Added breathing room between the fixed badge and the settings gear (no crowding).
+- Brand-safety audit: no official-affiliation language; event references stay generic/disclaimed.
+
+---
+
 ## [0.3.0] — 2026-06-06
 
 ### ✨ Attribution & Transparency

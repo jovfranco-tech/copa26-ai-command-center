@@ -4687,10 +4687,11 @@ h3, .h3 { font-size: clamp(1rem, 2.5vw, 1.35rem); }
   color: var(--gold);
   line-height: 1;
 }
-/* Fixed desktop badge: bottom-right, just left of the Tweaks FAB (right:18, 44px wide). */
+/* Fixed desktop badge: bottom-right, clearly left of the Tweaks FAB (right:18,
+   44px wide) with a comfortable gap so the two never feel crowded. */
 .aloria-badge--fixed {
   position: fixed;
-  right: 72px;
+  right: 84px;
   bottom: 18px;
   z-index: 60;
   background: color-mix(in srgb, var(--bg-1) 86%, transparent);

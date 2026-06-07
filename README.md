@@ -110,7 +110,7 @@ pnpm --filter web build     # Production build
 
 This is a personal/educational project. It is not affiliated with, endorsed by, or connected to FIFA, any national football association, or any official tournament entity. All tournament data used is publicly available factual information.
 
-This is an independent AI-powered fan engagement experience created by **[Aloria](https://aloria.mx)**. A subtle Aloria attribution badge (external link) and an independent-fan-experience transparency disclaimer appear in the dashboard footer. Aloria designs AI-native digital commerce and engagement experiences for local businesses, brands, communities, and private events.
+This is an independent AI-powered fan engagement experience created by **[Aloria](https://aloria.mx)**. A subtle, bilingual (EN/ES) Aloria attribution badge (external link, `target="_blank"` / `rel="noopener noreferrer"`) and an independent-fan-experience transparency disclaimer appear in the dashboard footer. Aloria designs AI-native digital commerce and engagement experiences for local businesses, brands, communities, and private events.
 
 ---
 
