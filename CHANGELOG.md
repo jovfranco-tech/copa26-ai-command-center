@@ -5,6 +5,23 @@ This is a private personal/family project. Not intended for commercial distribut
 
 ---
 
+## [0.4.0] — 2026-06-07
+
+### ⚡ Performance — lighter initial load
+- Lazy-loaded the secondary nav routes (Standings, Bracket, Favorites). Bracket pulled the chart library (Recharts) into the eager app-shell chunk; deferring it drops the initial `index` JS from ~268 kB → ~157 kB gzip (Recharts' ~100 kB gzip now loads only on chart routes). Three.js and Firebase were already route-lazy.
+
+### 🛡️ Type safety — api/ in CI
+- Added `api/tsconfig.json` and a `typecheck:api` script; `pnpm typecheck` (and the deploy workflow) now strictly type-check the serverless functions in `api/`, closing the gap where only Vercel's build surfaced api/ type errors as non-blocking annotations.
+- Fixed the cross-module result type in `api/sync-results.ts` (explicit `ResultEntry` element type so the merge type-checks under any module resolution).
+
+### 🌐 i18n — position labels
+- Localized the long position labels (`posLong`) via a new `positions` namespace: Player detail, the 3D stadium player card, and the AI analyst answers now show Goalkeeper/Defender/Midfielder/Forward in EN instead of the Spanish data string.
+
+### 🔎 Audit
+- Confirmed existing hardening on the AI endpoint: per-IP rate limiting, input length caps, upload size/MIME limits, plus client error reporting and Web Vitals monitoring.
+
+---
+
 ## [0.3.1] — 2026-06-06
 
 ### 💅 Attribution polish

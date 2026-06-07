@@ -13,8 +13,9 @@
  *
  * Node (Fluid) runtime: needs @vercel/blob (undici), not edge-compatible.
  */
-import { fetchFootballDataResults } from './_shared/results-source.js';
+import { fetchFootballDataResults, type SyncMapping } from './_shared/results-source.js';
 import { blobConfigured, getOverlay, putOverlay } from './_shared/overlay.js';
+import type { ResultEntry } from '../packages/shared/src/liveOverlay.js';
 
 function authorized(request: Request): boolean {
   const ua = request.headers.get('user-agent') ?? '';
@@ -45,7 +46,7 @@ export async function GET(request: Request): Promise<Response> {
     return Response.json({ ok: false, error: 'blob-not-configured' }, { status: 503 });
   }
 
-  let mapping;
+  let mapping: SyncMapping;
   try {
     mapping = await fetchFootballDataResults(token);
   } catch (e) {
@@ -56,7 +57,10 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const overlay = await getOverlay();
-  const nextResults = { ...overlay.results };
+  // Explicit element type so the merge type-checks under any module resolution
+  // (Vercel's function build resolves the cross-package result type differently
+  // than the local Bundler config).
+  const nextResults: Record<string, ResultEntry> = { ...overlay.results };
   let written = 0;
   let skippedManual = 0;
 

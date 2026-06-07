@@ -59,7 +59,7 @@ export function PlayerDetail({ id }: { id: string }) {
                   {team?.name ?? p.team}
                 </button>
                 <span>·</span>
-                <span className={`pos-tag pos-${p.pos}`}>{p.posLong ?? p.pos}</span>
+                <span className={`pos-tag pos-${p.pos}`}>{p.pos ? t(`positions.${p.pos}`) : (p.posLong ?? '')}</span>
                 <span>·</span>
                 <span>{p.club}</span>
                 <span>·</span>

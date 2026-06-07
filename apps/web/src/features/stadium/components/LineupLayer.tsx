@@ -607,7 +607,7 @@ const PlayerMarker3D: React.FC<PlayerMarker3DProps> = ({
                   <div style={{ flex: 1 }}>
                     <div className="detail-fullname" style={{ fontSize: '0.85rem', fontWeight: 800 }}>{player.name}</div>
                     <div className="detail-team-pos" style={{ fontSize: '0.62rem', color: 'var(--text-secondary)' }}>
-                      {visual.teamName} · {player.positionLabel}
+                      {visual.teamName} · {t(`positions.${player.position}`)}
                     </div>
                   </div>
                   <button 

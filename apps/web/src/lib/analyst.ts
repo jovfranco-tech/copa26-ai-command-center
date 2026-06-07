@@ -234,7 +234,7 @@ export function buildAnalystAnswer(input: AnalystInput, t: Translate = tEs): Ana
     if (!p) return { text: t('analyst.playerNotFound'), sources: ['jugadores'] };
     const rank = scorers.findIndex((x) => x.id === p.id) + 1;
     const lines = [
-      t('analyst.playerLine', { name: p.name, team: teamName(teams, p.team), pos: p.posLong ?? p.pos, club: p.club, goals: p.goals, assists: p.assists, min: p.minutes }),
+      t('analyst.playerLine', { name: p.name, team: teamName(teams, p.team), pos: p.pos ? t(`positions.${p.pos}`) : (p.posLong ?? p.pos), club: p.club, goals: p.goals, assists: p.assists, min: p.minutes }),
     ];
     if (p.goals > 0) lines.push(t('analyst.playerRank', { rank }));
     if (p.yellow || p.red) lines.push(t('analyst.playerDiscipline', { y: p.yellow, r: p.red }));
@@ -254,7 +254,7 @@ export function buildAnalystAnswer(input: AnalystInput, t: Translate = tEs): Ana
       citations: [
         {
           label: t('analyst.cPlayer'),
-          value: t('analyst.cPlayerVal', { name: p.name, team: teamName(teams, p.team), pos: p.posLong ?? p.pos, club: p.club }),
+          value: t('analyst.cPlayerVal', { name: p.name, team: teamName(teams, p.team), pos: p.pos ? t(`positions.${p.pos}`) : (p.posLong ?? p.pos), club: p.club }),
           source: t('analyst.cPlayerSource'),
           date: '2026-05-31',
           confidence: t('analyst.cPlayerConf'),

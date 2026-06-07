@@ -8,9 +8,6 @@ import { usePreferences } from '@/store/preferences';
 import { Dashboard } from '@/routes/Dashboard';
 import { MatchCenter } from '@/routes/MatchCenter';
 import { Teams } from '@/routes/Teams';
-import { Standings } from '@/routes/Standings';
-import { Bracket } from '@/routes/Bracket';
-import { Favorites } from '@/routes/Favorites';
 
 type AnalystCtx = 'tournament' | 'match' | 'team' | 'player';
 
@@ -81,7 +78,11 @@ const standingsRoute = createRoute({
   }),
   component: function StandingsRoute() {
     const { group } = standingsRoute.useSearch();
-    return <Standings group={group} />;
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyStandings group={group} />
+      </Suspense>
+    );
   },
 });
 
@@ -112,6 +113,11 @@ const LazyAnalyst = lazyWithRetry(() => import('./routes/Analyst').then((m) => (
 const LazyTVMode = lazyWithRetry(() => import('./routes/TVMode').then((m) => ({ default: m.TVMode })));
 const LazyEstadio3D = lazyWithRetry(() => import('./routes/Estadio3D').then((m) => ({ default: m.Estadio3D })));
 const LazyAdmin = lazyWithRetry(() => import('./routes/Admin').then((m) => ({ default: m.Admin })));
+// Secondary nav routes — lazy so they leave the initial app-shell chunk (they
+// still preload on intent/hover via the router's defaultPreload).
+const LazyStandings = lazyWithRetry(() => import('./routes/Standings').then((m) => ({ default: m.Standings })));
+const LazyBracket = lazyWithRetry(() => import('./routes/Bracket').then((m) => ({ default: m.Bracket })));
+const LazyFavorites = lazyWithRetry(() => import('./routes/Favorites').then((m) => ({ default: m.Favorites })));
 // Detail pages are navigation-only — defer them out of the initial shell.
 const LazyMatchDetail = lazyWithRetry(() => import('./routes/MatchDetail').then((m) => ({ default: m.MatchDetail })));
 const LazyTeamDetail = lazyWithRetry(() => import('./routes/TeamDetail').then((m) => ({ default: m.TeamDetail })));
@@ -157,7 +163,17 @@ const statsRoute = createRoute({
     );
   },
 });
-const bracketRoute = createRoute({ getParentRoute: () => rootRoute, path: '/bracket', component: Bracket });
+const bracketRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/bracket',
+  component: function BracketRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyBracket />
+      </Suspense>
+    );
+  },
+});
 const venuesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/venues',
@@ -169,7 +185,17 @@ const venuesRoute = createRoute({
     );
   },
 });
-const favoritesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/favorites', component: Favorites });
+const favoritesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/favorites',
+  component: function FavoritesRoute() {
+    return (
+      <Suspense fallback={<Skeleton h={260} />}>
+        <LazyFavorites />
+      </Suspense>
+    );
+  },
+});
 const poolRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/pool',

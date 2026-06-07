@@ -80,6 +80,13 @@ export const en: Dict = {
     empty: 'No data yet',
   },
 
+  positions: {
+    GK: 'Goalkeeper',
+    DF: 'Defender',
+    MF: 'Midfielder',
+    FW: 'Forward',
+  },
+
   footer: {
     brand: 'Copa 2026 · AI Command Center',
     tagline: 'Personal project · no official affiliation.',

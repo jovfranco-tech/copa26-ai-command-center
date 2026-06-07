@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Typecheck (quality gate — includes api/ serverless functions)
+        run: pnpm typecheck
+
       - name: Test (quality gate)
         run: pnpm test
 

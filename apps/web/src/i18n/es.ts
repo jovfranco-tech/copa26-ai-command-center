@@ -79,6 +79,13 @@ export const es = {
     empty: 'Sin datos por ahora',
   },
 
+  positions: {
+    GK: 'Portero',
+    DF: 'Defensa',
+    MF: 'Centrocampista',
+    FW: 'Delantero',
+  },
+
   footer: {
     brand: 'Copa 2026 · AI Command Center',
     tagline: 'Proyecto personal · sin afiliación oficial.',
