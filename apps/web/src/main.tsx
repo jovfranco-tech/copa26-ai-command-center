@@ -8,6 +8,8 @@ import { summarizeOldMemory } from '@/lib/aiMemory';
 import { translate, ensureEnglish } from '@/i18n';
 import { usePreferences } from '@/store/preferences';
 import { reportWebVitals } from '@/lib/webVitals';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './styles/index.css';
 import './styles/pool.css';
 
@@ -25,6 +27,9 @@ const renderApp = () =>
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        {/* Vercel real-user monitoring: page analytics + Core Web Vitals (RUM). */}
+        <Analytics />
+        <SpeedInsights />
       </QueryClientProvider>
     </StrictMode>,
   );

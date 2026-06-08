@@ -5,6 +5,19 @@ This is a private personal/family project. Not intended for commercial distribut
 
 ---
 
+## [0.6.0] — 2026-06-07
+
+### 🧪 Browser E2E (Playwright)
+- Added Playwright E2E against a local production preview (real bundle, lazy chunks): home brand + no-affiliation copy, ES⇄EN language switch, the Aloria attribution link (href/target/rel), and a lazy route navigation. 4 specs, verified green.
+
+### 📊 Lighthouse in CI
+- New `ci.yml` workflow runs the Playwright E2E and a Lighthouse audit (performance / accessibility / best-practices / SEO) over the built app. Kept separate from `deploy.yml` so it never blocks a deploy; assertions start at warn level.
+
+### 📈 Observability — Vercel RUM
+- Wired the official Vercel **Analytics** (page analytics) and **Speed Insights** (real-user Core Web Vitals) components, complementing the existing in-app Web Vitals reporter.
+
+---
+
 ## [0.5.0] — 2026-06-07
 
 ### ⚡ Performance — lazy English dictionary
