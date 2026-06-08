@@ -55,6 +55,5 @@ jobs:
       - name: Lighthouse audit
         uses: treosh/lighthouse-ci-action@v12
         with:
-          staticDistDir: apps/web/dist
           configPath: ./lighthouserc.json
           temporaryPublicStorage: true
