@@ -30,7 +30,7 @@ export function Players() {
   ].filter((label): label is string => Boolean(label));
 
   return (
-    <div className="page-fade">
+    <div className="page-fade" aria-busy={isLoading}>
       <MockBanner />
 
       <div className={`card card-pad filter-sticky player-filter-card${filtersOpen ? ' is-open' : ''}`}>

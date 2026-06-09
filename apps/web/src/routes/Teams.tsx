@@ -21,7 +21,7 @@ export function Teams() {
   const teams = (data?.items ?? []).filter((tm) => !group || tm.group === group);
 
   return (
-    <div className="page-fade">
+    <div className="page-fade" aria-busy={isLoading}>
       <MockBanner />
       <div className="row gap-8 wrap filter-sticky" style={{ marginBottom: 16 }}>
         <Pill on={!group} onClick={() => setGroup('')}>

@@ -1,4 +1,6 @@
 const CACHE_NAME = 'wc-pwa-cache-v5';
+const DATA_CACHE = 'wc-data-cache-v1';
+const CACHEABLE_API = ['/api/teams', '/api/matches', '/api/players', '/api/venues', '/api/standings', '/api/stats'];
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -23,7 +25,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
-          if (key !== CACHE_NAME) {
+          if (key !== CACHE_NAME && key !== DATA_CACHE) {
             return caches.delete(key);
           }
         })
@@ -35,10 +37,28 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
+  const url = new URL(req.url);
 
-  // Only intercept same-origin GET requests; never cache API calls.
+  // Only intercept same-origin GET requests
   if (req.method !== 'GET') return;
   if (!req.url.startsWith(self.location.origin)) return;
+
+  // Runtime cache for data API (stale-while-revalidate for offline support)
+  if (CACHEABLE_API.some(prefix => url.pathname.startsWith(prefix))) {
+    event.respondWith(
+      caches.open(DATA_CACHE).then(async (cache) => {
+        const cached = await cache.match(req);
+        const fetchPromise = fetch(req).then((res) => {
+          if (res.ok) cache.put(req, res.clone());
+          return res;
+        }).catch(() => cached || new Response('{"items":[]}', { status: 503, headers: { 'Content-Type': 'application/json' } }));
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // Never cache other API calls.
   if (req.url.includes('/api/')) return;
 
   // ── Navigations (HTML documents) → NETWORK-FIRST ─────────────────────────────

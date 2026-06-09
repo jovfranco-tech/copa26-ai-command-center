@@ -1,7 +1,7 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Icon, type IconName } from '@worldcup/ui';
-import { useMatches, useLiveOverlaySync, usePWAInstall } from '@/hooks';
+import { useMatches, useLiveOverlaySync, usePWAInstall, useTeams } from '@/hooks';
 import { useT } from '@/i18n';
 import { ALORIA_URL } from '@/lib/aloria';
 import { usePreferences, applyPreferences, isThemeExplicit, setSystemThemePreference, type AppRole } from '@/store/preferences';
@@ -101,6 +101,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isRouterLoading = useRouterState({ select: (s) => s.status === 'pending' });
   const activeKey = activeKeyFromPath(pathname);
   const [drawer, setDrawer] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState('');
   
   const [isOffline, setIsOffline] = useState(
@@ -119,6 +120,15 @@ export function AppShell({ children }: { children: ReactNode }) {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // Auto-focus first focusable element when drawer opens
+  useEffect(() => {
+    if (drawer && drawerRef.current) {
+      const first = drawerRef.current.querySelector<HTMLElement>('a[href], button');
+      first?.focus();
+    }
+  }, [drawer]);
+
   const isLocalHost =
     typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
 
@@ -143,11 +153,26 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { data: liveData } = useMatches({ status: 'LIVE' });
   const liveCount = liveData?.items.length ?? 0;
   const { canInstall, promptInstall } = usePWAInstall();
+  const { data: teamsData } = useTeams();
 
   const setPlayerQ = usePlayerFilters((s) => s.set);
   const runSearch = () => {
-    setPlayerQ({ q: searchTerm });
-    navigate({ to: '/players' });
+    if (!searchTerm.trim()) return;
+    const q = searchTerm.trim().toLowerCase();
+
+    // Check if it matches a team name or code
+    const matchedTeam = teamsData?.items?.find(
+      (t) => t.code.toLowerCase() === q || t.name.toLowerCase().includes(q)
+    );
+
+    if (matchedTeam) {
+      navigate({ to: '/teams/$code', params: { code: matchedTeam.code } });
+    } else {
+      setPlayerQ({ q: searchTerm.trim() });
+      navigate({ to: '/players' });
+    }
+
+    setSearchTerm('');
     setDrawer(false);
   };
 
@@ -399,7 +424,30 @@ export function AppShell({ children }: { children: ReactNode }) {
       {drawer && (
         <>
           <div className="drawer-scrim" onClick={() => setDrawer(false)} />
-          <div className="drawer">
+          <div
+            className="drawer"
+            ref={drawerRef}
+            role="dialog"
+            aria-modal="true"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') setDrawer(false);
+              if (e.key === 'Tab') {
+                const focusable = drawerRef.current?.querySelectorAll<HTMLElement>(
+                  'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                if (!focusable || !focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                  e.preventDefault();
+                  last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                  e.preventDefault();
+                  first.focus();
+                }
+              }
+            }}
+          >
             <div className="row" style={{ justifyContent: 'space-between' }}>
               <Brand />
               <button type="button" className="icon-btn" style={{ margin: 14 }} onClick={() => setDrawer(false)}>

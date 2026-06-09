@@ -37,6 +37,12 @@ export function Dashboard() {
   const favMatches = useFavorites((s) => s.matches);
   const pool = usePool();
 
+  const preferredGroup = useMemo(() => {
+    if (!favTeams.length || !teamsData?.items) return 'A';
+    const firstFavTeam = teamsData.items.find((t) => favTeams.includes(t.code));
+    return firstFavTeam?.group ?? 'A';
+  }, [favTeams, teamsData]);
+
   const matches = useMemo(() => matchData?.items ?? [], [matchData]);
   const day = useMemo(() => focusDate(matches), [matches]);
   const today = matches.filter((m) => m.date === day);
@@ -54,7 +60,7 @@ export function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="grid" style={{ gap: 16 }}>
+      <div className="grid" style={{ gap: 16 }} aria-busy={true}>
         <Skeleton h={90} />
         <Skeleton h={220} />
       </div>
@@ -176,14 +182,21 @@ export function Dashboard() {
             <div className="card">
               <div className="card-hd">
                 <Icon name="standings" size={15} style={{ color: 'var(--gold)' }} />
-                <h3>{t('dashboard.groupSummary')}</h3>
+                <h3>
+                  Grupo {preferredGroup}
+                  {favTeams.length > 0 && (
+                    <span style={{ fontSize: 10, fontWeight: 400, opacity: 0.7, marginLeft: 6 }}>
+                      (tu selección favorita)
+                    </span>
+                  )}
+                </h3>
                 <span className="spacer" />
                 <button type="button" className="card-link" onClick={() => navigate({ to: '/standings' })}>
                   {t('dashboard.fullTables')}
                 </button>
               </div>
               <div className="card-pad" style={{ paddingTop: 4 }}>
-                {(standings.groups.A ?? []).slice(0, 4).map((r, i) => (
+                {(standings.groups[preferredGroup] ?? []).slice(0, 4).map((r, i) => (
                   <div
                     key={r.team}
                     className="row gap-8 clickable"
