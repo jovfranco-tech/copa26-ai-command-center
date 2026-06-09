@@ -19,6 +19,26 @@ summarizeOldMemory();
 // Report Core Web Vitals (console in dev, Vercel Analytics in prod)
 reportWebVitals();
 
+// Optional error tracking. Loaded as its own chunk and only initialized when a
+// DSN is configured (set VITE_SENTRY_DSN via `vercel env`), so it never weighs on
+// the initial bundle and is a no-op otherwise. Never hard-code the DSN here.
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN as string | undefined;
+if (sentryDsn) {
+  import('@sentry/react')
+    .then((Sentry) => {
+      Sentry.init({
+        dsn: sentryDsn,
+        environment: import.meta.env.MODE,
+        tracesSampleRate: 0.1,
+        replaysSessionSampleRate: 0,
+        replaysOnErrorSampleRate: 0,
+      });
+    })
+    .catch(() => {
+      /* error tracking is best-effort; never block app boot */
+    });
+}
+
 const el = document.getElementById('root');
 if (!el) throw new Error('Root element #root not found');
 

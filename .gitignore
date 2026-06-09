@@ -50,6 +50,9 @@ coverage/
 test-results/
 playwright-report/
 .playwright/
+# Visual baselines: keep only the CI (linux) set; never commit local-OS baselines.
+**/*-snapshots/*-darwin.png
+**/*-snapshots/*-win32.png
 
 # --- Vercel (project link metadata; deploys are local-only-aware) ---
 .vercel/

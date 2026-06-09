@@ -1,8 +1,10 @@
-name: CI (E2E + Lighthouse)
+name: CI (E2E + Visual + Lighthouse)
 
 # Browser-based quality checks, kept separate from deploy.yml so they never block
-# a deploy: Playwright E2E against a local production preview, and a Lighthouse
-# audit (performance / accessibility / best-practices / SEO) over the built app.
+# a deploy:
+#   - Playwright smoke E2E across Chromium / Firefox / WebKit
+#   - Chromium visual-regression diff (informational; baselines generated in CI)
+#   - Lighthouse audit (performance / a11y / best-practices) as a hard gate
 
 on:
   push:
@@ -12,8 +14,35 @@ on:
 
 jobs:
   e2e:
-    name: Playwright E2E
+    name: Playwright E2E (multi-browser)
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.1.2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Install Playwright browsers
+        run: pnpm -C apps/web exec playwright install --with-deps chromium firefox webkit
+      - name: Run smoke E2E
+        run: pnpm -C apps/web exec playwright test smoke.spec.ts
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report
+          retention-days: 7
+
+  visual:
+    name: Visual regression (chromium)
+    runs-on: ubuntu-latest
+    # Informational: rendering differences should surface, not block deploys.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v6
@@ -27,12 +56,12 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Install Playwright browser
         run: pnpm -C apps/web exec playwright install --with-deps chromium
-      - name: Run E2E
-        run: pnpm -C apps/web exec playwright test
+      - name: Run visual diff
+        run: pnpm -C apps/web exec playwright test visual.spec.ts --project=chromium
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: visual-report
           path: apps/web/playwright-report
           retention-days: 7
 

@@ -18,7 +18,11 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+  ],
   webServer: {
     command: `pnpm exec vite build && pnpm exec vite preview --port ${PORT} --strictPort`,
     port: PORT,

@@ -5,6 +5,28 @@ This is a private personal/family project. Not intended for commercial distribut
 
 ---
 
+## [0.7.0] — 2026-06-09
+
+### 🔭 Error tracking — Sentry (zero-cost until configured)
+- Installed `@sentry/react`. Init is behind a dynamic import gated on `VITE_SENTRY_DSN`; absent the env var (current state) the bundle is completely inert — no extra KB, no network calls. When the user sets the DSN via `vercel env`, errors + breadcrumbs stream to Sentry automatically. `tracesSampleRate: 0.1`, session replay disabled by default.
+- Added `apps/web/src/vite-env.d.ts` declaring `VITE_SENTRY_DSN` so TypeScript knows the env var shape.
+
+### 🌐 Multi-browser E2E
+- Extended Playwright to run all 4 smoke specs on **Chromium, Firefox, and WebKit** — 12 tests across 3 engines, all passing locally. CI `e2e` job installs all three browser deps and runs in parallel.
+
+### 🚦 Lighthouse hard gates
+- Promoted Lighthouse assertions from `warn` to `error`: **performance ≥ 0.60**, **accessibility ≥ 0.90**, **best-practices ≥ 0.90**. A regression on any of these now fails the CI `lighthouse` job and blocks merge. SEO gate removed (app is intentionally `noindex`; a `<meta description>` was added to `index.html` for link previews).
+
+### 📸 Visual regression
+- New `e2e/visual.spec.ts`: Chromium-only sidebar snapshot (`maxDiffPixelRatio: 0.02`, animations disabled). CI `visual` job runs this on every push with `continue-on-error: true` (informational, not a blocker).
+- New `.github/workflows/visual-baseline.yml`: manual workflow that regenerates the Linux/Chromium baselines and commits them with `[skip ci]`. Run this after any intentional UI change.
+- `.gitignore` updated to exclude macOS (`*-darwin.png`) and Windows (`*-win32.png`) snapshots — only the CI Linux set is committed.
+
+### ⚙️ CI restructure
+- `ci.yml` split into three independent jobs: `e2e` (multi-browser smoke), `visual` (chromium diff, informational), `lighthouse` (hard gates). Each job installs only the browsers/deps it needs.
+
+---
+
 ## [0.6.0] — 2026-06-07
 
 ### 🧪 Browser E2E (Playwright)
