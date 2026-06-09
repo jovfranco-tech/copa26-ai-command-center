@@ -8,7 +8,7 @@ import { StandsGeometry } from './StandsGeometry';
 import { type Player, MATCH_LINEUPS } from '../data/lineups';
 
 // Note: Standard import for Drei
-import { OrbitControls as OrbitControlsDrei, Html as HtmlDrei, Sparkles as SparklesDrei } from '@react-three/drei';
+import { OrbitControls as OrbitControlsDrei, Html as HtmlDrei, Sparkles as SparklesDrei, ContactShadows as ContactShadowsDrei } from '@react-three/drei';
 import { useT } from '@/i18n';
 
 // Seedable pseudo-random number generator for React render purity compliance
@@ -1035,6 +1035,19 @@ export const StadiumScene: React.FC<StadiumSceneContentProps> = (props) => {
         style={{ width: '100%', height: '100%' }}
       >
         <StadiumSceneContent {...props} />
+        
+        {/* Soft contact shadows on the pitch surface */}
+        {!isMobileOuter && (
+          <ContactShadowsDrei
+            position={[0, 0.01, 0]}
+            opacity={0.4}
+            scale={80}
+            blur={2.5}
+            far={10}
+            resolution={256}
+            color="#000000"
+          />
+        )}
         
         {/* Controls mapping allowing navigation */}
         <OrbitControlsDrei
