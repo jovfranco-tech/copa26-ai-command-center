@@ -77,9 +77,8 @@ export async function GET(request: Request): Promise<Response> {
 
     // Generate dynamic metrics for updated live matches via Gemini
     if (r.status === 'LIVE' && process.env.GEMINI_API_KEY) {
-      const matchKeyParts = id.split('-'); // Try to guess the team codes or just pass the ID
       // Fallback: we don't have the explicit homeCode/awayCode here easily mapped, so we'll pass the ID.
-      const metrics = await generateDynamicMetrics('Local', 'Visitante', r.homeGoals ?? 0, r.awayGoals ?? 0, r.minute, process.env.GEMINI_API_KEY);
+      const metrics = await generateDynamicMetrics('Local', 'Visitante', r.homeGoals ?? 0, r.awayGoals ?? 0, r.minute ?? null, process.env.GEMINI_API_KEY);
       if (metrics) {
         overlay.metrics = overlay.metrics || {};
         overlay.metrics[id] = metrics;
