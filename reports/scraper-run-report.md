@@ -1,8 +1,8 @@
-# Scraper run — Match statistics
+# Scraper run — Players
 
-_Generated 2026-05-29T16:23:18.181Z — private/local-only, not for distribution._
+_Generated 2026-06-11T19:48:14.606Z — private/local-only, not for distribution._
 
-- **Entity:** Match statistics
+- **Entity:** Players
 - **URLs configured:** 0
 - **User-Agent:** FIFA-Private-Dashboard/0.1 (personal local research; respects robots.txt)
 - **Delay window:** 4000–10000 ms
