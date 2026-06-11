@@ -319,8 +319,12 @@ function App() {
       selectedPlayer
     : null;
 
-  // ── Group matches by stage for dropdown display ─────────────────────────────
-  const matchLabel = (m: Match) => `${m.teams.home} vs ${m.teams.away}`;
+  const matchLabel = (m: Match) => {
+    if (m.status === 'live' || m.status === 'post-match') {
+      return `${m.teams.home} ${m.score.home} - ${m.score.away} ${m.teams.away}`;
+    }
+    return `${m.teams.home} vs ${m.teams.away}`;
+  };
 
   const statusLabel = currentMatch.status === 'live' ? t('estadio3d.live') : currentMatch.status === 'pre-match' ? t('estadio3d.preMatch') : t('estadio3d.finished');
   const statusBg = currentMatch.status === 'live' ? 'rgba(16,185,129,0.12)' : 'rgba(94,163,184,0.12)';
