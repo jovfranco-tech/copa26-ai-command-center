@@ -66,4 +66,43 @@ export interface OfficialMatchLineup {
  * then redeploy. The data-integrity tests validate every entry's shape, so a
  * malformed sheet can never reach production.
  */
-export const OFFICIAL_LINEUPS: Record<string, OfficialMatchLineup> = {};
+export const OFFICIAL_LINEUPS: Record<string, OfficialMatchLineup> = {
+  M001: {
+    status: 'confirmada',
+    source: 'Alineación Oficial confirmada por FIFA',
+    home: {
+      formation: '4-3-3',
+      manager: 'Jaime Lozano',
+      starters: [
+        { shirt: 13, name: 'Guillermo Ochoa', pos: 'GK', playerId: 'MEX-7' },
+        { shirt: 3, name: 'César Montes', pos: 'DF', playerId: 'MEX-6' },
+        { shirt: 5, name: 'Johan Vásquez', pos: 'DF', playerId: 'MEX-8' },
+        { shirt: 2, name: 'Jorge Sánchez', pos: 'DF', playerId: 'MEX-9' },
+        { shirt: 17, name: 'Jesús Gallardo', pos: 'DF', playerId: 'MEX-12' },
+        { shirt: 4, name: 'Edson Álvarez', pos: 'MF', playerId: 'MEX-4' },
+        { shirt: 10, name: 'Orbelín Pineda', pos: 'MF', playerId: 'MEX-5' },
+        { shirt: 24, name: 'Luis Chávez', pos: 'MF', playerId: 'MEX-10' },
+        { shirt: 9, name: 'Santiago Giménez', pos: 'FW', playerId: 'MEX-1' },
+        { shirt: 22, name: 'Hirving Lozano', pos: 'FW', playerId: 'MEX-2' },
+        { shirt: 19, name: 'Raúl Jiménez', pos: 'FW', playerId: 'MEX-3' },
+      ],
+    },
+    away: {
+      formation: '4-3-3',
+      manager: 'Hugo Broos',
+      starters: [
+        { shirt: 1, name: 'Ronwen Williams', pos: 'GK', playerId: 'RSA-3' },
+        { shirt: 14, name: 'Aubrey Modiba', pos: 'DF', playerId: 'RSA-4' },
+        { shirt: 2, name: 'Mothobi Mvala', pos: 'DF', playerId: 'RSA-6' },
+        { shirt: 23, name: 'Khuliso Mudau', pos: 'DF', playerId: 'RSA-7' },
+        { shirt: 5, name: 'Grant Kekana', pos: 'DF', playerId: 'RSA-8' },
+        { shirt: 10, name: 'Themba Zwane', pos: 'MF', playerId: 'RSA-2' },
+        { shirt: 4, name: 'Teboho Mokoena', pos: 'MF', playerId: 'RSA-5' },
+        { shirt: 15, name: 'Sphephelo Sithole', pos: 'MF', playerId: 'RSA-9' },
+        { shirt: 18, name: 'Percy Tau', pos: 'FW', playerId: 'RSA-1' },
+        { shirt: 11, name: 'Elias Mokwana', pos: 'FW', playerId: 'RSA-10' },
+        { shirt: 9, name: 'Evidence Makgopa', pos: 'FW', playerId: 'RSA-11' },
+      ],
+    },
+  },
+};
