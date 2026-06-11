@@ -1,6 +1,6 @@
 # Asset download - Wikimedia player photos
 
-_Generated 2026-05-30T14:28:26.145Z — private/local-only, not for distribution._
+_Generated 2026-06-11T20:48:50.906Z — private/local-only, not for distribution._
 
 
 ## Source
@@ -10,229 +10,51 @@ _Generated 2026-05-30T14:28:26.145Z — private/local-only, not for distribution
 
 ## Selection
 
-- **Players in dataset:** 240
-- **Players considered:** 195
-- **Team filter:** all
+- **Players in dataset:** 1173
+- **Players considered:** 26
+- **Team filter:** MEX
 - **Limit:** none
-- **Download limit:** 8
+- **Download limit:** none
 - **Resolve only:** no
-- CAN-4 Tajon Buchanan -> Tajon Buchanan WC2022.jpg (Tajon Buchanan)
-- CAN-5 Maxime Crépeau -> Maxime Crépeau and James Pantemis Portland Timbers 2024 (cropped).jpg (Maxime Crépeau)
-- CIV-1 Simon Adingra -> Simon Adingra USG 2023.jpg (Simon Adingra)
-- CIV-2 Franck Kessié -> Franck Yannick Kessié.jpg (Franck Kessié)
-- CIV-3 Evan Ndicka -> 2022128151247 2022-05-08 Fussball Eintracht Frankfurt vs Borussia Mönchengladbach - Sven - 1D X MK II - 0370 - B70I6481 (Evan N’Dicka cropped).jpg (Evan Ndicka)
-- CIV-4 Yahia Fofana -> Fofana asse sco 2425.png (Yahia Fofana)
-- COD-1 Yoane Wissa -> CAN 2023RD Congo 2-1 Guinée 9939 (cropped).jpg (Yoane Wissa)
-- COD-2 Chancel Mbemba -> Chancel Mbemba Mangulu.JPG (Chancel Mbemba)
-- COL-1 Luis Díaz -> FC RB Salzburg gegen FC Bayern München (2026-01-06 Testspiel) 40 (Luiz Díaz).jpg (Luis Díaz)
-- COL-2 James Rodríguez -> James al natural - Series, 02.jpg (James Rodríguez)
-- COL-3 Jhon Durán -> Jhon Durán, Esteghlal FC vs Al-Nassr FC (ACLElite); 3 Mar 2025.png (Jhon Durán)
-- COL-4 Richard Ríos -> Richard-Rios-Palmeiras-Liverpool-abr24.jpg (Richard Ríos)
-- MISSING COL-5 Daniel Muñoz: no matching footballer with an image
-- COL-6 Camilo Vargas -> Camilo Vargas 2022.jpeg (Camilo Vargas)
-- CPV-1 Ryan Mendes -> Ryan Mendes (LOSC Lille).JPG (Ryan Mendes da Graça)
-- MISSING CPV-2 Bebé: no matching footballer with an image
-- CRO-1 Luka Modrić -> Luka Modric Interview 2021 (cropped).jpg (Luka Modrić)
-- CRO-2 Mateo Kovačić -> Chelsea vs. Arsenal, 29 May 2019 18 Kovacic.jpg (Mateo Kovačić)
-- CRO-3 Andrej Kramarić -> Andrej Kramarić 2018.jpg (Andrej Kramarić)
-- CRO-4 Joško Gvardiol -> 2021 Joško Gvardiol 2 (cropped2).jpg (Joško Gvardiol)
-- CRO-5 Dominik Livaković -> Dominik Livaković 2021.jpg (Dominik Livaković)
-- CUW-1 Leandro Bacuna -> Leandro Bacuna Back to your roots Groningen.jpg (Leandro Bacuna)
-- CZE-1 Patrik Schick -> Patrik Schick 20180601 AUSCZE 3910 (cropped).jpg (Patrik Schick)
-- CZE-2 Tomáš Souček -> Tomáš Souček, Czech Rp.-Montenegro EURO 2020 QR 10-06-2019.jpg (Tomáš Souček)
-- CZE-3 Vladimír Coufal -> Vladimír Coufal, CZE-KUW 2021-11-11.jpg (Vladimír Coufal)
-- CZE-4 Jindřich Staněk -> Jindřich Staněk brankář FK Viktorie Plzeň (r. 2023) (cropped).jpg (Jindřich Staněk)
-- ECU-1 Moisés Caicedo -> Moisés Caicedo 20042025 (1).jpg (Moisés Caicedo)
-- ECU-2 Piero Hincapié -> Piero Hincapié, 2022-07-31, Saisoneröffnung Bayer 04, Leverkusen (1).jpg (Piero Hincapié)
-- ECU-3 Pervis Estupiñán -> Pervis Estupiñán WC2022.jpg (Pervis Estupiñán)
-- ECU-4 Kendry Páez -> Kendry Paez 2023 Sudamericano Sub 17 (cropped).jpg (Kendry Páez)
-- ECU-5 Enner Valencia -> Enner Valencia, January 2016.jpg (Enner Valencia)
-- ECU-6 Hernán Galíndez -> HERNÁN GALÍNDEZ.jpg (Hernán Galíndez)
-- EGY-1 Mohamed Salah -> Mohamed_Salah_2018.jpg (Mohamed Salah)
-- EGY-2 Omar Marmoush -> OmarMarmoush.png (Omar Marmoush)
-- EGY-3 Mahmoud Trezeguet -> Mahmoud_Trézéguet_in_world_cup_2018.jpg (Trézéguet (Egyptian footballer))
-- EGY-4 Mohamed Elneny -> Mohamed_Elneny_2018.jpg (Mohamed Elneny)
-- EGY-5 Mohamed El Shenawy -> Mohamed_El_Shenawy.jpg (Mohamed El Shenawy)
-- ENG-1 Jude Bellingham -> 25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Jude_Bellingham_-_240422_190551-2_(cropped).jpg (Jude Bellingham)
-- ENG-2 Harry Kane -> Harry_Kane_on_October_10,_2023.jpg (Harry Kane)
-- ENG-3 Bukayo Saka -> 1_bukayo_saka_arsenal_2025_(cropped).jpg (Bukayo Saka)
-- ENG-4 Phil Foden -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2613,_Phil_Foden.jpg (Phil Foden)
-- ENG-5 Cole Palmer -> Cole_Palmer_2025_FIFA_Club_World_Cup_Final.jpg (Cole Palmer)
-- ENG-6 Declan Rice -> 1_declan_rice_arsenal_2025_(cropped).jpg (Declan Rice)
-- ENG-7 John Stones -> 1_john_stones_2015_(cropped).jpg (John Stones)
-- ENG-8 Marc Guéhi -> Marc_Guehi_December_2018.jpg (Marc Guéhi)
-- ENG-9 Jordan Pickford -> Jordan_Pickford_2022-07-16_1.jpg (Jordan Pickford)
-- ESP-1 Lamine Yamal -> Lamine_Yamal_in_2025.jpg (Lamine Yamal)
-- ESP-2 Nico Williams -> ATHLETIC-OSASUNA_SEMIFINAL._MAIDER_GOIKOETXEA_(168)_(cropped).jpg (Nico Williams)
-- ESP-3 Pedri -> Pedri.jpg (Pedri)
-- ESP-4 Gavi -> Jugadors_pretemporada_pels_Estats_Units_(cropped)2.jpg (Gavi (footballer))
-- ESP-5 Rodri -> RODRI - SWE vs ESP - UEFA EURO 2020 QUALIFIERS - 2019.10.15 (cropped).jpg (Rodri)
-- ESP-6 Fabián Ruiz -> Ruiz_asse_psg_2425.png (Fabián Ruiz)
-- ESP-7 Robin Le Normand -> Robin_Le_Normand_2122.jpg (Robin Le Normand)
-- ESP-8 Marc Cucurella -> Spain_football_team_in_202_(Marc_Cucurella).jpg (Marc Cucurella)
-- ESP-9 Unai Simón -> Unai_Simón_2025_(cropped).jpg (Unai Simón)
-- FRA-1 Kylian Mbappé -> Picture_with_Mbappé_(cropped_and_rotated).jpg (Kylian Mbappé)
-- FRA-2 Ousmane Dembélé -> Ousmane_Dembélé_2018_(cropped).jpg (Ousmane Dembélé)
-- FRA-3 Antoine Griezmann -> FRA-ARG_(10)_(cropped).jpg (Antoine Griezmann)
-- FRA-4 Aurélien Tchouaméni -> 2025_04_26_Final_de_la_Copa_del_Rey_-_Aurélien_Tchouaméni.jpg (Aurélien Tchouaméni)
-- FRA-5 Eduardo Camavinga -> Ofrenda_de_la_Liga_y_la_Champions-13-L.Millán_(52109790215)_(cropped).jpg (Eduardo Camavinga)
-- FRA-6 William Saliba -> 1_william_saliba_arsenal_2025_(cropped).jpg (William Saliba)
-- FRA-7 Dayot Upamecano -> 2022-07-30_Fußball,_Männer,_DFL-Supercup,_RB_Leipzig_-_FC_Bayern_München_1DX_3244_by_Stepro_(cropped).jpg (Dayot Upamecano)
-- FRA-8 Jules Koundé -> Jules_Koundé_2020.jpg (Jules Koundé)
-- FRA-9 Mike Maignan -> Mike_Maignan_2022_Salzburg_vs_AC_Milan_2022-09-06.jpg (Mike Maignan)
-- GER-1 Jamal Musiala -> Jamal_Musiala_2022_(cropped).jpg (Jamal Musiala)
-- GER-2 Florian Wirtz -> Florian_Wirtz,_2022-07-31,_Saisoneröffnung_Bayer_04,_Leverkusen_(1)_(cropped).jpg (Florian Wirtz)
-- GER-3 Kai Havertz -> 2019-06-11_Fußball,_Männer,_Länderspiel,_Deutschland-Estland_StP_2059_LR10_by_Stepro.jpg (Kai Havertz)
-- GER-4 Joshua Kimmich -> 2019-06-11_Fußball,_Männer,_Länderspiel,_Deutschland-Estland_StP_2078_LR10_by_Stepro_(cropped).jpg (Joshua Kimmich)
-- GER-5 Antonio Rüdiger -> 2025_04_26_Final_de_la_Copa_del_Rey_-_54482387776_(Elenco_do_Real_Madrid)_(Antonio_Rüdiger).jpg (Antonio Rüdiger)
-- GER-6 Jonathan Tah -> Jonathan_Tah_2019.jpg (Jonathan Tah)
-- GER-7 Marc-André ter Stegen -> Marc-Andre_Ter_Stegen_ACCI_FCBARCELONA_Turisme_Catalunya_gira_pretemporada_CATPRESS.jpg (Marc-André ter Stegen)
-- GHA-1 Mohammed Kudus -> Mohammed_Kudus_of_West_Ham_United.jpeg (Mohammed Kudus)
-- GHA-2 Thomas Partey -> ATL-Madrid-Lokomotiv001-Thomas_(cropped).jpg (Thomas Partey)
-- GHA-3 Iñaki Williams -> Iñaki_Williams.png (Iñaki Williams)
-- GHA-4 Jordan Ayew -> Jordan_Ayew_24082024_(2).jpg (Jordan Ayew)
-- MISSING HAI-1 Frantzdy Pierrot: no matching footballer with an image
-- IRN-1 Mehdi Taremi -> Iran_-_Japan,_AFC_Asian_Cup_2019_42_(cropped).jpg (Mehdi Taremi)
-- IRN-2 Sardar Azmoun -> Sardar_Azmoun_-_IRN_vs_USA_-_FIFA_WC_2022.jpg (Sardar Azmoun)
-- IRN-3 Alireza Jahanbakhsh -> 2022_FIFA_World_Cup_England_6–2_Iran_-_(26)_(cropped).jpg (Alireza Jahanbakhsh)
-- IRN-4 Alireza Beiranvand -> Alireza_Beiranvand_14021113000490638424849868670974_66487.jpg (Alireza Beiranvand)
-- IRQ-1 Aymen Hussein -> 4822953_AE7I9053_(cropped2).jpg (Aymen Hussein)
-- IRQ-2 Zidane Iqbal -> Zidane_Iqbal_debut_(cropped).jpg (Zidane Iqbal)
-- MISSING JOR-1 Mousa Al-Tamari: no matching footballer with an image
-- JOR-2 Yazan Al-Naimat -> Yazan_Al-Naimat_2.jpg (Yazan Al-Naimat)
-- JPN-1 Takefusa Kubo -> Takefusa_Kubo_2019.png (Takefusa Kubo)
-- JPN-2 Kaoru Mitoma -> Kaoru_Mitoma_(2022).jpg (Kaoru Mitoma)
-- JPN-3 Daichi Kamada -> 2022128173756_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_Mönchengladbach_-_Sven_-_1D_X_MK_II_-_0725_-_AK8I7460_(Daichi_Kamada_cropped).jpg (Daichi Kamada)
-- JPN-4 Wataru Endo -> Wataru_Endo_at_Iran-Japan_pre-match_conference.jpg (Wataru Endo)
-- JPN-5 Ko Itakura -> Ko_Itakura_(cropped).jpg (Kō Itakura)
-- JPN-6 Zion Suzuki -> ZION_SUZUKI_-_JPN_vs_THA_-_Friendly_Match_-_2024.01.01.jpg (Zion Suzuki)
-- KOR-1 Son Heung-min -> BFA_2023_-2_Heung-Min_Son_(cropped).jpg (Son Heung-min)
-- KOR-2 Lee Kang-in -> Lee_Kang-in_-_2022_(52551771501)_(cropped).jpg (Lee Kang-in)
-- KOR-3 Hwang Hee-chan -> 240622_황희찬_풋볼_페스티벌.jpg (Hwang Hee-chan)
-- KOR-4 Kim Min-jae -> FC_Red_Bull_Salzburg_gegen_Bayern_München_(2025-01-06_Testspiel)_26.jpg (Kim Min-jae (footballer))
-- KOR-5 Cho Gue-sung -> 191130_부산아이파크_VS_FC안양_플레이오프,_조규성_2.jpg (Cho Gue-sung)
-- KOR-6 Jo Hyeon-woo -> Jo_Hyeon-woo.jpg (Jo Hyeon-woo)
-- KSA-1 Salem Al-Dawsari -> Salem_Al-Dawsari_2018.jpg (Salem Al-Dawsari)
-- KSA-2 Firas Al-Buraikan -> Firas_Al-Buraikan_2026.jpg (Firas Al-Buraikan)
-- KSA-3 Ali Al-Bulaihi -> Saudi_Arabia_v_Oman_(13)_(cropped).jpg (Ali Al-Bulaihi)
-- KSA-4 Nawaf Al-Aqidi -> Nawaf_Al-Aqidi_2023_(cropped).jpg (Nawaf Al-Aqidi)
-- MAR-1 Achraf Hakimi -> Achraf_Hakimi_(cropped2).jpg (Achraf Hakimi)
-- MAR-2 Brahim Díaz -> Brahim_Diaz_2_vs_Niger_(cropped)_(cropped).jpg (Brahim Díaz)
-- MAR-3 Youssef En-Nesyri -> Ennesyri.jpg (Youssef En-Nesyri)
-- MAR-4 Sofyan Amrabat -> Sofyan_Amrabat_vs_Niger_(cropped).jpg (Sofyan Amrabat)
-- MAR-5 Noussair Mazraoui -> Mazraoui.jpg (Noussair Mazraoui)
-- MAR-6 Bilal El Khannouss -> Bilal_El_Khannouss_vs_Niger_(cropped).jpg (Bilal El Khannouss)
-- MAR-7 Yassine Bounou -> Yassine_Bono_(cropped).jpg (Yassine Bounou)
-- MEX-1 Santiago Giménez -> Santiago_Giménez.png (Santiago Giménez)
-- MEX-2 Hirving Lozano -> Hirving_Lozano.png (Hirving Lozano)
-- MEX-3 Raúl Jiménez -> Raúl_Jiménez_04032026_(1).jpg (Raúl Jiménez)
-- MEX-4 Edson Álvarez -> Edson_Álvarez.png (Edson Álvarez)
-- MEX-5 Orbelín Pineda -> Orbelín_Pineda.png (Orbelín Pineda)
-- MEX-6 César Montes -> César_Montes.png (César Montes)
-- MEX-7 Guillermo Ochoa -> Mex-Kor_(1)_(cropped).jpg (Guillermo Ochoa)
-- NED-1 Cody Gakpo -> Cody_Gakpo_06042025_(2)_(cropped).jpg (Cody Gakpo)
-- NED-2 Memphis Depay -> Memphis_Depay_2019.jpg (Memphis Depay)
-- NED-3 Xavi Simons -> Xavi_Simons,_Nick_Verhagen_in_duel_met_Xavi_Simons.jpg (Xavi Simons)
-- NED-4 Frenkie de Jong -> Матч_«Динамо»_-_«Барселона»_0-1._2_ноября_2021_года._II_—_1289671_(cropped).jpg (Frenkie de Jong)
-- NED-5 Tijjani Reijnders -> Reijnders_arriva_in_albergo_(cropped).jpg (Tijjani Reijnders)
-- NED-6 Virgil van Dijk -> 20160604_AUT_NED_8876_(cropped).jpg (Virgil van Dijk)
-- NED-7 Denzel Dumfries -> Edison_ndreca_inter_egnati_(cropped_Denzel_Dumfries).jpg (Denzel Dumfries)
-- NED-8 Bart Verbruggen -> Bart_Verbruggen.png (Bart Verbruggen)
-- NOR-1 Erling Haaland -> Erling_Haaland_June_2025.jpg (Erling Haaland)
-- NOR-2 Martin Ødegaard -> Norway_Italy_-_June_2025_E_04.jpg (Martin Ødegaard)
-- NOR-3 Alexander Sørloth -> Norway_Italy_-_June_2025_E_10.jpg (Alexander Sørloth)
-- NOR-4 Antonio Nusa -> Norway_Italy_-_June_2025_C_23.jpg (Antonio Nusa)
-- NOR-5 Ørjan Nyland -> Norway_Italy_-_June_2025_A_10_(cropped).jpg (Ørjan Nyland)
-- NZL-1 Chris Wood -> Chris Wood (cropped).jpg (Chris Wood)
-- NZL-2 Marko Stamenić -> FC_Zenit_Saint_Petersburg_vs._Red_Star_Belgrade,_4_July_2023_(50).jpg (Marko Stamenić)
-- NZL-3 Alex Paulsen -> Alex_Paulsen.jpg (Alex Paulsen)
-- PAN-1 Adalberto Carrasquilla -> Inter_Miami_CF_3-1_UNAM_(6_August_2025)_27_(cropped).jpg (Adalberto Carrasquilla)
-- MISSING PAN-2 José Fajardo: no matching footballer with an image
-- PAR-1 Miguel Almirón -> Miguel_Almirón_Red_Bull_Atlanta_5.31.25-069_(cropped).jpg (Miguel Almirón)
-- PAR-2 Antonio Sanabria -> Antonio_Sanabria,_2025_(cropped).jpg (Antonio Sanabria)
-- PAR-3 Gustavo Gómez -> Gustavo-Gomez-Palmeiras-Athletico-jul-2022-2.jpg (Gustavo Gómez)
-- MISSING PAR-4 Julio Enciso: no matching footballer with an image
-- POR-1 Cristiano Ronaldo -> President_Donald_Trump_meets_with_Cristiano_Ronaldo_in_the_Oval_Office_(54933344262)_(cropped_and_rotated).jpg (Cristiano Ronaldo)
-- POR-2 Rafael Leão -> RafaelLeãoPortugal23.jpg (Rafael Leão)
-- POR-3 Bruno Fernandes -> Bruno_Fernandes_USMNT_v_Portugal_Mar_31_2026-27_(cropped).jpg (Bruno Fernandes)
-- POR-4 Bernardo Silva -> Bernardo_Silva_(Isto_É_Gozar_Com_Quem_Trabalha,_2024).png (Bernardo Silva)
-- POR-5 Vitinha -> Vitinha USMNT v Portugal Mar 31 2026-50.jpg (Vitinha)
-- POR-6 Rúben Dias -> Portugal_national_football_team_0866_(Rúben_Dias).jpg (Rúben Dias)
-- POR-7 Nuno Mendes -> FC Salzburg gegen Paris Saint-Germain UEFA Champions League 85 (cropped).jpg (Nuno Mendes)
-- POR-8 Diogo Costa -> Portugal_national_football_team_0866_(Diogo_Costa).jpg (Diogo Costa)
-- QAT-1 Akram Afif -> Qatar_v_Lebanon_(37)_(cropped).jpg (Akram Afif)
-- QAT-2 Almoez Ali -> Moez_Ali_at_Qatar_v_Japan_–_AFC_Asian_Cup_2019_final_32_(2).jpg (Almoez Ali)
-- QAT-3 Meshaal Barsham -> Qatar_v_Lebanon_(32)_(cropped).jpg (Meshaal Barsham)
-- RSA-1 Percy Tau -> Percy_Tau_in_2019_(cropped).jpg (Percy Tau)
-- MISSING RSA-2 Themba Zwane: no matching footballer with an image
-- RSA-3 Ronwen Williams -> Ronwen Williams AFCON2025Q 35.jpg (Ronwen Williams)
-- SCO-1 Scott McTominay -> Manchester_United_v_Liverpool,_22_August_2022_(21)_(Scott_McTominay).jpg (Scott McTominay)
-- SCO-2 John McGinn -> First_Minister_meets_with_Scottish_National_Football_Team_(2)_(cropped).jpg (John McGinn)
-- MISSING SCO-3 Andrew Robertson: no matching footballer with an image
-- SCO-4 Billy Gilmour -> Billy_Gilmour_2021-08-07_1_(cropped)_(cropped).jpg (Billy Gilmour)
-- SCO-5 Angus Gunn -> Angus.gunn.jpg (Angus Gunn)
-- SEN-1 Sadio Mané -> Sadio_Mane_Al-Nassr.jpg (Sadio Mané)
-- SEN-2 Nicolas Jackson -> Nicolas_Jackson_2025_FIFA_Club_World_Cup_Final.jpg (Nicolas Jackson)
-- SEN-3 Ismaïla Sarr -> Ismaila_Sarr_2022.jpg (Ismaïla Sarr)
-- SEN-4 Pape Matar Sarr -> Pape_Matar_Sarr.png (Pape Matar Sarr)
-- SEN-5 Kalidou Koulibaly -> Joueur_de_foot.jpg (Kalidou Koulibaly)
-- SEN-6 Édouard Mendy -> 2021_FIFA_Club_World_Cup_Final_-_30.jpg (Édouard Mendy)
-- SUI-1 Granit Xhaka -> Granit_Xhaka_(cropped).jpg (Granit Xhaka)
-- SUI-2 Dan Ndoye -> Lens_-_Nice_(23-01-2021)_52.jpg (Dan Ndoye)
-- SUI-3 Breel Embolo -> 2022128160447_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_Mönchengladbach_-_Sven_-_1D_X_MK_II_-_1422_-_B70I7533_(cropped).jpg (Breel Embolo)
-- SUI-4 Manuel Akanji -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2792_(Manuel_Akanji).jpg (Manuel Akanji)
-- SUI-5 Yann Sommer -> FC_Salzburg_gegen_Inter_Mailand_(Testspiel_2023-08-09)_69.jpg (Yann Sommer)
-- SWE-1 Alexander Isak -> UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_Alexander_Isak_56_(cropped).jpg (Alexander Isak)
-- SWE-2 Viktor Gyökeres -> 3840px-1_Viktor_Gyökeres_2026.jpg (Viktor Gyökeres)
-- SWE-3 Dejan Kulusevski -> Sweden-Slovenia_Nations_League_2022-09-27_17_Kulusevski_(cropped).jpg (Dejan Kulusevski)
-- SWE-4 Emil Forsberg -> Emil_Forsberg_Red_Bulls_Revolution-27_(cropped).jpg (Emil Forsberg)
-- SWE-5 Robin Olsen -> SWE-SWI_(8)_(cropped).jpg (Robin Olsen)
-- TUN-1 Hannibal Mejbri -> Hannibal_Mejbri_26042025_(1).jpg (Hannibal Mejbri)
-- TUN-2 Aïssa Laïdouni -> Attaque_de_football_(cropped).jpg (Aïssa Laïdouni)
-- TUN-3 Youssef Msakni -> Youssef_Msakni_2015b.jpg (Youssef Msakni)
-- TUR-1 Arda Güler -> Derbide_Fenerbahçe_Yedek_Oyuncu_Arda_Güler_(2021-22_Süper_Lig_-_Cropped).jpg (Arda Güler)
-- TUR-2 Hakan Çalhanoğlu -> AUT_vs._TUR_2016-03-29_(342).jpg (Hakan Çalhanoğlu)
-- TUR-3 Kenan Yıldız -> Kenan_Yildiz_Juventus_(cropped).jpg (Kenan Yıldız)
-- TUR-4 Ferdi Kadıoğlu -> Ferdi_Kadıoğlu_2024.jpg (Ferdi Kadıoğlu)
-- TUR-5 Orkun Kökçü -> Kökçü_in_the_international_match_in_March_2024_(Cropped).jpg (Orkun Kökçü)
-- TUR-6 Altay Bayındır -> Altay_Bayindir_(cropped).jpg (Altay Bayındır)
-- URU-1 Federico Valverde -> Federico_Valverde_2021_(cropped).jpg (Federico Valverde)
-- URU-2 Darwin Núñez -> Darwin_Núñez_(cropped).jpg (Darwin Núñez)
-- URU-3 Manuel Ugarte -> M.UGARTE.jpg (Manuel Ugarte (footballer))
-- URU-4 Rodrigo Bentancur -> 20171114_AUT_URU_4518_-_Rodrigo_Bentancur_(cropped)_2.jpg (Rodrigo Bentancur)
-- URU-5 Ronald Araújo -> FC_Red_Bull_Salzburg_gegen_CF_Barcelona_(Testspiel_4._August_2021)_45_(cropped).jpg (Ronald Araújo)
-- URU-6 Sergio Rochet -> Sergio_Rochet_(2022).jpg (Sergio Rochet)
-- USA-1 Christian Pulisic -> Christian_Pulisic_USMNT_v_Belgium_Mar_28_2026-73_(cropped).jpg (Christian Pulisic)
-- USA-2 Folarin Balogun -> Folarin_Balogun_USMNT_v_Belgium_Mar_28_2026-69_(cropped).jpg (Folarin Balogun)
-- USA-3 Weston McKennie -> Weston_McKennie_USMNT_v_Belgium_Mar_28_2026-68_(cropped).jpg (Weston McKennie)
-- USA-4 Yunus Musah -> 2022_FIFA_World_Cup_United_States_1–1_Wales_-_(13)_(cropped).jpg (Yunus Musah)
-- USA-5 Tyler Adams -> Tyler_Adams_09052026_(4).jpg (Tyler Adams)
-- USA-6 Antonee Robinson -> Antonee_Robinson_USMNT_v_Portugal_Mar_31_2026-173_(cropped).jpg (Antonee Robinson)
-- MISSING USA-7 Matt Turner: no matching footballer with an image
-- UZB-1 Eldor Shomurodov -> 3840px-Eldor_Shomurodov_14_İstanbul_Başakşehir_FK_20250731_(10)_(cropped).jpg (Eldor Shomurodov)
-- UZB-2 Abbosbek Fayzullaev -> 3840px-Abbosbek_Fayzullaev_11_İstanbul_Başakşehir_FK_UECL_20250821_(5).jpg (Abbosbek Fayzullaev)
+- MEX-1 Raúl Rangel -> Raúl_Rangel.png (Raúl Rangel (footballer))
+- MEX-10 Jesús Gallardo -> Jesús_Gallardo.png (Jesús Gallardo)
+- MEX-11 Érik Lira -> Erik_Lira_2.png (Érik Lira)
+- MEX-12 Luis Romo -> Luis_Romo.png (Luis Romo)
+- MEX-13 Álvaro Fidalgo -> Álvaro_Fidalgo.png (Álvaro Fidalgo)
+- MEX-14 Orbelín Pineda -> Orbelín_Pineda.png (Orbelín Pineda)
+- MISSING MEX-15 Obed Vargas: no matching footballer with an image
+- MEX-16 Gilberto Mora -> GilbertoInter2014.jpg (Gilberto Moraes Junior)
+- MEX-17 Luis Chávez -> Luis_Chávez_WC_2022_-_01.jpg (Luis Chávez (footballer))
+- MEX-18 Roberto Alvarado -> Roberto_Alvarado.png (Roberto Alvarado)
+- MEX-19 Brian Gutiérrez -> Brian_Gutiérrez_Philadelphia_Chicago_10.26.25-126_(cropped).jpg (Brian Gutiérrez)
+- MEX-2 Carlos Acevedo -> Carlos_Acevedo.png (Carlos Acevedo)
+- MEX-20 Raúl Jiménez -> Raúl_Jiménez_04032026_(1).jpg (Raúl Jiménez)
+- MEX-21 Alexis Vega -> Alexis Vega WC2022.jpg (Alexis Vega)
+- MEX-22 Santiago Giménez -> Santiago_Giménez.png (Santiago Giménez)
+- MISSING MEX-23 Armando González: no matching footballer with an image
+- MEX-24 Julián Quiñones -> Julián_Quiñones.png (Julián Quiñones)
+- MEX-25 César Huerta -> César_Huerta.png (César Huerta)
+- MEX-26 Guillermo Martínez -> Inter_Miami_CF_3-1_UNAM_(6_August_2025)_30_(cropped).jpg (Guillermo Martínez (footballer))
+- MEX-3 Guillermo Ochoa -> Mex-Kor_(1)_(cropped).jpg (Guillermo Ochoa)
+- MISSING MEX-4 Jorge Sánchez: no matching footballer with an image
+- MEX-5 César Montes -> César_Montes.png (César Montes)
+- MEX-6 Edson Álvarez -> Edson_Álvarez.png (Edson Álvarez)
+- MISSING MEX-7 Johan Vásquez: no matching footballer with an image
+- MEX-8 Israel Reyes -> Israel_Reyes.png (Israel Reyes)
+- MEX-9 Mateo Chávez -> Mateo_Chávez.png (Mateo Chávez)
 
 ## Summary
 
-- **Resolved:** 186
-- **Missing:** 9
-- **Downloaded:** 4
-- **Registered in DB:** 4
+- **Resolved:** 22
+- **Missing:** 4
+- **Downloaded:** 22
+- **Registered in DB:** 22
 - **Errors:** 0
-- **Stopped:** yes
+- **Stopped:** no
 
 ## Missing players
 
-- COL-5 Daniel Muñoz: no matching footballer with an image
-- CPV-2 Bebé: no matching footballer with an image
-- HAI-1 Frantzdy Pierrot: no matching footballer with an image
-- JOR-1 Mousa Al-Tamari: no matching footballer with an image
-- PAN-2 José Fajardo: no matching footballer with an image
-- PAR-4 Julio Enciso: no matching footballer with an image
-- RSA-2 Themba Zwane: no matching footballer with an image
-- SCO-3 Andrew Robertson: no matching footballer with an image
-- USA-7 Matt Turner: no matching footballer with an image
-
-## Stopped per policy
-
-- asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/29/2022128151247_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0370_-_B70I6481_%28Evan_N%E2%80%99Dicka_cropped%29.jpg — stopping per policy.
+- MEX-15 Obed Vargas: no matching footballer with an image
+- MEX-23 Armando González: no matching footballer with an image
+- MEX-4 Jorge Sánchez: no matching footballer with an image
+- MEX-7 Johan Vásquez: no matching footballer with an image

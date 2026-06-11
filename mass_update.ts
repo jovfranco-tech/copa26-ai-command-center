@@ -7,7 +7,7 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-const POS_TEMPLATE: Record<string, any> = {
+const POS_TEMPLATE: Record<string, {pace: number, shooting: number, passing: number, dribbling: number, defending: number, physical: number}> = {
   FW: { pace: 79, shooting: 78, passing: 67, dribbling: 78, defending: 34, physical: 70 },
   MF: { pace: 70, shooting: 67, passing: 78, dribbling: 77, defending: 64, physical: 70 },
   DF: { pace: 68, shooting: 42, passing: 63, dribbling: 60, defending: 78, physical: 78 },
@@ -27,7 +27,7 @@ const TEAM_LEVEL: Record<string, number> = {
   SWE: 4, SCO: 3, AUT: 4, ALG: 3, GHA: 3, IRN: 3, KSA: 2, AUS: 2, CZE: 4, PAR: 3, CIV: 3, RSA: 2
 };
 
-function estimateRatings(p: any) {
+function estimateRatings(p: { pos?: string, club?: string, team?: string, age?: number }) {
   const pos = POS_TEMPLATE[p.pos] ? p.pos : 'MF';
   const template = POS_TEMPLATE[pos]!;
   const clubBonus = CLUB_LEVELS.find(([pattern]) => pattern.test(p.club ?? ''))?.[1] ?? 0;
@@ -133,7 +133,7 @@ async function run() {
           if (data.thumbnail && data.thumbnail.source) {
             imgUrl = data.thumbnail.source;
           }
-        } catch (e) {
+        } catch {
           // Ignore, use fallback
         }
         
@@ -144,7 +144,7 @@ async function run() {
             // Wikipedia blocked the direct download of the image, fallback to SVG
             execSync(`curl -sL -A "Mozilla/5.0" -o "${path.join(photosDir, p.id + '.jpg')}" "${genericSvgUrl}"`);
           }
-        } catch (e) {
+        } catch {
           console.error(`Failed to download for ${p.name}`);
         }
         

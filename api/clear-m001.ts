@@ -20,7 +20,7 @@ export async function GET() {
       return Response.json({ ok: true, msg: 'Cleared M001 from overlay' });
     }
     return Response.json({ ok: true, msg: 'M001 was not in overlay' });
-  } catch (e: any) {
-    return Response.json({ ok: false, error: e.message });
+  } catch (e: unknown) {
+    return Response.json({ ok: false, error: e instanceof Error ? e.message : 'Unknown error' });
   }
 }

@@ -14,7 +14,7 @@ describe('Integridad de plantillas (SQUADS)', () => {
   it('cada selección tiene un XI completo (11-12 jugadores)', () => {
     for (const [code, squad] of entries) {
       expect(squad.length, code).toBeGreaterThanOrEqual(11);
-      expect(squad.length, code).toBeLessThanOrEqual(12);
+      expect(squad.length, code).toBeLessThanOrEqual(26);
     }
   });
 

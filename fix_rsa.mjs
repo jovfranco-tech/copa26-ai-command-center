@@ -48,7 +48,7 @@ players.forEach(p => {
   try {
     console.log(`Downloading ${p.id}...`);
     execSync(`curl -L -f -o "apps/web/static/player-photos/${p.id}.jpg" "${p.url}"`);
-  } catch (e) {
+  } catch {
     console.log(`Failed to download ${p.name}, creating generic placeholder...`);
     // Create a 1x1 transparent JPEG or use another fallback
     execSync(`curl -L -o "apps/web/static/player-photos/${p.id}.jpg" "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"`);

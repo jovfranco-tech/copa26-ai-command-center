@@ -4685,7 +4685,7 @@ export const SQUADS: Record<string, SquadEntry[]> = {
       "GK",
       "MC Alger",
       25,
-      15
+      25
     ],
     [
       "Aïssa Mandi",
