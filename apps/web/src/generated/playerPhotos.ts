@@ -346,16 +346,28 @@ export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
   "MAR-8": "jpg",
   "MAR-9": "jpg",
   "MEX-1": "webp",
-  "MEX-10": "jpg",
+  "MEX-10": "png",
   "MEX-11": "webp",
   "MEX-12": "webp",
+  "MEX-13": "png",
+  "MEX-14": "png",
+  "MEX-16": "jpg",
+  "MEX-17": "jpg",
+  "MEX-18": "png",
+  "MEX-19": "jpg",
   "MEX-2": "webp",
+  "MEX-20": "jpg",
+  "MEX-21": "jpg",
+  "MEX-22": "png",
+  "MEX-24": "png",
+  "MEX-25": "png",
+  "MEX-26": "jpg",
   "MEX-3": "webp",
   "MEX-4": "webp",
   "MEX-5": "webp",
   "MEX-6": "webp",
   "MEX-7": "webp",
-  "MEX-8": "jpg",
+  "MEX-8": "png",
   "MEX-9": "webp",
   "NED-1": "webp",
   "NED-10": "jpg",
@@ -552,10 +564,75 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Mahrez_2021.jpg"
   },
+  "ALG-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Rayan_A%C3%AFt-Nouri_playing_for_Algeria_in_2024.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Rayan_A%C3%AFt-Nouri"
+  },
+  "ALG-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5b/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93134.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ramy_Bensebaini"
+  },
+  "ALG-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/Ramiz_zerrouki-1672746224.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ramiz_Zerrouki"
+  },
+  "ALG-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/56/Houssem_Aouar_in_2024.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Houssem_Aouar"
+  },
+  "ALG-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/ff/World_Cup_Qualification_Africa_Guinea_v_Algeria_14_%28Far%C3%A8s_Cha%C3%AFbi%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Far%C3%A8s_Cha%C3%AFbi"
+  },
+  "ALG-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Boudaoui_asse_ogcn_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Hicham_Boudaoui"
+  },
+  "ALG-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/83/RC_Lens_-_Lille_OSC_%2808-10-2023%29_19_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nabil_Bentaleb"
+  },
   "ALG-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/2c/BennacerLeB2022.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:BennacerLeB2022.jpg"
+  },
+  "ALG-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/45/Mahrez_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Riyad_Mahrez"
+  },
+  "ALG-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Lens_-_Stade_Rennais_%2820-08-2023%29_22.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Amine_Gouiri"
+  },
+  "ALG-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/57/MCI_VS_FER_2024_%28Anis_Hadj_Moussa%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Anis_Hadj_Moussa"
+  },
+  "ALG-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/36/Ahmed_Nadhir_Benbouali_2025.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nadhir_Benbouali"
+  },
+  "ALG-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/29/Mohammed_Amoura_training_against_Mozambique.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Mohamed_Amoura"
+  },
+  "ALG-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Adel_Boulbina.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Adil_Boulbina"
   },
   "ALG-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Houssem_Aouar_2017.jpg",
@@ -566,6 +643,26 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/72/Sa%C3%AFd_Benrahma_-_20240326.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Sa%C3%AFd_Benrahma_-_20240326.jpg"
+  },
+  "ALG-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Mandi_asselosc_2425_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/A%C3%AFssa_Mandi"
+  },
+  "ALG-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/18/Mohamed_Amine_Tougai.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mohamed_Amine_Tougai"
+  },
+  "ALG-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Zineddine_Bela%C3%AFd_-_20240326_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Zineddine_Bela%C3%AFd"
+  },
+  "ALG-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/RC_Lens_-_FC_Nantes_%2828-10-2023%29_10.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jaouen_Hadjam"
   },
   "ARG-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Lionel_Messi_White_House_2026_%283x4_cropped%29.jpg",
@@ -585,10 +682,80 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
     "ext": "jpg"
   },
+  "ARG-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/13/Leandro_Paredes_2018_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Leandro_Paredes"
+  },
+  "ARG-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/Rodrigo_De_Paul_NYCFC_Miami_24_Sep_2025-018_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Rodrigo_De_Paul"
+  },
+  "ARG-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/25/2020-03-10_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League_Achtelfinale%2C_RB_Leipzig_-_Tottenham_Hotspur_1DX_3705_by_Stepro.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Giovani_Lo_Celso"
+  },
+  "ARG-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Exequiel_Palacios%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Exequiel_Palacios"
+  },
+  "ARG-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/68/Almada_asse_ol_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Thiago_Almada"
+  },
+  "ARG-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/12/Nico_Paz_Como_2025.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Nico_Paz_Como_2025.jpg"
+  },
+  "ARG-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/49/Alexis_Mac_Allister_WC_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alexis_Mac_Allister"
+  },
   "ARG-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Lautaro_Mart%C3%ADnez_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Lautaro_Mart%C3%ADnez_(cropped).jpg"
+  },
+  "ARG-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Enzo_Fern%C3%A1ndez_2025_FIFA_Club_World_Cup_Final.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Enzo_Fern%C3%A1ndez"
+  },
+  "ARG-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/03/Argentina_national_football_team_-_2_-_2022_%28Juli%C3%A1n_%C3%81lvarez%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez"
+  },
+  "ARG-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Lionel_Messi_White_House_2026_%283x4_cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lionel_Messi"
+  },
+  "ARG-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Nicolas_Gonzalez_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Nicolas_Gonzalez_(cropped).jpg"
+  },
+  "ARG-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/db/Giuliano_Simeone%2C_FC_Salzburg_vs._Atletico_Madrid_%282025-01-29_UEFA_Championsleague%29_53_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Giuliano_Simeone"
+  },
+  "ARG-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/16/Flaco-Lopez-Palmeiras-Juventude-jun24.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jos%C3%A9_Manuel_L%C3%B3pez_(footballer)"
+  },
+  "ARG-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Lautaro_Martinez_ARGENTINA_VS_VENEZUELA_2017.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lautaro_Mart%C3%ADnez"
   },
   "ARG-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/34/Juli%C3%A1n_%C3%81lvarez_%28footballer%29_2023.jpg",
@@ -630,6 +797,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Chile_VS._Australia_(3)_(cropped)_2.jpg"
   },
+  "AUS-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/92/Mitchell_Duke.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Mitchell_Duke.jpg"
+  },
+  "AUS-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/83/KusiniYengi1.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Kusini_Yengi"
+  },
   "AUS-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Riley_McGree.jpg",
     "ext": "jpg",
@@ -645,15 +822,120 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:20180601_FIFA_Friendly_Match_Czech_Republic_vs._Australia_Matthew_Ryan_850_0230.jpg"
   },
+  "AUS-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/00/Kye_Rowles_NYCFC_vs_DC_United_on_Aug_30_2025-016_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kye_Rowles"
+  },
+  "AUS-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Cameron_Burgess_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Cameron_Burgess"
+  },
+  "AUS-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5e/20180601_FIFA_Friendly_Match_Czech_Republic_vs._Australia_Aziz_Behich_850_0277.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Aziz_Behich"
+  },
+  "AUS-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/4822293_AE7I6590_-_Connor_Metcalfe.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Connor_Metcalfe"
+  },
+  "AUS-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/57/4822273_AE7I7255_-_Martin_Boyle.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Martin_Boyle"
+  },
   "AUT-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_David_Alaba_850_1632.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:20180610_FIFA_Friendly_Match_Austria_vs._Brazil_David_Alaba_850_1632.jpg"
   },
+  "AUT-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1a/FC_Liefering_versus_WSG_Wattens_%2824._Mai_2019%29_06.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alexander_Prass"
+  },
+  "AUT-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28053%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marco_Friedl"
+  },
+  "AUT-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/35/FC_RB_Salzburg_gegen_WSG_Swarowski_Tirol_%287._Dezember_2019%29_62_%28Michael_Svoboda%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Michael_Svoboda"
+  },
+  "AUT-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9a/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Xaver_Schlager_850_1680.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Xaver_Schlager"
+  },
+  "AUT-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/35/Meisterteller%C3%BCbergabe_Saison_2021-22_%282022-05-21%29_49.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nicolas_Seiwald"
+  },
+  "AUT-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Marcel_Sabitzer_2020_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marcel_Sabitzer"
+  },
+  "AUT-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a0/20180602_AUTGER_4687_%28cropped%29_Florian_Grillitsch.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Florian_Grillitsch"
+  },
+  "AUT-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/48/UEFA_Euro_2023_Qualifiers_Austria_vs._Finland_%282022-06-03%29_30.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Romano_Schmid"
+  },
+  "AUT-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Dejan_Ljubicic_-_SC_Wiener_Neustadt_%2801%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dejan_Ljubi%C4%8Di%C4%87"
+  },
   "AUT-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Marcel_Sabitzer_2020_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Marcel_Sabitzer_2020_(cropped).jpg"
+  },
+  "AUT-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3d/2022-07-21_Fu%C3%9Fball%2C_M%C3%A4nner%2CFreundschaftsspiel%2C_RB_Leipzig_-_FC_Liverpool_1DX_2137_by_Stepro_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Konrad_Laimer"
+  },
+  "AUT-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6f/U19_Austria_vs._Ireland%2819._November_2019_%29_42.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Patrick_Wimmer"
+  },
+  "AUT-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/41/Paul_wanner-1772636856_%28cropped%29.JPG",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Paul_Wanner"
+  },
+  "AUT-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d7/20140905_U21_AUT_BIH_AT08_1103.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alessandro_Sch%C3%B6pf"
+  },
+  "AUT-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f6/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Marko_Arnautovi%C4%87_850_1633.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marko_Arnautovi%C4%87"
+  },
+  "AUT-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Michael_Gregoritsch_U21_Austria_vs._Albania_2014-03-05_01.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Michael_Gregoritsch"
+  },
+  "AUT-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Sasa_kalajdzic.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Sa%C5%A1a_Kalajd%C5%BEi%C4%87"
   },
   "AUT-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3d/2022-07-21_Fu%C3%9Fball%2C_M%C3%A4nner%2CFreundschaftsspiel%2C_RB_Leipzig_-_FC_Liverpool_1DX_2137_by_Stepro_%28cropped%29.jpg",
@@ -670,15 +952,115 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "png",
     "page": "https://commons.wikimedia.org/wiki/File:Pentz_(2024).png"
   },
+  "AUT-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28110%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Stefan_Posch"
+  },
+  "AUT-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_David_Alaba_850_1632.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/David_Alaba"
+  },
+  "AUT-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28057%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Philipp_Lienhart"
+  },
+  "AUT-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Phillipp-mwene.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Phillipp_Mwene"
+  },
   "BEL-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Kevin_De_Bruyne_USMNT_v_Belgium_Mar_28_2026-64_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Kevin_De_Bruyne_USMNT_v_Belgium_Mar_28_2026-64_(cropped).jpg"
   },
+  "BEL-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Joaquin_Seys_USMNT_v_Belgium_Mar_28_2026-206.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Joaquin_Seys"
+  },
+  "BEL-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Timothy_Castagne_USMNT_v_Belgium_Mar_28_2026-17_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Timothy_Castagne"
+  },
+  "BEL-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/61/Axel_Witsel_USMNT_v_Belgium_Mar_28_2026-34_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Axel_Witsel"
+  },
+  "BEL-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Kevin_De_Bruyne_USMNT_v_Belgium_Mar_28_2026-64_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kevin_De_Bruyne"
+  },
+  "BEL-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Youri_Tielemans_USMNT_v_Belgium_Mar_28_2026-20_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Youri_Tielemans"
+  },
+  "BEL-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Moreira2_asse_rcsa_2425.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Diego_Moreira"
+  },
+  "BEL-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/77/Hans_Vanaken_Lommel_United.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Hans_Vanaken"
+  },
+  "BEL-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Nicolas_Raskin_USMNT_v_Belgium_Mar_28_2026-14_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nicolas_Raskin"
+  },
+  "BEL-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/36/Amadou_Onana_USMNT_v_Belgium_Mar_28_2026-96_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Amadou_Onana"
+  },
   "BEL-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Romelu_Lukaku_2021.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Romelu_Lukaku_2021.jpg"
+  },
+  "BEL-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Romelu_Lukaku_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Romelu_Lukaku"
+  },
+  "BEL-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7b/RC_Lens_-_Arsenal_FC_%2803-10-2023%29_26_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Leandro_Trossard"
+  },
+  "BEL-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/06/J%C3%A9r%C3%A9my_Doku_USMNT_v_Belgium_Mar_28_2026-27_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/J%C3%A9r%C3%A9my_Doku"
+  },
+  "BEL-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Dodi_Luk%C3%A9bakio_USMNT_v_Belgium_Mar_28_2026-212_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dodi_Luk%C3%A9bakio"
+  },
+  "BEL-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/42/Charles_De_Ketelaere_USMNT_v_Belgium_Mar_28_2026-76_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Charles_De_Ketelaere"
+  },
+  "BEL-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/74/Alexis_Saelemaekers_USMNT_v_Belgium_Mar_28_2026-13_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alexis_Saelemaekers"
+  },
+  "BEL-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Pardo_asselosc_2425_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Matias_Fernandez-Pardo"
   },
   "BEL-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/06/J%C3%A9r%C3%A9my_Doku_USMNT_v_Belgium_Mar_28_2026-27_%28cropped%29.jpg",
@@ -705,20 +1087,115 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:FC_Salzburg_gegen_VfL_Wolfsburg_(CL-Gruppenphase_20._Oktober_2021)_75.jpg"
   },
+  "BEL-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/50/Thomas_Meunier_USMNT_v_Belgium_Mar_28_2026-16_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Thomas_Meunier"
+  },
+  "BEL-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/36/Koni_De_Winter_USMNT_v_Belgium_Mar_28_2026-36_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Koni_De_Winter"
+  },
   "BIH-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/2c/20150331_2026_AUT_BIH_2177_Edin_D%C5%BEeko_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:20150331_2026_AUT_BIH_2177_Edin_D%C5%BEeko_(cropped).jpg"
+  },
+  "BIH-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/94/%C4%8Celik_rcl_asse_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Nidal_%C4%8Celik"
+  },
+  "BIH-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/83/Benjamin_Tahirovic_for_Br%C3%B8ndby.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Benjamin_Tahirovi%C4%87"
+  },
+  "BIH-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9e/2025-03-05_Armin_Gigovic_Holstein_Kiel_pic1.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Armin_Gigovi%C4%87"
+  },
+  "BIH-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/98/Ivan_Ba%C5%A1i%C4%87_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ivan_Ba%C5%A1i%C4%87"
+  },
+  "BIH-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Ivan_%C5%A0unji%C4%87_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ivan_%C5%A0unji%C4%87"
+  },
+  "BIH-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Amir_Had%C5%BEiahmetovi%C4%87_playing_for_Be%C5%9Fikta%C5%9F.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Amir_Had%C5%BEiahmetovi%C4%87"
+  },
+  "BIH-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f8/2019-08-10_TuS_Dassendorf_vs._SG_Dynamo_Dresden_%28DFB-Pokal%29_by_Sandro_Halank%E2%80%93151.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/D%C5%BEenis_Burni%C4%87"
+  },
+  "BIH-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/61/Jahresbeginnfeier_FC_RB_Salzburg_%282026-01-25_RB_Arena%29_10.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kerim_Alajbegovi%C4%87"
   },
   "BIH-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/43/1_Sead_Kola%C5%A1inac_2018_%28cropped2%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:1_Sead_Kola%C5%A1inac_2018_(cropped2).jpg"
   },
+  "BIH-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/06/FC_Liefering_gegen_SV_Lafnitz_%282024-05-25%29_25_%28Ermin_Mahmi%C4%87%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ermin_Mahmi%C4%87"
+  },
+  "BIH-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2c/20150331_2026_AUT_BIH_2177_Edin_D%C5%BEeko_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Edin_D%C5%BEeko"
+  },
+  "BIH-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/FC_RB_Salzburg_vs._FK_Austria_Wien_%282023-04-09%29_45_%28Haris_Tabakovi%C4%87%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Haris_Tabakovi%C4%87"
+  },
+  "BIH-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/79/Jovo_Luki%C4%87_97_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jovo_Luki%C4%87"
+  },
   "BIH-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3e/%282024-09-10_%29_FC_RB_Salzburg_gegen_SCR_Altach_24.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:(2024-09-10_)_FC_RB_Salzburg_gegen_SCR_Altach_24.jpg"
+  },
+  "BIH-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Dennis_Had%C5%BEikaduni%C4%87_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dennis_Had%C5%BEikaduni%C4%87"
+  },
+  "BIH-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Muharemovi%C4%87-24.25.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Tarik_Muharemovi%C4%87"
+  },
+  "BIH-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/06/Kolasinac_2015.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Sead_Kola%C5%A1inac"
+  },
+  "BIH-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/%282024-09-10_%29_FC_RB_Salzburg_gegen_SCR_Altach_24.jpg/3840px-%282024-09-10_%29_FC_RB_Salzburg_gegen_SCR_Altach_24.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Amar_Dedi%C4%87"
+  },
+  "BIH-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/84/SM-Rangers18_%2816%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nikola_Kati%C4%87"
   },
   "BRA-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Vinicius_Jr_2021.jpg",
@@ -735,10 +1212,80 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpeg",
     "page": "https://en.wikipedia.org/wiki/Lucas_Paquet%C3%A1"
   },
+  "BRA-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Ederson1.JPG"
+  },
+  "BRA-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Casemiro_Brazil_Austria_June_2018.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Casemiro"
+  },
+  "BRA-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Bruno_Guimar%C3%A3es.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Bruno_Guimar%C3%A3es"
+  },
+  "BRA-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Fabinho_%2843934382122%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Fabinho_(43934382122)_(cropped).jpg"
+  },
+  "BRA-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Lucas_Paquet%C3%A1_of_West_Ham.jpeg",
+    "ext": "jpeg",
+    "page": "https://en.wikipedia.org/wiki/Lucas_Paquet%C3%A1"
+  },
+  "BRA-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c6/2023_05_06_Final_de_la_Copa_del_Rey_-_52879242230_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Vin%C3%ADcius_J%C3%BAnior"
+  },
+  "BRA-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/80/Matheus_Cunha_em_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Matheus_Cunha"
+  },
   "BRA-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/05/Rodrygo_2023_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Rodrygo_2023_(cropped).jpg"
+  },
+  "BRA-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Neymar_Jr._with_Al_Hilal%2C_3_October_2023_-_03_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Neymar"
+  },
+  "BRA-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Raphael_Dias_Belloli_2023.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Raphinha"
+  },
+  "BRA-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Endrick_sele%C3%A7%C3%A3o_vs_inglaterra.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Endrick_sele%C3%A7%C3%A3o_vs_inglaterra.jpg"
+  },
+  "BRA-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Luiz_Henrique_in_Zenit_2025.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Luiz_Henrique_in_Zenit_2025.jpg"
+  },
+  "BRA-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/1_Gabriel_Martinelli_arsenal_2025_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Gabriel_Martinelli"
+  },
+  "BRA-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Brentford_Players_27122025_%284%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Igor_Thiago"
+  },
+  "BRA-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Rayan_2026.png",
+    "ext": "png",
+    "page": "https://commons.wikimedia.org/wiki/File:Rayan_2026.png"
   },
   "BRA-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Raphael_Dias_Belloli_2023.jpg",
@@ -780,6 +1327,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:2022-07-30_Fu%C3%9Fball,_M%C3%A4nner,_DFL-Supercup,_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3286_by_Stepro.jpg"
   },
+  "CAN-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/90/Jonathan_Osorio_2017.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jonathan_Osorio"
+  },
+  "CAN-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Cyle_Larin_%282021-22_S%C3%BCper_Lig%29_-_Resim1_%28cropped%29.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Cyle_Larin"
+  },
   "CAN-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Jonathan_David_asse_losc_2425_%28cropped%29.jpg",
     "ext": "jpg",
@@ -800,15 +1357,100 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Maxime_Cr%C3%A9peau_and_James_Pantemis_Portland_Timbers_2024_(cropped).jpg"
   },
+  "CAN-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/60/Bombito_asse_ogcn_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Mo%C3%AFse_Bombito"
+  },
+  "CAN-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Cornelius_asse_om_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Derek_Cornelius"
+  },
+  "CAN-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/A_Johnston_Canada_national_football_team_WC2022_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alistair_Johnston"
+  },
+  "CAN-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/08/Kone_asse_om_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Isma%C3%ABl_Kon%C3%A9"
+  },
   "CIV-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Simon_Adingra_USG_2023.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Simon_Adingra_USG_2023.jpg"
   },
+  "CIV-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Emmanuel_Agbadou.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Emmanuel_Agbadou"
+  },
+  "CIV-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/29/2022128151247_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0370_-_B70I6481_%28Evan_N%E2%80%99Dicka_cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Evan_Ndicka"
+  },
+  "CIV-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Jean_Seri.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jean_Micha%C3%ABl_Seri"
+  },
+  "CIV-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Seko_Fofana.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Seko_Fofana"
+  },
+  "CIV-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/43/Franck_Yannick_Kessi%C3%A9.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Franck_Kessi%C3%A9"
+  },
+  "CIV-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/31/Ibrahim_Sangar%C3%A9_%282018-05-09%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Ibrahim_Sangar%C3%A9_(2018-05-09).jpg"
+  },
+  "CIV-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f1/%D7%A4%D7%90%D7%A8%D7%A4%D7%94_%D7%92%D7%95%D7%99%D7%90%D7%92%D7%95%D7%9F_-_Parfait_Guiagon.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Parfait_Guiagon"
+  },
+  "CIV-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Simon_Adingra_USG_2023.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Simon_Adingra"
+  },
   "CIV-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/43/Franck_Yannick_Kessi%C3%A9.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Franck_Yannick_Kessi%C3%A9.jpg"
+  },
+  "CIV-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Elye_Wahi_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Elye_Wahi"
+  },
+  "CIV-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Diakite_asse_sr_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Oumar_Diakit%C3%A9"
+  },
+  "CIV-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/19/Manchester_United_v_BSC_Young_Boys%2C_8_December_2021_%2817%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Amad_Diallo"
+  },
+  "CIV-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Nicolas_Pepe_LOSC_%28cropped2%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nicolas_P%C3%A9p%C3%A9"
+  },
+  "CIV-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/70/Guessand_asse_ogcn_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Evann_Guessand"
   },
   "CIV-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/29/2022128151247_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0370_-_B70I6481_%28Evan_N%E2%80%99Dicka_cropped%29.jpg",
@@ -820,25 +1462,210 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "png",
     "page": "https://commons.wikimedia.org/wiki/File:Fofana_asse_sco_2425.png"
   },
+  "CIV-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/92/Joueur_ivoirien_02.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ghislain_Konan"
+  },
+  "CIV-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/21/Singo_asse_asm_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Wilfried_Singo"
+  },
+  "CIV-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Odilon_Kossounou%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Odilon_Kossounou"
+  },
+  "CIV-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Christopher_Op%C3%A9ri_21_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_20250731_%286%29.jpg/3840px-Christopher_Op%C3%A9ri_21_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_20250731_%286%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Christopher_Op%C3%A9ri"
+  },
+  "CIV-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/28/Doue_asse_rcsa_2425.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Gu%C3%A9la_Dou%C3%A9"
+  },
   "COD-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9b/CAN_2023RD_Congo_2-1_Guin%C3%A9e_9939_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:CAN_2023RD_Congo_2-1_Guin%C3%A9e_9939_(cropped).jpg"
+  },
+  "COD-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/74/G%C3%A9d%C3%A9on_Kalulu_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/G%C3%A9d%C3%A9on_Kalulu"
+  },
+  "COD-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/db/Arthur_Masuaku%2C_2023_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Arthur_Masuaku"
+  },
+  "COD-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Samuel_Moutoussamy_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Samuel_Moutoussamy"
+  },
+  "COD-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/12/Bongonda_in_DR_Congo_national_football_team_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Th%C3%A9o_Bongonda"
+  },
+  "COD-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Entra%C3%AEnement_du_RC_Lens_-_15_juillet_2020_24.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ga%C3%ABl_Kakuta"
+  },
+  "COD-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Noah_Sadiki_versus_Real_Betis_2nd_August_2025.jpg/3840px-Noah_Sadiki_versus_Real_Betis_2nd_August_2025.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Noah_Sadiki"
+  },
+  "COD-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Aaron_Tshibola_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Aaron_Tshibola"
   },
   "COD-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Chancel_Mbemba_Mangulu.JPG",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Chancel_Mbemba_Mangulu.JPG"
   },
+  "COD-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/75/Charles_Pickel_2023_Africa_Cup_of_Nations_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Charles_Pickel"
+  },
+  "COD-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Edo_Kayembe_2025_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Edo_Kayembe"
+  },
+  "COD-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/db/Meschack_Elia_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Meschak_Elia"
+  },
+  "COD-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4b/C%C3%A9dric_Bakambu_2016_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/C%C3%A9dric_Bakambu"
+  },
+  "COD-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9b/CAN_2023RD_Congo_2-1_Guin%C3%A9e_9939_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Yoane_Wissa"
+  },
+  "COD-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/78/Lens_-_Sochaux_%2823-11-2019%29_99_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Simon_Banza"
+  },
+  "COD-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/55/Aaron_Wan-Bissaka_of_West_Ham_United.jpeg",
+    "ext": "jpeg",
+    "page": "https://en.wikipedia.org/wiki/Aaron_Wan-Bissaka"
+  },
+  "COD-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Manchester_United_v_Everton%2C_7_August_2021_%2836%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Axel_Tuanzebe"
+  },
+  "COD-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Batubinsika_asse_fcn_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Dylan_Batubinsika"
+  },
+  "COD-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/60/24BBRW_-_53535940590_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Chancel_Mbemba"
+  },
   "COL-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/c7/FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_%282026-01-06_Testspiel%29_40_%28Luiz_D%C3%ADaz%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_(2026-01-06_Testspiel)_40_(Luiz_D%C3%ADaz).jpg"
   },
+  "COL-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Lens_-_Reims_%2812-05-2023%29_33.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Deiver_Machado"
+  },
+  "COL-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/64/FWC_2018_-_Round_of_16_-_COL_v_ENG_-_D_S%C3%A1nchez.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Davinson_S%C3%A1nchez"
+  },
+  "COL-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Kevin_con_Krasnodar_en_2023.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kevin_Casta%C3%B1o"
+  },
+  "COL-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/42/Richard-Rios-Palmeiras-Liverpool-abr24.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Richard_R%C3%ADos"
+  },
+  "COL-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/76/Jorge_Carrascal_2025.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jorge_Carrascal"
+  },
+  "COL-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/79/James_Rodriguez_2018.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/James_Rodr%C3%ADguez"
+  },
+  "COL-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Jhon_Arias_en_Palmeiras_-_Copa_Libertadores_2026.jpg/3840px-Jhon_Arias_en_Palmeiras_-_Copa_Libertadores_2026.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jhon_Arias_(footballer)"
+  },
+  "COL-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/94/Gustavo_Puerta_2023_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Gustavo_Puerta"
+  },
+  "COL-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Jefferson_Lerma_2018.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Jefferson_Lerma"
+  },
   "COL-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/James_al_natural_-_Series%2C_02.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:James_al_natural_-_Series,_02.jpg"
+  },
+  "COL-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/31/Juan_Quintero_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Juan_Fernando_Quintero"
+  },
+  "COL-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c7/FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_%282026-01-06_Testspiel%29_40_%28Luiz_D%C3%ADaz%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_(2026-01-06_Testspiel)_40_(Luiz_D%C3%ADaz).jpg"
+  },
+  "COL-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Jhon_C%C3%B3rdoba_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jhon_C%C3%B3rdoba"
+  },
+  "COL-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/76/Cucho_Hernandez_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Cucho_Hern%C3%A1ndez"
+  },
+  "COL-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Luis_Su%C3%A1rez_2026_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+  },
+  "COL-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7b/IMCF_vs._RSL_25_%28cropped%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Andr%C3%A9s_G%C3%B3mez_(footballer)"
   },
   "COL-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/74/Jhon_Dur%C3%A1n%2C_Esteghlal_FC_vs_Al-Nassr_FC_%28ACLElite%29%3B_3_Mar_2025.png",
@@ -855,25 +1682,175 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpeg",
     "page": "https://commons.wikimedia.org/wiki/File:Camilo_Vargas_2022.jpeg"
   },
+  "COL-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bf/FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_103_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Yerry_Mina"
+  },
+  "COL-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4a/FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_102_%28cropped%29_2.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Johan_Mojica"
+  },
+  "COL-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Willer_Ditta_en_Newell%27s_Old_Boys.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Willer_Ditta"
+  },
   "CPV-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Ryan_Mendes_%28LOSC_Lille%29.JPG",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Ryan_Mendes_(LOSC_Lille).JPG"
+  },
+  "CPV-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Steven_Moreira_NYCFC_v_Columbus_10_May_2026-67_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Steven_Moreira"
+  },
+  "CPV-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Kevin_Pina_%28footballer%29_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kevin_Pina_(footballer)"
+  },
+  "CPV-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/93/Jamiro_Monteiro_Philadelphia_Union_2019.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jamiro_Monteiro"
+  },
+  "CPV-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Deroy_Duarte_2026.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Deroy_Duarte"
+  },
+  "CPV-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/11/JovaneCabral_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jovane_Cabral"
   },
   "CPV-2": {
     "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiago%20Manuel%20Dias%20Correia.JPG?width=420",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Tiago_Manuel_Dias_Correia.JPG"
   },
+  "CPV-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Cap-vert_vs_Ethiopi_%2824%29.jpg/1920px-Cap-vert_vs_Ethiopi_%2824%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Garry_Rodrigues"
+  },
+  "CPV-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/RC_Lens_-_Grenoble_Foot_38_%2810-02-2020%29_70.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Willy_Semedo"
+  },
+  "CPV-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Ryan_Mendes_%28LOSC_Lille%29.JPG",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ryan_Mendes"
+  },
+  "CPV-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Nuno_da_Costa_10_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_20250731_%2810%29.jpg/3840px-Nuno_da_Costa_10_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_20250731_%2810%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nuno_da_Costa"
+  },
+  "CPV-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/C.J._dos_Santos_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/CJ_dos_Santos"
+  },
+  "CPV-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Cap-vert_vs_Ethiopi_%2825%29.jpg/1920px-Cap-vert_vs_Ethiopi_%2825%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Stopira"
+  },
+  "CPV-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Logan_Costa_-_2023-02-01_%28cropped_medium_shot%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Logan_Costa"
+  },
   "CRO-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Luka_Modric_Interview_2021_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Luka_Modric_Interview_2021_(cropped).jpg"
   },
+  "CRO-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Martin-Erlic.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Martin_Erli%C4%87"
+  },
+  "CRO-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Nikola_Moro_2020.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nikola_Moro"
+  },
+  "CRO-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Chelsea_vs._Arsenal%2C_29_May_2019_18_Kovacic.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mateo_Kova%C4%8Di%C4%87"
+  },
+  "CRO-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Ofrenda_de_la_Liga_y_la_Champions-57-L.Mill%C3%A1n_%2852109310843%29_%28Luka_Modri%C4%87%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Luka_Modri%C4%87"
+  },
+  "CRO-14": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Nikola_Vla%C5%A1i%C4%87_%28CSKA_Moscow%2C_19.08.2019%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nikola_Vla%C5%A1i%C4%87"
+  },
+  "CRO-15": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/28/Pasalic_6459_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mario_Pa%C5%A1ali%C4%87"
+  },
+  "CRO-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a7/FC_Salzburg_gegen_GNK_Dinamo_Zagreb_%28UEFA_Championsleague_2022-10-05%29_52.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Martin_Baturina"
+  },
+  "CRO-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/40/Petar_Su%C4%8Di%C4%87.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Petar_Su%C4%8Di%C4%87"
+  },
+  "CRO-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Kristijan-Jakic.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Kristijan_Jaki%C4%87"
+  },
   "CRO-2": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Chelsea_vs._Arsenal%2C_29_May_2019_18_Kovacic.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Chelsea_vs._Arsenal,_29_May_2019_18_Kovacic.jpg"
+  },
+  "CRO-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/68/SD_Negreira_-_Real_Sociedad%2C_Copa_do_Rei_2025-26_05_-_Luka_Sucic.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Luka_Su%C4%8Di%C4%87"
+  },
+  "CRO-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Andrej_Kramari%C4%87_2018.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Andrej_Kramari%C4%87"
+  },
+  "CRO-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Budimir%2C_Ante_FCSP_15-16_WP_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ante_Budimir"
+  },
+  "CRO-23": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/85/Ivan_Peri%C5%A1i%C4%87_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ivan_Peri%C5%A1i%C4%87"
+  },
+  "CRO-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Marco_Pa%C5%A1ali%C4%87_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marco_Pa%C5%A1ali%C4%87"
+  },
+  "CRO-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Petar_Musa_NY_Red_Bulls_v_FC_Dallas_2_May_2026-53_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Petar_Musa"
   },
   "CRO-3": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Andrej_Kramari%C4%87_2018.jpg",
@@ -890,10 +1867,30 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Dominik_Livakovi%C4%87_2021.jpg"
   },
+  "CRO-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6a/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2611_%28Jo%C5%A1ko_Gvardiol%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jo%C5%A1ko_Gvardiol"
+  },
+  "CRO-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Caleta_asse_ol_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Duje_%C4%86aleta-Car"
+  },
+  "CRO-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/79/Qaraba%C4%9F_vs_Ajax_%2824.10.2024%29_%284%29_%28Josip_%C5%A0utalo%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Josip_%C5%A0utalo"
+  },
   "CUW-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Leandro_Bacuna_Back_to_your_roots_Groningen.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Leandro_Bacuna_Back_to_your_roots_Groningen.jpg"
+  },
+  "CUW-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Go_Ahead_Eagles_-_AZ_-_53170906955_%28Riechedly_Bazoer%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Riechedly_Bazoer"
   },
   "CZE-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Patrik_Schick_20180601_AUSCZE_3910_%28cropped%29.jpg",
@@ -1358,54 +2355,114 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "page": "https://en.wikipedia.org/wiki/Yassine_Bounou"
   },
   "MEX-1": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Santiago_Gim%C3%A9nez.png",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/73/Ra%C3%BAl_Rangel.png",
     "ext": "png",
-    "page": "https://en.wikipedia.org/wiki/Santiago_Gim%C3%A9nez"
+    "page": "https://en.wikipedia.org/wiki/Ra%C3%BAl_Rangel_(footballer)"
   },
   "MEX-10": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Luis_Ch%C3%A1vez_WC_2022_-_01.jpg",
-    "ext": "jpg",
-    "page": "https://en.wikipedia.org/wiki/Luis_Ch%C3%A1vez_(footballer)"
-  },
-  "MEX-11": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/73/Luis_Romo.png",
-    "ext": "png",
-    "page": "https://en.wikipedia.org/wiki/Luis_Romo"
-  },
-  "MEX-12": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Jes%C3%BAs_Gallardo.png",
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/Jes%C3%BAs_Gallardo"
   },
-  "MEX-2": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Hirving_Lozano.png",
+  "MEX-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/54/Erik_Lira_2.png",
     "ext": "png",
-    "page": "https://en.wikipedia.org/wiki/Hirving_Lozano"
+    "page": "https://en.wikipedia.org/wiki/%C3%89rik_Lira"
   },
-  "MEX-3": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Ra%C3%BAl_Jim%C3%A9nez_04032026_%281%29.jpg",
-    "ext": "jpg",
-    "page": "https://en.wikipedia.org/wiki/Ra%C3%BAl_Jim%C3%A9nez"
-  },
-  "MEX-4": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/91/Edson_%C3%81lvarez.png",
+  "MEX-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/73/Luis_Romo.png",
     "ext": "png",
-    "page": "https://en.wikipedia.org/wiki/Edson_%C3%81lvarez"
+    "page": "https://en.wikipedia.org/wiki/Luis_Romo"
   },
-  "MEX-5": {
+  "MEX-13": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e9/%C3%81lvaro_Fidalgo.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/%C3%81lvaro_Fidalgo"
+  },
+  "MEX-14": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/09/Orbel%C3%ADn_Pineda.png",
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/Orbel%C3%ADn_Pineda"
   },
-  "MEX-6": {
+  "MEX-16": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/15/GilbertoInter2014.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:GilbertoInter2014.jpg"
+  },
+  "MEX-17": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Luis_Ch%C3%A1vez_WC_2022_-_01.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Luis_Ch%C3%A1vez_(footballer)"
+  },
+  "MEX-18": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/38/Roberto_Alvarado.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Roberto_Alvarado"
+  },
+  "MEX-19": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Brian_Guti%C3%A9rrez_Philadelphia_Chicago_10.26.25-126_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Brian_Guti%C3%A9rrez"
+  },
+  "MEX-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/31/Carlos_Acevedo.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Carlos_Acevedo"
+  },
+  "MEX-20": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Ra%C3%BAl_Jim%C3%A9nez_04032026_%281%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ra%C3%BAl_Jim%C3%A9nez"
+  },
+  "MEX-21": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/06/Alexis_Vega_WC2022.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Alexis_Vega_WC2022.jpg"
+  },
+  "MEX-22": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Santiago_Gim%C3%A9nez.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Santiago_Gim%C3%A9nez"
+  },
+  "MEX-24": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Juli%C3%A1n_Qui%C3%B1ones.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Juli%C3%A1n_Qui%C3%B1ones"
+  },
+  "MEX-25": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/88/C%C3%A9sar_Huerta.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/C%C3%A9sar_Huerta"
+  },
+  "MEX-26": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Inter_Miami_CF_3-1_UNAM_%286_August_2025%29_30_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Guillermo_Mart%C3%ADnez_(footballer)"
+  },
+  "MEX-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Mex-Kor_%281%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Guillermo_Ochoa"
+  },
+  "MEX-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/a/a9/C%C3%A9sar_Montes.png",
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/C%C3%A9sar_Montes"
   },
-  "MEX-7": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Mex-Kor_%281%29_%28cropped%29.jpg",
-    "ext": "jpg",
-    "page": "https://en.wikipedia.org/wiki/Guillermo_Ochoa"
+  "MEX-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/91/Edson_%C3%81lvarez.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Edson_%C3%81lvarez"
+  },
+  "MEX-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Israel_Reyes.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Israel_Reyes"
+  },
+  "MEX-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Mateo_Ch%C3%A1vez.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Mateo_Ch%C3%A1vez"
   },
   "NED-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Cody_Gakpo_06042025_%282%29_%28cropped%29.jpg",

@@ -3029,6 +3029,7 @@ body {
 .matchday-team strong {
   font-size: clamp(20px, 2.6vw, 34px);
   line-height: 1.04;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4), 0 0 4px rgba(0,0,0,0.3);
 }
 .matchday-center {
   display: grid;
@@ -3042,10 +3043,12 @@ body {
   font-weight: 900;
   color: var(--gold-2);
   line-height: 1;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
 }
 .matchday-score b {
   padding: 0 12px;
   color: var(--tx-3);
+  text-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 .matchday-intel {
   display: grid;
