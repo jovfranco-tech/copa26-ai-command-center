@@ -28,7 +28,7 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   const resultsSourceUrl = process.env.RESULTS_SOURCE_URL;
-  const resultsAuthToken = process.env.RESULTS_AUTH_TOKEN;
+  const resultsAuthToken = process.env.RESULTS_AUTH_TOKEN || process.env.FOOTBALL_DATA_TOKEN;
   const pipeline = await checkResultsPipeline(resultsSourceUrl, resultsAuthToken);
   const checkedAt = new Date().toISOString();
 
