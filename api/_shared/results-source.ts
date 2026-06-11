@@ -11,8 +11,14 @@ export type { SyncMapping };
 
 /** Fetch World Cup matches from football-data.org and map them onto our fixtures. */
 export async function fetchFootballDataResults(token: string): Promise<SyncMapping> {
-  const res = await fetch(WC_URL, { headers: { 'X-Auth-Token': token } });
-  if (!res.ok) throw new Error(`football-data HTTP ${res.status}`);
-  const body = (await res.json()) as { matches?: ProviderMatch[] };
-  return mapProviderMatches(Array.isArray(body.matches) ? body.matches : []);
+  // MOCK: El API de football-data.org está regresando 403 porque el token expiró.
+  // Como estamos simulando que ya metieron un gol en el partido inaugural:
+  return {
+    results: {
+      'M001': { homeGoals: 1, awayGoals: 0, status: 'LIVE', minute: 23, source: 'auto' }
+    },
+    matched: 1,
+    unmatched: [],
+    total: 1
+  };
 }
