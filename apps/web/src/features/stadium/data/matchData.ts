@@ -8,7 +8,8 @@
  *   - MATCH_FIXTURES as emergency fallback if the real data API is unavailable
  *
  * Uso personal/privado — visualización no oficial — sin afiliación FIFA.
-import type { MatchAnalytics, PitchZoneInsights } from '@worldcup/shared/src/liveOverlay';
+ */
+import type { MatchAnalytics, PitchZoneInsights } from '@worldcup/shared';
 
 export type { MatchAnalytics, PitchZoneInsights };
 
