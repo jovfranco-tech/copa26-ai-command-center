@@ -13,7 +13,7 @@ export async function fetchFootballDataResults(_token: string): Promise<SyncMapp
   // Como estamos simulando que ya metieron un gol en el partido inaugural:
   return {
     results: {
-      'M001': { homeGoals: 1, awayGoals: 0, status: 'LIVE', minute: 23, source: 'auto' }
+      'M001': { homeGoals: 2, awayGoals: 0, status: 'LIVE', minute: 45, source: 'auto' }
     },
     matched: 1,
     unmatched: [],
