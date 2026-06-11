@@ -32,13 +32,33 @@ export interface LineupEntry {
   away?: LineupSheet;
 }
 
+export interface PitchZoneInsights {
+  stands: string;
+  field: string;
+  screens: string;
+  lights: string;
+}
+
+export interface MatchAnalytics {
+  confidence: number;
+  tacticalRisk: number;
+  momentum: number[];
+  storyline: string;
+  whatToWatch: string[];
+  strategyHome: string;
+  strategyAway: string;
+  heatZones: { x: number; y: number; r: number; val: number }[];
+  pitchZoneInsights?: PitchZoneInsights;
+}
+
 export interface LiveOverlay {
   results: Record<string, ResultEntry>;
   lineups: Record<string, LineupEntry>;
+  metrics: Record<string, MatchAnalytics>;
   updatedAt: string | null;
 }
 
-export const emptyOverlay = (): LiveOverlay => ({ results: {}, lineups: {}, updatedAt: null });
+export const emptyOverlay = (): LiveOverlay => ({ results: {}, lineups: {}, metrics: {}, updatedAt: null });
 
 const MAX_ENTRIES = 80;
 const MATCH_ID = /^M\d{1,4}$/;
@@ -98,6 +118,15 @@ export function sanitizeOverlay(raw: unknown): LiveOverlay {
     };
   }
 
+  const rawMetrics = (o.metrics ?? {}) as Record<string, unknown>;
+  for (const id of Object.keys(rawMetrics).slice(0, MAX_ENTRIES)) {
+    if (!MATCH_ID.test(id)) continue;
+    const m = rawMetrics[id] as Partial<MatchAnalytics>;
+    if (m && typeof m.storyline === 'string') {
+      out.metrics[id] = m as MatchAnalytics;
+    }
+  }
+
   out.updatedAt = typeof o.updatedAt === 'string' ? o.updatedAt : null;
   return out;
 }
@@ -113,6 +142,7 @@ export function applyAdminOp(overlay: LiveOverlay, body: AdminOp): LiveOverlay |
   const next: LiveOverlay = {
     results: { ...overlay.results },
     lineups: { ...overlay.lineups },
+    metrics: { ...overlay.metrics },
     updatedAt: overlay.updatedAt,
   };
   const id = typeof body?.matchId === 'string' ? body.matchId : '';

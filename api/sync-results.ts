@@ -16,6 +16,7 @@
 import { fetchFootballDataResults, type SyncMapping } from './_shared/results-source.js';
 import { blobConfigured, getOverlay, putOverlay } from './_shared/overlay.js';
 import type { ResultEntry } from '../packages/shared/src/liveOverlay.js';
+import { generateDynamicMetrics } from './_shared/gemini-metrics.js';
 
 function authorized(request: Request): boolean {
   const ua = request.headers.get('user-agent') ?? '';
@@ -73,6 +74,17 @@ export async function GET(request: Request): Promise<Response> {
     if (existing && sameResult(existing, r)) continue; // no change
     nextResults[id] = r;
     written++;
+
+    // Generate dynamic metrics for updated live matches via Gemini
+    if (r.status === 'LIVE' && process.env.GEMINI_API_KEY) {
+      const matchKeyParts = id.split('-'); // Try to guess the team codes or just pass the ID
+      // Fallback: we don't have the explicit homeCode/awayCode here easily mapped, so we'll pass the ID.
+      const metrics = await generateDynamicMetrics('Local', 'Visitante', r.homeGoals ?? 0, r.awayGoals ?? 0, r.minute, process.env.GEMINI_API_KEY);
+      if (metrics) {
+        overlay.metrics = overlay.metrics || {};
+        overlay.metrics[id] = metrics;
+      }
+    }
   }
 
   if (written > 0) {

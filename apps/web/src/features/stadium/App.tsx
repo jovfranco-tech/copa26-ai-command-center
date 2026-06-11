@@ -126,15 +126,33 @@ function App() {
     [venuesMap, t],
   );
 
+  const overlayLineups = useLiveOverlay().data?.lineups;
+  const overlayMetrics = useLiveOverlay().data?.metrics;
+
   // ── Build stadium match list from real API data (fallback to MATCH_FIXTURES) ─
   const fixtures = useMemo<Match[]>(() => {
     const realMatches = matchesData?.items ?? [];
+    let baseFixtures = MATCH_FIXTURES;
     if (realMatches.length > 0) {
-      return realMatches.map((m) => bridgeRealMatch(m, teamName, venueName, t));
+      baseFixtures = realMatches.map((m) => bridgeRealMatch(m, teamName, venueName, t));
     }
-    // Emergency offline fallback — clearly labeled in matchData.ts
-    return MATCH_FIXTURES;
-  }, [matchesData, teamName, venueName, t]);
+    
+    // Inject AI generated dynamic metrics if present in the live overlay
+    if (overlayMetrics) {
+      return baseFixtures.map(m => {
+        const metrics = overlayMetrics[m.id];
+        if (metrics) {
+          return {
+            ...m,
+            analytics: metrics,
+            pitchZoneInsights: metrics.pitchZoneInsights ?? m.pitchZoneInsights,
+          };
+        }
+        return m;
+      });
+    }
+    return baseFixtures;
+  }, [matchesData, teamName, venueName, t, overlayMetrics]);
 
   // Apply per-match user overrides (weather / time of day)
   const fixturesWithOverrides = useMemo<Match[]>(() => {
@@ -153,7 +171,6 @@ function App() {
     fixturesWithOverrides[0];
 
   // ── Live overlay: admin-published official lineups (merged over the static store)
-  const overlayLineups = useLiveOverlay().data?.lineups;
   const officialSource = useMemo<Record<string, OfficialMatchLineup>>(
     () => ({ ...OFFICIAL_LINEUPS, ...(overlayLineups ?? {}) }),
     [overlayLineups],

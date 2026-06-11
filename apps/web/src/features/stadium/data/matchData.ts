@@ -8,24 +8,9 @@
  *   - MATCH_FIXTURES as emergency fallback if the real data API is unavailable
  *
  * Uso personal/privado — visualización no oficial — sin afiliación FIFA.
- */
-export interface PitchZoneInsights {
-  stands: string;
-  field: string;
-  screens: string;
-  lights: string;
-}
+import type { MatchAnalytics, PitchZoneInsights } from '@worldcup/shared/src/liveOverlay';
 
-export interface MatchAnalytics {
-  confidence: number;       // 0 to 100
-  tacticalRisk: number;     // 0 to 100
-  momentum: number[];       // 20 values between -100 (Away dominant) and 100 (Home dominant)
-  storyline: string;
-  whatToWatch: string[];
-  strategyHome: string;
-  strategyAway: string;
-  heatZones: { x: number; y: number; r: number; val: number }[];
-}
+export type { MatchAnalytics, PitchZoneInsights };
 
 export interface Match {
   id: string;
