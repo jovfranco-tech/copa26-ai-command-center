@@ -175,6 +175,28 @@ export function DataCenter() {
 
       <AdminOpsPanel check={check} adminOps={adminOps} checking={checking} onRunCheck={runCheck} />
 
+      <div className="card" style={{ border: '1px solid var(--gold)', marginTop: '16px', marginBottom: '16px' }}>
+        <div className="card-hd">
+          <Icon name="cloud" size={15} style={{ color: 'var(--gold)' }} />
+          <h3 style={{ color: 'var(--gold)' }}>Cómo sincronizar partidos reales</h3>
+        </div>
+        <div className="card-pad">
+          <p style={{ margin: '0 0 10px 0', lineHeight: 1.5, color: 'var(--tx)' }}>
+            El sistema actualmente utiliza datos de demostración local para evitar errores. Para sincronizar tu tablero automáticamente con los goles y eventos del torneo en tiempo real:
+          </p>
+          <ol style={{ paddingLeft: '20px', margin: '0 0 10px 0', lineHeight: 1.6, color: 'var(--tx-2)' }}>
+            <li>Consigue una API de resultados de fútbol (ej. <strong>API-Football</strong> o <strong>Sportradar</strong>) que devuelva un JSON válido.</li>
+            <li>Entra a la configuración de este proyecto en tu panel de <strong>Vercel</strong>.</li>
+            <li>Navega a <em>Settings &gt; Environment Variables</em>.</li>
+            <li>Añade la variable <code>RESULTS_SOURCE_URL</code> y pega la URL de tu API como valor.</li>
+            <li>Si tu API requiere autenticación por token, añade la variable <code>RESULTS_AUTH_TOKEN</code>.</li>
+          </ol>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--tx-3)' }}>
+            <em>Al guardarlo, el sistema descartará el simulador local y comenzará a actualizar el Estadio 3D, las tarjetas de partido y los grupos con los datos oficiales.</em>
+          </p>
+        </div>
+      </div>
+
       <div className="card ai-native-ops">
         <div className="card-hd">
           <Icon name="ai" size={15} style={{ color: 'var(--gold)' }} />
