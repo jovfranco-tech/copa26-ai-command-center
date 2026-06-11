@@ -133,21 +133,10 @@ writeFileSync(cacheFile, `${JSON.stringify(next, null, 2)}\n`);
 writeGeneratedFile(next);
 console.log(`[fc26-ratings] resolved ${resolved}/${players.length}; generated apps/web/src/generated/playerRatings.ts`);
 
+import { execSync } from 'child_process';
 function parseSquads() {
-  const out = [];
-  let team = '';
-  for (const line of readFileSync(squadsFile, 'utf8').split('\n')) {
-    const teamMatch = line.match(/^\s{2}([A-Z0-9]{2,4}): \[/);
-    if (teamMatch) {
-      team = teamMatch[1];
-      continue;
-    }
-    const entry = line.match(/^\s+\['((?:\\'|[^'])+)',\s*'(GK|DF|MF|FW)',\s*'((?:\\'|[^'])*)',\s*(\d+),\s*(\d+)/);
-    if (!team || !entry) continue;
-    const name = entry[1].replace(/\\'/g, "'");
-    out.push({ id: `${team}-${out.filter((p) => p.team === team).length + 1}`, team, name });
-  }
-  return out;
+  const json = execSync('npx tsx -e "import { SQUADS } from \\"./packages/shared/src/data/squads.ts\\"; const out = []; for (const [team, players] of Object.entries(SQUADS)) { players.forEach((p, i) => out.push({ id: \\\`\\${team}-\\${i+1}\\\`, team, name: p[0] })); } console.log(JSON.stringify(out));"', { encoding: 'utf8', cwd: repoRoot });
+  return JSON.parse(json);
 }
 
 function readCache() {
