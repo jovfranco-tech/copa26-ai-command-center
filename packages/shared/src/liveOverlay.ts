@@ -54,6 +54,9 @@ export interface MatchAnalytics {
 export interface PlayerStatsEntry {
   goals: number;
   assists: number;
+  yellow: number;
+  red: number;
+  saves: number;
 }
 
 export interface LiveOverlay {
@@ -140,6 +143,9 @@ export function sanitizeOverlay(raw: unknown): LiveOverlay {
     out.playerStats[id] = {
       goals: nonNegInt(p.goals) ?? 0,
       assists: nonNegInt(p.assists) ?? 0,
+      yellow: nonNegInt(p.yellow) ?? 0,
+      red: nonNegInt(p.red) ?? 0,
+      saves: nonNegInt(p.saves) ?? 0,
     };
   }
 

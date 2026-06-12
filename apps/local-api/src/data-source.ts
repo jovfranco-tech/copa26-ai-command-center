@@ -113,6 +113,7 @@ async function loadFromSqlite(): Promise<DomainBundle | null> {
       minutes: r.minutes ?? 0,
       yellow: r.yellowCards ?? 0,
       red: r.redCards ?? 0,
+      saves: 0,
       photoAssetId: r.photoAssetId ?? null,
       profileUrl: r.profileUrl ?? null,
     };

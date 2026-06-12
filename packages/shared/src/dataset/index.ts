@@ -54,6 +54,7 @@ export const PLAYERS: Player[] = Object.entries(SQUADS).flatMap(([team, entries]
     minutes: 0,
     yellow: 0,
     red: 0,
+    saves: 0,
     photoAssetId: null,
     profileUrl: null,
   })),

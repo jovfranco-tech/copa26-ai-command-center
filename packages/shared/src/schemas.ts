@@ -56,6 +56,7 @@ export const PlayerSchema = z.object({
   minutes: z.number().int().min(0).default(0),
   yellow: z.number().int().min(0).default(0),
   red: z.number().int().min(0).default(0),
+  saves: z.number().int().min(0).default(0),
   photoAssetId: z.string().nullable().default(null),
   profileUrl: z.string().url().nullable().default(null),
 });

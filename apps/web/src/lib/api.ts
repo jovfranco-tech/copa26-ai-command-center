@@ -76,7 +76,7 @@ function overlaidPlayers(): typeof mock.PLAYERS {
   return mock.PLAYERS.map(p => {
     const stats = LIVE_OVERLAY.playerStats![p.id];
     if (!stats) return p;
-    return { ...p, goals: stats.goals, assists: stats.assists };
+    return { ...p, goals: stats.goals, assists: stats.assists, yellow: stats.yellow || 0, red: stats.red || 0, saves: stats.saves || 0 };
   });
 }
 export const fetchLiveOverlay = () => safeGet<LiveOverlay>('/live-data', () => emptyOverlay());

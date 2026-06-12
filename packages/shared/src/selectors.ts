@@ -41,7 +41,7 @@ export function buildStats(
   teams: Team[],
   players: Player[],
   matches: Match[],
-  goalkeepers: StatsBundle['goalkeepers'],
+  _goalkeepers: StatsBundle['goalkeepers'],
   source: StatsBundle['source'],
 ): StatsBundle {
   const teamGoals = teams
@@ -75,7 +75,7 @@ export function buildStats(
     topScorers: topScorers(players, 12),
     topAssists: topAssists(players, 12),
     topCards: topCards(players, 12),
-    goalkeepers: [...goalkeepers].sort((a, b) => b.saves - a.saves),
+    goalkeepers: players.filter(p => p.pos === 'GK' || p.saves > 0).sort((a, b) => b.saves - a.saves).slice(0, 12).map(p => ({ id: p.id, name: p.name, team: p.team, saves: p.saves, cleanSheets: 0, pos: 'GK' as const })),
     teamGoals,
     teamPossession,
     teamShots,

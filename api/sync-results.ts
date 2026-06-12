@@ -91,11 +91,25 @@ export async function GET(request: Request): Promise<Response> {
     playerStatsWritten = true;
   }
 
-  if (written > 0 || playerStatsWritten) {
+  const nextLineups = { ...overlay.lineups };
+  let lineupsWritten = false;
+  if (mapping.lineups) {
+    for (const [id, l] of Object.entries(mapping.lineups)) {
+      const existing = overlay.lineups[id];
+      if (existing?.source === 'manual') continue; // never overwrite manual lineup
+      if (JSON.stringify(existing) !== JSON.stringify(l)) {
+        nextLineups[id] = l;
+        lineupsWritten = true;
+      }
+    }
+  }
+
+  if (written > 0 || playerStatsWritten || lineupsWritten) {
     await putOverlay({ 
       ...overlay, 
       results: nextResults, 
       playerStats: mapping.playerStats ?? overlay.playerStats,
+      lineups: nextLineups,
       updatedAt: new Date().toISOString() 
     });
   }
@@ -105,10 +119,10 @@ export async function GET(request: Request): Promise<Response> {
       ok: true,
       total: mapping.total,
       matched: mapping.matched,
-      written,
+      written: written + (playerStatsWritten ? 1 : 0),
       skippedManual,
       unmatched: mapping.unmatched.length,
-      unmatchedSample: mapping.unmatched.slice(0, 8),
+      unmatchedSample: mapping.unmatched.slice(0, 3),
     },
     { headers: { 'Cache-Control': 'no-store' } },
   );
