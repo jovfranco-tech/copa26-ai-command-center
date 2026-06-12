@@ -79,8 +79,8 @@ export async function GET(request: Request): Promise<Response> {
       continue; // never overwrite a manual entry
     }
     
-    // Check if match just finished
-    const justFinished = r.status === 'FT' && existing?.status !== 'FT';
+    // Check if match is finished and not yet scraped
+    const justFinished = r.status === 'FT' && (!overlay.scrapedMatches || !overlay.scrapedMatches.includes(id));
 
     if (existing && sameResult(existing, r) && !justFinished) continue; // no change
     nextResults[id] = r;
@@ -96,13 +96,16 @@ export async function GET(request: Request): Promise<Response> {
       }
     }
 
-    // Gemini Search Grounding for cards when match just finished
+    // Gemini Search Grounding for cards when match finishes and hasn't been scraped yet
     if (justFinished && process.env.GEMINI_API_KEY) {
       const matchDef = MATCHES.find(m => m.id === id);
       if (matchDef) {
         const cards = await scrapeCardsForMatch(matchDef.home, matchDef.away, process.env.GEMINI_API_KEY);
         if (cards) {
           overlay.playerStats = overlay.playerStats || {};
+          overlay.scrapedMatches = overlay.scrapedMatches || [];
+          if (!overlay.scrapedMatches.includes(id)) overlay.scrapedMatches.push(id);
+          
           for (const pid of cards.yellowCards) {
             overlay.playerStats[pid] = overlay.playerStats[pid] || { goals: 0, assists: 0, yellow: 0, red: 0, saves: 0 };
             overlay.playerStats[pid].yellow = (overlay.playerStats[pid].yellow || 0) + 1;
@@ -110,6 +113,14 @@ export async function GET(request: Request): Promise<Response> {
           for (const pid of cards.redCards) {
             overlay.playerStats[pid] = overlay.playerStats[pid] || { goals: 0, assists: 0, yellow: 0, red: 0, saves: 0 };
             overlay.playerStats[pid].red = (overlay.playerStats[pid].red || 0) + 1;
+          }
+          for (const assist of cards.assists) {
+            overlay.playerStats[assist.id] = overlay.playerStats[assist.id] || { goals: 0, assists: 0, yellow: 0, red: 0, saves: 0 };
+            overlay.playerStats[assist.id].assists = (overlay.playerStats[assist.id].assists || 0) + assist.count;
+          }
+          for (const save of cards.saves) {
+            overlay.playerStats[save.id] = overlay.playerStats[save.id] || { goals: 0, assists: 0, yellow: 0, red: 0, saves: 0 };
+            overlay.playerStats[save.id].saves = (overlay.playerStats[save.id].saves || 0) + save.count;
           }
           playerStatsWritten = true;
         }
@@ -130,11 +141,30 @@ export async function GET(request: Request): Promise<Response> {
     }
   }
 
+  // Merge mapping.playerStats into overlay.playerStats to preserve scraped cards/saves
+  const nextPlayerStats = { ...overlay.playerStats };
+  if (mapping.playerStats) {
+    for (const [pid, stats] of Object.entries(mapping.playerStats)) {
+      nextPlayerStats[pid] = {
+        ...nextPlayerStats[pid],
+        goals: stats.goals, // API is source of truth for goals
+        // Do not override assists if they exist, or maybe we do?
+        // Actually the API assists might be tournament-wide, so Gemini assists are better per-match.
+        // Let's preserve Gemini assists by doing Math.max
+        assists: Math.max(stats.assists ?? 0, nextPlayerStats[pid]?.assists ?? 0),
+        yellow: nextPlayerStats[pid]?.yellow ?? 0,
+        red: nextPlayerStats[pid]?.red ?? 0,
+        saves: nextPlayerStats[pid]?.saves ?? 0,
+      };
+    }
+  }
+
   if (written > 0 || playerStatsWritten || lineupsWritten) {
     await putOverlay({ 
       ...overlay, 
       results: nextResults, 
-      playerStats: mapping.playerStats ?? overlay.playerStats,
+      playerStats: nextPlayerStats,
+      scrapedMatches: overlay.scrapedMatches,
       lineups: nextLineups,
       updatedAt: new Date().toISOString() 
     });

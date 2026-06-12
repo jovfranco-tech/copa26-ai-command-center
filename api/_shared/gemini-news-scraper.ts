@@ -3,6 +3,8 @@ import { PLAYERS, TEAMS } from '../../packages/shared/src/dataset/index.js';
 export interface ScrapedCards {
   yellowCards: string[]; // List of our internal player IDs
   redCards: string[];
+  assists: { id: string; count: number }[];
+  saves: { id: string; count: number }[];
 }
 
 const normalize = (s: string) =>
@@ -46,7 +48,7 @@ export async function scrapeCardsForMatch(
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
   const prompt = `
 Actúa como un analista deportivo. Utiliza tu herramienta de búsqueda de Google (Google Search) para buscar en vivo las noticias, resúmenes y crónicas del partido más reciente de la Copa del Mundo 2026 entre ${homeName} (${homeCode}) vs ${awayName} (${awayCode}).
-Revisa cuidadosamente los reportes para encontrar qué jugadores recibieron tarjeta amarilla o tarjeta roja en este partido.
+Revisa cuidadosamente los reportes para encontrar qué jugadores recibieron tarjeta amarilla o tarjeta roja, quiénes dieron asistencias, y cuántas atajadas (saves) tuvieron los porteros en este partido.
 
 Devuelve ÚNICAMENTE un JSON válido con esta estructura exacta y nada más:
 {
@@ -55,10 +57,16 @@ Devuelve ÚNICAMENTE un JSON válido con esta estructura exacta y nada más:
   ],
   "redCards": [
     { "name": "Nombre del Jugador", "team": "MEX" }
+  ],
+  "assists": [
+    { "name": "Nombre del Jugador", "team": "KOR", "count": 1 }
+  ],
+  "saves": [
+    { "name": "Nombre del Portero", "team": "MEX", "count": 3 }
   ]
 }
 Usa el código del equipo ("${homeCode}" o "${awayCode}") en el campo "team".
-Si no hubo tarjetas o no encuentras información confiable, devuelve arrays vacíos [].
+Si no hubo eventos de un tipo o no encuentras información confiable, devuelve arrays vacíos [].
 No agregues formato Markdown (\`\`\`json) ni texto adicional, SOLO el JSON puro.
 `;
 
@@ -83,9 +91,14 @@ No agregues formato Markdown (\`\`\`json) ni texto adicional, SOLO el JSON puro.
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     if (!text) return null;
     
-    const raw = JSON.parse(text) as { yellowCards: {name: string, team: string}[], redCards: {name: string, team: string}[] };
+    const raw = JSON.parse(text) as { 
+      yellowCards: {name: string, team: string}[], 
+      redCards: {name: string, team: string}[],
+      assists: {name: string, team: string, count: number}[],
+      saves: {name: string, team: string, count: number}[]
+    };
     
-    const result: ScrapedCards = { yellowCards: [], redCards: [] };
+    const result: ScrapedCards = { yellowCards: [], redCards: [], assists: [], saves: [] };
     
     // Map yellow cards
     if (Array.isArray(raw.yellowCards)) {
@@ -100,6 +113,22 @@ No agregues formato Markdown (\`\`\`json) ni texto adicional, SOLO el JSON puro.
       for (const card of raw.redCards) {
         const id = fuzzyMatchPlayer(card.name, card.team);
         if (id) result.redCards.push(id);
+      }
+    }
+
+    // Map assists
+    if (Array.isArray(raw.assists)) {
+      for (const item of raw.assists) {
+        const id = fuzzyMatchPlayer(item.name, item.team);
+        if (id) result.assists.push({ id, count: item.count || 1 });
+      }
+    }
+
+    // Map saves
+    if (Array.isArray(raw.saves)) {
+      for (const item of raw.saves) {
+        const id = fuzzyMatchPlayer(item.name, item.team);
+        if (id) result.saves.push({ id, count: item.count || 0 });
       }
     }
     

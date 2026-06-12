@@ -64,10 +64,11 @@ export interface LiveOverlay {
   lineups: Record<string, LineupEntry>;
   metrics: Record<string, MatchAnalytics>;
   playerStats?: Record<string, PlayerStatsEntry>;
+  scrapedMatches?: string[];
   updatedAt: string | null;
 }
 
-export const emptyOverlay = (): LiveOverlay => ({ results: {}, lineups: {}, metrics: {}, playerStats: {}, updatedAt: null });
+export const emptyOverlay = (): LiveOverlay => ({ results: {}, lineups: {}, metrics: {}, playerStats: {}, scrapedMatches: [], updatedAt: null });
 
 const MAX_ENTRIES = 80;
 const MATCH_ID = /^M\d{1,4}$/;
