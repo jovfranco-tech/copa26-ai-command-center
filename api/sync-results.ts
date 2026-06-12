@@ -103,7 +103,7 @@ export async function GET(request: Request): Promise<Response> {
     }
 
     // Gemini Search Grounding for cards/assists when match is finished and hasn't been scraped yet
-    const justFinished = r.status === 'FT' && (!overlay.scrapedMatches || !overlay.scrapedMatches.includes(id));
+    const justFinished = r.status === 'FT'; // TEMPORARILY FORCE RESCRAPE
     if (justFinished && process.env.GEMINI_API_KEY) {
       const matchDef = MATCHES.find(m => m.id === id);
       if (matchDef) {
