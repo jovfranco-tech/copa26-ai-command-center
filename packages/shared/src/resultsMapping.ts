@@ -7,8 +7,8 @@
  * to ours) with a normalized-name fallback. Unmatched matches are reported, not
  * guessed — so a feed/our-data mismatch is visible instead of silently wrong.
  */
-import { MATCHES, TEAMS } from './dataset/index.js';
-import type { ResultEntry } from './liveOverlay.js';
+import { MATCHES, TEAMS, PLAYERS } from './dataset/index.js';
+import type { ResultEntry, PlayerStatsEntry } from './liveOverlay.js';
 
 const normalize = (s: string): string =>
   s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
@@ -41,11 +41,35 @@ export interface ProviderMatch {
   score?: { fullTime?: { home?: number | null; away?: number | null } };
 }
 
+export interface ProviderScorer {
+  player: { name: string };
+  team: ProviderTeam;
+  goals: number | null;
+  assists: number | null;
+}
+
 export interface SyncMapping {
   results: Record<string, ResultEntry>;
+  playerStats?: Record<string, PlayerStatsEntry>;
   matched: number;
   unmatched: { home?: string; away?: string }[];
   total: number;
+}
+
+export function mapProviderScorers(providerScorers: ProviderScorer[]): Record<string, PlayerStatsEntry> {
+  const byName = new Map(PLAYERS.map(p => [normalize(p.name), p]));
+  const out: Record<string, PlayerStatsEntry> = {};
+  for (const s of providerScorers) {
+    if (!s.player?.name) continue;
+    const n = normalize(s.player.name);
+    const p = byName.get(n);
+    if (!p) continue; // Unmatched player
+    out[p.id] = {
+      goals: s.goals ?? 0,
+      assists: s.assists ?? 0,
+    };
+  }
+  return out;
 }
 
 /** Map a provider match feed → { ourMatchId: result }. Pure + network-free. */

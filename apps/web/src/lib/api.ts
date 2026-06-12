@@ -69,6 +69,16 @@ function overlaidMatches(): Match[] {
   if (!Object.keys(LIVE_OVERLAY.results).length) return mock.MATCHES;
   return applyMatchResults(mock.MATCHES, LIVE_OVERLAY.results).matches;
 }
+
+/** mock.PLAYERS with any live goals/assists injected from the overlay. */
+function overlaidPlayers(): typeof mock.PLAYERS {
+  if (!LIVE_OVERLAY.playerStats || !Object.keys(LIVE_OVERLAY.playerStats).length) return mock.PLAYERS;
+  return mock.PLAYERS.map(p => {
+    const stats = LIVE_OVERLAY.playerStats![p.id];
+    if (!stats) return p;
+    return { ...p, goals: stats.goals, assists: stats.assists };
+  });
+}
 export const fetchLiveOverlay = () => safeGet<LiveOverlay>('/live-data', () => emptyOverlay());
 
 async function safeGet<T>(path: string, fallback: () => T): Promise<T> {
@@ -186,7 +196,7 @@ export const fetchStandings = () =>
 
 export const fetchStats = () =>
   safeGet<StatsBundle>('/stats', () =>
-    buildStats(mock.TEAMS, mock.PLAYERS, overlaidMatches(), mock.GOALKEEPERS, 'mock'),
+    buildStats(mock.TEAMS, overlaidPlayers(), overlaidMatches(), mock.GOALKEEPERS, 'mock'),
   );
 
 export const fetchSyncStatus = () =>

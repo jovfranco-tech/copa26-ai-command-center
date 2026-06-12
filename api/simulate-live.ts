@@ -39,18 +39,9 @@ export async function GET(): Promise<Response> {
       if (displayMinute >= 60) displayMinute -= 15; // second half
       if (displayMinute > 90) displayMinute = 90; // extra time
 
-      // Random goal simulation (approx 2.5 goals per match over 90 mins -> ~0.013 chance per team per minute)
-      // Only roll for goals if the minute changed and it's not halftime
-      const isNewMinute = !existing || existing.minute !== displayMinute;
-      const isHalftime = diffMinutes > 45 && diffMinutes < 60;
-      
-      let homeG = existing?.homeGoals ?? 0;
-      let awayG = existing?.awayGoals ?? 0;
-
-      if (isNewMinute && !isHalftime) {
-        if (Math.random() < 0.015) homeG += 1;
-        if (Math.random() < 0.012) awayG += 1; // Slight home advantage
-      }
+      // Preserve existing goals from the feed or default to 0
+      const homeG = existing?.homeGoals ?? 0;
+      const awayG = existing?.awayGoals ?? 0;
 
       const newResult: ResultEntry = {
         homeGoals: homeG,

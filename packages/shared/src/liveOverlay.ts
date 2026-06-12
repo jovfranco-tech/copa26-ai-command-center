@@ -51,14 +51,20 @@ export interface MatchAnalytics {
   pitchZoneInsights?: PitchZoneInsights;
 }
 
+export interface PlayerStatsEntry {
+  goals: number;
+  assists: number;
+}
+
 export interface LiveOverlay {
   results: Record<string, ResultEntry>;
   lineups: Record<string, LineupEntry>;
   metrics: Record<string, MatchAnalytics>;
+  playerStats?: Record<string, PlayerStatsEntry>;
   updatedAt: string | null;
 }
 
-export const emptyOverlay = (): LiveOverlay => ({ results: {}, lineups: {}, metrics: {}, updatedAt: null });
+export const emptyOverlay = (): LiveOverlay => ({ results: {}, lineups: {}, metrics: {}, playerStats: {}, updatedAt: null });
 
 const MAX_ENTRIES = 80;
 const MATCH_ID = /^M\d{1,4}$/;
@@ -127,6 +133,16 @@ export function sanitizeOverlay(raw: unknown): LiveOverlay {
     }
   }
 
+  const rawPlayerStats = (o.playerStats ?? {}) as Record<string, unknown>;
+  out.playerStats = {};
+  for (const id of Object.keys(rawPlayerStats).slice(0, 500)) {
+    const p = (rawPlayerStats[id] ?? {}) as Record<string, unknown>;
+    out.playerStats[id] = {
+      goals: nonNegInt(p.goals) ?? 0,
+      assists: nonNegInt(p.assists) ?? 0,
+    };
+  }
+
   out.updatedAt = typeof o.updatedAt === 'string' ? o.updatedAt : null;
   return out;
 }
@@ -143,6 +159,7 @@ export function applyAdminOp(overlay: LiveOverlay, body: AdminOp): LiveOverlay |
     results: { ...overlay.results },
     lineups: { ...overlay.lineups },
     metrics: { ...overlay.metrics },
+    playerStats: overlay.playerStats ? { ...overlay.playerStats } : {},
     updatedAt: overlay.updatedAt,
   };
   const id = typeof body?.matchId === 'string' ? body.matchId : '';

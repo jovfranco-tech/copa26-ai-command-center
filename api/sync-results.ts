@@ -86,8 +86,18 @@ export async function GET(request: Request): Promise<Response> {
     }
   }
 
-  if (written > 0) {
-    await putOverlay({ ...overlay, results: nextResults, updatedAt: new Date().toISOString() });
+  let playerStatsWritten = false;
+  if (mapping.playerStats && JSON.stringify(overlay.playerStats) !== JSON.stringify(mapping.playerStats)) {
+    playerStatsWritten = true;
+  }
+
+  if (written > 0 || playerStatsWritten) {
+    await putOverlay({ 
+      ...overlay, 
+      results: nextResults, 
+      playerStats: mapping.playerStats ?? overlay.playerStats,
+      updatedAt: new Date().toISOString() 
+    });
   }
 
   return Response.json(
