@@ -17,6 +17,8 @@ import { fetchFootballDataResults, type SyncMapping } from './_shared/results-so
 import { blobConfigured, getOverlay, putOverlay } from './_shared/overlay.js';
 import type { ResultEntry } from '../packages/shared/src/liveOverlay.js';
 import { generateDynamicMetrics } from './_shared/gemini-metrics.js';
+import { scrapeCardsForMatch } from './_shared/gemini-news-scraper.js';
+import { MATCHES } from '../packages/shared/src/dataset/index.js';
 
 function authorized(request: Request): boolean {
   const ua = request.headers.get('user-agent') ?? '';
@@ -65,13 +67,22 @@ export async function GET(request: Request): Promise<Response> {
   let written = 0;
   let skippedManual = 0;
 
+  let playerStatsWritten = false;
+  if (mapping.playerStats && JSON.stringify(overlay.playerStats) !== JSON.stringify(mapping.playerStats)) {
+    playerStatsWritten = true;
+  }
+
   for (const [id, r] of Object.entries(mapping.results)) {
     const existing = overlay.results[id];
     if (existing?.source === 'manual') {
       skippedManual++;
       continue; // never overwrite a manual entry
     }
-    if (existing && sameResult(existing, r)) continue; // no change
+    
+    // Check if match just finished
+    const justFinished = r.status === 'FT' && existing?.status !== 'FT';
+
+    if (existing && sameResult(existing, r) && !justFinished) continue; // no change
     nextResults[id] = r;
     written++;
 
@@ -84,11 +95,26 @@ export async function GET(request: Request): Promise<Response> {
         overlay.metrics[id] = metrics;
       }
     }
-  }
 
-  let playerStatsWritten = false;
-  if (mapping.playerStats && JSON.stringify(overlay.playerStats) !== JSON.stringify(mapping.playerStats)) {
-    playerStatsWritten = true;
+    // Gemini Search Grounding for cards when match just finished
+    if (justFinished && process.env.GEMINI_API_KEY) {
+      const matchDef = MATCHES.find(m => m.id === id);
+      if (matchDef) {
+        const cards = await scrapeCardsForMatch(matchDef.home, matchDef.away, process.env.GEMINI_API_KEY);
+        if (cards) {
+          overlay.playerStats = overlay.playerStats || {};
+          for (const pid of cards.yellowCards) {
+            overlay.playerStats[pid] = overlay.playerStats[pid] || { goals: 0, assists: 0, yellow: 0, red: 0, saves: 0 };
+            overlay.playerStats[pid].yellow = (overlay.playerStats[pid].yellow || 0) + 1;
+          }
+          for (const pid of cards.redCards) {
+            overlay.playerStats[pid] = overlay.playerStats[pid] || { goals: 0, assists: 0, yellow: 0, red: 0, saves: 0 };
+            overlay.playerStats[pid].red = (overlay.playerStats[pid].red || 0) + 1;
+          }
+          playerStatsWritten = true;
+        }
+      }
+    }
   }
 
   const nextLineups = { ...overlay.lineups };
