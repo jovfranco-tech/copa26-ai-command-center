@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Crest, Flag, Avatar, FavButton, Jersey } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
 import { downloadedPlayerPhotoExts, playerPhotoFallbacks } from '@/generated/playerPhotos';
+import blobPlayerPhotos from '@worldcup/shared/src/data/blobPlayerPhotos.json';
 import { downloadedTeamCrestExts, teamCrestFallbacks } from '@/generated/teamCrests';
 import {
   downloadedTeamKitExts,
@@ -106,12 +107,13 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
   const assetSrc = useAsset(player.photoAssetId);
   const fallback = playerPhotoFallbacks[player.id];
   const downloadedExt = downloadedPlayerPhotoExts[player.id];
+  const blobUrl = (blobPlayerPhotos as Record<string, string>)[player.id];
   const candidates = useMemo(() => {
     const staticSrc = downloadedExt ? `/player-photos/${encodeURIComponent(player.id)}.${downloadedExt}` : null;
-    return [assetSrc, staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
-  }, [assetSrc, downloadedExt, fallback?.src, player.id]);
+    return [blobUrl, assetSrc, staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
+  }, [blobUrl, assetSrc, downloadedExt, fallback?.src, player.id]);
   const [candidateIndex, setCandidateIndex] = useState(0);
-  useEffect(() => setCandidateIndex(0), [assetSrc, downloadedExt, fallback?.src, player.id]);
+  useEffect(() => setCandidateIndex(0), [blobUrl, assetSrc, downloadedExt, fallback?.src, player.id]);
 
   const src = candidates[candidateIndex] ?? null;
   return (
