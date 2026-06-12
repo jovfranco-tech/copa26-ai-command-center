@@ -78,25 +78,29 @@ export async function GET(request: Request): Promise<Response> {
       skippedManual++;
       continue; // never overwrite a manual entry
     }
-    
-    // Check if match is finished and not yet scraped
-    const justFinished = r.status === 'FT' && (!overlay.scrapedMatches || !overlay.scrapedMatches.includes(id));
-
-    if (existing && sameResult(existing, r) && !justFinished) continue; // no change
+    if (existing && sameResult(existing, r)) continue; // no change
     nextResults[id] = r;
     written++;
+  }
 
+  // Generate dynamic metrics and scrape cards for any active/finished matches in the combined state
+  for (const [id, r] of Object.entries(nextResults)) {
     // Generate dynamic metrics for updated live matches via Gemini
     if (r.status === 'LIVE' && process.env.GEMINI_API_KEY) {
-      // Fallback: we don't have the explicit homeCode/awayCode here easily mapped, so we'll pass the ID.
-      const metrics = await generateDynamicMetrics('Local', 'Visitante', r.homeGoals ?? 0, r.awayGoals ?? 0, r.minute ?? null, process.env.GEMINI_API_KEY);
-      if (metrics) {
-        overlay.metrics = overlay.metrics || {};
-        overlay.metrics[id] = metrics;
+      // Avoid excessive metrics calls by only doing it if the minute changed or we don't have metrics
+      const existing = overlay.results[id];
+      if (!overlay.metrics?.[id] || (existing && existing.minute !== r.minute)) {
+        const metrics = await generateDynamicMetrics('Local', 'Visitante', r.homeGoals ?? 0, r.awayGoals ?? 0, r.minute ?? null, process.env.GEMINI_API_KEY);
+        if (metrics) {
+          overlay.metrics = overlay.metrics || {};
+          overlay.metrics[id] = metrics;
+          written++; // Force save
+        }
       }
     }
 
-    // Gemini Search Grounding for cards when match finishes and hasn't been scraped yet
+    // Gemini Search Grounding for cards/assists when match is finished and hasn't been scraped yet
+    const justFinished = r.status === 'FT' && (!overlay.scrapedMatches || !overlay.scrapedMatches.includes(id));
     if (justFinished && process.env.GEMINI_API_KEY) {
       const matchDef = MATCHES.find(m => m.id === id);
       if (matchDef) {
