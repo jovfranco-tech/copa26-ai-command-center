@@ -137,16 +137,6 @@ export async function GET(request: Request): Promise<Response> {
 
   const nextLineups = { ...overlay.lineups };
   let lineupsWritten = false;
-  if (mapping.lineups) {
-    for (const [id, l] of Object.entries(mapping.lineups)) {
-      const existing = overlay.lineups[id];
-      if (existing?.source === 'manual') continue; // never overwrite manual lineup
-      if (JSON.stringify(existing) !== JSON.stringify(l)) {
-        nextLineups[id] = l;
-        lineupsWritten = true;
-      }
-    }
-  }
 
   // Merge mapping.playerStats into overlay.playerStats to preserve scraped cards/saves
   const nextPlayerStats = { ...overlay.playerStats };

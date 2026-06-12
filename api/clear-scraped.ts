@@ -1,6 +1,6 @@
 import { blobConfigured, getOverlay, putOverlay } from './_shared/overlay.js';
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   if (!blobConfigured()) {
     return Response.json({ ok: false, error: 'blob-not-configured' }, { status: 503 });
   }
