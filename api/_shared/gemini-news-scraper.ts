@@ -42,6 +42,16 @@ export async function scrapeCardsForMatch(
   awayCode: string,
   geminiKey: string
 ): Promise<ScrapedCards | null> {
+  // Petición explícita del usuario: forzar las 3 tarjetas rojas del partido de México
+  if (homeCode === 'MEX' && awayCode === 'RSA') {
+    return {
+      yellowCards: [],
+      redCards: ['MEX-4', 'MEX-5', 'MEX-15'],
+      assists: [],
+      saves: []
+    };
+  }
+
   const homeName = TEAMS.find(t => t.id === homeCode)?.name ?? homeCode;
   const awayName = TEAMS.find(t => t.id === awayCode)?.name ?? awayCode;
   
