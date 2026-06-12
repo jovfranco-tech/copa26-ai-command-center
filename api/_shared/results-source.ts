@@ -43,18 +43,23 @@ async function fetchApiFootballResults(url: string, token: string): Promise<Sync
   const resMatches = await fetch(url, { headers });
   if (!resMatches.ok) throw new Error(`api-football HTTP ${resMatches.status}`);
   const bodyMatches = await resMatches.json();
+  if (bodyMatches.errors && Object.keys(bodyMatches.errors).length > 0) {
+    throw new Error(`api-football Error: ${JSON.stringify(bodyMatches.errors)}`);
+  }
   const fixtures = Array.isArray(bodyMatches.response) ? bodyMatches.response : [];
   
   const urlObj = new URL(url);
   const baseUrl = urlObj.origin;
 
-  // 2. Identify active or today's matches to fetch detailed stats and lineups without blowing the rate limit
+  // 2. Identify active or today's/yesterday's matches to fetch detailed stats and lineups
   const today = new Date().toISOString().split('T')[0];
+  const yesterdayDate = new Date(Date.now() - 86400000);
+  const yesterday = yesterdayDate.toISOString().split('T')[0];
   const activeFixtures = fixtures.filter((f: any) => {
     const status = f.fixture?.status?.short;
     const date = f.fixture?.date ? f.fixture.date.split('T')[0] : '';
-    // Fetch if match is live, or if it's scheduled/finished today
-    return date === today || ['1H', 'HT', '2H', 'ET', 'P', 'LIVE'].includes(status);
+    // Fetch if match is live, or if it's scheduled/finished today or yesterday
+    return date === today || date === yesterday || ['1H', 'HT', '2H', 'ET', 'P', 'LIVE'].includes(status);
   });
 
   const lineups: any[] = [];
