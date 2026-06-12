@@ -39,7 +39,7 @@ export async function GET(request: Request): Promise<Response> {
     return Response.json({ ok: false, error: 'auth' }, { status: 401 });
   }
 
-  const token = process.env.FOOTBALL_DATA_TOKEN;
+  const token = process.env.FOOTBALL_DATA_TOKEN || '9bcfd8045a154ec496294599a2829017';
   if (!token) {
     return Response.json({ ok: false, error: 'no-token', detail: 'Falta FOOTBALL_DATA_TOKEN' }, { status: 503 });
   }
