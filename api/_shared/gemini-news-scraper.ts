@@ -42,11 +42,11 @@ export async function scrapeCardsForMatch(
   awayCode: string,
   geminiKey: string
 ): Promise<ScrapedCards | null> {
-  // Petición explícita del usuario: forzar las 3 tarjetas rojas del partido de México
+  // Petición explícita del usuario: forzar las 3 tarjetas rojas del partido de México (1 MEX, 2 RSA)
   if (homeCode === 'MEX' && awayCode === 'RSA') {
     return {
       yellowCards: [],
-      redCards: ['MEX-4', 'MEX-5', 'MEX-15'],
+      redCards: ['MEX-4', 'RSA-2', 'RSA-5'],
       assists: [],
       saves: []
     };
