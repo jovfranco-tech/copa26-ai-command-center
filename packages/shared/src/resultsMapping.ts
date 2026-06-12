@@ -67,6 +67,9 @@ export function mapProviderScorers(providerScorers: ProviderScorer[]): Record<st
     out[p.id] = {
       goals: s.goals ?? 0,
       assists: s.assists ?? 0,
+      yellow: 0,
+      red: 0,
+      saves: 0,
     };
   }
   return out;
