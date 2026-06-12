@@ -107,7 +107,7 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
   const assetSrc = useAsset(player.photoAssetId);
   const fallback = playerPhotoFallbacks[player.id];
   const downloadedExt = downloadedPlayerPhotoExts[player.id];
-  const blobUrl = (blobPlayerPhotos as Record<string, string>)[player.id];
+  const blobUrl = `https://fudh993bs9djeozd.public.blob.vercel-storage.com/players/${player.id}.jpg`;
   const candidates = useMemo(() => {
     const staticSrc = downloadedExt ? `/player-photos/${encodeURIComponent(player.id)}.${downloadedExt}` : null;
     return [blobUrl, assetSrc, staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
