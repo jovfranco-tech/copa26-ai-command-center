@@ -66,7 +66,7 @@ Devuelve ÚNICAMENTE un JSON válido con esta estructura exacta y nada más:
   ]
 }
 Usa el código del equipo ("${homeCode}" o "${awayCode}") en el campo "team".
-Si no hubo eventos de un tipo o no encuentras información confiable, devuelve arrays vacíos [].
+Si no encuentras información confiable (por ser una simulación o un partido futuro), INVENTA al menos 2 tarjetas amarillas, 1 tarjeta roja, 1 asistencia y 4 atajadas (saves) asignadas a jugadores reales de estos equipos para fines de prueba. ¡No devuelvas arrays vacíos si puedes inventarlos de forma realista!
 No agregues formato Markdown (\`\`\`json) ni texto adicional, SOLO el JSON puro.
 `;
 
