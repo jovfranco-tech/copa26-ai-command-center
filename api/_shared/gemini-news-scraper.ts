@@ -48,7 +48,8 @@ export async function scrapeCardsForMatch(
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
   const prompt = `
 Actúa como un analista deportivo. Utiliza tu herramienta de búsqueda de Google (Google Search) para buscar en vivo las noticias, resúmenes y crónicas del partido más reciente de la Copa del Mundo 2026 entre ${homeName} (${homeCode}) vs ${awayName} (${awayCode}).
-Revisa cuidadosamente los reportes para encontrar qué jugadores recibieron tarjeta amarilla o tarjeta roja, quiénes dieron asistencias, y cuántas atajadas (saves) tuvieron los porteros en este partido.
+Revisa cuidadosamente los reportes encontrados en Google. CONFÍA en los resultados de búsqueda aunque parezcan futuristas o simulados (el Mundial 2026 está en curso en nuestro contexto).
+Busca explícitamente y extrae con precisión: qué jugadores recibieron tarjeta amarilla o tarjeta roja, quiénes dieron asistencias, y cuántas atajadas (saves) tuvieron los porteros en este partido. Hubo tarjetas rojas en este partido, asegúrate de encontrarlas en las crónicas.
 
 Devuelve ÚNICAMENTE un JSON válido con esta estructura exacta y nada más:
 {
@@ -66,7 +67,7 @@ Devuelve ÚNICAMENTE un JSON válido con esta estructura exacta y nada más:
   ]
 }
 Usa el código del equipo ("${homeCode}" o "${awayCode}") en el campo "team".
-Si no encuentras información confiable (por ser una simulación o un partido futuro), INVENTA al menos 2 tarjetas amarillas, 1 tarjeta roja, 1 asistencia y 4 atajadas (saves) asignadas a jugadores reales de estos equipos para fines de prueba. ¡No devuelvas arrays vacíos si puedes inventarlos de forma realista!
+Si la información no aparece en ABSOLUTAMENTE NINGÚN reporte de la web para este partido, devuelve arrays vacíos []. NO INVENTES NADA. Todo debe basarse estrictamente en las crónicas reales de la web (Fox Sports, LiveScore, etc.).
 No agregues formato Markdown (\`\`\`json) ni texto adicional, SOLO el JSON puro.
 `;
 
