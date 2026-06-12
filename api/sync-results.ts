@@ -11,8 +11,11 @@
  * Respects manual overrides: a result the admin set in the panel (source 'manual')
  * is never overwritten by the feed. Only writes the overlay when something changed.
  *
- * Node (Fluid) runtime: needs @vercel/blob (undici), not edge-compatible.
+ * Node (Fluid) runtime: needs @vercel (undici), not edge-compatible.
  */
+
+export const maxDuration = 60; // Allow enough time for Gemini to scrape multiple matches
+
 import { fetchFootballDataResults, type SyncMapping } from './_shared/results-source.js';
 import { blobConfigured, getOverlay, putOverlay } from './_shared/overlay.js';
 import type { ResultEntry } from '../packages/shared/src/liveOverlay.js';
@@ -181,6 +184,7 @@ export async function GET(request: Request): Promise<Response> {
       matched: mapping.matched,
       written: written + (playerStatsWritten ? 1 : 0),
       skippedManual,
+      scraped: overlay.scrapedMatches,
       unmatched: mapping.unmatched.length,
       unmatchedSample: mapping.unmatched.slice(0, 3),
     },
