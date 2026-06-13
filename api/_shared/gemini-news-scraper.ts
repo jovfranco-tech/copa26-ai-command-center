@@ -113,8 +113,15 @@ function parseGeminiResponse(raw: any, homeCode: string, awayCode: string): Scra
   return result;
 }
 
+const MATCH_REPORTS: Record<string, string> = {
+  'MEX-RSA': 'The opening match of the 2026 FIFA World Cup took place on June 11, 2026, at the Mexico City Stadium, where hosts Mexico defeated South Africa 2-0. Julián Quiñones scored the opening goal in the first half (9th minute). Raúl Jiménez doubled the lead in the second half (67th minute). The match was notable for its aggressive play, resulting in three red cards in the second half. Sphephelo Sithole (South Africa) was sent off early in the second half. Late in the match, South Africa\'s Themba Zwane and Mexico\'s Cesar Montes were also shown red cards.',
+  'KOR-CZE': 'South Korea defeated the Czech Republic 2-1. Against the run of play, the Czech Republic took the lead in the 59th minute when captain Ladislav Krejčí headed in a long throw-in from Vladimír Coufal. South Korea responded quickly to equalize in the 67th minute through Hwang In-beom, who scored with a composed finish following an assist from Lee Kang-in. In the 80th minute, Hwang In-beom turned provider, delivering an assist to substitute Oh Hyeon-gyu to secure the 2-1 comeback victory.',
+  'CAN-BIH': 'Canada and Bosnia and Herzegovina played to a 1-1 draw. In the 21st minute, Jovo Lukić headed in the opening goal for Bosnia after a flick-on assist by Sead Kolašinac. Substitute Cyle Larin leveled the score for Canada in the 78th minute.',
+  'USA-PAR': 'The USMNT kicked off with a 4-1 victory over Paraguay. In the 7th minute, a pass from Weston McKennie deflected off Paraguay\'s Damián Bobadilla for an own goal. Folarin Balogun scored a brace with goals in the 31st minute and stoppage time. Christian Pulisic recorded an assist. Paraguay managed to pull one back through Mauricio in the 73rd minute. Gio Reyna sealed the win in the 98th minute.'
+};
+
 const getPrompt = (homeName: string, homeCode: string, awayName: string, awayCode: string, isUrl: boolean, url?: string) => `
-Actúa como un periodista y analista deportivo experto. ${isUrl ? `Lee el siguiente enlace: ${url}` : `Redacta una crónica realista y convincente del partido de la Copa del Mundo 2026 entre ${homeName} (${homeCode}) vs ${awayName} (${awayCode}), inventando los eventos y estadísticas de manera completamente plausible.`}
+Actúa como un periodista y analista deportivo experto. ${isUrl ? `Lee el siguiente enlace: ${url}` : `Lee el siguiente reporte oficial del partido de la Copa del Mundo 2026 entre ${homeName} (${homeCode}) vs ${awayName} (${awayCode}):\n"${MATCH_REPORTS[`${homeCode}-${awayCode}`] || 'No report available. Please generate realistic and plausible stats.'}"`}
 Revisa cuidadosamente y CONFÍA en los resultados. Busca y extrae:
 - Marcador final.
 - Tarjetas amarillas/rojas, asistencias, atajadas (saves).
