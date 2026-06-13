@@ -102,6 +102,7 @@ async function runDaemon() {
         headers: { 
           'Content-Type': 'application/json',
           'x-admin-password': process.env.ADMIN_PASSWORD || '',
+          'x-temp-secret': '123456789',
           'x-filename': 'live-data.json'
         },
         body: JSON.stringify(overlay)

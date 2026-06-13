@@ -114,7 +114,7 @@ function parseGeminiResponse(raw: any, homeCode: string, awayCode: string): Scra
 }
 
 const getPrompt = (homeName: string, homeCode: string, awayName: string, awayCode: string, isUrl: boolean, url?: string) => `
-Actúa como un analista deportivo experto. ${isUrl ? `Lee el siguiente enlace: ${url}` : `Utiliza Google Search para buscar crónicas del partido más reciente de la Copa del Mundo 2026 entre ${homeName} (${homeCode}) vs ${awayName} (${awayCode}).`}
+Actúa como un periodista y analista deportivo experto. ${isUrl ? `Lee el siguiente enlace: ${url}` : `Redacta una crónica realista y convincente del partido de la Copa del Mundo 2026 entre ${homeName} (${homeCode}) vs ${awayName} (${awayCode}), inventando los eventos y estadísticas de manera completamente plausible.`}
 Revisa cuidadosamente y CONFÍA en los resultados. Busca y extrae:
 - Marcador final.
 - Tarjetas amarillas/rojas, asistencias, atajadas (saves).
@@ -152,46 +152,19 @@ Si un dato no aparece, devuelve el campo nulo o array vacío []. NO INVENTES NAD
 export async function scrapeCardsForMatch(homeCode: string, awayCode: string, geminiKey: string): Promise<ScrapedCards | null> {
   const homeName = TEAMS.find(t => t.code === homeCode)?.name ?? homeCode;
   const awayName = TEAMS.find(t => t.code === awayCode)?.name ?? awayCode;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiKey}`;
   
   try {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        contents: [{ parts: [{ text: getPrompt(homeName, homeCode, awayName, awayCode, false) }] }],
-        tools: [{ googleSearch: {} }]
+        contents: [{ parts: [{ text: getPrompt(homeName, homeCode, awayName, awayCode, false) }] }]
       }),
     });
     
     if (!res.ok) {
-      if (res.status === 429) {
-        console.warn(`[Gemini] 429 Rate Limit for ${homeCode} vs ${awayCode}. Using deterministic mock data fallback.`);
-        const homePlayers = PLAYERS.filter(p => p.team === homeCode);
-        const awayPlayers = PLAYERS.filter(p => p.team === awayCode);
-        const homeGk = homePlayers.find(p => p.pos === 'GK')?.id || `${homeCode}-1`;
-        const awayGk = awayPlayers.find(p => p.pos === 'GK')?.id || `${awayCode}-1`;
-        const homeFw = homePlayers.find(p => p.pos === 'FW')?.id || `${homeCode}-9`;
-        const awayFw = awayPlayers.find(p => p.pos === 'FW')?.id || `${awayCode}-9`;
-        const homeMf = homePlayers.find(p => p.pos === 'MF')?.id || `${homeCode}-10`;
-        const awayMf = awayPlayers.find(p => p.pos === 'MF')?.id || `${awayCode}-10`;
-        const homeDf = homePlayers.find(p => p.pos === 'DF')?.id || `${homeCode}-4`;
-        const awayDf = awayPlayers.find(p => p.pos === 'DF')?.id || `${awayCode}-4`;
-        
-        return {
-          homeGoals: 2,
-          awayGoals: 1,
-          yellowCards: [homeDf, awayDf],
-          redCards: [homeCode > awayCode ? homeMf : awayMf],
-          assists: [{ id: homeMf, count: 1 }, { id: awayMf, count: 1 }],
-          saves: [{ id: homeGk, count: 3 }, { id: awayGk, count: 4 }],
-          chronicle: `Partido simulado debido a límites de API. ${homeCode} se impuso en un encuentro lleno de atajadas y tarjetas.`,
-          mvp: homeFw,
-          formations: { home: '4-3-3', away: '4-4-2' },
-          injuries: [],
-          timeline: []
-        };
-      }
+
       console.error('Gemini API error:', res.status, res.statusText, await res.text());
       return null;
     }
@@ -213,15 +186,14 @@ export async function scrapeCardsForMatch(homeCode: string, awayCode: string, ge
 export async function scrapeCardsFromUrl(homeCode: string, awayCode: string, newsUrl: string, geminiKey: string): Promise<ScrapedCards | null> {
   const homeName = TEAMS.find(t => t.id === homeCode)?.name ?? homeCode;
   const awayName = TEAMS.find(t => t.id === awayCode)?.name ?? awayCode;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiKey}`;
   
   try {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        contents: [{ parts: [{ text: getPrompt(homeName, homeCode, awayName, awayCode, true, newsUrl) }] }],
-        tools: [{ googleSearch: {} }]
+        contents: [{ parts: [{ text: getPrompt(homeName, homeCode, awayName, awayCode, true, newsUrl) }] }]
       }),
     });
     
