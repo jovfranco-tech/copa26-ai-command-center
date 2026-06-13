@@ -105,7 +105,6 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
   const t = teams[player.team];
   const assetSrc = useAsset(player.photoAssetId);
   const fallback = playerPhotoFallbacks[player.id];
-  const downloadedExt = downloadedPlayerPhotoExts[player.id];
   const blobUrl = `https://fudh993bs9djeozd.public.blob.vercel-storage.com/players/${player.id}.jpg?v=2`;
   const candidates = useMemo(() => {
     // staticSrc is removed because private-assets is not deployed, causing 404s that break onError chains in some browsers
