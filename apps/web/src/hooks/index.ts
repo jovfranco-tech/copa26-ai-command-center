@@ -39,15 +39,16 @@ export function useLiveOverlaySync() {
   const qc = useQueryClient();
   const { data } = useLiveOverlay();
   const stamp = data?.updatedAt ?? null;
+  const isLoaded = !!data;
   useEffect(() => {
     if (!data) return;
     setLiveOverlay(data);
     for (const key of ['matches', 'match', 'standings', 'stats']) {
       qc.invalidateQueries({ queryKey: [key] });
     }
-    // Re-run only when the published overlay actually changes.
+    // Re-run when the published overlay actually changes or when it first loads
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stamp]);
+  }, [stamp, isLoaded]);
 }
 
 export function useTeams() {
