@@ -106,10 +106,10 @@ export function PlayerAvatar({ player, size = 44 }: { player: Player; size?: num
   const assetSrc = useAsset(player.photoAssetId);
   const fallback = playerPhotoFallbacks[player.id];
   const downloadedExt = downloadedPlayerPhotoExts[player.id];
-  const blobUrl = `https://fudh993bs9djeozd.public.blob.vercel-storage.com/players/${player.id}.jpg`;
+  const blobUrl = `https://fudh993bs9djeozd.public.blob.vercel-storage.com/players/${player.id}.jpg?v=2`;
   const candidates = useMemo(() => {
     const staticSrc = downloadedExt ? `/player-photos/${encodeURIComponent(player.id)}.${downloadedExt}` : null;
-    return [blobUrl, assetSrc, staticSrc, fallback?.src].filter((src): src is string => Boolean(src));
+    return [staticSrc, blobUrl, assetSrc, fallback?.src].filter((src): src is string => Boolean(src));
   }, [blobUrl, assetSrc, downloadedExt, fallback?.src, player.id]);
   const [candidateIndex, setCandidateIndex] = useState(0);
   useEffect(() => setCandidateIndex(0), [blobUrl, assetSrc, downloadedExt, fallback?.src, player.id]);
