@@ -4,7 +4,7 @@
   "outputDirectory": "apps/web/dist",
   "installCommand": "pnpm install --no-frozen-lockfile",
   "framework": null,
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "rewrites": [{ "source": "/((?!api/|player-photos/|team-kits/|team-crests/|brand/).*)", "destination": "/index.html" }],
   "crons": [
     { "path": "/api/data-sync", "schedule": "0 12 * * *" },
     { "path": "/api/sync-results", "schedule": "0 */4 * * *" },
