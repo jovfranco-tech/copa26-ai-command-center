@@ -14,6 +14,21 @@
  */
 import type { Match } from './types.js';
 
+export interface TeamStats {
+  possession: number;
+  shots: number;
+  corners: number;
+  fouls: number;
+}
+
+export interface MatchTimelineEvent {
+  minute: number;
+  type: 'goal' | 'yellow_card' | 'red_card' | 'substitution' | 'injury' | 'other';
+  player: string;
+  detail: string;
+  team: 'home' | 'away';
+}
+
 export interface MatchResultInput {
   /** `null` (or absent) = not played yet → treated as pending, fixture untouched. */
   homeGoals: number | null;
@@ -27,7 +42,21 @@ export interface MatchResultInput {
   shotsA?: number | null;
   /** Provenance in the live overlay: 'auto' = synced from the feed, 'manual' =
    * set in the admin panel. The auto-sync never overwrites a 'manual' entry. */
-  source?: 'auto' | 'manual';
+  source?: 'auto' | 'manual' | 'gemini-autonomous';
+  
+  // Advanced AI Extracted Fields
+  chronicle?: string;
+  mvp?: string;
+  teamStats?: {
+    home: TeamStats;
+    away: TeamStats;
+  };
+  injuries?: string[]; // Array of player IDs
+  formations?: {
+    home: string; // e.g. "4-3-3"
+    away: string;
+  };
+  timeline?: MatchTimelineEvent[];
 }
 
 export interface ApplyResultsReport {
@@ -80,6 +109,14 @@ export function applyMatchResults(
       possH: r.possH ?? m.possH ?? null,
       shotsH: r.shotsH ?? m.shotsH ?? null,
       shotsA: r.shotsA ?? m.shotsA ?? null,
+      
+      // Copy Advanced AI Extracted Fields
+      chronicle: r.chronicle ?? m.chronicle,
+      mvp: r.mvp ?? m.mvp,
+      teamStats: r.teamStats ?? m.teamStats,
+      injuries: r.injuries ?? m.injuries,
+      formations: r.formations ?? m.formations,
+      timeline: r.timeline ?? m.timeline
     };
   });
 

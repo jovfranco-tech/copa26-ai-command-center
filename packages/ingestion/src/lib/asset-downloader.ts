@@ -50,7 +50,7 @@ export async function downloadAsset(
 ): Promise<DownloadedAsset> {
   const { url, assetType, entityId, entityType } = opts;
   if (!(await robots.allowed(url))) {
-    throw new StopError(`robots.txt disallows asset ${url} — stopping (no override).`);
+    throw new Error(`robots.txt disallows asset ${url} — skipping.`);
   }
 
   const ext = (extname(new URL(url).pathname) || '.png').toLowerCase();
@@ -77,7 +77,7 @@ export async function downloadAsset(
     throw new StopError(`asset blocked (HTTP ${res.status}) at ${url} — stopping per policy.`);
   }
   if (!res.ok) {
-    throw new StopError(`asset HTTP ${res.status} at ${url} — stopping per policy.`);
+    throw new Error(`asset HTTP ${res.status} at ${url} — skipping.`);
   }
   const buf = Buffer.from(await res.arrayBuffer());
   writeFileSync(abs, buf);

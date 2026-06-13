@@ -36,6 +36,8 @@ export interface Match {
   };
   liveTime?: string;
   spectators: string;
+  formations?: { home: string; away: string };
+  mvp?: string;
   pitchZoneInsights: PitchZoneInsights;
   /** English variant of pitchZoneInsights, shown when the active language is 'en'. */
   pitchZoneInsightsEn?: PitchZoneInsights;

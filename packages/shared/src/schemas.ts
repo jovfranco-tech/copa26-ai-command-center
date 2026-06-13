@@ -83,6 +83,23 @@ export const MatchSchema = z.object({
   shotsTA: z.number().int().min(0).nullable().default(null),
   resultSource: z.enum(['manual', 'live-overlay', 'scraper', 'ai-vision']).optional(),
   resultVerifiedAt: z.string().optional(),
+  
+  // Advanced AI Extracted Fields
+  chronicle: z.string().optional(),
+  mvp: z.string().optional(),
+  teamStats: z.object({
+    home: z.object({ possession: z.number(), shots: z.number(), corners: z.number(), fouls: z.number() }),
+    away: z.object({ possession: z.number(), shots: z.number(), corners: z.number(), fouls: z.number() })
+  }).optional(),
+  injuries: z.array(z.string()).optional(),
+  formations: z.object({ home: z.string(), away: z.string() }).optional(),
+  timeline: z.array(z.object({
+    minute: z.number(),
+    type: z.enum(['goal', 'yellow_card', 'red_card', 'substitution', 'injury', 'other']),
+    player: z.string(),
+    detail: z.string(),
+    team: z.enum(['home', 'away'])
+  })).optional()
 });
 
 export const VenueSchema = z.object({

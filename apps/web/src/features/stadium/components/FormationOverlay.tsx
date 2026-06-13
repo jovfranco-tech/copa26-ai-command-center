@@ -335,7 +335,7 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
               {(lineups?.teams?.home?.teamName ?? match.teams.home).toUpperCase()}
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              {lineups?.teams?.home?.formation ?? '4-3-3'}
+              {match.formations?.home ?? lineups?.teams?.home?.formation ?? '4-3-3'}
             </span>
           </div>
           {renderVerticalPitch(homePlayers, 'home')}
@@ -349,7 +349,7 @@ export const FormationOverlay: React.FC<FormationOverlayProps> = ({
               {(lineups?.teams?.away?.teamName ?? match.teams.away).toUpperCase()}
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              {lineups?.teams?.away?.formation ?? '4-3-3'}
+              {match.formations?.away ?? lineups?.teams?.away?.formation ?? '4-3-3'}
             </span>
           </div>
           {renderVerticalPitch(awayPlayers, 'away')}

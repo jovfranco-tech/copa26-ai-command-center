@@ -8,7 +8,8 @@
   "crons": [
     { "path": "/api/data-sync", "schedule": "0 12 * * *" },
     { "path": "/api/sync-results", "schedule": "0 */4 * * *" },
-    { "path": "/api/simulate-live", "schedule": "0 * * * *" }
+    { "path": "/api/simulate-live", "schedule": "0 * * * *" },
+    { "path": "/api/cron-journalist", "schedule": "*/5 * * * *" }
   ],
   "headers": [
     {

@@ -123,6 +123,7 @@ export function Admin() {
       )}
 
       <SyncSection pw={pw} onOverlay={setOverlay} />
+      <UrlScraperSection matches={matches} pw={pw} onOverlay={setOverlay} />
       <ResultsSection matches={matches} overlay={overlay} pw={pw} onOverlay={setOverlay} />
       <LineupsSection matches={matches} players={players} overlay={overlay} pw={pw} onOverlay={setOverlay} />
     </div>
@@ -190,6 +191,98 @@ function SyncSection({ pw, onOverlay }: { pw: string; onOverlay: (o: LiveOverlay
           {summary.unmatched ? t('admin.feedUnmatched', { n: summary.unmatched }) : ''}
         </div>
       )}
+    </section>
+  );
+}
+
+/* ──────────────────────────── Extracción IA ──────────────────────────── */
+
+function UrlScraperSection({
+  matches,
+  pw,
+  onOverlay,
+}: {
+  matches: Match[];
+  pw: string;
+  onOverlay: (o: LiveOverlay) => void;
+}) {
+  const [matchId, setMatchId] = useState('');
+  const [url, setUrl] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const pastMatches = matches; // In a real app we'd filter by date, but since we are simulating/testing, we show all or a dropdown.
+  
+  async function runScraper(e: FormEvent) {
+    e.preventDefault();
+    if (!matchId) return;
+    
+    setBusy(true);
+    setErr('');
+    setSuccess('');
+    
+    try {
+      const res = await fetch('/api/admin-scrape-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': pw,
+        },
+        body: JSON.stringify({ matchId, url }),
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to scrape');
+      setSuccess(`Éxito: ${data.statsAdded} eventos extraídos (Tarjetas/Atajadas/Asistencias)`);
+      // Reload overlay to show new stats
+      const s = await adminLoad(pw);
+      onOverlay(s.overlay);
+      
+    } catch (error: any) {
+      setErr(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section style={{ ...card, display: 'grid', gap: 12 }}>
+      <div>
+        <h2 style={{ margin: 0, fontSize: 16 }}>Extracción de Eventos (IA)</h2>
+        <p className="muted" style={{ fontSize: 12, margin: '2px 0 0' }}>
+          Pega el enlace de una crónica de partido (ej. ESPN) para que Gemini extraiga automáticamente las tarjetas rojas/amarillas, atajadas y asistencias.
+        </p>
+      </div>
+      
+      <form onSubmit={runScraper} style={{ display: 'grid', gap: 10 }}>
+        <select 
+          style={input} 
+          value={matchId} 
+          onChange={e => setMatchId(e.target.value)}
+          required
+        >
+          <option value="">-- Selecciona el partido --</option>
+          {pastMatches.map(m => (
+            <option key={m.id} value={m.id}>{m.home} vs {m.away} ({m.id})</option>
+          ))}
+        </select>
+        
+        <input 
+          style={input} 
+          type="url" 
+          placeholder="Opcional: URL de ESPN / Medio de Deportes..." 
+          value={url}
+          onChange={e => setUrl(e.target.value)}
+        />
+        
+        {err && <div style={{ color: '#f87171', fontSize: 13 }}>{err}</div>}
+        {success && <div style={{ color: '#34d399', fontSize: 13 }}>{success}</div>}
+        
+        <button type="submit" className="btn gold" disabled={busy || !matchId}>
+          {busy ? 'Extrayendo datos con IA...' : 'Extraer Datos'}
+        </button>
+      </form>
     </section>
   );
 }

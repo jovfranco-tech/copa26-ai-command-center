@@ -109,7 +109,15 @@ export function sanitizeOverlay(raw: unknown): LiveOverlay {
       awayGoals: nonNegInt(r.awayGoals),
       status: r.status === 'LIVE' ? 'LIVE' : 'FT',
       minute: nonNegInt(r.minute),
-      ...(r.source === 'manual' || r.source === 'auto' ? { source: r.source } : {}),
+      ...(r.source === 'manual' || r.source === 'auto' || r.source === 'gemini-autonomous' ? { source: r.source } : {}),
+      
+      // Advanced AI Fields
+      ...(r.chronicle ? { chronicle: String(r.chronicle) } : {}),
+      ...(r.mvp ? { mvp: String(r.mvp) } : {}),
+      ...(r.teamStats ? { teamStats: r.teamStats as any } : {}),
+      ...(r.injuries && Array.isArray(r.injuries) ? { injuries: r.injuries } : {}),
+      ...(r.formations ? { formations: r.formations as any } : {}),
+      ...(r.timeline && Array.isArray(r.timeline) ? { timeline: r.timeline } : {})
     };
   }
 

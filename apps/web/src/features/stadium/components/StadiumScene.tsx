@@ -731,6 +731,12 @@ const StadiumSceneContent: React.FC<StadiumSceneContentProps> = ({
                   <span style={{ color: 'var(--accent-emerald)' }}>{t('estadio3d.active')}</span>
                 </div>
                 <div style={{ margin: '3px 0', fontSize: '6px', color: 'var(--text-secondary)' }}>
+                  {match.mvp && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5px', background: 'rgba(212, 175, 55, 0.15)', padding: '1.5px', borderRadius: '2px', borderLeft: '2px solid var(--gold)' }}>
+                      <span style={{ color: 'var(--gold)', fontWeight: 'bold' }}>MVP</span>
+                      <strong style={{ color: '#fff', textTransform: 'uppercase' }}>{match.mvp.split('-').join(' ')}</strong>
+                    </div>
+                  )}
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5px' }}>
                     <span>{t('estadio3d.predictionCertainty')}</span>
                     <strong style={{ color: '#fff' }}>{match.analytics.confidence}%</strong>

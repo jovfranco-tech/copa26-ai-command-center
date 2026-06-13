@@ -1,6 +1,6 @@
 # Asset download - Wikimedia player photos
 
-_Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution._
+_Generated 2026-06-12T18:42:52.774Z — private/local-only, not for distribution._
 
 
 ## Source
@@ -11,272 +11,136 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 ## Selection
 
 - **Players in dataset:** 1173
-- **Players considered:** 1151
+- **Players considered:** 1015
 - **Team filter:** all
 - **Limit:** none
 - **Download limit:** none
 - **Resolve only:** no
-- ALG-1 Melvin Mastil -> Mahrez 2021.jpg (Riyad Mahrez)
-- ALG-10 Rayan Aït-Nouri -> Rayan_Aït-Nouri_playing_for_Algeria_in_2024.jpg (Rayan Aït-Nouri)
 - MISSING ALG-11 Rafik Belghali: no matching footballer with an image
-- ALG-12 Ramy Bensebaini -> 2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_(DFB-Pokal_2023-24)_by_Sandro_Halank–134.jpg (Ramy Bensebaini)
 - MISSING ALG-13 Samir Chergui: no matching footballer with an image
-- ALG-14 Ramiz Zerrouki -> Ramiz_zerrouki-1672746224.jpg (Ramiz Zerrouki)
-- ALG-15 Houssem Aouar -> Houssem_Aouar_in_2024.jpg (Houssem Aouar)
-- ALG-16 Farès Chaïbi -> World_Cup_Qualification_Africa_Guinea_v_Algeria_14_(Farès_Chaïbi).jpg (Farès Chaïbi)
-- ALG-17 Hicham Boudaoui -> Boudaoui_asse_ogcn_2425.png (Hicham Boudaoui)
-- ALG-18 Nabil Bentaleb -> RC_Lens_-_Lille_OSC_(08-10-2023)_19_(cropped).jpg (Nabil Bentaleb)
 - MISSING ALG-19 Ibrahim Maza: no matching footballer with an image
-- ALG-2 Oussama Benbot -> BennacerLeB2022.jpg (Ismaël Bennacer)
 - MISSING ALG-20 Yacine Titraoui: no matching footballer with an image
-- ALG-21 Riyad Mahrez -> Mahrez_2021.jpg (Riyad Mahrez)
-- ALG-22 Amine Gouiri -> Lens_-_Stade_Rennais_(20-08-2023)_22.jpg (Amine Gouiri)
-- ALG-23 Anis Hadj Moussa -> MCI_VS_FER_2024_(Anis_Hadj_Moussa).jpg (Anis Hadj Moussa)
-- ALG-24 Nadhir Benbouali -> Ahmed_Nadhir_Benbouali_2025.jpg (Nadhir Benbouali)
-- ALG-25 Mohamed Amoura -> Mohammed_Amoura_training_against_Mozambique.png (Mohamed Amoura)
-- ALG-26 Adil Boulbina -> Adel_Boulbina.jpg (Adil Boulbina)
-- ALG-3 Luca Zidane -> Houssem Aouar 2017.jpg (Houssem Aouar)
-- ALG-4 Abdelatif Ramdane -> Saïd Benrahma - 20240326.jpg (Saïd Benrahma)
-- ALG-5 Aïssa Mandi -> Mandi_asselosc_2425_(cropped).jpg (Aïssa Mandi)
 - MISSING ALG-6 Achref Abada: no matching footballer with an image
-- ALG-7 Mohamed Amine Tougai -> Mohamed_Amine_Tougai.jpg (Mohamed Amine Tougai)
-- ALG-8 Zineddine Belaïd -> Zineddine_Belaïd_-_20240326_(cropped).jpg (Zineddine Belaïd)
-- ALG-9 Jaouen Hadjam -> RC_Lens_-_FC_Nantes_(28-10-2023)_10.jpg (Jaouen Hadjam)
-- ARG-1 Juan Musso -> Lionel Messi White House 2026 (3x4 cropped).jpg (Lionel Messi)
-- ARG-10 Nicolás Otamendi -> St. Louis City vs Aston Villa (Jul 2025) 14 (Emiliano Martínez).jpg (Emiliano Martínez)
 - ARG-11 Facundo Medina -> undefined (undefined)
-- ARG-12 Nahuel Molina -> undefined (undefined)
-- ARG-13 Leandro Paredes -> Leandro_Paredes_2018_(cropped).jpg (Leandro Paredes)
-- ARG-14 Rodrigo De Paul -> Rodrigo_De_Paul_NYCFC_Miami_24_Sep_2025-018_(cropped).jpg (Rodrigo De Paul)
-- ARG-15 Giovani Lo Celso -> 2020-03-10_Fußball,_Männer,_UEFA_Champions_League_Achtelfinale,_RB_Leipzig_-_Tottenham_Hotspur_1DX_3705_by_Stepro.jpg (Giovani Lo Celso)
-- ARG-16 Exequiel Palacios -> Exequiel_Palacios,_2022-07-31,_Saisoneröffnung_Bayer_04,_Leverkusen_(1).jpg (Exequiel Palacios)
-- ARG-17 Thiago Almada -> Almada_asse_ol_2425.png (Thiago Almada)
-- ARG-18 Nico Paz -> Nico Paz Como 2025.jpg (Nico Paz)
-- ARG-19 Alexis Mac Allister -> Alexis_Mac_Allister_WC_2022.jpg (Alexis Mac Allister)
-- ARG-2 Gerónimo Rulli -> Lautaro Martínez (cropped).jpg (Lautaro Martínez)
-- ARG-20 Enzo Fernández -> Enzo_Fernández_2025_FIFA_Club_World_Cup_Final.jpg (Enzo Fernández)
-- ARG-21 Julián Alvarez -> Argentina_national_football_team_-_2_-_2022_(Julián_Álvarez).jpg (Julián Alvarez)
-- ARG-22 Lionel Messi -> Lionel_Messi_White_House_2026_(3x4_cropped).jpg (Lionel Messi)
-- ARG-23 Nicolás González -> Nicolas Gonzalez (cropped).jpg (Nicolás González)
-- ARG-24 Giuliano Simeone -> Giuliano_Simeone,_FC_Salzburg_vs._Atletico_Madrid_(2025-01-29_UEFA_Championsleague)_53_(cropped).jpg (Giuliano Simeone)
-- ARG-25 José Manuel López -> Flaco-Lopez-Palmeiras-Juventude-jun24.jpg (José Manuel López (footballer))
-- ARG-26 Lautaro Martínez -> Lautaro_Martinez_ARGENTINA_VS_VENEZUELA_2017.jpg (Lautaro Martínez)
-- ARG-3 Emiliano Martínez -> Julián Álvarez (footballer) 2023.jpg (Julián Alvarez)
-- ARG-4 Marcos Senesi -> Enzo Fernández 2025 FIFA Club World Cup Final.jpg (Enzo Fernández)
-- ARG-5 Nicolás Tagliafico -> Alexis Mac Allister WC 2022.jpg (Alexis Mac Allister)
-- ARG-6 Valentín Barco -> Rodrigo De Paul NYCFC Miami 24 Sep 2025-018 (cropped).jpg (Rodrigo De Paul)
-- ARG-7 Gonzalo Montiel -> Cristian Romero WC2022.jpg (Cristian Romero)
-- ARG-8 Lisandro Martínez -> Argentina team in St. Petersburg (cropped) Otamendi.jpg (Nicolás Otamendi)
-- ARG-9 Cristian Romero -> Nahuel Molina WC2022.jpg (Nahuel Molina)
-- AUS-1 Jackson Irvine -> Chile VS. Australia (3) (cropped) 2.jpg (Jackson Irvine)
-- AUS-10 Mitchell Duke -> Mitchell Duke.jpg (Mitchell Duke)
-- AUS-11 Kusini Yengi -> KusiniYengi1.png (Kusini Yengi)
-- AUS-2 Riley McGree -> Riley McGree.jpg (Riley McGree)
-- AUS-3 Harry Souttar -> 4822293 AE7I6590 (cropped).jpg (Harry Souttar)
-- AUS-4 Mathew Ryan -> 20180601 FIFA Friendly Match Czech Republic vs. Australia Matthew Ryan 850 0230.jpg (Mathew Ryan)
-- AUS-5 Kye Rowles -> Kye_Rowles_NYCFC_vs_DC_United_on_Aug_30_2025-016_(cropped).jpg (Kye Rowles)
-- AUS-6 Cameron Burgess -> Cameron_Burgess_(cropped).jpg (Cameron Burgess)
-- AUS-7 Aziz Behich -> 20180601_FIFA_Friendly_Match_Czech_Republic_vs._Australia_Aziz_Behich_850_0277.jpg (Aziz Behich)
-- AUS-8 Connor Metcalfe -> 4822293_AE7I6590_-_Connor_Metcalfe.jpg (Connor Metcalfe)
-- AUS-9 Martin Boyle -> 4822273_AE7I7255_-_Martin_Boyle.jpg (Martin Boyle)
-- AUT-1 Alexander Schlager -> 20180610 FIFA Friendly Match Austria vs. Brazil David Alaba 850 1632.jpg (David Alaba)
-- AUT-10 Alexander Prass -> FC_Liefering_versus_WSG_Wattens_(24._Mai_2019)_06.jpg (Alexander Prass)
+- ARG-5 Nicolás Tagliafico -> undefined (undefined)
 - AUT-11 Marco Friedl -> Austria_national_under-21_football_team_-_Teamcamp_June_2017_(053).jpg (Marco Friedl)
 - AUT-12 Michael Svoboda -> FC_RB_Salzburg_gegen_WSG_Swarowski_Tirol_(7._Dezember_2019)_62_(Michael_Svoboda).jpg (Michael Svoboda)
-- AUT-13 Xaver Schlager -> 20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Xaver_Schlager_850_1680.jpg (Xaver Schlager)
-- AUT-14 Nicolas Seiwald -> Meistertellerübergabe_Saison_2021-22_(2022-05-21)_49.jpg (Nicolas Seiwald)
-- AUT-15 Marcel Sabitzer -> Marcel_Sabitzer_2020_(cropped).jpg (Marcel Sabitzer)
-- AUT-16 Florian Grillitsch -> 20180602_AUTGER_4687_(cropped)_Florian_Grillitsch.jpg (Florian Grillitsch)
 - MISSING AUT-17 Carney Chukwuemeka: no matching footballer with an image
-- AUT-18 Romano Schmid -> UEFA_Euro_2023_Qualifiers_Austria_vs._Finland_(2022-06-03)_30.jpg (Romano Schmid)
 - AUT-19 Dejan Ljubičić -> Dejan_Ljubicic_-_SC_Wiener_Neustadt_(01).jpg (Dejan Ljubičić)
-- AUT-2 Florian Wiegele -> Marcel Sabitzer 2020 (cropped).jpg (Marcel Sabitzer)
-- AUT-20 Konrad Laimer -> 2022-07-21_Fußball,_Männer,Freundschaftsspiel,_RB_Leipzig_-_FC_Liverpool_1DX_2137_by_Stepro_(cropped).jpg (Konrad Laimer)
-- AUT-21 Patrick Wimmer -> U19_Austria_vs._Ireland(19._November_2019_)_42.jpg (Patrick Wimmer)
+- MISSING AUT-2 Florian Wiegele: no matching footballer with an image
 - AUT-22 Paul Wanner -> Paul_wanner-1772636856_(cropped).JPG (Paul Wanner)
 - AUT-23 Alessandro Schöpf -> 20140905_U21_AUT_BIH_AT08_1103.jpg (Alessandro Schöpf)
-- AUT-24 Marko Arnautović -> 20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Marko_Arnautović_850_1633.jpg (Marko Arnautović)
 - AUT-25 Michael Gregoritsch -> Michael_Gregoritsch_U21_Austria_vs._Albania_2014-03-05_01.jpg (Michael Gregoritsch)
-- AUT-26 Saša Kalajdžić -> Sasa_kalajdzic.jpg (Saša Kalajdžić)
-- AUT-3 Patrick Pentz -> 2022-07-21 Fußball, Männer,Freundschaftsspiel, RB Leipzig - FC Liverpool 1DX 2137 by Stepro (cropped).jpg (Konrad Laimer)
-- AUT-4 David Affengruber -> 20180610 FIFA Friendly Match Austria vs. Brazil Marko Arnautović 850 1633.jpg (Marko Arnautović)
-- AUT-5 Kevin Danso -> Pentz (2024).png (Patrick Pentz)
+- AUT-3 Patrick Pentz -> Pentz (2024).png (Patrick Pentz)
+- AUT-5 Kevin Danso -> Kevin_Danso_ASSE_RCL_2425.jpg (Kevin Danso)
 - AUT-6 Stefan Posch -> Austria_national_under-21_football_team_-_Teamcamp_June_2017_(110).jpg (Stefan Posch)
-- AUT-7 David Alaba -> 20180610_FIFA_Friendly_Match_Austria_vs._Brazil_David_Alaba_850_1632.jpg (David Alaba)
 - AUT-8 Philipp Lienhart -> Austria_national_under-21_football_team_-_Teamcamp_June_2017_(057).jpg (Philipp Lienhart)
 - AUT-9 Phillipp Mwene -> Phillipp-mwene.jpg (Phillipp Mwene)
-- BEL-1 Thibaut Courtois -> Kevin De Bruyne USMNT v Belgium Mar 28 2026-64 (cropped).jpg (Kevin De Bruyne)
-- BEL-10 Joaquin Seys -> Joaquin_Seys_USMNT_v_Belgium_Mar_28_2026-206.jpg (Joaquin Seys)
 - BEL-11 Timothy Castagne -> Timothy_Castagne_USMNT_v_Belgium_Mar_28_2026-17_(cropped).jpg (Timothy Castagne)
 - MISSING BEL-12 Nathan Ngoy: no matching footballer with an image
 - BEL-13 Axel Witsel -> Axel_Witsel_USMNT_v_Belgium_Mar_28_2026-34_(cropped).jpg (Axel Witsel)
-- BEL-14 Kevin De Bruyne -> Kevin_De_Bruyne_USMNT_v_Belgium_Mar_28_2026-64_(cropped).jpg (Kevin De Bruyne)
 - BEL-15 Youri Tielemans -> Youri_Tielemans_USMNT_v_Belgium_Mar_28_2026-20_(cropped).jpg (Youri Tielemans)
 - BEL-16 Diego Moreira -> Moreira2_asse_rcsa_2425.jpg (Diego Moreira)
 - BEL-17 Hans Vanaken -> Hans_Vanaken_Lommel_United.jpg (Hans Vanaken)
 - BEL-18 Nicolas Raskin -> Nicolas_Raskin_USMNT_v_Belgium_Mar_28_2026-14_(cropped).jpg (Nicolas Raskin)
-- BEL-19 Amadou Onana -> Amadou_Onana_USMNT_v_Belgium_Mar_28_2026-96_(cropped).jpg (Amadou Onana)
-- BEL-2 Senne Lammens -> Romelu Lukaku 2021.jpg (Romelu Lukaku)
-- BEL-20 Romelu Lukaku -> Romelu_Lukaku_2021.jpg (Romelu Lukaku)
 - BEL-21 Leandro Trossard -> RC_Lens_-_Arsenal_FC_(03-10-2023)_26_(cropped).jpg (Leandro Trossard)
 - BEL-22 Jérémy Doku -> Jérémy_Doku_USMNT_v_Belgium_Mar_28_2026-27_(cropped).jpg (Jérémy Doku)
 - BEL-23 Dodi Lukébakio -> Dodi_Lukébakio_USMNT_v_Belgium_Mar_28_2026-212_(cropped).jpg (Dodi Lukébakio)
 - BEL-24 Charles De Ketelaere -> Charles_De_Ketelaere_USMNT_v_Belgium_Mar_28_2026-76_(cropped).jpg (Charles De Ketelaere)
 - BEL-25 Alexis Saelemaekers -> Alexis_Saelemaekers_USMNT_v_Belgium_Mar_28_2026-13_(cropped).jpg (Alexis Saelemaekers)
-- BEL-26 Matias Fernandez-Pardo -> Pardo_asselosc_2425_(cropped).jpg (Matias Fernandez-Pardo)
-- BEL-3 Mike Penders -> Jérémy Doku USMNT v Belgium Mar 28 2026-27 (cropped).jpg (Jérémy Doku)
-- BEL-4 Zeno Debast -> Leandro Trossard 2022.jpg (Leandro Trossard)
-- BEL-5 Arthur Theate -> RC Lens - Lille OSC (17-09-2021) 9 (cropped).jpg (Amadou Onana)
+- MISSING BEL-3 Mike Penders: no matching footballer with an image
+- BEL-4 Zeno Debast -> Zeno_Debast_USMNT_v_Belgium_Mar_28_2026-80_(cropped).jpg (Zeno Debast)
+- BEL-5 Arthur Theate -> Arthur_Theate_USMNT_v_Belgium_Mar_28_2026-22_(cropped).jpg (Arthur Theate)
 - BEL-6 Brandon Mechele -> Wout Faes Leicester Championship (cropped).jpg (Wout Faes)
 - BEL-7 Maxim De Cuyper -> FC Salzburg gegen VfL Wolfsburg (CL-Gruppenphase 20. Oktober 2021) 75.jpg (Koen Casteels)
 - BEL-8 Thomas Meunier -> Thomas_Meunier_USMNT_v_Belgium_Mar_28_2026-16_(cropped).jpg (Thomas Meunier)
 - BEL-9 Koni De Winter -> Koni_De_Winter_USMNT_v_Belgium_Mar_28_2026-36_(cropped).jpg (Koni De Winter)
-- BIH-1 Nikola Vasilj -> 20150331 2026 AUT BIH 2177 Edin Džeko (cropped).jpg (Edin Džeko)
+- BIH-1 Nikola Vasilj -> 2025-04-23_-_FC_St_Pauli_-_Nikola_Vasilj.jpg (Nikola Vasilj)
 - MISSING BIH-10 Stjepan Radeljić: no matching footballer with an image
 - BIH-11 Nidal Čelik -> Čelik_rcl_asse_2425.png (Nidal Čelik)
 - BIH-12 Benjamin Tahirović -> Benjamin_Tahirovic_for_Brøndby.jpg (Benjamin Tahirović)
 - BIH-13 Armin Gigović -> 2025-03-05_Armin_Gigovic_Holstein_Kiel_pic1.jpg (Armin Gigović)
-- BIH-14 Ivan Bašić -> Ivan_Bašić_2022.jpg (Ivan Bašić)
-- BIH-15 Ivan Šunjić -> Ivan_Šunjić_2022.jpg (Ivan Šunjić)
 - MISSING BIH-16 Amar Memić: no matching footballer with an image
 - BIH-17 Amir Hadžiahmetović -> Amir_Hadžiahmetović_playing_for_Beşiktaş.jpg (Amir Hadžiahmetović)
 - BIH-18 Dženis Burnić -> 2019-08-10_TuS_Dassendorf_vs._SG_Dynamo_Dresden_(DFB-Pokal)_by_Sandro_Halank–151.jpg (Dženis Burnić)
 - BIH-19 Kerim Alajbegović -> Jahresbeginnfeier_FC_RB_Salzburg_(2026-01-25_RB_Arena)_10.jpg (Kerim Alajbegović)
-- BIH-2 Mladen Jurkas -> 1 Sead Kolašinac 2018 (cropped2).jpg (Sead Kolašinac)
+- MISSING BIH-2 Mladen Jurkas: no matching footballer with an image
 - MISSING BIH-20 Esmir Bajraktarević: no matching footballer with an image
 - BIH-21 Ermin Mahmić -> FC_Liefering_gegen_SV_Lafnitz_(2024-05-25)_25_(Ermin_Mahmić).jpg (Ermin Mahmić)
 - MISSING BIH-22 Samed Baždar: no matching footballer with an image
 - MISSING BIH-23 Ermedin Demirović: no matching footballer with an image
-- BIH-24 Edin Džeko -> 20150331_2026_AUT_BIH_2177_Edin_Džeko_(cropped).jpg (Edin Džeko)
-- BIH-25 Haris Tabaković -> FC_RB_Salzburg_vs._FK_Austria_Wien_(2023-04-09)_45_(Haris_Tabaković).jpg (Haris Tabaković)
 - BIH-26 Jovo Lukić -> Jovo_Lukić_97_(cropped).jpg (Jovo Lukić)
-- BIH-3 Martin Zlomislić -> (2024-09-10 ) FC RB Salzburg gegen SCR Altach 24.jpg (Amar Dedić)
+- MISSING BIH-3 Martin Zlomislić: no matching footballer with an image
 - MISSING BIH-4 Nihad Mujakić: no matching footballer with an image
-- BIH-5 Dennis Hadžikadunić -> Dennis_Hadžikadunić_2021.jpg (Dennis Hadžikadunić)
 - BIH-6 Tarik Muharemović -> Muharemović-24.25.jpg (Tarik Muharemović)
 - BIH-7 Sead Kolašinac -> Kolasinac_2015.jpg (Sead Kolašinac)
-- BIH-8 Amar Dedić -> 3840px-(2024-09-10_)_FC_RB_Salzburg_gegen_SCR_Altach_24.jpg (Amar Dedić)
-- BIH-9 Nikola Katić -> SM-Rangers18_(16).jpg (Nikola Katić)
-- BRA-1 Alisson -> Vinicius Jr 2021.jpg (Vinícius Júnior)
-- BRA-10 Douglas Santos -> 20180610 FIFA Friendly Match Austria vs. Brazil Danilo Luiz 850 1591 (cropped).jpg (Danilo)
-- BRA-11 Roger Ibañez -> Lucas_Paquetá_of_West_Ham.jpeg (Lucas Paquetá)
+- BRA-10 Douglas Santos -> Brasil estreia contra a África do Sul no Mané Garrincha — копия (7).jpg (Douglas Santos)
+- BRA-11 Roger Ibañez -> Roger_Ibañez_2026.jpg (Roger Ibañez)
 - BRA-12 Éderson -> Ederson1.JPG (Ederson Honorato Campos)
 - BRA-13 Casemiro -> Casemiro_Brazil_Austria_June_2018.jpg (Casemiro)
 - BRA-14 Bruno Guimarães -> Bruno_Guimarães.png (Bruno Guimarães)
 - BRA-15 Fabinho -> Fabinho (43934382122) (cropped).jpg (Fabinho)
 - MISSING BRA-16 Danilo Santos: no matching footballer with an image
 - BRA-17 Lucas Paquetá -> Lucas_Paquetá_of_West_Ham.jpeg (Lucas Paquetá)
-- BRA-18 Vinícius Júnior -> 2023_05_06_Final_de_la_Copa_del_Rey_-_52879242230_(cropped).jpg (Vinícius Júnior)
-- BRA-19 Matheus Cunha -> Matheus_Cunha_em_2021.jpg (Matheus Cunha)
-- BRA-2 Weverton -> Rodrygo 2023 (cropped).jpg (Rodrygo)
-- BRA-20 Neymar -> Neymar_Jr._with_Al_Hilal,_3_October_2023_-_03_(cropped).jpg (Neymar)
-- BRA-21 Raphinha -> Raphael_Dias_Belloli_2023.jpg (Raphinha)
-- BRA-22 Endrick -> Endrick seleção vs inglaterra.jpg (Endrick)
-- BRA-23 Luiz Henrique -> Luiz Henrique in Zenit 2025.jpg (Luiz Henrique)
 - BRA-24 Gabriel Martinelli -> 1_Gabriel_Martinelli_arsenal_2025_(cropped).jpg (Gabriel Martinelli)
 - BRA-25 Igor Thiago -> Brentford_Players_27122025_(4)_(cropped).jpg (Igor Thiago)
-- BRA-26 Rayan -> Rayan 2026.png (Rayan)
-- BRA-3 Ederson -> Raphael Dias Belloli 2023.jpg (Raphinha)
-- BRA-4 Gabriel Magalhães -> Bruno Guimarães.png (Bruno Guimarães)
-- BRA-5 Marquinhos -> 20180610 FIFA Friendly Match Austria vs. Brazil Casemiro 850 1575.jpg (Casemiro)
-- BRA-6 Alex Sandro -> FC Salzburg gegen Paris Saint-Germain UEFA Champions League 49 (cropped).jpg (Marquinhos)
-- BRA-7 Danilo -> Eder Militao 2021.jpg (Éder Militão)
-- BRA-8 Bremer -> GabrielLille2019.png (Gabriel Magalhães)
-- BRA-9 Léo Pereira -> 20180610 FIFA Friendly Match Austria vs. Brazil 850 1625.jpg (Alisson Becker)
+- BRA-3 Ederson -> Ederson1.JPG (Ederson Honorato Campos)
+- BRA-7 Danilo -> 20180610 FIFA Friendly Match Austria vs. Brazil Danilo Luiz 850 1591 (cropped).jpg (Danilo)
+- MISSING BRA-8 Bremer: no matching footballer with an image
+- BRA-9 Léo Pereira -> Léo Pereira Atlético GO 2022.png (Léo Pereira)
 - CAN-1 Alphonso Davies -> 2022-07-30 Fußball, Männer, DFL-Supercup, RB Leipzig - FC Bayern München 1DX 3286 by Stepro.jpg (Alphonso Davies)
-- CAN-10 Jonathan Osorio -> Jonathan_Osorio_2017.jpg (Jonathan Osorio)
-- CAN-11 Cyle Larin -> Cyle_Larin_(2021-22_Süper_Lig)_-_Resim1_(cropped).png (Cyle Larin)
-- CAN-2 Jonathan David -> Jonathan David asse losc 2425 (cropped).jpg (Jonathan David)
-- CAN-3 Stephen Eustáquio -> S Eustaqui Canada national football team WC2022 (cropped).jpg (Stephen Eustáquio)
-- CAN-4 Tajon Buchanan -> Tajon Buchanan WC2022.jpg (Tajon Buchanan)
-- CAN-5 Maxime Crépeau -> Maxime Crépeau and James Pantemis Portland Timbers 2024 (cropped).jpg (Maxime Crépeau)
-- CAN-6 Moïse Bombito -> Bombito_asse_ogcn_2425.png (Moïse Bombito)
-- CAN-7 Derek Cornelius -> Cornelius_asse_om_2425.png (Derek Cornelius)
-- CAN-8 Alistair Johnston -> A_Johnston_Canada_national_football_team_WC2022_(cropped).jpg (Alistair Johnston)
-- CAN-9 Ismaël Koné -> Kone_asse_om_2425.png (Ismaël Koné)
-- CIV-1 Yahia Fofana -> Simon Adingra USG 2023.jpg (Simon Adingra)
+- CIV-1 Yahia Fofana -> Fofana asse sco 2425.png (Yahia Fofana)
 - CIV-10 Emmanuel Agbadou -> Emmanuel_Agbadou.jpg (Emmanuel Agbadou)
 - CIV-11 Evan Ndicka -> 2022128151247_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_Mönchengladbach_-_Sven_-_1D_X_MK_II_-_0370_-_B70I6481_(Evan_N’Dicka_cropped).jpg (Evan Ndicka)
-- CIV-12 Jean Michaël Seri -> Jean_Seri.jpg (Jean Michaël Seri)
-- CIV-13 Seko Fofana -> Seko_Fofana.jpg (Seko Fofana)
-- CIV-14 Franck Kessié -> Franck_Yannick_Kessié.jpg (Franck Kessié)
 - CIV-15 Ibrahim Sangaré -> Ibrahim Sangaré (2018-05-09).jpg (Ibrahim Sangaré)
 - CIV-16 Parfait Guiagon -> פארפה_גויאגון_-_Parfait_Guiagon.jpg (Parfait Guiagon)
 - MISSING CIV-17 Christ Inao Oulaï: no matching footballer with an image
 - MISSING CIV-18 Ange-Yoan Bonny: no matching footballer with an image
 - CIV-19 Simon Adingra -> Simon_Adingra_USG_2023.jpg (Simon Adingra)
-- CIV-2 Mohamed Koné -> Franck Yannick Kessié.jpg (Franck Kessié)
+- CIV-2 Mohamed Koné -> KapfenbergJudenburg15.jpg (Mohamed Koné)
 - MISSING CIV-20 Yan Diomande: no matching footballer with an image
-- CIV-21 Elye Wahi -> Elye_Wahi_2022.jpg (Elye Wahi)
 - CIV-22 Oumar Diakité -> Diakite_asse_sr_2425.png (Oumar Diakité)
-- CIV-23 Amad Diallo -> Manchester_United_v_BSC_Young_Boys,_8_December_2021_(17)_(cropped).jpg (Amad Diallo)
 - CIV-24 Nicolas Pépé -> Nicolas_Pepe_LOSC_(cropped2).jpg (Nicolas Pépé)
-- CIV-25 Evann Guessand -> Guessand_asse_ogcn_2425.png (Evann Guessand)
 - MISSING CIV-26 Bazoumana Touré: no matching footballer with an image
-- CIV-3 Alban Lafont -> 2022128151247 2022-05-08 Fussball Eintracht Frankfurt vs Borussia Mönchengladbach - Sven - 1D X MK II - 0370 - B70I6481 (Evan N’Dicka cropped).jpg (Evan Ndicka)
-- CIV-4 Ousmane Diomande -> Fofana asse sco 2425.png (Yahia Fofana)
+- CIV-3 Alban Lafont -> Alban_Lafont_(2018-04-21)_1.jpg (Alban Lafont)
 - CIV-5 Ghislain Konan -> Joueur_ivoirien_02.jpg (Ghislain Konan)
 - CIV-6 Wilfried Singo -> Singo_asse_asm_2425.png (Wilfried Singo)
 - CIV-7 Odilon Kossounou -> Odilon_Kossounou,_2022-07-31,_Saisoneröffnung_Bayer_04,_Leverkusen_(1).jpg (Odilon Kossounou)
-- CIV-8 Christopher Opéri -> 3840px-Christopher_Opéri_21_İstanbul_Başakşehir_FK_20250731_(6).jpg (Christopher Opéri)
 - CIV-9 Guéla Doué -> Doue_asse_rcsa_2425.jpg (Guéla Doué)
-- COD-1 Lionel Mpasi -> CAN 2023RD Congo 2-1 Guinée 9939 (cropped).jpg (Yoane Wissa)
 - COD-10 Gédéon Kalulu -> Gédéon_Kalulu_(cropped).jpg (Gédéon Kalulu)
 - COD-11 Arthur Masuaku -> Arthur_Masuaku,_2023_(cropped).jpg (Arthur Masuaku)
 - MISSING COD-12 Ngal'ayel Mukau: no matching footballer with an image
 - MISSING COD-13 Nathanaël Mbuku: no matching footballer with an image
 - COD-14 Samuel Moutoussamy -> Samuel_Moutoussamy_(cropped).jpg (Samuel Moutoussamy)
 - MISSING COD-15 Brian Cipenga: no matching footballer with an image
-- COD-16 Théo Bongonda -> Bongonda_in_DR_Congo_national_football_team_(cropped).jpg (Théo Bongonda)
 - COD-17 Gaël Kakuta -> Entraînement_du_RC_Lens_-_15_juillet_2020_24.jpg (Gaël Kakuta)
-- COD-18 Noah Sadiki -> 3840px-Noah_Sadiki_versus_Real_Betis_2nd_August_2025.jpg (Noah Sadiki)
 - COD-19 Aaron Tshibola -> Aaron_Tshibola_(cropped).jpg (Aaron Tshibola)
-- COD-2 Timothy Fayulu -> Chancel Mbemba Mangulu.JPG (Chancel Mbemba)
+- MISSING COD-2 Timothy Fayulu: no matching footballer with an image
 - COD-20 Charles Pickel -> Charles_Pickel_2023_Africa_Cup_of_Nations_(cropped).jpg (Charles Pickel)
 - COD-21 Edo Kayembe -> Edo_Kayembe_2025_(cropped).jpg (Edo Kayembe)
 - COD-22 Meschak Elia -> Meschack_Elia_(cropped).jpg (Meschak Elia)
-- COD-23 Cédric Bakambu -> Cédric_Bakambu_2016_(cropped).jpg (Cédric Bakambu)
 - MISSING COD-24 Fiston Mayele: no matching footballer with an image
-- COD-25 Yoane Wissa -> CAN_2023RD_Congo_2-1_Guinée_9939_(cropped).jpg (Yoane Wissa)
-- COD-26 Simon Banza -> Lens_-_Sochaux_(23-11-2019)_99_(cropped).jpg (Simon Banza)
 - MISSING COD-3 Matthieu Epolo: no matching footballer with an image
 - COD-4 Aaron Wan-Bissaka -> Aaron_Wan-Bissaka_of_West_Ham_United.jpeg (Aaron Wan-Bissaka)
 - MISSING COD-5 Steve Kapuadi: no matching footballer with an image
 - COD-6 Axel Tuanzebe -> Manchester_United_v_Everton,_7_August_2021_(36).jpg (Axel Tuanzebe)
 - COD-7 Dylan Batubinsika -> Batubinsika_asse_fcn_2425.png (Dylan Batubinsika)
 - MISSING COD-8 Joris Kayembe: no matching footballer with an image
-- COD-9 Chancel Mbemba -> 24BBRW_-_53535940590_(cropped).jpg (Chancel Mbemba)
-- COL-1 David Ospina -> FC RB Salzburg gegen FC Bayern München (2026-01-06 Testspiel) 40 (Luiz Díaz).jpg (Luis Díaz)
+- COL-1 David Ospina -> David_Ospina,_2015-05-31.JPG (David Ospina)
 - COL-10 Deiver Machado -> Lens_-_Reims_(12-05-2023)_33.jpg (Deiver Machado)
-- COL-11 Davinson Sánchez -> FWC_2018_-_Round_of_16_-_COL_v_ENG_-_D_Sánchez.jpg (Davinson Sánchez)
 - COL-12 Kevin Castaño -> Kevin_con_Krasnodar_en_2023.jpg (Kevin Castaño)
-- COL-13 Richard Ríos -> Richard-Rios-Palmeiras-Liverpool-abr24.jpg (Richard Ríos)
 - COL-14 Jorge Carrascal -> Jorge_Carrascal_2025.jpg (Jorge Carrascal)
-- COL-15 James Rodríguez -> James_Rodriguez_2018.jpg (James Rodríguez)
-- COL-16 Jhon Arias -> 3840px-Jhon_Arias_en_Palmeiras_-_Copa_Libertadores_2026.jpg (Jhon Arias (footballer))
-- COL-17 Gustavo Puerta -> Gustavo_Puerta_2023_(cropped).jpg (Gustavo Puerta)
 - MISSING COL-18 Juan Portilla: no matching footballer with an image
-- COL-19 Jefferson Lerma -> Jefferson_Lerma_2018.png (Jefferson Lerma)
-- COL-2 Camilo Vargas -> James al natural - Series, 02.jpg (James Rodríguez)
-- COL-20 Juan Fernando Quintero -> Juan_Quintero_(cropped).jpg (Juan Fernando Quintero)
 - MISSING COL-21 Jaminton Campaz: no matching footballer with an image
-- COL-22 Luis Díaz -> FC RB Salzburg gegen FC Bayern München (2026-01-06 Testspiel) 40 (Luiz Díaz).jpg (Luis Díaz)
 - COL-23 Jhon Córdoba -> Jhon_Córdoba_2022.jpg (Jhon Córdoba)
-- COL-24 Cucho Hernández -> Cucho_Hernandez_(cropped).jpg (Cucho Hernández)
-- COL-25 Luis Suárez -> Luis_Suárez_2026_(cropped).jpg (Luis Suárez)
-- COL-26 Andrés Gómez -> IMCF_vs._RSL_25_(cropped)_(cropped).jpg (Andrés Gómez (footballer))
 - COL-3 Álvaro Montero -> Jhon Durán, Esteghlal FC vs Al-Nassr FC (ACLElite); 3 Mar 2025.png (Jhon Durán)
-- COL-4 Daniel Muñoz -> Richard-Rios-Palmeiras-Liverpool-abr24.jpg (Richard Ríos)
-- MISSING COL-5 Jhon Lucumí: no matching footballer with an image
-- COL-6 Santiago Arias -> Camilo Vargas 2022.jpeg (Camilo Vargas)
+- MISSING COL-4 Daniel Muñoz: no matching footballer with an image
 - COL-7 Yerry Mina -> FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_103_(cropped).jpg (Yerry Mina)
 - COL-8 Johan Mojica -> FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_102_(cropped)_2.jpg (Johan Mojica)
-- COL-9 Willer Ditta -> Willer_Ditta_en_Newell's_Old_Boys.jpg (Willer Ditta)
-- CPV-1 Vozinha -> Ryan Mendes (LOSC Lille).JPG (Ryan Mendes da Graça)
+- MISSING CPV-1 Vozinha: no matching footballer with an image
 - CPV-10 Steven Moreira -> Steven_Moreira_NYCFC_v_Columbus_10_May_2026-67_(cropped).jpg (Steven Moreira)
 - MISSING CPV-11 Wagner Pina: no matching footballer with an image
 - MISSING CPV-12 Kelvin Pires: no matching footballer with an image
-- CPV-13 Kevin Pina -> Kevin_Pina_(footballer)_2022.jpg (Kevin Pina (footballer))
 - CPV-14 Jamiro Monteiro -> Jamiro_Monteiro_Philadelphia_Union_2019.jpg (Jamiro Monteiro)
 - CPV-15 Deroy Duarte -> Deroy_Duarte_2026.jpg (Deroy Duarte)
 - MISSING CPV-16 Laros Duarte: no matching footballer with an image
@@ -298,7 +162,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CPV-7 Logan Costa -> Logan_Costa_-_2023-02-01_(cropped_medium_shot).jpg (Logan Costa)
 - MISSING CPV-8 João Paulo: no matching footballer with an image
 - MISSING CPV-9 Sidny Lopes Cabral: no matching footballer with an image
-- CRO-1 Dominik Livaković -> Luka Modric Interview 2021 (cropped).jpg (Luka Modrić)
+- CRO-1 Dominik Livaković -> Dominik Livaković 2021.jpg (Dominik Livaković)
 - CRO-10 Martin Erlić -> Martin-Erlic.png (Martin Erlić)
 - CRO-11 Nikola Moro -> Nikola_Moro_2020.jpg (Nikola Moro)
 - CRO-12 Mateo Kovačić -> Chelsea_vs._Arsenal,_29_May_2019_18_Kovacic.jpg (Mateo Kovačić)
@@ -309,7 +173,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CRO-17 Petar Sučić -> Petar_Sučić.png (Petar Sučić)
 - CRO-18 Kristijan Jakić -> Kristijan-Jakic.png (Kristijan Jakić)
 - MISSING CRO-19 Toni Fruk: no matching footballer with an image
-- CRO-2 Ivor Pandur -> Chelsea vs. Arsenal, 29 May 2019 18 Kovacic.jpg (Mateo Kovačić)
+- MISSING CRO-2 Ivor Pandur: no matching footballer with an image
 - CRO-20 Luka Sučić -> SD_Negreira_-_Real_Sociedad,_Copa_do_Rei_2025-26_05_-_Luka_Sucic.jpg (Luka Sučić)
 - CRO-21 Andrej Kramarić -> Andrej_Kramarić_2018.jpg (Andrej Kramarić)
 - CRO-22 Ante Budimir -> Budimir,_Ante_FCSP_15-16_WP_(cropped).jpg (Ante Budimir)
@@ -317,14 +181,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING CRO-24 Igor Matanović: no matching footballer with an image
 - CRO-25 Marco Pašalić -> Marco_Pašalić_(cropped).jpg (Marco Pašalić)
 - CRO-26 Petar Musa -> Petar_Musa_NY_Red_Bulls_v_FC_Dallas_2_May_2026-53_(cropped).jpg (Petar Musa)
-- CRO-3 Dominik Kotarski -> Andrej Kramarić 2018.jpg (Andrej Kramarić)
-- CRO-4 Josip Stanišić -> 2021 Joško Gvardiol 2 (cropped2).jpg (Joško Gvardiol)
-- CRO-5 Marin Pongračić -> Dominik Livaković 2021.jpg (Dominik Livaković)
+- CRO-3 Dominik Kotarski -> SønderjyskE_-_FC_København,_27._September_2025_-_j_(Dominik_Kotarski).jpg (Dominik Kotarski)
+- CRO-4 Josip Stanišić -> Josip_Stanišić_during_an_Interview_in_2023.png (Josip Stanišić)
+- CRO-5 Marin Pongračić -> Marin_Pongracic_2021.jpg (Marin Pongračić)
 - CRO-6 Joško Gvardiol -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2611_(Joško_Gvardiol).jpg (Joško Gvardiol)
 - CRO-7 Duje Ćaleta-Car -> Caleta_asse_ol_2425.png (Duje Ćaleta-Car)
 - CRO-8 Josip Šutalo -> Qarabağ_vs_Ajax_(24.10.2024)_(4)_(Josip_Šutalo).jpg (Josip Šutalo)
 - MISSING CRO-9 Luka Vušković: no matching footballer with an image
-- CUW-1 Eloy Room -> Leandro Bacuna Back to your roots Groningen.jpg (Leandro Bacuna)
+- CUW-1 Eloy Room -> Room_Eloy_Columbus_Crew_SC_Meet_the_Team_2019.jpg (Eloy Room)
 - CUW-10 Riechedly Bazoer -> Go_Ahead_Eagles_-_AZ_-_53170906955_(Riechedly_Bazoer).jpg (Riechedly Bazoer)
 - MISSING CUW-11 Deveron Fonville: no matching footballer with an image
 - CUW-12 Godfried Roemeratoe -> Godfried Roemeratoe.JPG (Godfried Roemeratoe)
@@ -350,7 +214,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CUW-7 Sherel Floranus -> Sherel_Floranus_at_Antalyaspor_vs_Fatih_Karagümrük_SK_20220213.jpg (Sherel Floranus)
 - CUW-8 Armando Obispo -> Austria_U-18_vs._Netherlands_U-18_2017-03-23_(060).jpg (Armando Obispo)
 - CUW-9 Joshua Brenet -> PSV_Eindhoven,_Teamcamp_Bad_Erlach,_July_2014_(076).jpg (Joshua Brenet)
-- CZE-1 Matěj Kovář -> Patrik Schick 20180601 AUSCZE 3910 (cropped).jpg (Patrik Schick)
+- CZE-1 Matěj Kovář -> 3840px-Matj_kova-1772635856_(cropped).JPG (Matěj Kovář)
 - MISSING CZE-10 David Jurásek: no matching footballer with an image
 - CZE-11 Jaroslav Zelený -> Jaroslav_Zelený,_FCB-SLAVIA_30092018.jpg (Jaroslav Zelený)
 - CZE-12 David Douděra -> David_Douděra,_U21_CZE-GRE_2019-10-10.jpg (David Douděra)
@@ -361,7 +225,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CZE-17 Michal Sadílek -> Michal_Sadílek,_U21_CZE-GRE_2019-10-10_(2).jpg (Michal Sadílek)
 - CZE-18 Tomáš Souček -> Tomáš_Souček_WHU.jpeg (Tomáš Souček)
 - MISSING CZE-19 Alexandr Sojka: no matching footballer with an image
-- CZE-2 Jindřich Staněk -> Tomáš Souček, Czech Rp.-Montenegro EURO 2020 QR 10-06-2019.jpg (Tomáš Souček)
+- CZE-2 Jindřich Staněk -> Jindřich Staněk brankář FK Viktorie Plzeň (r. 2023) (cropped).jpg (Jindřich Staněk)
 - MISSING CZE-20 Hugo Sochůrek: no matching footballer with an image
 - MISSING CZE-21 Denis Višinský: no matching footballer with an image
 - CZE-22 Adam Hložek -> Adam_Hložek,_2022-07-31,_Saisoneröffnung_Bayer_04,_Leverkusen_(2)_(cropped).jpg (Adam Hložek)
@@ -369,14 +233,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CZE-24 Jan Kuchta -> Jan_Kuchta_2022.jpg (Jan Kuchta)
 - MISSING CZE-25 Mojmír Chytil: no matching footballer with an image
 - CZE-26 Tomáš Chorý -> Tomáš_Chorý_(cropped).jpg (Tomáš Chorý)
-- CZE-3 Lukáš Horníček -> Vladimír Coufal, CZE-KUW 2021-11-11.jpg (Vladimír Coufal)
-- CZE-4 David Zima -> Jindřich Staněk brankář FK Viktorie Plzeň (r. 2023) (cropped).jpg (Jindřich Staněk)
+- MISSING CZE-3 Lukáš Horníček: no matching footballer with an image
+- CZE-4 David Zima -> David_Zima_CZE-KUW_2021-11-11_(cropped).jpg (David Zima)
 - CZE-5 Tomáš Holeš -> Tomáš_Holeš_Jablonec-Ostrava.jpg (Tomáš Holeš)
 - MISSING CZE-6 Robin Hranáč: no matching footballer with an image
 - CZE-7 Vladimír Coufal -> Vladimír_Coufal_with_West_Ham_United.jpeg (Vladimír Coufal)
 - MISSING CZE-8 Štěpán Chaloupek: no matching footballer with an image
 - CZE-9 Ladislav Krejčí -> Ladislav Krejčí 01112025 (3).jpg (Ladislav Krejčí)
-- ECU-1 Hernán Galíndez -> Moisés Caicedo 20042025 (1).jpg (Moisés Caicedo)
+- ECU-1 Hernán Galíndez -> HERNÁN GALÍNDEZ.jpg (Hernán Galíndez)
 - ECU-10 Jackson Porozo -> Jackson_Porozo_2022.jpg (Jackson Porozo)
 - ECU-11 Jordy Alcívar -> SESIÓN_NO._603_DEL_PLENO_DE_LA_ASAMBLEA_NACIONAL._QUITO,_25_DE_JUNIO_2019._(48129379208)_(cropped).jpg (Jordy Alcívar)
 - MISSING ECU-12 Anthony Valencia: no matching footballer with an image
@@ -387,7 +251,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING ECU-17 Denil Castillo: no matching footballer with an image
 - ECU-18 Gonzalo Plata -> 2022_FIFA_World_Cup_Qatar_0–2_Ecuador_-_Plata.jpg (Gonzalo Plata)
 - MISSING ECU-19 Alan Franco: no matching footballer with an image
-- ECU-2 Moisés Ramírez -> Piero Hincapié, 2022-07-31, Saisoneröffnung Bayer 04, Leverkusen (1).jpg (Piero Hincapié)
+- MISSING ECU-2 Moisés Ramírez: no matching footballer with an image
 - ECU-20 Moisés Caicedo -> Moises_Caicedo_2022_(cropped).jpg (Moisés Caicedo)
 - MISSING ECU-21 Yaimar Medina: no matching footballer with an image
 - MISSING ECU-22 Kevin Rodríguez: no matching footballer with an image
@@ -395,14 +259,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - ECU-24 Jordy Caicedo -> J._Kaisedo.jpg (Jordy Caicedo)
 - ECU-25 Nilson Angulo -> Nilson_Angulo_RSC_Anderlecht_2025.jpg (Nilson Angulo)
 - MISSING ECU-26 Jeremy Arévalo: no matching footballer with an image
-- ECU-3 Gonzalo Valle -> Pervis Estupiñán WC2022.jpg (Pervis Estupiñán)
-- ECU-4 Félix Torres -> Kendry Paez 2023 Sudamericano Sub 17 (cropped).jpg (Kendry Páez)
-- ECU-5 Piero Hincapié -> Enner Valencia, January 2016.jpg (Enner Valencia)
-- ECU-6 Joel Ordóñez -> HERNÁN GALÍNDEZ.jpg (Hernán Galíndez)
+- MISSING ECU-3 Gonzalo Valle: no matching footballer with an image
+- ECU-4 Félix Torres -> 2022 FIFA World Cup Qatar 0–2 Ecuador - (13).jpg (Félix Torres)
+- ECU-5 Piero Hincapié -> Piero Hincapié, 2022-07-31, Saisoneröffnung Bayer 04, Leverkusen (1).jpg (Piero Hincapié)
+- ECU-6 Joel Ordóñez -> JoelOrdóñez.jpg (Joel Ordóñez)
 - ECU-7 Willian Pacho -> Pacho_asse_psg_2425.png (Willian Pacho)
 - ECU-8 Pervis Estupiñán -> Pervis_Estupinan_00-00-54.40.png (Pervis Estupiñán)
 - ECU-9 Ángelo Preciado -> Angelo_Preciado.jpg (Ángelo Preciado)
-- EGY-1 Mohamed El Shenawy -> Mohamed_Salah_2018.jpg (Mohamed Salah)
+- EGY-1 Mohamed El Shenawy -> Mohamed_El_Shenawy.jpg (Mohamed El Shenawy)
 - MISSING EGY-10 Ahmed Fatouh: no matching footballer with an image
 - EGY-11 Karim Hafez -> Karim_Hafez_(RC_Lens).jpg (Karim Hafez)
 - MISSING EGY-12 Tarek Alaa: no matching footballer with an image
@@ -413,7 +277,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING EGY-17 Nabil Emad: no matching footballer with an image
 - EGY-18 Marwan Attia -> Marwan_Attia.jpg (Marwan Attia)
 - EGY-19 Mahmoud Saber -> Egypt vs. Morocco 2024 Summer Olympics men's association football 02 (cropped4).jpg (Mahmoud Saber)
-- EGY-2 El Mahdy Soliman -> OmarMarmoush.png (Omar Marmoush)
+- MISSING EGY-2 El Mahdy Soliman: no matching footballer with an image
 - EGY-20 Trézéguet -> Mahmoud Trézéguet in world cup 2018.jpg (Trézéguet)
 - MISSING EGY-21 Hamza Abdelkarim: no matching footballer with an image
 - EGY-22 Mohamed Salah -> Mohamed_Salah_2018.jpg (Mohamed Salah)
@@ -423,12 +287,12 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - EGY-26 Zizo -> A.Zizo.jpg (Zizo (footballer))
 - EGY-3 Mostafa Shobeir -> Mahmoud_Trézéguet_in_world_cup_2018.jpg (Trézéguet (Egyptian footballer))
 - EGY-4 Mohamed Alaa -> Mohamed_Elneny_2018.jpg (Mohamed Elneny)
-- EGY-5 Yasser Ibrahim -> Mohamed_El_Shenawy.jpg (Mohamed El Shenawy)
+- EGY-5 Yasser Ibrahim -> Yasser_Ibrahim_in_FIFA_Club_World_Cup.jpg (Yasser Ibrahim)
 - EGY-6 Mohamed Hany -> Mohamed_Hany_in_2021_FIFA_Club_World_Cup.jpg (Mohamed Hany)
 - EGY-7 Hossam Abdelmaguid -> Hossam_Abdel_Maguid.jpg (Hossam Abdelmaguid)
 - EGY-8 Ramy Rabia -> Ramy_Rabia_in_2021_FIFA_Club_World_Cup.jpg (Ramy Rabia)
 - EGY-9 Mohamed Abdelmonem -> Abdelmonem_asse_ogcn_2425.png (Mohamed Abdelmonem)
-- ENG-1 Jordan Pickford -> 25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Jude_Bellingham_-_240422_190551-2_(cropped).jpg (Jude Bellingham)
+- ENG-1 Jordan Pickford -> Jordan_Pickford_2022-07-16_1.jpg (Jordan Pickford)
 - ENG-10 Reece James -> Reece_James_FIFA_Club_World_Cup_final_extraction.jpg (Reece James)
 - MISSING ENG-11 Djed Spence: no matching footballer with an image
 - ENG-12 Jarell Quansah -> Jarell_Quansah_06042025_(1).jpg (Jarell Quansah)
@@ -439,7 +303,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING ENG-17 Kobbie Mainoo: no matching footballer with an image
 - ENG-18 Morgan Rogers -> Morgan_Rogers_April_2026_(cropped).jpg (Morgan Rogers)
 - ENG-19 Eberechi Eze -> Qpr2018eberechieeze001.jpg (Eberechi Eze)
-- ENG-2 Dean Henderson -> Harry_Kane_on_October_10,_2023.jpg (Harry Kane)
+- ENG-2 Dean Henderson -> DeanHenderson2018.jpg (Dean Henderson)
 - ENG-20 Bukayo Saka -> 1_bukayo_saka_arsenal_2025_(cropped).jpg (Bukayo Saka)
 - ENG-21 Harry Kane -> Harry_Kane_on_October_10,_2023.jpg (Harry Kane)
 - ENG-22 Marcus Rashford -> Marcus_Rashford_in_2023.jpg (Marcus Rashford)
@@ -447,16 +311,16 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - ENG-24 Ollie Watkins -> Manchester_United_v_Aston_Villa,_25_September_2021_(17)_(cropped).jpg (Ollie Watkins)
 - ENG-25 Noni Madueke -> Fulham_v_Chelsea_20042025_(7)_(Noni_Madueke).jpg (Noni Madueke)
 - ENG-26 Ivan Toney -> Ivan_Tony_with_Al-Ahli.jpg (Ivan Toney)
-- ENG-3 James Trafford -> 1_bukayo_saka_arsenal_2025_(cropped).jpg (Bukayo Saka)
+- ENG-3 James Trafford -> Queen_Park_Rangers_v_Burnley_26042025_(25)_(James_Trafford).jpg (James Trafford)
 - ENG-4 Ezri Konsa -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2613,_Phil_Foden.jpg (Phil Foden)
 - ENG-5 Nico O'Reilly -> Cole_Palmer_2025_FIFA_Club_World_Cup_Final.jpg (Cole Palmer)
-- ENG-6 John Stones -> 1_declan_rice_arsenal_2025_(cropped).jpg (Declan Rice)
-- ENG-7 Marc Guéhi -> 1_john_stones_2015_(cropped).jpg (John Stones)
-- ENG-8 Tino Livramento -> Marc_Guehi_December_2018.jpg (Marc Guéhi)
-- ENG-9 Dan Burn -> Jordan_Pickford_2022-07-16_1.jpg (Jordan Pickford)
-- ESP-1 David Raya -> Lamine_Yamal_in_2025.jpg (Lamine Yamal)
+- ENG-6 John Stones -> 1_john_stones_2015_(cropped).jpg (John Stones)
+- ENG-7 Marc Guéhi -> Marc_Guehi_December_2018.jpg (Marc Guéhi)
+- MISSING ENG-8 Tino Livramento: no matching footballer with an image
+- ENG-9 Dan Burn -> Premier_League_Newcastle-Arsenal_2023-05-07_29_(cropped_Dan_Burn).jpg (Dan Burn)
+- ESP-1 David Raya -> David_Raya_in_2025_(cropped).jpg (David Raya)
 - ESP-10 Pau Cubarsí -> UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_Dani_Carvajal_10_(cropped).jpg (Dani Carvajal)
-- ESP-11 Marc Cucurella -> Aymeric_Laporte_2023_(cropped)_2.jpg (Aymeric Laporte)
+- ESP-11 Marc Cucurella -> Spain_football_team_in_202_(Marc_Cucurella).jpg (Marc Cucurella)
 - ESP-12 Mikel Merino -> 1_mikel_merino_arsenal_2025_(cropped).jpg (Mikel Merino)
 - ESP-13 Fabián Ruiz -> Ruiz_asse_psg_2425.png (Fabián Ruiz)
 - ESP-14 Gavi -> Jugadors_pretemporada_pels_Estats_Units_(cropped)2.jpg (Gavi (footballer))
@@ -465,7 +329,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - ESP-17 Álex Baena -> Álex_Baena_2019.jpg (Álex Baena)
 - ESP-18 Rodri -> RODRI - SWE vs ESP - UEFA EURO 2020 QUALIFIERS - 2019.10.15 (cropped).jpg (Rodri)
 - ESP-19 Martín Zubimendi -> Martín_Zubimendi.jpg (Martín Zubimendi)
-- ESP-2 Joan Garcia -> ATHLETIC-OSASUNA_SEMIFINAL._MAIDER_GOIKOETXEA_(168)_(cropped).jpg (Nico Williams)
+- ESP-2 Joan Garcia -> CE_Manresa_Aleví_A,_amb_el_porter_Joan_Garcia,_abril_de_2012_(cropped).jpg (Joan Garcia)
 - ESP-20 Pedri -> Pedri.jpg (Pedri)
 - ESP-21 Ferran Torres -> Ferran_Torres_2019.png (Ferran Torres)
 - ESP-22 Nico Williams -> ATHLETIC-OSASUNA_SEMIFINAL._MAIDER_GOIKOETXEA_(168)_(cropped).jpg (Nico Williams)
@@ -473,17 +337,17 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - ESP-24 Mikel Oyarzabal -> UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_108_(cropped).jpg (Mikel Oyarzabal)
 - MISSING ESP-25 Víctor Muñoz: no matching footballer with an image
 - ESP-26 Borja Iglesias -> Borja_iglesias_2019001_(cropped).jpg (Borja Iglesias)
-- ESP-3 Unai Simón -> Pedri.jpg (Pedri)
-- ESP-4 Marc Pubill -> Jugadors_pretemporada_pels_Estats_Units_(cropped)2.jpg (Gavi (footballer))
-- ESP-5 Álex Grimaldo -> RODRI - SWE vs ESP - UEFA EURO 2020 QUALIFIERS - 2019.10.15 (cropped).jpg (Rodri)
-- ESP-6 Eric García -> Ruiz_asse_psg_2425.png (Fabián Ruiz)
+- ESP-3 Unai Simón -> Unai_Simón_2025_(cropped).jpg (Unai Simón)
+- ESP-4 Marc Pubill -> Uzbekistan_vs._Spain,_2024_Summer_Olympic_men's_association_football,_2024-07-24_(250)_-_Marc_Pubill.jpg (Marc Pubill)
+- ESP-5 Álex Grimaldo -> Alex_Grimaldo_2020.png (Álex Grimaldo)
+- ESP-6 Eric García -> Eric Garcia autographs 2022 (cropped).jpg (Eric García)
 - ESP-7 Marcos Llorente -> Robin_Le_Normand_2122.jpg (Robin Le Normand)
-- ESP-8 Pedro Porro -> Spain_football_team_in_202_(Marc_Cucurella).jpg (Marc Cucurella)
-- ESP-9 Aymeric Laporte -> Unai_Simón_2025_(cropped).jpg (Unai Simón)
-- FRA-1 Brice Samba -> Picture_with_Mbappé_(cropped_and_rotated).jpg (Kylian Mbappé)
+- ESP-8 Pedro Porro -> Pedro_Porro_2021.png (Pedro Porro)
+- ESP-9 Aymeric Laporte -> Aymeric_Laporte_2023_(cropped)_2.jpg (Aymeric Laporte)
+- FRA-1 Brice Samba -> Brice_Samba_asse_rcl_23_24.jpg (Brice Samba)
 - FRA-10 Théo Hernandez -> undefined (undefined)
 - FRA-11 Lucas Hernandez -> undefined (undefined)
-- FRA-12 Maxence Lacroix -> undefined (undefined)
+- FRA-12 Maxence Lacroix -> Lens_-_Sochaux_(23-11-2019)_73.jpg (Maxence Lacroix)
 - FRA-13 Manu Koné -> Kouadio_Manu_Koné_(2019-08-31)_(cropped).jpg (Manu Koné)
 - FRA-14 Aurélien Tchouaméni -> 2025_04_26_Final_de_la_Copa_del_Rey_-_Aurélien_Tchouaméni.jpg (Aurélien Tchouaméni)
 - FRA-15 N'Golo Kanté -> N'Golo_Kanté_(cropped).jpg (N'Golo Kanté)
@@ -491,7 +355,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - FRA-17 Warren Zaïre-Emery -> Zaire_asse_psg_2425.png (Warren Zaïre-Emery)
 - FRA-18 Rayan Cherki -> Cherki_asse_ol_2425.png (Rayan Cherki)
 - FRA-19 Maghnes Akliouche -> Akliouche2_asse_asm_2425.png (Maghnes Akliouche)
-- FRA-2 Mike Maignan -> Ousmane_Dembélé_2018_(cropped).jpg (Ousmane Dembélé)
+- FRA-2 Mike Maignan -> Mike_Maignan_2022_Salzburg_vs_AC_Milan_2022-09-06.jpg (Mike Maignan)
 - FRA-20 Ousmane Dembélé -> Ousmane_Dembélé_2018_(cropped).jpg (Ousmane Dembélé)
 - FRA-21 Marcus Thuram -> Marcus_Thuram_in_2023.jpg (Marcus Thuram)
 - FRA-22 Kylian Mbappé -> Picture_with_Mbappé_(cropped_and_rotated).jpg (Kylian Mbappé)
@@ -500,15 +364,15 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - FRA-25 Désiré Doué -> Doue_asse_psg_2425.png (Désiré Doué)
 - FRA-26 Jean-Philippe Mateta -> Fredrikstad_Fotballklubb_v_Crystal_Palace_FC,_28_August_2025_B11_(JP_Mateta).jpg (Jean-Philippe Mateta)
 - FRA-3 Robin Risser -> FRA-ARG_(10)_(cropped).jpg (Antoine Griezmann)
-- FRA-4 Malo Gusto -> 2025_04_26_Final_de_la_Copa_del_Rey_-_Aurélien_Tchouaméni.jpg (Aurélien Tchouaméni)
+- FRA-4 Malo Gusto -> Malo_Gusto_20042025_(1).jpg (Malo Gusto)
 - FRA-5 Lucas Digne -> Ofrenda_de_la_Liga_y_la_Champions-13-L.Millán_(52109790215)_(cropped).jpg (Eduardo Camavinga)
-- FRA-6 Dayot Upamecano -> 1_william_saliba_arsenal_2025_(cropped).jpg (William Saliba)
-- FRA-7 Jules Koundé -> 2022-07-30_Fußball,_Männer,_DFL-Supercup,_RB_Leipzig_-_FC_Bayern_München_1DX_3244_by_Stepro_(cropped).jpg (Dayot Upamecano)
-- FRA-8 Ibrahima Konaté -> Jules_Koundé_2020.jpg (Jules Koundé)
-- FRA-9 William Saliba -> Mike_Maignan_2022_Salzburg_vs_AC_Milan_2022-09-06.jpg (Mike Maignan)
-- GER-1 Manuel Neuer -> Jamal_Musiala_2022_(cropped).jpg (Jamal Musiala)
+- FRA-6 Dayot Upamecano -> 2022-07-30_Fußball,_Männer,_DFL-Supercup,_RB_Leipzig_-_FC_Bayern_München_1DX_3244_by_Stepro_(cropped).jpg (Dayot Upamecano)
+- FRA-7 Jules Koundé -> Jules_Koundé_2020.jpg (Jules Koundé)
+- FRA-8 Ibrahima Konaté -> Ibrahima_Konaté_in_2021.jpg (Ibrahima Konaté)
+- FRA-9 William Saliba -> 1_william_saliba_arsenal_2025_(cropped).jpg (William Saliba)
+- GER-1 Manuel Neuer -> 20180602_FIFA_Friendly_Match_Austria_vs._Germany_Manuel_Neuer_850_0723.jpg (Manuel Neuer)
 - GER-10 David Raum -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2658_(cropped).jpg (David Raum)
-- GER-11 Malick Thiaw -> 2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_(DFB-Pokal_2023-24)_by_Sandro_Halank–069.jpg (Nico Schlotterbeck)
+- GER-11 Malick Thiaw -> Malick_Thiaw_24052026_(4).jpg (Malick Thiaw)
 - GER-12 Aleksandar Pavlović -> FC_RB_Salzburg_gegen_FC_Bayern_München_(2026-01-06_Testspiel)_34.jpg (Aleksandar Pavlović (footballer))
 - GER-13 Joshua Kimmich -> 2019-06-11_Fußball,_Männer,_Länderspiel,_Deutschland-Estland_StP_2078_LR10_by_Stepro_(cropped).jpg (Joshua Kimmich)
 - GER-14 Leon Goretzka -> FC_Red_Bull_Salzburg_gegen_Bayern_München_(2025-01-06_Testspiel)_27.jpg (Leon Goretzka)
@@ -517,7 +381,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - GER-17 Angelo Stiller -> Angelo_Stiller_2023.jpg (Angelo Stiller)
 - GER-18 Florian Wirtz -> Florian_Wirtz,_2022-07-31,_Saisoneröffnung_Bayer_04,_Leverkusen_(1)_(cropped).jpg (Florian Wirtz)
 - GER-19 Leroy Sané -> FC_Red_Bull_Salzburg_gegen_Bayern_München_(2025-01-06_Testspiel)_22.jpg (Leroy Sané)
-- GER-2 Oliver Baumann -> Florian_Wirtz,_2022-07-31,_Saisoneröffnung_Bayer_04,_Leverkusen_(1)_(cropped).jpg (Florian Wirtz)
+- GER-2 Oliver Baumann -> OliverBaumann_(cropped).jpg (Oliver Baumann)
 - GER-20 Nadiem Amiri -> 20161011_U21_AUT_GER_9328_(cropped).jpg (Nadiem Amiri)
 - GER-21 Felix Nmecha -> Felix_Nmecha_2021.jpg (Felix Nmecha)
 - MISSING GER-22 Assan Ouédraogo: no matching footballer with an image
@@ -525,13 +389,13 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - GER-24 Nick Woltemade -> Nick_Woltemade_24052026_(5).jpg (Nick Woltemade)
 - GER-25 Maximilian Beier -> Maximilian_Beier_training_with_Borussia_Dortmund_(2026).jpg (Maximilian Beier)
 - GER-26 Deniz Undav -> Deniz_undav.jpg (Deniz Undav)
-- GER-3 Alexander Nübel -> 2019-06-11_Fußball,_Männer,_Länderspiel,_Deutschland-Estland_StP_2059_LR10_by_Stepro.jpg (Kai Havertz)
-- GER-4 Antonio Rüdiger -> 2019-06-11_Fußball,_Männer,_Länderspiel,_Deutschland-Estland_StP_2078_LR10_by_Stepro_(cropped).jpg (Joshua Kimmich)
-- GER-5 Waldemar Anton -> 2025_04_26_Final_de_la_Copa_del_Rey_-_54482387776_(Elenco_do_Real_Madrid)_(Antonio_Rüdiger).jpg (Antonio Rüdiger)
+- GER-3 Alexander Nübel -> Alexander_nuebel.jpg (Alexander Nübel)
+- GER-4 Antonio Rüdiger -> 2025_04_26_Final_de_la_Copa_del_Rey_-_54482387776_(Elenco_do_Real_Madrid)_(Antonio_Rüdiger).jpg (Antonio Rüdiger)
+- GER-5 Waldemar Anton -> Waldemar_Anton_(2025).jpg (Waldemar Anton)
 - GER-6 Jonathan Tah -> Jonathan_Tah_2019.jpg (Jonathan Tah)
 - GER-7 Pascal Groß -> Marc-Andre_Ter_Stegen_ACCI_FCBARCELONA_Turisme_Catalunya_gira_pretemporada_CATPRESS.jpg (Marc-André ter Stegen)
 - GER-8 Nico Schlotterbeck -> 20180602_FIFA_Friendly_Match_Austria_vs._Germany_İlkay_Gündoğan_850_0728.jpg (İlkay Gündoğan)
-- GER-9 Nathaniel Brown -> FC_Red_Bull_Salzburg_gegen_Bayern_München_(2025-01-06_Testspiel)_22.jpg (Leroy Sané)
+- MISSING GER-9 Nathaniel Brown: no matching footballer with an image
 - GHA-1 Lawrence Ati-Zigi -> Mohammed_Kudus_of_West_Ham_United.jpeg (Mohammed Kudus)
 - MISSING GHA-10 Kojo Peprah Oppong: no matching footballer with an image
 - GHA-11 Derrick Luckassen -> Derrick_luckassen-1447005764.JPG (Derrick Luckassen)
@@ -543,7 +407,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - GHA-17 Antoine Semenyo -> Antoine_Semenyo_2026.png (Antoine Semenyo)
 - GHA-18 Elisha Owusu -> Lens_-_Sochaux_(15-09-2018)_175_(cropped).jpg (Elisha Owusu)
 - GHA-19 Augustine Boakye -> Boakye_ASSE_MHSC_2425.png (Augustine Boakye)
-- GHA-2 Joseph Anang -> ATL-Madrid-Lokomotiv001-Thomas_(cropped).jpg (Thomas Partey)
+- GHA-2 Joseph Anang -> Hertha_BSC_vs._West_Ham_United_20190731_(199).jpg (Joseph Anang)
 - GHA-20 Kamaldeen Sulemana -> Kamaldeen_Sulemana_(cropped).jpg (Kamaldeen Sulemana)
 - GHA-21 Jordan Ayew -> Jordan_Ayew_24082024_(2).jpg (Jordan Ayew)
 - MISSING GHA-22 Brandon Thomas-Asante: no matching footballer with an image
@@ -551,14 +415,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - GHA-24 Iñaki Williams -> Iñaki_Williams.png (Iñaki Williams)
 - GHA-25 Ernest Nuamah -> Nuamah_vs_FCSB.png (Ernest Nuamah)
 - MISSING GHA-26 Prince Kwabena Adu: no matching footballer with an image
-- GHA-3 Benjamin Asare -> Iñaki_Williams.png (Iñaki Williams)
-- GHA-4 Alidu Seidu -> Jordan_Ayew_24082024_(2).jpg (Jordan Ayew)
+- MISSING GHA-3 Benjamin Asare: no matching footballer with an image
+- MISSING GHA-4 Alidu Seidu: no matching footballer with an image
 - MISSING GHA-5 Jonas Adjetey: no matching footballer with an image
 - MISSING GHA-6 Abdul Mumin: no matching footballer with an image
 - GHA-7 Gideon Mensah -> FC Liefering gegen SC Wiener Neustadt (23. September 2016) 05.jpg (Gideon Mensah)
 - GHA-8 Abdul Rahman Baba -> Ghana_national_Baba_Rahman.jpg (Abdul Rahman Baba)
 - GHA-9 Jerome Opoku -> 3840px-Jerome_Opoku_3_İstanbul_Başakşehir_FK_UECL_20250813_(1).jpg (Jerome Opoku)
-- MISSING HAI-1 Johny Placide: no matching footballer with an image
+- HAI-1 Johny Placide -> Johny_Placide_in_Tsarsko_selo.jpg (Johny Placide)
 - HAI-10 Jean-Kévin Duverne -> RC_Lens_-_FC_Nantes_(28-10-2023)_17.jpg (Jean-Kévin Duverne)
 - MISSING HAI-11 Wilguens Paugain: no matching footballer with an image
 - MISSING HAI-12 Carl Sainté: no matching footballer with an image
@@ -584,7 +448,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - HAI-7 Hannes Delcroix -> FC_Red_Bull_Salzburg_gegen_RSC_Anderlecht_(Testspiel_7._Juli_2017)_50.jpg (Hannes Delcroix)
 - MISSING HAI-8 Martin Expérience: no matching footballer with an image
 - MISSING HAI-9 Duke Lacroix: no matching footballer with an image
-- IRN-1 Alireza Beiranvand -> Iran_-_Japan,_AFC_Asian_Cup_2019_42_(cropped).jpg (Mehdi Taremi)
+- IRN-1 Alireza Beiranvand -> Alireza_Beiranvand_14021113000490638424849868670974_66487.jpg (Alireza Beiranvand)
 - IRN-10 Ali Nemati -> Mes_Rafsanjan_F.C._vs_Persepolis_F.C.,_19_November_2021_2.jpg (Ali Nemati)
 - IRN-11 Ramin Rezaeian -> Esteghlal_0_-_0_Al_Nassr,_round_of_16_of_the_AFC_Elite_League,_Azadi_Stadium,_3_March_2025_15.jpg (Ramin Rezaeian)
 - MISSING IRN-12 Danial Eiri: no matching footballer with an image
@@ -603,14 +467,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - IRN-24 Amirhossein Hosseinzadeh -> Esteghlal_FC_in_training,_29_September_2021_-_09.jpg (Amirhossein Hosseinzadeh)
 - IRN-25 Shahriyar Moghanlou -> Shahriyar_Moghanlou_14000129000016637543017694769152.jpg (Shahriyar Moghanlou)
 - IRN-26 Dennis Eckert -> XXIII_Memorial_Quinocho_(RC_Celta_vs_Mainz_05)_-_55_(cropped).jpg (Dennis Eckert)
-- IRN-3 Hossein Hosseini -> 2022_FIFA_World_Cup_England_6–2_Iran_-_(26)_(cropped).jpg (Alireza Jahanbakhsh)
-- IRN-4 Saleh Hardani -> Alireza_Beiranvand_14021113000490638424849868670974_66487.jpg (Alireza Beiranvand)
+- IRN-3 Hossein Hosseini -> Esteghlal FC vs Sepahan FC, 14 December 2021 - 26.jpg (Hossein Hosseini)
+- IRN-4 Saleh Hardani -> Esteghlal_Celebrate_IPL_Title_Win_at_Azadi_Stadium_-_020.jpg (Saleh Hardani)
 - IRN-5 Ehsan Hajsafi -> نشست_خبری_پیش_از_بازی_ایران_و_انگلیس_(26)_(cropped).jpg (Ehsan Hajsafi)
 - IRN-6 Shojae Khalilzadeh -> Shoja_Khalilzadeh_at_Fars_News_Agency.jpg (Shojae Khalilzadeh)
 - IRN-7 Milad Mohammadi -> Milad_Mohammadi_2017.jpg (Milad Mohammadi)
 - IRN-8 Hossein Kanaanizadegan -> Hossein_Kanaani_14000213000920637556755600710662.jpg (Hossein Kanaanizadegan)
 - IRN-9 Aria Yousefi -> YousefiCropped.jpg (Aria Yousefi)
-- IRQ-1 Fahad Talib -> 4822953_AE7I9053_(cropped2).jpg (Aymen Hussein)
+- IRQ-1 Fahad Talib -> Fahad_Talib.png (Fahad Talib)
 - IRQ-10 Merchas Doski -> Merchas_doski.jpg (Merchas Doski)
 - MISSING IRQ-11 Mustafa Saadoon: no matching footballer with an image
 - MISSING IRQ-12 Frans Putros: no matching footballer with an image
@@ -621,7 +485,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - IRQ-17 Amir Al-Ammari -> Amir_Al-Ammari_(Halmstad_vs_Degerfors,_7_October_2023).jpg (Amir Al-Ammari)
 - MISSING IRQ-18 Ali Jasim: no matching footballer with an image
 - IRQ-19 Kevin Yakob -> Kevin_Enkido_Yakob2.jpg (Kevin Yakob)
-- IRQ-2 Jalal Hassan -> Zidane_Iqbal_debut_(cropped).jpg (Zidane Iqbal)
+- IRQ-2 Jalal Hassan -> Jalal_Hassan.jpg (Jalal Hassan)
 - IRQ-20 Aimar Sher -> GAE_-_FC_Groningen_-_52878021366_(cropped1).jpg (Aimar Sher)
 - MISSING IRQ-21 Marko Farji: no matching footballer with an image
 - MISSING IRQ-22 Zaid Ismail: no matching footballer with an image
@@ -662,7 +526,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING JOR-7 Mohammad Abualnadi: no matching footballer with an image
 - JOR-8 Salim Obaid -> Sepahan_and_Al-Hussein_Jordan_football_teams_meet_21_(2025)_esfahanzibaonline.ir_(cropped2).jpg (Salim Obaid)
 - MISSING JOR-9 Mohammad Taha: no matching footballer with an image
-- JPN-1 Zion Suzuki -> Takefusa_Kubo_2019.png (Takefusa Kubo)
+- JPN-1 Zion Suzuki -> ZION_SUZUKI_-_JPN_vs_THA_-_Friendly_Match_-_2024.01.01.jpg (Zion Suzuki)
 - JPN-10 Hiroki Itō -> Hiroki Ito VfB Stuttgart.jpg (Hiroki Itō)
 - JPN-11 Takehiro Tomiyasu -> Takehiro_Tomiyasu,_2019_AFC_Asian_Cup_1.jpg (Takehiro Tomiyasu)
 - MISSING JPN-12 Junnosuke Suzuki: no matching footballer with an image
@@ -681,14 +545,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - JPN-24 Ayase Ueda -> Go_Ahead_Eagles_-_Feyenoord_-_53679351240_(Ayase_Ueda).jpg (Ayase Ueda)
 - JPN-25 Kōki Ogawa -> GAE_-_NEC_-_53493888105_(Koki_Ogawa).jpg (Kōki Ogawa (footballer))
 - MISSING JPN-26 Kento Shiogai: no matching footballer with an image
-- JPN-3 Tomoki Hayakawa -> 2022128173756_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_Mönchengladbach_-_Sven_-_1D_X_MK_II_-_0725_-_AK8I7460_(Daichi_Kamada_cropped).jpg (Daichi Kamada)
+- MISSING JPN-3 Tomoki Hayakawa: no matching footballer with an image
 - JPN-4 Yukinari Sugawara -> Wataru_Endo_at_Iran-Japan_pre-match_conference.jpg (Wataru Endo)
 - JPN-5 Shōgo Taniguchi -> Ko_Itakura_(cropped).jpg (Kō Itakura)
-- JPN-6 Kō Itakura -> ZION_SUZUKI_-_JPN_vs_THA_-_Friendly_Match_-_2024.01.01.jpg (Zion Suzuki)
+- JPN-6 Kō Itakura -> Ko_Itakura_(cropped).jpg (Kō Itakura)
 - JPN-7 Yūto Nagatomo -> Yuto_Nagatomo_in_2018.jpg (Yūto Nagatomo)
 - MISSING JPN-8 Tsuyoshi Watanabe: no matching footballer with an image
 - MISSING JPN-9 Ayumu Seko: no matching footballer with an image
-- KOR-1 Kim Seung-gyu -> BFA_2023_-2_Heung-Min_Son_(cropped).jpg (Son Heung-min)
+- KOR-1 Kim Seung-gyu -> Rus-SK2017_(22).jpg (Kim Seung-gyu)
 - KOR-10 Kim Moon-hwan -> 191202_K리그_시상식,_김문환_3.jpg (Kim Moon-hwan)
 - MISSING KOR-11 Park Jin-seob: no matching footballer with an image
 - KOR-12 Seol Young-woo -> (추꾸미)_'울산_합류'_설영우.jpg (Seol Young-woo)
@@ -699,7 +563,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - KOR-17 Hwang Hee-chan -> 240622_황희찬_풋볼_페스티벌.jpg (Hwang Hee-chan)
 - KOR-18 Bae Jun-ho -> Bae_Jun-ho_20092025_(2).jpg (Bae Jun-ho)
 - KOR-19 Lee Kang-in -> Lee_Kang-in_-_2022_(52551771501)_(cropped).jpg (Lee Kang-in)
-- KOR-2 Song Bum-keun -> Lee_Kang-in_-_2022_(52551771501)_(cropped).jpg (Lee Kang-in)
+- KOR-2 Song Bum-keun -> 240611_대한민국_vs_중국_(송범근).jpg (Song Bum-keun)
 - KOR-20 Yang Hyun-jun -> Celtic-20240722-062_(cropped).jpg (Yang Hyun-jun)
 - KOR-21 Kim Jin-gyu -> 250503 FC 서을 vs 전북 (김진규).jpg (Kim Jin-gyu)
 - KOR-22 Eom Ji-sung -> 230917_FC_서울_vs_광주_FC_(엄지성).jpg (Eom Ji-sung)
@@ -707,14 +571,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - KOR-24 Son Heung-min -> BFA_2023_-2_Heung-Min_Son_(cropped).jpg (Son Heung-min)
 - KOR-25 Cho Gue-sung -> 191130_부산아이파크_VS_FC안양_플레이오프,_조규성_2.jpg (Cho Gue-sung)
 - KOR-26 Oh Hyeon-gyu -> Oh_Hyeon-gyu_BJK.jpeg (Oh Hyeon-gyu)
-- KOR-3 Jo Hyeon-woo -> 240622_황희찬_풋볼_페스티벌.jpg (Hwang Hee-chan)
-- KOR-4 Lee Han-beom -> FC_Red_Bull_Salzburg_gegen_Bayern_München_(2025-01-06_Testspiel)_26.jpg (Kim Min-jae (footballer))
-- KOR-5 Lee Gi-hyuk -> 191130_부산아이파크_VS_FC안양_플레이오프,_조규성_2.jpg (Cho Gue-sung)
-- KOR-6 Kim Min-jae -> Jo_Hyeon-woo.jpg (Jo Hyeon-woo)
+- KOR-3 Jo Hyeon-woo -> Jo_Hyeon-woo.jpg (Jo Hyeon-woo)
+- KOR-4 Lee Han-beom -> 230422_FC_서울_vs_수원_삼성_블루윙즈_(이한범).jpg (Lee Han-beom)
+- KOR-5 Lee Gi-hyuk -> 250617_FC_서울_vs_강원_(이기혁)_1.jpg (Lee Gi-hyuk)
+- KOR-6 Kim Min-jae -> FC_Red_Bull_Salzburg_gegen_Bayern_München_(2025-01-06_Testspiel)_26.jpg (Kim Min-jae (footballer))
 - MISSING KOR-7 Kim Tae-hyeon: no matching footballer with an image
 - KOR-8 Lee Tae-seok -> 밀워키_이달의_선수_5월_-_이태석_인터뷰_&_제품_언박싱까지!_0s.jpg (Lee Tae-seok)
 - KOR-9 Cho Wi-je -> 260411 FC 서울 vs 전북 (조위제).jpg (Cho Wi-je)
-- KSA-1 Nawaf Al-Aqidi -> Salem_Al-Dawsari_2018.jpg (Salem Al-Dawsari)
+- KSA-1 Nawaf Al-Aqidi -> Nawaf_Al-Aqidi_2023_(cropped).jpg (Nawaf Al-Aqidi)
 - MISSING KSA-10 Hassan Kadesh: no matching footballer with an image
 - MISSING KSA-11 Moteb Al-Harbi: no matching footballer with an image
 - MISSING KSA-12 Jehad Thakri: no matching footballer with an image
@@ -725,7 +589,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - KSA-17 Salem Al-Dawsari -> Salem_Al-Dawsari_2018.jpg (Salem Al-Dawsari)
 - KSA-18 Abdullah Al-Khaibari -> Abdullah_Al-Khaibari_2023_(cropped).jpg (Abdullah Al-Khaibari)
 - KSA-19 Ziyad Al-Johani -> Ziyad_Al-Johani.jpg (Ziyad Al-Johani)
-- KSA-2 Mohammed Al-Owais -> Firas_Al-Buraikan_2026.jpg (Firas Al-Buraikan)
+- KSA-2 Mohammed Al-Owais -> Mohammed_Al-Owais_2018.jpg (Mohammed Al-Owais)
 - MISSING KSA-20 Alaa Al-Hejji: no matching footballer with an image
 - MISSING KSA-21 Sultan Mandash: no matching footballer with an image
 - KSA-22 Mohamed Kanno -> Group_photographs_of_Al_Hilal,_Al_Hilal_SFC_vs_Chelsea_F.C.,_9_February_2022_(cropped).jpg (Mohamed Kanno)
@@ -734,13 +598,13 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING KSA-25 Khalid Al-Ghannam: no matching footballer with an image
 - MISSING KSA-26 Abdullah Al-Hamdan: no matching footballer with an image
 - KSA-3 Ahmed Al-Kassar -> Saudi_Arabia_v_Oman_(13)_(cropped).jpg (Ali Al-Bulaihi)
-- KSA-4 Ali Majrashi -> Nawaf_Al-Aqidi_2023_(cropped).jpg (Nawaf Al-Aqidi)
+- KSA-4 Ali Majrashi -> Ali_Majrashi,_2025_CONCACAF_Gold_Cup_(cropped).jpg (Ali Majrashi)
 - KSA-5 Ali Lajami -> AFC_Elite_League_Western,_Azadi_Stadium,_Persepolis_0-0_Al_Nassr,_17_February_2025,_Ali_Lajami.jpg (Ali Lajami)
 - KSA-6 Abdulelah Al-Amri -> Abdulelah_Al-Amri_2023_(cropped).jpg (Abdulelah Al-Amri)
 - MISSING KSA-7 Hassan Al-Tambakti: no matching footballer with an image
 - KSA-8 Saud Abdulhamid -> Saudi_Arabia_v_Oman_(2)_(cropped).jpg (Saud Abdulhamid)
 - KSA-9 Nawaf Boushal -> Esteghlal_0_-_0_Al_Nassr,_round_of_16_of_the_AFC_Elite_League,_Azadi_Stadium,_3_March_2025,_Nawaf_Boushal.jpg (Nawaf Boushal)
-- MAR-1 Yassine Bounou -> Achraf_Hakimi_(cropped2).jpg (Achraf Hakimi)
+- MAR-1 Yassine Bounou -> Yassine_Bono_(cropped).jpg (Yassine Bounou)
 - MAR-10 Youssef Belammari -> Youssef_Belammari_vs_Niger_(cropped).jpg (Youssef Belammari)
 - MAR-11 Redouane Halhal -> Redouane_Halhal_vs_Paraguay_(cropped).jpg (Redouane Halhal)
 - MAR-12 Anass Salah-Eddine -> Anass_Salah-Eddine_against_Paraguay_(cropped).jpg (Anass Salah-Eddine)
@@ -751,7 +615,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MAR-17 Ismael Saibari -> Ismael_Saibari_vs_Niger_(cropped).jpg (Ismael Saibari)
 - MAR-18 Samir El Mourabet -> Samir_El_Mourabet_vs_Paraguay_(cropped).jpg (Samir El Mourabet)
 - MAR-19 Gessime Yassine -> Gessime_Yassine_against_Paraguay_2_(cropped).jpg (Gessime Yassine)
-- MAR-2 Munir Mohamedi -> Brahim_Diaz_2_vs_Niger_(cropped)_(cropped).jpg (Brahim Díaz)
+- MAR-2 Munir Mohamedi -> Munir_Mohand_Mohamedi_(cropped2).jpg (Munir Mohamedi)
 - MAR-20 Bilal El Khannouss -> Bilal_El_Khannouss_vs_Niger_(cropped).jpg (Bilal El Khannouss)
 - MAR-21 Neil El Aynaoui -> Neil_El_Aynaoui_(cropped2).jpg (Neil El Aynaoui)
 - MAR-22 Soufiane Rahimi -> Soufiane_Rahimi_against_Paraguay_(cropped).jpg (Soufiane Rahimi)
@@ -760,17 +624,17 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MAR-25 Ayoub El Kaabi -> Ayoub_El_Kaabi_vs_Niger_(cropped).jpg (Ayoub El Kaabi)
 - MISSING MAR-26 Ayoube Amaimouni: no matching footballer with an image
 - MAR-3 Ahmed Reda Tagnaouti -> Ennesyri.jpg (Youssef En-Nesyri)
-- MAR-4 Achraf Hakimi -> Sofyan_Amrabat_vs_Niger_(cropped).jpg (Sofyan Amrabat)
+- MAR-4 Achraf Hakimi -> Achraf_Hakimi_(cropped2).jpg (Achraf Hakimi)
 - MAR-5 Noussair Mazraoui -> Mazraoui.jpg (Noussair Mazraoui)
-- MAR-6 Marwane Saâdane -> Bilal_El_Khannouss_vs_Niger_(cropped).jpg (Bilal El Khannouss)
-- MAR-7 Zakaria El Ouahdi -> Yassine_Bono_(cropped).jpg (Yassine Bounou)
+- MAR-6 Marwane Saâdane -> FC_Red_Bull_Salzburg_gegen_Çaykur_Rizespor_(Testspiel)_34.jpg (Marwane Saâdane)
+- MAR-7 Zakaria El Ouahdi -> 1920px-Zakaria_El_Ouahdi_at_the_Olympic_Games_2024_(cropped).jpg (Zakaria El Ouahdi)
 - MAR-8 Issa Diop -> Issa_Diop_-_Morocco_v_Paraguay.jpg (Issa Diop (footballer))
 - MAR-9 Chadi Riad -> Chadi_Riad_against_Paraguay_(cropped).jpg (Chadi Riad)
 - MISSING MEX-15 Obed Vargas: no matching footballer with an image
 - MISSING MEX-23 Armando González: no matching footballer with an image
 - MISSING MEX-4 Jorge Sánchez: no matching footballer with an image
 - MISSING MEX-7 Johan Vásquez: no matching footballer with an image
-- NED-1 Bart Verbruggen -> Cody_Gakpo_06042025_(2)_(cropped).jpg (Cody Gakpo)
+- NED-1 Bart Verbruggen -> Bart_Verbruggen.png (Bart Verbruggen)
 - NED-10 Denzel Dumfries -> FC_Salzburg_gegen_Inter_Mailand_(Testspiel_2023-08-09)_67_-_Stefan_de_Vrij_(cropped).jpg (Stefan de Vrij)
 - NED-11 Jorrel Hato -> Jeremie_Frimpong_04012026_(3)_(cropped).jpg (Jeremie Frimpong)
 - NED-12 Marten de Roon -> Marten_de_Roon_03.jpg (Marten de Roon)
@@ -781,7 +645,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - NED-17 Teun Koopmeiners -> Teun_Koopmeiners_Manchester_United_v_Atalanta_BC,_20_October_2021_(12)_(cropped).jpg (Teun Koopmeiners)
 - NED-18 Frenkie de Jong -> Матч_«Динамо»_-_«Барселона»_0-1._2_ноября_2021_года._II_—_1289671_(cropped).jpg (Frenkie de Jong)
 - NED-19 Quinten Timber -> Quinten_Timber.jpg (Quinten Timber)
-- NED-2 Robin Roefs -> Memphis_Depay_2019.jpg (Memphis Depay)
+- MISSING NED-2 Robin Roefs: no matching footballer with an image
 - NED-20 Wout Weghorst -> Qarabağ_vs_Ajax_(24.10.2024)_(4)_(Wout_Weghorst).jpg (Wout Weghorst)
 - NED-21 Memphis Depay -> Memphis_Depay_2019.jpg (Memphis Depay)
 - NED-22 Cody Gakpo -> Cody_Gakpo_06042025_(2)_(cropped).jpg (Cody Gakpo)
@@ -790,13 +654,13 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - NED-25 Brian Brobbey -> GAE_-_Ajax_-_52788469380_(Brobbey).jpg (Brian Brobbey)
 - NED-26 Crysencio Summerville -> Crysencio_Summerville_of_West_Ham_United.jpeg (Crysencio Summerville)
 - NED-3 Mark Flekken -> Xavi_Simons,_Nick_Verhagen_in_duel_met_Xavi_Simons.jpg (Xavi Simons)
-- NED-4 Lutsharel Geertruida -> Матч_«Динамо»_-_«Барселона»_0-1._2_ноября_2021_года._II_—_1289671_(cropped).jpg (Frenkie de Jong)
-- NED-5 Virgil van Dijk -> Reijnders_arriva_in_albergo_(cropped).jpg (Tijjani Reijnders)
-- NED-6 Nathan Aké -> 20160604_AUT_NED_8876_(cropped).jpg (Virgil van Dijk)
-- NED-7 Jan Paul van Hecke -> Edison_ndreca_inter_egnati_(cropped_Denzel_Dumfries).jpg (Denzel Dumfries)
-- NED-8 Mats Wieffer -> Bart_Verbruggen.png (Bart Verbruggen)
-- NED-9 Micky van de Ven -> Yokohama_F._Marinos_-_Manchester_City_(3-5)_-_53075276224_(Nathan_Ake).jpg (Nathan Aké)
-- NOR-1 Ørjan Nyland -> Erling_Haaland_June_2025.jpg (Erling Haaland)
+- NED-4 Lutsharel Geertruida -> Go_Ahead_Eagles_-_Feyenoord_-_53679251479_(Lutsharel_Geertruida).jpg (Lutsharel Geertruida)
+- NED-5 Virgil van Dijk -> 20160604_AUT_NED_8876_(cropped).jpg (Virgil van Dijk)
+- NED-6 Nathan Aké -> Yokohama_F._Marinos_-_Manchester_City_(3-5)_-_53075276224_(Nathan_Ake).jpg (Nathan Aké)
+- NED-7 Jan Paul van Hecke -> 3840px-Jan_Paul_van_Hecke_24012026_(2)_(cropped).jpg (Jan Paul van Hecke)
+- NED-8 Mats Wieffer -> FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_(Testspiel_2022-07-09)_39_(cropped).jpg (Mats Wieffer)
+- NED-9 Micky van de Ven -> Micky_Van_De_Ven_pre-match_training_(cropped).jpg (Micky van de Ven)
+- NOR-1 Ørjan Nyland -> Norway_Italy_-_June_2025_A_10_(cropped).jpg (Ørjan Nyland)
 - NOR-10 Sondre Langås -> Sondre_Langås_25042026_(1).jpg (Sondre Langås)
 - NOR-11 Henrik Falchener -> 3840px-Henrik_Falchener_25_Viking_FK_UECL_20250813_(5).jpg (Henrik Falchener)
 - NOR-12 Julian Ryerson -> 2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_(DFB-Pokal_2023-24)_by_Sandro_Halank–102.jpg (Julian Ryerson)
@@ -807,7 +671,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - NOR-17 Fredrik Aursnes -> Zenit-Mo;de_(6)_(cropped).jpg (Fredrik Aursnes)
 - MISSING NOR-18 Kristian Thorstvedt: no matching footballer with an image
 - MISSING NOR-19 Thelo Aasgaard: no matching footballer with an image
-- NOR-2 Sander Tangvik -> Norway_Italy_-_June_2025_E_04.jpg (Martin Ødegaard)
+- MISSING NOR-2 Sander Tangvik: no matching footballer with an image
 - NOR-20 Antonio Nusa -> Norway_Italy_-_June_2025_C_23.jpg (Antonio Nusa)
 - MISSING NOR-21 Andreas Schjelderup: no matching footballer with an image
 - NOR-22 Oscar Bobb -> ManCity20240722-050_(Oscar_Bobb2).jpg (Oscar Bobb)
@@ -815,9 +679,9 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - NOR-24 Alexander Sørloth -> Norway_Italy_-_June_2025_E_10.jpg (Alexander Sørloth)
 - NOR-25 Erling Haaland -> Erling_Haaland_June_2025.jpg (Erling Haaland)
 - NOR-26 Jørgen Strand Larsen -> Norway_Italy_-_June_2025_A_15_(cropped).jpg (Jørgen Strand Larsen)
-- NOR-3 Egil Selvik -> Norway_Italy_-_June_2025_E_10.jpg (Alexander Sørloth)
-- NOR-4 Kristoffer Vassbakk Ajer -> Norway_Italy_-_June_2025_C_23.jpg (Antonio Nusa)
-- NOR-5 Leo Østigård -> Norway_Italy_-_June_2025_A_10_(cropped).jpg (Ørjan Nyland)
+- NOR-3 Egil Selvik -> Norway_Italy_-_June_2025_A_07_(cropped).jpg (Egil Selvik)
+- MISSING NOR-4 Kristoffer Vassbakk Ajer: no matching footballer with an image
+- NOR-5 Leo Østigård -> Norway_Italy_-_June_2025_A_06_(cropped).jpg (Leo Østigård)
 - NOR-6 David Møller Wolfe -> David_Møller_Wolfe.jpg (David Møller Wolfe)
 - NOR-7 Fredrik André Bjørkan -> F_Bjørkan.jpg (Fredrik André Bjørkan)
 - NOR-8 Marcus Holmgren Pedersen -> Marcus_Holmgren_Pedersen_2022_FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_(cropped).jpg (Marcus Holmgren Pedersen)
@@ -833,7 +697,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - NZL-7 Liberato Cacace -> Liberato_Cacace_30082025_(1).jpg (Liberato Cacace)
 - NZL-8 Joe Bell -> Joe_Bell_2023.jpg (Joe Bell (footballer))
 - MISSING NZL-9 Matthew Garbett: no matching footballer with an image
-- PAN-1 Luis Mejía -> Inter_Miami_CF_3-1_UNAM_(6_August_2025)_27_(cropped).jpg (Adalberto Carrasquilla)
+- PAN-1 Luis Mejía -> Concacaf_Gold_Cup_(48248588296)_(cropped).jpg (Luis Mejía)
 - PAN-10 Andrés Andrade -> Partido Galicia - Panamá en Balaídos 51 (Andrés Andrade Cedeño).jpg (Andrés Andrade Cedeño)
 - PAN-11 Amir Murillo -> Michael_Amir_Murillo_vs_Cincinnati,_May_2019.jpg (Michael Amir Murillo)
 - PAN-12 Roderick Miller -> Partido_Galicia_-_Panamá_en_Balaídos_59_(Roderick_Miller).jpg (Roderick Miller (footballer))
@@ -859,7 +723,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - PAN-7 Edgardo Fariña -> Partido_Galicia_-_Panamá_en_Balaídos_21_(Edgardo_Fariña).jpg (Edgardo Fariña)
 - MISSING PAN-8 Jiovany Ramos: no matching footballer with an image
 - PAN-9 Eric Davis -> Erick Davis (cropped).jpg (Eric Davis)
-- PAR-1 Gatito Fernández -> Miguel_Almirón_Red_Bull_Atlanta_5.31.25-069_(cropped).jpg (Miguel Almirón)
+- PAR-1 Gatito Fernández -> Gatito_Fernández_(Cerro_Porteño).png (Gatito Fernández)
 - PAR-10 Gustavo Gómez -> Gustavo-Gomez-Palmeiras-Athletico-jul-2022-2.jpg (Gustavo Gómez)
 - MISSING PAR-11 Alexandro Maidana: no matching footballer with an image
 - PAR-12 Ramón Sosa -> Ramon-sosa-palmeiras-sport-ago-25-4_(cropped).jpg (Ramón Sosa)
@@ -870,7 +734,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING PAR-17 Damián Bobadilla: no matching footballer with an image
 - PAR-18 Kaku -> Alejandro_Romero_20180612_(cropped).jpg (Kaku (footballer))
 - PAR-19 Braian Ojeda -> Dynamo_vs_Real_Salt_Lake_(Mar_2025)_16_(cropped).jpg (Braian Ojeda)
-- PAR-2 Orlando Gill -> Antonio_Sanabria,_2025_(cropped).jpg (Antonio Sanabria)
+- MISSING PAR-2 Orlando Gill: no matching footballer with an image
 - PAR-20 Matías Galarza -> Matías Galarza - Brasileirão Série A- Bragantino 4 x 2 Coritiba - 52150854647 (cropped).jpg (Matías Galarza)
 - MISSING PAR-21 Gustavo Caballero: no matching footballer with an image
 - PAR-22 Antonio Sanabria -> Antonio_Sanabria,_2025_(cropped).jpg (Antonio Sanabria)
@@ -878,14 +742,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING PAR-24 Julio Enciso: no matching footballer with an image
 - MISSING PAR-25 Gabriel Ávalos: no matching footballer with an image
 - PAR-26 Isidro Pitta -> Isidro-Pitta-Juventude-Corinthians-jun-2022.jpg (Isidro Pitta)
-- PAR-3 Gastón Olveira -> Gustavo-Gomez-Palmeiras-Athletico-jul-2022-2.jpg (Gustavo Gómez)
-- PAR-4 Gustavo Velázquez -> Enciso 2022.jpg (Julio Enciso)
+- MISSING PAR-3 Gastón Olveira: no matching footballer with an image
+- MISSING PAR-4 Gustavo Velázquez: no matching footballer with an image
 - PAR-5 Omar Alderete -> Omar_Alderete_2019_(cropped).jpg (Omar Alderete)
 - PAR-6 Juan José Cáceres -> Juan_José_Cáceres_2025.jpg (Juan José Cáceres)
 - PAR-7 Fabián Balbuena -> Fabián_Balbuena_2021.jpg (Fabián Balbuena)
 - PAR-8 Júnior Alonso -> Júnior_Alonso_20180612_(cropped).jpg (Júnior Alonso)
 - MISSING PAR-9 José Canale: no matching footballer with an image
-- POR-1 Diogo Costa -> President_Donald_Trump_meets_with_Cristiano_Ronaldo_in_the_Oval_Office_(54933344262)_(cropped_and_rotated).jpg (Cristiano Ronaldo)
+- POR-1 Diogo Costa -> Portugal_national_football_team_0866_(Diogo_Costa).jpg (Diogo Costa)
 - POR-10 João Cancelo -> João_Cancelo_USMNT_v_Portugal_Mar_31_2026-30_(cropped).jpg (João Cancelo)
 - POR-11 Nuno Mendes -> FC Salzburg gegen Paris Saint-Germain UEFA Champions League 85 (cropped).jpg (Nuno Mendes)
 - POR-12 Matheus Nunes -> Matheus_Nunes_USMNT_v_Portugal_Mar_31_2026-21_(cropped).jpg (Matheus Nunes)
@@ -896,7 +760,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - POR-17 Vitinha -> Vitinha_USMNT_v_Portugal_Mar_31_2026-50_(cropped).jpg (Vitinha)
 - POR-18 Samú Costa -> Samú_Costa_USMNT_v_Portugal_Mar_31_2026-54_(cropped).jpg (Samú Costa)
 - POR-19 Cristiano Ronaldo -> President_Donald_Trump_meets_with_Cristiano_Ronaldo_in_the_Oval_Office_(54933344262)_(cropped_and_rotated).jpg (Cristiano Ronaldo)
-- POR-2 José Sá -> RafaelLeãoPortugal23.jpg (Rafael Leão)
+- POR-2 José Sá -> José_Sá_USMNT_v_Portugal_Mar_31_2026-185_(cropped).jpg (José Sá)
 - POR-20 Gonçalo Ramos -> Gonçalo_Ramos_USMNT_v_Portugal_Mar_31_2026-32_(cropped).jpg (Gonçalo Ramos)
 - POR-21 João Félix -> João_Félix_USMNT_v_Portugal_Mar_31_2026-22_(cropped).jpg (João Félix)
 - POR-22 Francisco Trincão -> Francisco_Trincão_USMNT_v_Portugal_Mar_31_2026-55_(cropped).jpg (Francisco Trincão)
@@ -904,14 +768,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - POR-24 Pedro Neto -> Pedro_Neto_USMNT_v_Portugal_Mar_31_2026-48.jpg (Pedro Neto)
 - POR-25 Gonçalo Guedes -> Gonçalo_Guedes_USMNT_v_Portugal_Mar_31_2026-64_(cropped).jpg (Gonçalo Guedes)
 - POR-26 Francisco Conceição -> Francisco_Conceição_USMNT_v_Portugal_Mar_31_2026-62_(cropped).jpg (Francisco Conceição)
-- POR-3 Rui Silva -> Bruno_Fernandes_USMNT_v_Portugal_Mar_31_2026-27_(cropped).jpg (Bruno Fernandes)
-- POR-4 Nélson Semedo -> Bernardo_Silva_(Isto_É_Gozar_Com_Quem_Trabalha,_2024).png (Bernardo Silva)
-- POR-5 Rúben Dias -> Vitinha USMNT v Portugal Mar 31 2026-50.jpg (Vitinha)
-- POR-6 Tomás Araújo -> Portugal_national_football_team_0866_(Rúben_Dias).jpg (Rúben Dias)
-- POR-7 Diogo Dalot -> FC Salzburg gegen Paris Saint-Germain UEFA Champions League 85 (cropped).jpg (Nuno Mendes)
-- POR-8 Renato Veiga -> Portugal_national_football_team_0866_(Diogo_Costa).jpg (Diogo Costa)
+- POR-3 Rui Silva -> Rui Silva USMNT v Portugal Mar 31 2026-14.jpg (Rui Silva)
+- POR-4 Nélson Semedo -> Mex-por-14_(cropped).jpg (Nélson Semedo)
+- POR-5 Rúben Dias -> Portugal_national_football_team_0866_(Rúben_Dias).jpg (Rúben Dias)
+- POR-6 Tomás Araújo -> Tomás_Araújo_USMNT_v_Portugal_Mar_31_2026-40_(cropped).jpg (Tomás Araújo)
+- POR-7 Diogo Dalot -> Diogo_Dalot_USMNT_v_Portugal_Mar_31_2026-12.jpg (Diogo Dalot)
+- POR-8 Renato Veiga -> Renato_Veiga_USMNT_v_Portugal_Mar_31_2026-20.jpg (Renato Veiga)
 - POR-9 Gonçalo Inácio -> Gonçalo_Inácio_USMNT_v_Portugal_Mar_31_2026-42_(cropped).jpg (Gonçalo Inácio)
-- QAT-1 Mahmud Abunada -> Qatar_v_Lebanon_(37)_(cropped).jpg (Akram Afif)
+- MISSING QAT-1 Mahmud Abunada: no matching footballer with an image
 - QAT-10 Sultan Al-Brake -> Sultan_Al_Brake_in_2018.jpg (Sultan Al-Brake)
 - MISSING QAT-11 Al-Hashmi Al-Hussain: no matching footballer with an image
 - QAT-12 Jassem Gaber -> Asian_Nations_Cup_Iran_-_Qatar_(5)_(cropped).jpg (Jassem Gaber)
@@ -922,7 +786,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING QAT-17 Mohamed Manai: no matching footballer with an image
 - QAT-18 Ahmed Alaaeldin -> Qatar_v_Japan_–_AFC_Asian_Cup_2019_final_04_(cropped).jpg (Ahmed Alaaeldin)
 - QAT-19 Edmilson Junior -> Edmilson_Junior_2018.jpg (Edmilson Junior)
-- QAT-2 Salah Zakaria -> Moez_Ali_at_Qatar_v_Japan_–_AFC_Asian_Cup_2019_final_32_(2).jpg (Almoez Ali)
+- MISSING QAT-2 Salah Zakaria: no matching footballer with an image
 - QAT-20 Mohammed Muntari -> Esteghlal_FC_vs_Al-Gharafa_FC,_16_September_2024_-_02.jpg (Mohammed Muntari)
 - QAT-21 Hassan Al-Haydos -> Qatar_-_Japan,_AFC_Asian_Cup_2019_58_-_Hassan_Al_Haydos.jpg (Hassan Al-Haydos)
 - QAT-22 Akram Afif -> Qatar_v_Lebanon_(37)_(cropped).jpg (Akram Afif)
@@ -937,7 +801,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING QAT-7 Ayoub Al-Oui: no matching footballer with an image
 - QAT-8 Homam Ahmed -> Asian_Nations_Cup_Iran_-_Qatar_(8)_(cropped).jpg (Homam Ahmed)
 - QAT-9 Boualem Khoukhi -> Boualem_Khoukhi.png (Boualem Khoukhi)
-- RSA-1 Ronwen Williams -> Percy_Tau_in_2019_(cropped).jpg (Percy Tau)
+- RSA-1 Ronwen Williams -> Ronwen Williams AFCON2025Q 35.jpg (Ronwen Williams)
 - MISSING RSA-10 Khuliso Mudau: no matching footballer with an image
 - MISSING RSA-11 Ime Okon: no matching footballer with an image
 - RSA-12 Olwethu Makhanya -> Olwethu_Makhanya_Philadelphia_Union_New_York_City_FC_Nov_23_2025-027_(cropped).jpg (Olwethu Makhanya)
@@ -956,14 +820,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - RSA-24 Thapelo Maseko -> 3840px-Go_Ahead_Eagles_-_Mamelodi_Sundowns_FC_-_53066145739.jpg (Thapelo Maseko)
 - MISSING RSA-25 Iqraam Rayners: no matching footballer with an image
 - MISSING RSA-26 Evidence Makgopa: no matching footballer with an image
-- RSA-3 Ricardo Goss -> Ronwen Williams AFCON2025Q 35.jpg (Ronwen Williams)
-- RSA-4 Thabang Matuludi -> Aubrey_Modiba_(cropped).jpg (Aubrey Modiba)
+- MISSING RSA-3 Ricardo Goss: no matching footballer with an image
+- MISSING RSA-4 Thabang Matuludi: no matching footballer with an image
 - MISSING RSA-5 Khulumani Ndamane: no matching footballer with an image
 - RSA-6 Aubrey Modiba -> Mothobi_Mvala_(2023).jpg (Mothobi Mvala)
 - MISSING RSA-7 Mbekezeli Mbokazi: no matching footballer with an image
 - RSA-8 Samukele Kabini -> 3840px-Go_Ahead_Eagles_-_Mamelodi_Sundowns_FC_-_53066348125.jpg (Grant Kekana)
 - MISSING RSA-9 Nkosinathi Sibisi: no matching footballer with an image
-- SCO-1 Angus Gunn -> Manchester_United_v_Liverpool,_22_August_2022_(21)_(Scott_McTominay).jpg (Scott McTominay)
+- SCO-1 Angus Gunn -> Angus.gunn.jpg (Angus Gunn)
 - SCO-10 Dominic Hyam -> Scott_McKenna_Scotland_v_Bolivia_6_June_2026-59.jpg (Dominic Hyam)
 - SCO-11 Nathan Patterson -> Nathan_Patterson_Scotland_v_Bolivia_6_June_2026-58.jpg (Nathan Patterson (footballer))
 - SCO-12 Anthony Ralston -> Celtic-20240722-034.jpg (Anthony Ralston)
@@ -974,7 +838,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SCO-17 Ryan Christie -> Ryan_Christie_Bournemouth_(cropped).png (Ryan Christie)
 - SCO-18 Ben Gannon-Doak -> Ben_Doak_2025.jpg (Ben Gannon-Doak)
 - SCO-19 Lewis Ferguson -> Lewis_Ferguson_Scotland_v_Bolivia_6_June_2026-52.jpg (Lewis Ferguson)
-- SCO-2 Liam Kelly -> First_Minister_meets_with_Scottish_National_Football_Team_(2)_(cropped).jpg (John McGinn)
+- SCO-2 Liam Kelly -> Liam Kelly.jpg (Liam Kelly)
 - SCO-20 Kenny McLean -> Kenny_McLean_Scotland_v_Bolivia_6_June_2026-177_(cropped).jpg (Kenny McLean)
 - SCO-21 Findlay Curtis -> Findlay_Curtis_Scotland_v_Bolivia_6_June_2026-56.jpg (Findlay Curtis)
 - SCO-22 Lyndon Dykes -> First_Minister_meets_with_Scottish_National_Football_Team_-_55168603663_(Lyndon_Dykes_cropped).jpg (Lyndon Dykes)
@@ -984,12 +848,12 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SCO-26 Lawrence Shankland -> Lawrence_Shankland_2019.jpg (Lawrence Shankland)
 - SCO-3 Craig Gordon -> Andrew Robertson 04012026 (1).jpg (Andrew Robertson)
 - SCO-4 Aaron Hickey -> Billy_Gilmour_2021-08-07_1_(cropped)_(cropped).jpg (Billy Gilmour)
-- SCO-5 Andy Robertson -> Angus.gunn.jpg (Angus Gunn)
+- SCO-5 Andy Robertson -> Andy_Robertson_Scotland_v_Bolivia_6_June_2026-43.jpg (Andy Robertson)
 - SCO-6 Grant Hanley -> First_Minister_meets_with_Scottish_National_Football_Team_11Jun_(cropped).jpg (Grant Hanley)
 - SCO-7 Kieran Tierney -> Kieran_Tierney_(close-up_image).jpg (Kieran Tierney)
 - SCO-8 Jack Hendry -> FC Salzburg versus Celtic FC (4. Oktober 2918 Gruppe B, Zweiter Spieltag) 20 (cropped).jpg (Jack Hendry)
 - SCO-9 John Souttar -> John_Souttar_Scotland_v_Bolivia_6_June_2026-163.jpg (John Souttar)
-- SEN-1 Yehvann Diouf -> Sadio_Mane_Al-Nassr.jpg (Sadio Mané)
+- SEN-1 Yehvann Diouf -> Diouf_asse_sr_2425.png (Yehvann Diouf)
 - SEN-10 Antoine Mendy -> Mendy_asse_ogcn_2425.png (Antoine Mendy (footballer))
 - MISSING SEN-11 El Hadji Malick Diouf: no matching footballer with an image
 - SEN-12 Idrissa Gueye -> Idrissa_Gueye_(cropped).jpg (Idrissa Gueye)
@@ -1000,7 +864,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING SEN-17 Bara Sapoko Ndiaye: no matching footballer with an image
 - SEN-18 Pape Gueye -> Pape_Gueye_Le_Havre_AC_2019.jpg (Pape Gueye)
 - MISSING SEN-19 Assane Diao: no matching footballer with an image
-- SEN-2 Édouard Mendy -> Nicolas_Jackson_2025_FIFA_Club_World_Cup_Final.jpg (Nicolas Jackson)
+- SEN-2 Édouard Mendy -> 2021_FIFA_Club_World_Cup_Final_-_30.jpg (Édouard Mendy)
 - SEN-20 Bamba Dieng -> Dieng_asse_sco_2425.png (Bamba Dieng)
 - SEN-21 Sadio Mané -> Sadio_Mane_Al-Nassr.jpg (Sadio Mané)
 - SEN-22 Nicolas Jackson -> Nicolas_Jackson_2025_FIFA_Club_World_Cup_Final.jpg (Nicolas Jackson)
@@ -1008,14 +872,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SEN-24 Iliman Ndiaye -> Iliman_Ndiaye.png (Iliman Ndiaye)
 - SEN-25 Ismaïla Sarr -> Ismaila_Sarr_2022.jpg (Ismaïla Sarr)
 - SEN-26 Ibrahim Mbaye -> PSG_attacking_vs_Atletico_Madrid_Club_World_Cup_(cropped).jpg (Ibrahim Mbaye)
-- SEN-3 Mory Diaw -> Ismaila_Sarr_2022.jpg (Ismaïla Sarr)
-- SEN-4 Mamadou Sarr -> Pape_Matar_Sarr.png (Pape Matar Sarr)
+- SEN-3 Mory Diaw -> Mory_Diaw_2015_(cropped).jpg (Mory Diaw)
+- SEN-4 Mamadou Sarr -> Sarr_asse_rcsa_2425.jpg (Mamadou Sarr)
 - SEN-5 Kalidou Koulibaly -> Joueur_de_foot.jpg (Kalidou Koulibaly)
-- SEN-6 Abdoulaye Seck -> 2021_FIFA_Club_World_Cup_Final_-_30.jpg (Édouard Mendy)
+- SEN-6 Abdoulaye Seck -> Abdoulaye Seck.jpg (Abdoulaye Seck)
 - SEN-7 Ismail Jakobs -> Ismail_Jakobs.jpg (Ismail Jakobs)
 - SEN-8 Krépin Diatta -> Diatta_asse_asm_2425.png (Krépin Diatta)
 - SEN-9 Moussa Niakhaté -> Niakhaté_asse_ol_2425.png (Moussa Niakhaté)
-- SUI-1 Gregor Kobel -> Granit_Xhaka_(cropped).jpg (Granit Xhaka)
+- SUI-1 Gregor Kobel -> 2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_(DFB-Pokal_2023-24)_by_Sandro_Halank–090.jpg (Gregor Kobel)
 - MISSING SUI-10 Aurèle Amenda: no matching footballer with an image
 - MISSING SUI-11 Luca Jaquez: no matching footballer with an image
 - SUI-12 Denis Zakaria -> Zakaria_asse_asm_2425_(cropped).png (Denis Zakaria)
@@ -1026,7 +890,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SUI-17 Djibril Sow -> DjibrilSow_(cropped).jpg (Djibril Sow)
 - SUI-18 Christian Fassnacht -> Christian_Fassnacht_(cropped).jpg (Christian Fassnacht)
 - MISSING SUI-19 Michel Aebischer: no matching footballer with an image
-- SUI-2 Yvon Mvogo -> Lens_-_Nice_(23-01-2021)_52.jpg (Dan Ndoye)
+- SUI-2 Yvon Mvogo -> Yvon_Mvogo.jpg (Yvon Mvogo)
 - MISSING SUI-20 Fabian Rieder: no matching footballer with an image
 - SUI-21 Breel Embolo -> 2022128160447_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_Mönchengladbach_-_Sven_-_1D_X_MK_II_-_1422_-_B70I7533_(cropped).jpg (Breel Embolo)
 - SUI-22 Dan Ndoye -> Lens_-_Nice_(23-01-2021)_52.jpg (Dan Ndoye)
@@ -1034,8 +898,8 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SUI-24 Noah Okafor -> FC_RB_Salzburg_gegen_FK_Austria_Wien_(2022-04-24)_68.jpg (Noah Okafor)
 - MISSING SUI-25 Zeki Amdouni: no matching footballer with an image
 - MISSING SUI-26 Cedric Itten: no matching footballer with an image
-- SUI-3 Marvin Keller -> 2022128160447_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_Mönchengladbach_-_Sven_-_1D_X_MK_II_-_1422_-_B70I7533_(cropped).jpg (Breel Embolo)
-- SUI-4 Miro Muheim -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2792_(Manuel_Akanji).jpg (Manuel Akanji)
+- MISSING SUI-3 Marvin Keller: no matching footballer with an image
+- SUI-4 Miro Muheim -> 3840px-2025-05-16_Hamburger_SV_Miro_Muheim.jpg (Miro Muheim)
 - SUI-5 Silvan Widmer -> FC_Salzburg_gegen_Inter_Mailand_(Testspiel_2023-08-09)_69.jpg (Yann Sommer)
 - SUI-6 Nico Elvedi -> Wales-Switzerland_match_at_Euro_2020_in_Baku_(cropped).jpg (Nico Elvedi)
 - SUI-7 Manuel Akanji -> 2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2792_(Manuel_Akanji).jpg (Manuel Akanji)
@@ -1052,7 +916,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SWE-7 Isak Hien -> Sweden-Slovenia Nations League 2022-09-27 32 (cropped).jpg (Isak Hien)
 - SWE-8 Gabriel Gudmundsson -> Gabriel_Gudmundsson_(Sweden_vs_Moldova,_12_October_2023)_(cropped).jpg (Gabriel Gudmundsson)
 - SWE-9 Emil Krafth -> Emil_Krafth_(cropped).jpg (Emil Krafth)
-- TUN-1 Mouhib Chamakh -> Hannibal_Mejbri_26042025_(1).jpg (Hannibal Mejbri)
+- MISSING TUN-1 Mouhib Chamakh: no matching footballer with an image
 - TUN-10 Yan Valery -> Sheffield_Wednesday's_Starting_Eleven_18102025_(1)_(cropped).jpg (Yan Valery)
 - TUN-11 Mohamed Amine Ben Hamida -> Mohamed_Amine_Ben_Hmida_(cropped).jpg (Mohamed Amine Ben Hamida)
 - MISSING TUN-12 Moutaz Neffati: no matching footballer with an image
@@ -1078,7 +942,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MISSING TUN-7 Adem Arous: no matching footballer with an image
 - TUN-8 Dylan Bronn -> Dylan_Bronn_2.jpg (Dylan Bronn)
 - TUN-9 Mortadha Ben Ouanes -> Mortadha_Ben_Ouanes.jpg (Mortadha Ben Ouanes)
-- TUR-1 Mert Günok -> Derbide_Fenerbahçe_Yedek_Oyuncu_Arda_Güler_(2021-22_Süper_Lig_-_Cropped).jpg (Arda Güler)
+- TUR-1 Mert Günok -> Mert_Günok_(cropped).jpg (Mert Günok)
 - TUR-10 Mert Müldür -> Rapid-Spartak_(15)_(cropped).jpg (Mert Müldür)
 - TUR-11 Ferdi Kadıoğlu -> Ferdi_Kadıoğlu_2024.jpg (Ferdi Kadıoğlu)
 - TUR-12 Samet Akaydin -> SAMETAKAYDİN_4.jpg (Samet Akaydin)
@@ -1089,7 +953,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - TUR-17 Kaan Ayhan -> Kaan-Ayhan-08-2019.jpg (Kaan Ayhan)
 - TUR-18 Kerem Aktürkoğlu -> Muhammed_Kerem_Aktürkoğlu.png (Kerem Aktürkoğlu)
 - TUR-19 Arda Güler -> Derbide_Fenerbahçe_Yedek_Oyuncu_Arda_Güler_(2021-22_Süper_Lig_-_Cropped).jpg (Arda Güler)
-- TUR-2 Altay Bayındır -> AUT_vs._TUR_2016-03-29_(342).jpg (Hakan Çalhanoğlu)
+- TUR-2 Altay Bayındır -> Altay_Bayindir_(cropped).jpg (Altay Bayındır)
 - MISSING TUR-20 Deniz Gül: no matching footballer with an image
 - TUR-21 Kenan Yıldız -> Kenan Yıldız in the international match (March 2025) (cropped).jpg (Kenan Yıldız)
 - TUR-22 İrfan Can Kahveci -> Rus-Turkey_(5).jpg (İrfan Can Kahveci)
@@ -1097,14 +961,14 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - TUR-24 Barış Alper Yılmaz -> 3840px-Barış_Alper_Yılmaz_20251019.jpg (Barış Alper Yılmaz)
 - MISSING TUR-25 Oğuz Aydın: no matching footballer with an image
 - MISSING TUR-26 Can Uzun: no matching footballer with an image
-- TUR-3 Uğurcan Çakır -> Kenan_Yildiz_Juventus_(cropped).jpg (Kenan Yıldız)
-- TUR-4 Zeki Çelik -> Ferdi_Kadıoğlu_2024.jpg (Ferdi Kadıoğlu)
-- TUR-5 Merih Demiral -> Kökçü_in_the_international_match_in_March_2024_(Cropped).jpg (Orkun Kökçü)
-- TUR-6 Çağlar Söyüncü -> Altay_Bayindir_(cropped).jpg (Altay Bayındır)
+- TUR-3 Uğurcan Çakır -> Uğurcan_Çakır_-_beIN-Sports-Reklam_(2021)_(cropped).png (Uğurcan Çakır)
+- TUR-4 Zeki Çelik -> Zeki_çelik_2020.jpg (Zeki Çelik)
+- TUR-5 Merih Demiral -> Merih_Demiral_2026.jpg (Merih Demiral)
+- TUR-6 Çağlar Söyüncü -> AUT_vs._TUR_2016-03-29_(381)_(cropped).jpg (Çağlar Söyüncü)
 - TUR-7 Eren Elmalı -> Eren_Elmalı_20251019.jpg (Eren Elmalı)
 - TUR-8 Abdülkerim Bardakcı -> Abdülkerim_Bardakçı_-_beIN-Sports-Reklam_(2021)_(cropped).png (Abdülkerim Bardakcı)
 - TUR-9 Ozan Kabak -> Ozan_kabak.jpg (Ozan Kabak)
-- URU-1 Sergio Rochet -> Federico_Valverde_2021_(cropped).jpg (Federico Valverde)
+- URU-1 Sergio Rochet -> Sergio_Rochet_(2022).jpg (Sergio Rochet)
 - URU-10 Joaquín Piquerez -> Joaquin-Piquerez-Palmeiras-Liverpool-abr24.jpg (Joaquín Piquerez)
 - URU-11 Santiago Bueno -> Santiago_Bueno.png (Santiago Bueno)
 - URU-12 Manuel Ugarte -> M.UGARTE.jpg (Manuel Ugarte (footballer))
@@ -1115,7 +979,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - URU-17 Facundo Pellistri -> Facundo_Pellistri_WC2022.jpg (Facundo Pellistri)
 - URU-18 Agustín Canobbio -> Agustín_Canobbio_2018.jpg (Agustín Canobbio)
 - URU-19 Emiliano Martínez -> St._Louis_City_vs_Aston_Villa_(Jul_2025)_14_(Emiliano_Martínez).jpg (Emiliano Martínez)
-- URU-2 Santiago Mele -> Darwin_Núñez_(cropped).jpg (Darwin Núñez)
+- URU-2 Santiago Mele -> Santiago_Mele.png (Santiago Mele)
 - URU-20 Brian Rodríguez -> Brian_Rodriguez.png (Brian Rodríguez)
 - MISSING URU-21 Maximiliano Araújo: no matching footballer with an image
 - MISSING URU-22 Juan Manuel Sanabria: no matching footballer with an image
@@ -1123,10 +987,10 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - URU-24 Darwin Núñez -> Darwin_Núñez_(cropped).jpg (Darwin Núñez)
 - MISSING URU-25 Rodrigo Aguirre: no matching footballer with an image
 - URU-26 Federico Viñas -> Federico_Viñas.jpg (Federico Viñas)
-- URU-3 Fernando Muslera -> M.UGARTE.jpg (Manuel Ugarte (footballer))
-- URU-4 José María Giménez -> 20171114_AUT_URU_4518_-_Rodrigo_Bentancur_(cropped)_2.jpg (Rodrigo Bentancur)
-- URU-5 Sebastián Cáceres -> FC_Red_Bull_Salzburg_gegen_CF_Barcelona_(Testspiel_4._August_2021)_45_(cropped).jpg (Ronald Araújo)
-- URU-6 Ronald Araújo -> Sergio_Rochet_(2022).jpg (Sergio Rochet)
+- URU-3 Fernando Muslera -> Fernando_Muslera_in_2021.jpg (Fernando Muslera)
+- URU-4 José María Giménez -> José_María_Giménez.jpg (José María Giménez)
+- URU-5 Sebastián Cáceres -> Sebastián_Cáceres.jpg (Sebastián Cáceres)
+- URU-6 Ronald Araújo -> FC_Red_Bull_Salzburg_gegen_CF_Barcelona_(Testspiel_4._August_2021)_45_(cropped).jpg (Ronald Araújo)
 - URU-7 Guillermo Varela -> Guillermo_Varela_2022.jpg (Guillermo Varela)
 - URU-8 Mathías Olivera -> Mathías_Olivera_WC2022.jpg (Mathías Olivera)
 - URU-9 Matías Viña -> Matías_Viña.jpg (Matías Viña)
@@ -1141,7 +1005,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - USA-7 Matt Turner -> Matt Turner USMNT v Belgium Mar 28 2026-176.jpg (Matt Turner)
 - USA-8 Sergiño Dest -> Sergino_Dest.jpg (Sergiño Dest)
 - USA-9 Chris Richards -> Chris Richards USMNT v Portugal Mar 31 2026-45 (cropped).jpg (Chris Richards)
-- UZB-1 Utkir Yusupov -> 3840px-Eldor_Shomurodov_14_İstanbul_Başakşehir_FK_20250731_(10)_(cropped).jpg (Eldor Shomurodov)
+- UZB-1 Utkir Yusupov -> Oʻtkir_Yusupov_(cropped).jpg (Utkir Yusupov)
 - MISSING UZB-10 Abdulla Abdullaev: no matching footballer with an image
 - UZB-11 Bekhruz Karimov -> Behruz_Karimov.jpg (Bekhruz Karimov)
 - UZB-12 Avazbek Ulmasaliev -> Avazbek_Oʻlmasaliyev.jpg (Avazbek Ulmasaliev)
@@ -1152,7 +1016,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - UZB-17 Odiljon Hamrobekov -> Odiljon_Hamrobekov_2020.jpg (Odiljon Hamrobekov)
 - UZB-18 Jaloliddin Masharipov -> Esteghlal_FC_vs_Al-Gharafa_FC,_16_September_2024_-_06.jpg (Jaloliddin Masharipov)
 - UZB-19 Oston Urunov -> Oston_Urunov.jpg (Oston Urunov)
-- UZB-2 Abduvohid Nematov -> 3840px-Abbosbek_Fayzullaev_11_İstanbul_Başakşehir_FK_UECL_20250821_(5).jpg (Abbosbek Fayzullaev)
+- UZB-2 Abduvohid Nematov -> Abduvohid_Nematov_(cropped).jpg (Abduvohid Nematov)
 - UZB-20 Dostonbek Khamdamov -> Dostonbek_Khamdamov_2018.jpg (Dostonbek Khamdamov)
 - UZB-21 Azizjon Ganiev -> Aziz Gʻaniyev.webp (Azizjon Ganiev)
 - UZB-22 Abbosbek Fayzullaev -> 3840px-Abbosbek_Fayzullaev_11_İstanbul_Başakşehir_FK_UECL_20250821_(5).jpg (Abbosbek Fayzullaev)
@@ -1170,12 +1034,12 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 
 ## Summary
 
-- **Resolved:** 927
-- **Missing:** 224
-- **Downloaded:** 23
-- **Registered in DB:** 23
-- **Errors:** 0
-- **Stopped:** yes
+- **Resolved:** 763
+- **Missing:** 252
+- **Downloaded:** 277
+- **Registered in DB:** 277
+- **Errors:** 486
+- **Stopped:** no
 
 ## Missing players
 
@@ -1185,14 +1049,19 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - ALG-20 Yacine Titraoui: no matching footballer with an image
 - ALG-6 Achref Abada: no matching footballer with an image
 - AUT-17 Carney Chukwuemeka: no matching footballer with an image
+- AUT-2 Florian Wiegele: no matching footballer with an image
 - BEL-12 Nathan Ngoy: no matching footballer with an image
+- BEL-3 Mike Penders: no matching footballer with an image
 - BIH-10 Stjepan Radeljić: no matching footballer with an image
 - BIH-16 Amar Memić: no matching footballer with an image
+- BIH-2 Mladen Jurkas: no matching footballer with an image
 - BIH-20 Esmir Bajraktarević: no matching footballer with an image
 - BIH-22 Samed Baždar: no matching footballer with an image
 - BIH-23 Ermedin Demirović: no matching footballer with an image
+- BIH-3 Martin Zlomislić: no matching footballer with an image
 - BIH-4 Nihad Mujakić: no matching footballer with an image
 - BRA-16 Danilo Santos: no matching footballer with an image
+- BRA-8 Bremer: no matching footballer with an image
 - CIV-17 Christ Inao Oulaï: no matching footballer with an image
 - CIV-18 Ange-Yoan Bonny: no matching footballer with an image
 - CIV-20 Yan Diomande: no matching footballer with an image
@@ -1200,13 +1069,15 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - COD-12 Ngal'ayel Mukau: no matching footballer with an image
 - COD-13 Nathanaël Mbuku: no matching footballer with an image
 - COD-15 Brian Cipenga: no matching footballer with an image
+- COD-2 Timothy Fayulu: no matching footballer with an image
 - COD-24 Fiston Mayele: no matching footballer with an image
 - COD-3 Matthieu Epolo: no matching footballer with an image
 - COD-5 Steve Kapuadi: no matching footballer with an image
 - COD-8 Joris Kayembe: no matching footballer with an image
 - COL-18 Juan Portilla: no matching footballer with an image
 - COL-21 Jaminton Campaz: no matching footballer with an image
-- COL-5 Daniel Muñoz: no matching footballer with an image
+- COL-4 Daniel Muñoz: no matching footballer with an image
+- CPV-1 Vozinha: no matching footballer with an image
 - CPV-11 Wagner Pina: no matching footballer with an image
 - CPV-12 Kelvin Pires: no matching footballer with an image
 - CPV-16 Laros Duarte: no matching footballer with an image
@@ -1220,6 +1091,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CPV-8 João Paulo: no matching footballer with an image
 - CPV-9 Sidny Lopes Cabral: no matching footballer with an image
 - CRO-19 Toni Fruk: no matching footballer with an image
+- CRO-2 Ivor Pandur: no matching footballer with an image
 - CRO-24 Igor Matanović: no matching footballer with an image
 - CRO-9 Luka Vušković: no matching footballer with an image
 - CUW-11 Deveron Fonville: no matching footballer with an image
@@ -1235,26 +1107,32 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - CZE-20 Hugo Sochůrek: no matching footballer with an image
 - CZE-21 Denis Višinský: no matching footballer with an image
 - CZE-25 Mojmír Chytil: no matching footballer with an image
+- CZE-3 Lukáš Horníček: no matching footballer with an image
 - CZE-6 Robin Hranáč: no matching footballer with an image
 - CZE-8 Štěpán Chaloupek: no matching footballer with an image
 - ECU-12 Anthony Valencia: no matching footballer with an image
 - ECU-15 Alan Minda: no matching footballer with an image
 - ECU-17 Denil Castillo: no matching footballer with an image
 - ECU-19 Alan Franco: no matching footballer with an image
+- ECU-2 Moisés Ramírez: no matching footballer with an image
 - ECU-21 Yaimar Medina: no matching footballer with an image
 - ECU-22 Kevin Rodríguez: no matching footballer with an image
 - ECU-26 Jeremy Arévalo: no matching footballer with an image
+- ECU-3 Gonzalo Valle: no matching footballer with an image
 - EGY-10 Ahmed Fatouh: no matching footballer with an image
 - EGY-12 Tarek Alaa: no matching footballer with an image
 - EGY-14 Mostafa Ziko: no matching footballer with an image
 - EGY-16 Mohanad Lasheen: no matching footballer with an image
 - EGY-17 Nabil Emad: no matching footballer with an image
+- EGY-2 El Mahdy Soliman: no matching footballer with an image
 - EGY-21 Hamza Abdelkarim: no matching footballer with an image
 - EGY-23 Haissem Hassan: no matching footballer with an image
 - ENG-11 Djed Spence: no matching footballer with an image
 - ENG-17 Kobbie Mainoo: no matching footballer with an image
+- ENG-8 Tino Livramento: no matching footballer with an image
 - ESP-25 Víctor Muñoz: no matching footballer with an image
 - GER-22 Assan Ouédraogo: no matching footballer with an image
+- GER-9 Nathaniel Brown: no matching footballer with an image
 - GHA-10 Kojo Peprah Oppong: no matching footballer with an image
 - GHA-12 Marvin Senaya: no matching footballer with an image
 - GHA-13 Caleb Yirenkyi: no matching footballer with an image
@@ -1262,9 +1140,10 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - GHA-22 Brandon Thomas-Asante: no matching footballer with an image
 - GHA-23 Christopher Bonsu Baah: no matching footballer with an image
 - GHA-26 Prince Kwabena Adu: no matching footballer with an image
+- GHA-3 Benjamin Asare: no matching footballer with an image
+- GHA-4 Alidu Seidu: no matching footballer with an image
 - GHA-5 Jonas Adjetey: no matching footballer with an image
 - GHA-6 Abdul Mumin: no matching footballer with an image
-- HAI-1 Frantzdy Pierrot: no matching footballer with an image
 - HAI-11 Wilguens Paugain: no matching footballer with an image
 - HAI-12 Carl Sainté: no matching footballer with an image
 - HAI-14 Leverton Pierre: no matching footballer with an image
@@ -1307,6 +1186,7 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - JPN-12 Junnosuke Suzuki: no matching footballer with an image
 - JPN-21 Keisuke Gotō: no matching footballer with an image
 - JPN-26 Kento Shiogai: no matching footballer with an image
+- JPN-3 Tomoki Hayakawa: no matching footballer with an image
 - JPN-8 Tsuyoshi Watanabe: no matching footballer with an image
 - JPN-9 Ayumu Seko: no matching footballer with an image
 - KOR-11 Park Jin-seob: no matching footballer with an image
@@ -1329,15 +1209,18 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - MEX-23 Armando González: no matching footballer with an image
 - MEX-4 Jorge Sánchez: no matching footballer with an image
 - MEX-7 Johan Vásquez: no matching footballer with an image
+- NED-2 Robin Roefs: no matching footballer with an image
 - NOR-18 Kristian Thorstvedt: no matching footballer with an image
 - NOR-19 Thelo Aasgaard: no matching footballer with an image
+- NOR-2 Sander Tangvik: no matching footballer with an image
 - NOR-21 Andreas Schjelderup: no matching footballer with an image
+- NOR-4 Kristoffer Vassbakk Ajer: no matching footballer with an image
 - NZL-9 Matthew Garbett: no matching footballer with an image
 - PAN-13 Jorge Gutiérrez: no matching footballer with an image
 - PAN-15 José Luis Rodríguez: no matching footballer with an image
 - PAN-17 Ismael Díaz: no matching footballer with an image
 - PAN-19 Carlos Harvey: no matching footballer with an image
-- PAN-2 José Fajardo: no matching footballer with an image
+- PAN-2 César Samudio: no matching footballer with an image
 - PAN-23 Tomás Rodríguez: no matching footballer with an image
 - PAN-24 José Fajardo: no matching footballer with an image
 - PAN-26 Azarias Londoño: no matching footballer with an image
@@ -1345,19 +1228,24 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - PAR-11 Alexandro Maidana: no matching footballer with an image
 - PAR-13 Diego Gómez: no matching footballer with an image
 - PAR-17 Damián Bobadilla: no matching footballer with an image
+- PAR-2 Orlando Gill: no matching footballer with an image
 - PAR-21 Gustavo Caballero: no matching footballer with an image
 - PAR-23 Álex Arce: no matching footballer with an image
 - PAR-24 Julio Enciso: no matching footballer with an image
 - PAR-25 Gabriel Ávalos: no matching footballer with an image
+- PAR-3 Gastón Olveira: no matching footballer with an image
+- PAR-4 Gustavo Velázquez: no matching footballer with an image
 - PAR-9 José Canale: no matching footballer with an image
+- QAT-1 Mahmud Abunada: no matching footballer with an image
 - QAT-11 Al-Hashmi Al-Hussain: no matching footballer with an image
 - QAT-17 Mohamed Manai: no matching footballer with an image
+- QAT-2 Salah Zakaria: no matching footballer with an image
 - QAT-24 Ahmed Al-Ganehi: no matching footballer with an image
 - QAT-26 Tahsin Jamshid: no matching footballer with an image
 - QAT-6 Issa Laye: no matching footballer with an image
 - QAT-7 Ayoub Al-Oui: no matching footballer with an image
-- RSA-10 Elias Mokwana: no matching footballer with an image
-- RSA-11 Evidence Makgopa: no matching footballer with an image
+- RSA-10 Khuliso Mudau: no matching footballer with an image
+- RSA-11 Ime Okon: no matching footballer with an image
 - RSA-13 Kamogelo Sebelebele: no matching footballer with an image
 - RSA-14 Bradley Cross: no matching footballer with an image
 - RSA-15 Teboho Mokoena: no matching footballer with an image
@@ -1365,14 +1253,16 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - RSA-17 Yaya Sithole: no matching footballer with an image
 - RSA-18 Jayden Adams: no matching footballer with an image
 - RSA-19 Oswin Appollis: no matching footballer with an image
-- RSA-2 Themba Zwane: no matching footballer with an image
+- RSA-2 Sipho Chaine: no matching footballer with an image
 - RSA-20 Tshepang Moremi: no matching footballer with an image
 - RSA-22 Relebohile Mofokeng: no matching footballer with an image
 - RSA-23 Themba Zwane: no matching footballer with an image
 - RSA-25 Iqraam Rayners: no matching footballer with an image
 - RSA-26 Evidence Makgopa: no matching footballer with an image
-- RSA-5 Teboho Mokoena: no matching footballer with an image
-- RSA-7 Khuliso Mudau: no matching footballer with an image
+- RSA-3 Ricardo Goss: no matching footballer with an image
+- RSA-4 Thabang Matuludi: no matching footballer with an image
+- RSA-5 Khulumani Ndamane: no matching footballer with an image
+- RSA-7 Mbekezeli Mbokazi: no matching footballer with an image
 - RSA-9 Sphephelo Sithole: no matching footballer with an image
 - SCO-24 Ross Stewart: no matching footballer with an image
 - SEN-11 El Hadji Malick Diouf: no matching footballer with an image
@@ -1387,6 +1277,8 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - SUI-23 Rubén Vargas: no matching footballer with an image
 - SUI-25 Zeki Amdouni: no matching footballer with an image
 - SUI-26 Cedric Itten: no matching footballer with an image
+- SUI-3 Marvin Keller: no matching footballer with an image
+- TUN-1 Mouhib Chamakh: no matching footballer with an image
 - TUN-12 Moutaz Neffati: no matching footballer with an image
 - TUN-13 Raed Chikhaoui: no matching footballer with an image
 - TUN-17 Hadj Mahmoud: no matching footballer with an image
@@ -1404,6 +1296,491 @@ _Generated 2026-06-11T21:43:32.491Z — private/local-only, not for distribution
 - URU-25 Rodrigo Aguirre: no matching footballer with an image
 - UZB-10 Abdulla Abdullaev: no matching footballer with an image
 
-## Stopped per policy
+## Errors
 
-- asset HTTP 404 at https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg — stopping per policy.
+- ARG-11 (https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg): asset HTTP 404 at https://upload.wikimedia.org/wikipedia/commons/b/b8/Angel_Di_Maria_2024.jpg — skipping.
+- ARG-5 (https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg): asset HTTP 404 at https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg — skipping.
+- AUT-11 (https://upload.wikimedia.org/wikipedia/commons/e/e1/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28053%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e1/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28053%29.jpg — skipping.
+- AUT-19 (https://upload.wikimedia.org/wikipedia/commons/6/6b/Dejan_Ljubicic_-_SC_Wiener_Neustadt_%2801%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6b/Dejan_Ljubicic_-_SC_Wiener_Neustadt_%2801%29.jpg — skipping.
+- AUT-22 (https://upload.wikimedia.org/wikipedia/commons/4/41/Paul_wanner-1772636856_%28cropped%29.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/41/Paul_wanner-1772636856_%28cropped%29.JPG — skipping.
+- AUT-23 (https://upload.wikimedia.org/wikipedia/commons/d/d7/20140905_U21_AUT_BIH_AT08_1103.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d7/20140905_U21_AUT_BIH_AT08_1103.jpg — skipping.
+- AUT-5 (https://upload.wikimedia.org/wikipedia/commons/4/4c/Kevin_Danso_ASSE_RCL_2425.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4c/Kevin_Danso_ASSE_RCL_2425.jpg — skipping.
+- AUT-8 (https://upload.wikimedia.org/wikipedia/commons/4/4c/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28057%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4c/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28057%29.jpg — skipping.
+- AUT-9 (https://upload.wikimedia.org/wikipedia/commons/b/b2/Phillipp-mwene.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b2/Phillipp-mwene.jpg — skipping.
+- BEL-11 (https://upload.wikimedia.org/wikipedia/commons/d/d9/Timothy_Castagne_USMNT_v_Belgium_Mar_28_2026-17_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d9/Timothy_Castagne_USMNT_v_Belgium_Mar_28_2026-17_%28cropped%29.jpg — skipping.
+- BEL-13 (https://upload.wikimedia.org/wikipedia/commons/6/61/Axel_Witsel_USMNT_v_Belgium_Mar_28_2026-34_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/61/Axel_Witsel_USMNT_v_Belgium_Mar_28_2026-34_%28cropped%29.jpg — skipping.
+- BEL-15 (https://upload.wikimedia.org/wikipedia/commons/f/ff/Youri_Tielemans_USMNT_v_Belgium_Mar_28_2026-20_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/ff/Youri_Tielemans_USMNT_v_Belgium_Mar_28_2026-20_%28cropped%29.jpg — skipping.
+- BEL-16 (https://upload.wikimedia.org/wikipedia/commons/b/b2/Moreira2_asse_rcsa_2425.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b2/Moreira2_asse_rcsa_2425.jpg — skipping.
+- BEL-17 (https://upload.wikimedia.org/wikipedia/commons/7/77/Hans_Vanaken_Lommel_United.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/77/Hans_Vanaken_Lommel_United.jpg — skipping.
+- BEL-18 (https://upload.wikimedia.org/wikipedia/commons/2/2b/Nicolas_Raskin_USMNT_v_Belgium_Mar_28_2026-14_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2b/Nicolas_Raskin_USMNT_v_Belgium_Mar_28_2026-14_%28cropped%29.jpg — skipping.
+- BEL-22 (https://upload.wikimedia.org/wikipedia/commons/0/06/J%C3%A9r%C3%A9my_Doku_USMNT_v_Belgium_Mar_28_2026-27_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/06/J%C3%A9r%C3%A9my_Doku_USMNT_v_Belgium_Mar_28_2026-27_%28cropped%29.jpg — skipping.
+- BEL-23 (https://upload.wikimedia.org/wikipedia/commons/1/1d/Dodi_Luk%C3%A9bakio_USMNT_v_Belgium_Mar_28_2026-212_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1d/Dodi_Luk%C3%A9bakio_USMNT_v_Belgium_Mar_28_2026-212_%28cropped%29.jpg — skipping.
+- BEL-24 (https://upload.wikimedia.org/wikipedia/commons/4/42/Charles_De_Ketelaere_USMNT_v_Belgium_Mar_28_2026-76_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/42/Charles_De_Ketelaere_USMNT_v_Belgium_Mar_28_2026-76_%28cropped%29.jpg — skipping.
+- BEL-25 (https://upload.wikimedia.org/wikipedia/commons/7/74/Alexis_Saelemaekers_USMNT_v_Belgium_Mar_28_2026-13_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/74/Alexis_Saelemaekers_USMNT_v_Belgium_Mar_28_2026-13_%28cropped%29.jpg — skipping.
+- BEL-4 (https://upload.wikimedia.org/wikipedia/commons/b/bc/Zeno_Debast_USMNT_v_Belgium_Mar_28_2026-80_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bc/Zeno_Debast_USMNT_v_Belgium_Mar_28_2026-80_%28cropped%29.jpg — skipping.
+- BEL-5 (https://upload.wikimedia.org/wikipedia/commons/9/96/Arthur_Theate_USMNT_v_Belgium_Mar_28_2026-22_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/96/Arthur_Theate_USMNT_v_Belgium_Mar_28_2026-22_%28cropped%29.jpg — skipping.
+- BEL-6 (https://upload.wikimedia.org/wikipedia/commons/d/d1/Wout_Faes_Leicester_Championship_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d1/Wout_Faes_Leicester_Championship_%28cropped%29.jpg — skipping.
+- BEL-7 (https://upload.wikimedia.org/wikipedia/commons/5/5e/FC_Salzburg_gegen_VfL_Wolfsburg_%28CL-Gruppenphase_20._Oktober_2021%29_75.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5e/FC_Salzburg_gegen_VfL_Wolfsburg_%28CL-Gruppenphase_20._Oktober_2021%29_75.jpg — skipping.
+- BEL-8 (https://upload.wikimedia.org/wikipedia/commons/5/50/Thomas_Meunier_USMNT_v_Belgium_Mar_28_2026-16_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/50/Thomas_Meunier_USMNT_v_Belgium_Mar_28_2026-16_%28cropped%29.jpg — skipping.
+- BEL-9 (https://upload.wikimedia.org/wikipedia/commons/3/36/Koni_De_Winter_USMNT_v_Belgium_Mar_28_2026-36_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/36/Koni_De_Winter_USMNT_v_Belgium_Mar_28_2026-36_%28cropped%29.jpg — skipping.
+- BIH-1 (https://upload.wikimedia.org/wikipedia/commons/7/7a/2025-04-23_-_FC_St_Pauli_-_Nikola_Vasilj.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7a/2025-04-23_-_FC_St_Pauli_-_Nikola_Vasilj.jpg — skipping.
+- BIH-11 (https://upload.wikimedia.org/wikipedia/commons/9/94/%C4%8Celik_rcl_asse_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/94/%C4%8Celik_rcl_asse_2425.png — skipping.
+- BIH-12 (https://upload.wikimedia.org/wikipedia/commons/8/83/Benjamin_Tahirovic_for_Br%C3%B8ndby.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/83/Benjamin_Tahirovic_for_Br%C3%B8ndby.jpg — skipping.
+- BIH-13 (https://upload.wikimedia.org/wikipedia/commons/9/9e/2025-03-05_Armin_Gigovic_Holstein_Kiel_pic1.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9e/2025-03-05_Armin_Gigovic_Holstein_Kiel_pic1.jpg — skipping.
+- BIH-17 (https://upload.wikimedia.org/wikipedia/commons/e/e1/Amir_Had%C5%BEiahmetovi%C4%87_playing_for_Be%C5%9Fikta%C5%9F.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e1/Amir_Had%C5%BEiahmetovi%C4%87_playing_for_Be%C5%9Fikta%C5%9F.jpg — skipping.
+- BIH-18 (https://upload.wikimedia.org/wikipedia/commons/f/f8/2019-08-10_TuS_Dassendorf_vs._SG_Dynamo_Dresden_%28DFB-Pokal%29_by_Sandro_Halank%E2%80%93151.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f8/2019-08-10_TuS_Dassendorf_vs._SG_Dynamo_Dresden_%28DFB-Pokal%29_by_Sandro_Halank%E2%80%93151.jpg — skipping.
+- BIH-19 (https://upload.wikimedia.org/wikipedia/commons/6/61/Jahresbeginnfeier_FC_RB_Salzburg_%282026-01-25_RB_Arena%29_10.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/61/Jahresbeginnfeier_FC_RB_Salzburg_%282026-01-25_RB_Arena%29_10.jpg — skipping.
+- BIH-21 (https://upload.wikimedia.org/wikipedia/commons/0/06/FC_Liefering_gegen_SV_Lafnitz_%282024-05-25%29_25_%28Ermin_Mahmi%C4%87%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/06/FC_Liefering_gegen_SV_Lafnitz_%282024-05-25%29_25_%28Ermin_Mahmi%C4%87%29.jpg — skipping.
+- BIH-26 (https://upload.wikimedia.org/wikipedia/commons/7/79/Jovo_Luki%C4%87_97_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/79/Jovo_Luki%C4%87_97_%28cropped%29.jpg — skipping.
+- BIH-6 (https://upload.wikimedia.org/wikipedia/commons/2/2c/Muharemovi%C4%87-24.25.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2c/Muharemovi%C4%87-24.25.jpg — skipping.
+- BIH-7 (https://upload.wikimedia.org/wikipedia/commons/0/06/Kolasinac_2015.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/06/Kolasinac_2015.jpg — skipping.
+- BRA-11 (https://upload.wikimedia.org/wikipedia/commons/0/08/Roger_Iba%C3%B1ez_2026.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/08/Roger_Iba%C3%B1ez_2026.jpg — skipping.
+- BRA-12 (https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG — skipping.
+- BRA-13 (https://upload.wikimedia.org/wikipedia/commons/d/dc/Casemiro_Brazil_Austria_June_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dc/Casemiro_Brazil_Austria_June_2018.jpg — skipping.
+- BRA-14 (https://upload.wikimedia.org/wikipedia/commons/8/8e/Bruno_Guimar%C3%A3es.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8e/Bruno_Guimar%C3%A3es.png — skipping.
+- BRA-15 (https://upload.wikimedia.org/wikipedia/commons/d/dc/Fabinho_%2843934382122%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dc/Fabinho_%2843934382122%29_%28cropped%29.jpg — skipping.
+- BRA-24 (https://upload.wikimedia.org/wikipedia/commons/d/df/1_Gabriel_Martinelli_arsenal_2025_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/df/1_Gabriel_Martinelli_arsenal_2025_%28cropped%29.jpg — skipping.
+- BRA-3 (https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG — skipping.
+- BRA-7 (https://upload.wikimedia.org/wikipedia/commons/f/f8/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Danilo_Luiz_850_1591_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f8/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Danilo_Luiz_850_1591_%28cropped%29.jpg — skipping.
+- BRA-9 (https://upload.wikimedia.org/wikipedia/commons/b/b0/L%C3%A9o_Pereira_Atl%C3%A9tico_GO_2022.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b0/L%C3%A9o_Pereira_Atl%C3%A9tico_GO_2022.png — skipping.
+- CAN-1 (https://upload.wikimedia.org/wikipedia/commons/4/48/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3286_by_Stepro.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/48/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3286_by_Stepro.jpg — skipping.
+- CIV-1 (https://upload.wikimedia.org/wikipedia/commons/1/1a/Fofana_asse_sco_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1a/Fofana_asse_sco_2425.png — skipping.
+- CIV-10 (https://upload.wikimedia.org/wikipedia/commons/4/4c/Emmanuel_Agbadou.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4c/Emmanuel_Agbadou.jpg — skipping.
+- CIV-11 (https://upload.wikimedia.org/wikipedia/commons/2/29/2022128151247_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0370_-_B70I6481_%28Evan_N%E2%80%99Dicka_cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/29/2022128151247_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0370_-_B70I6481_%28Evan_N%E2%80%99Dicka_cropped%29.jpg — skipping.
+- CIV-15 (https://upload.wikimedia.org/wikipedia/commons/3/31/Ibrahim_Sangar%C3%A9_%282018-05-09%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/31/Ibrahim_Sangar%C3%A9_%282018-05-09%29.jpg — skipping.
+- CIV-16 (https://upload.wikimedia.org/wikipedia/commons/f/f1/%D7%A4%D7%90%D7%A8%D7%A4%D7%94_%D7%92%D7%95%D7%99%D7%90%D7%92%D7%95%D7%9F_-_Parfait_Guiagon.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f1/%D7%A4%D7%90%D7%A8%D7%A4%D7%94_%D7%92%D7%95%D7%99%D7%90%D7%92%D7%95%D7%9F_-_Parfait_Guiagon.jpg — skipping.
+- CIV-19 (https://upload.wikimedia.org/wikipedia/commons/4/40/Simon_Adingra_USG_2023.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/40/Simon_Adingra_USG_2023.jpg — skipping.
+- CIV-2 (https://upload.wikimedia.org/wikipedia/commons/3/36/KapfenbergJudenburg15.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/36/KapfenbergJudenburg15.jpg — skipping.
+- CIV-22 (https://upload.wikimedia.org/wikipedia/commons/7/7b/Diakite_asse_sr_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7b/Diakite_asse_sr_2425.png — skipping.
+- CIV-24 (https://upload.wikimedia.org/wikipedia/commons/b/bb/Nicolas_Pepe_LOSC_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bb/Nicolas_Pepe_LOSC_%28cropped2%29.jpg — skipping.
+- CIV-3 (https://upload.wikimedia.org/wikipedia/commons/d/dc/Alban_Lafont_%282018-04-21%29_1.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dc/Alban_Lafont_%282018-04-21%29_1.jpg — skipping.
+- CIV-5 (https://upload.wikimedia.org/wikipedia/commons/9/92/Joueur_ivoirien_02.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/92/Joueur_ivoirien_02.jpg — skipping.
+- CIV-6 (https://upload.wikimedia.org/wikipedia/commons/2/21/Singo_asse_asm_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/21/Singo_asse_asm_2425.png — skipping.
+- CIV-7 (https://upload.wikimedia.org/wikipedia/commons/f/f2/Odilon_Kossounou%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f2/Odilon_Kossounou%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg — skipping.
+- COD-10 (https://upload.wikimedia.org/wikipedia/commons/7/74/G%C3%A9d%C3%A9on_Kalulu_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/74/G%C3%A9d%C3%A9on_Kalulu_%28cropped%29.jpg — skipping.
+- COD-11 (https://upload.wikimedia.org/wikipedia/commons/d/db/Arthur_Masuaku%2C_2023_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/db/Arthur_Masuaku%2C_2023_%28cropped%29.jpg — skipping.
+- COD-14 (https://upload.wikimedia.org/wikipedia/commons/4/4b/Samuel_Moutoussamy_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4b/Samuel_Moutoussamy_%28cropped%29.jpg — skipping.
+- COD-17 (https://upload.wikimedia.org/wikipedia/commons/4/4a/Entra%C3%AEnement_du_RC_Lens_-_15_juillet_2020_24.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4a/Entra%C3%AEnement_du_RC_Lens_-_15_juillet_2020_24.jpg — skipping.
+- COD-20 (https://upload.wikimedia.org/wikipedia/commons/7/75/Charles_Pickel_2023_Africa_Cup_of_Nations_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/75/Charles_Pickel_2023_Africa_Cup_of_Nations_%28cropped%29.jpg — skipping.
+- COD-21 (https://upload.wikimedia.org/wikipedia/commons/b/b0/Edo_Kayembe_2025_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b0/Edo_Kayembe_2025_%28cropped%29.jpg — skipping.
+- COD-22 (https://upload.wikimedia.org/wikipedia/commons/d/db/Meschack_Elia_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/db/Meschack_Elia_%28cropped%29.jpg — skipping.
+- COD-4 (https://upload.wikimedia.org/wikipedia/commons/5/55/Aaron_Wan-Bissaka_of_West_Ham_United.jpeg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/55/Aaron_Wan-Bissaka_of_West_Ham_United.jpeg — skipping.
+- COD-6 (https://upload.wikimedia.org/wikipedia/commons/5/5e/Manchester_United_v_Everton%2C_7_August_2021_%2836%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5e/Manchester_United_v_Everton%2C_7_August_2021_%2836%29.jpg — skipping.
+- COD-7 (https://upload.wikimedia.org/wikipedia/commons/9/96/Batubinsika_asse_fcn_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/96/Batubinsika_asse_fcn_2425.png — skipping.
+- COL-1 (https://upload.wikimedia.org/wikipedia/commons/f/fd/David_Ospina%2C_2015-05-31.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fd/David_Ospina%2C_2015-05-31.JPG — skipping.
+- COL-12 (https://upload.wikimedia.org/wikipedia/commons/4/4d/Kevin_con_Krasnodar_en_2023.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4d/Kevin_con_Krasnodar_en_2023.jpg — skipping.
+- COL-14 (https://upload.wikimedia.org/wikipedia/commons/7/76/Jorge_Carrascal_2025.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/76/Jorge_Carrascal_2025.jpg — skipping.
+- COL-3 (https://upload.wikimedia.org/wikipedia/commons/7/74/Jhon_Dur%C3%A1n%2C_Esteghlal_FC_vs_Al-Nassr_FC_%28ACLElite%29%3B_3_Mar_2025.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/74/Jhon_Dur%C3%A1n%2C_Esteghlal_FC_vs_Al-Nassr_FC_%28ACLElite%29%3B_3_Mar_2025.png — skipping.
+- COL-8 (https://upload.wikimedia.org/wikipedia/commons/4/4a/FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_102_%28cropped%29_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4a/FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_102_%28cropped%29_2.jpg — skipping.
+- CPV-10 (https://upload.wikimedia.org/wikipedia/commons/a/ae/Steven_Moreira_NYCFC_v_Columbus_10_May_2026-67_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ae/Steven_Moreira_NYCFC_v_Columbus_10_May_2026-67_%28cropped%29.jpg — skipping.
+- CPV-15 (https://upload.wikimedia.org/wikipedia/commons/c/c9/Deroy_Duarte_2026.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c9/Deroy_Duarte_2026.jpg — skipping.
+- CPV-19 (https://upload.wikimedia.org/wikipedia/commons/1/11/JovaneCabral_2021.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/JovaneCabral_2021.jpg — skipping.
+- CPV-2 (https://commons.wikimedia.org/wiki/Special:FilePath/Tiago%20Manuel%20Dias%20Correia.JPG?width=420): robots.txt disallows asset https://commons.wikimedia.org/wiki/Special:FilePath/Tiago%20Manuel%20Dias%20Correia.JPG?width=420 — skipping.
+- CPV-22 (https://upload.wikimedia.org/wikipedia/commons/b/b2/RC_Lens_-_Grenoble_Foot_38_%2810-02-2020%29_70.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b2/RC_Lens_-_Grenoble_Foot_38_%2810-02-2020%29_70.jpg — skipping.
+- CRO-11 (https://upload.wikimedia.org/wikipedia/commons/a/ad/Nikola_Moro_2020.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ad/Nikola_Moro_2020.jpg — skipping.
+- CRO-14 (https://upload.wikimedia.org/wikipedia/commons/d/dc/Nikola_Vla%C5%A1i%C4%87_%28CSKA_Moscow%2C_19.08.2019%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dc/Nikola_Vla%C5%A1i%C4%87_%28CSKA_Moscow%2C_19.08.2019%29.jpg — skipping.
+- CRO-16 (https://upload.wikimedia.org/wikipedia/commons/a/a7/FC_Salzburg_gegen_GNK_Dinamo_Zagreb_%28UEFA_Championsleague_2022-10-05%29_52.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a7/FC_Salzburg_gegen_GNK_Dinamo_Zagreb_%28UEFA_Championsleague_2022-10-05%29_52.jpg — skipping.
+- CRO-20 (https://upload.wikimedia.org/wikipedia/commons/6/68/SD_Negreira_-_Real_Sociedad%2C_Copa_do_Rei_2025-26_05_-_Luka_Sucic.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/68/SD_Negreira_-_Real_Sociedad%2C_Copa_do_Rei_2025-26_05_-_Luka_Sucic.jpg — skipping.
+- CRO-26 (https://upload.wikimedia.org/wikipedia/commons/a/a3/Petar_Musa_NY_Red_Bulls_v_FC_Dallas_2_May_2026-53_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a3/Petar_Musa_NY_Red_Bulls_v_FC_Dallas_2_May_2026-53_%28cropped%29.jpg — skipping.
+- CRO-3 (https://upload.wikimedia.org/wikipedia/commons/c/cd/S%C3%B8nderjyskE_-_FC_K%C3%B8benhavn%2C_27._September_2025_-_j_%28Dominik_Kotarski%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/cd/S%C3%B8nderjyskE_-_FC_K%C3%B8benhavn%2C_27._September_2025_-_j_%28Dominik_Kotarski%29.jpg — skipping.
+- CRO-5 (https://upload.wikimedia.org/wikipedia/commons/c/cf/Marin_Pongracic_2021.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/cf/Marin_Pongracic_2021.jpg — skipping.
+- CRO-6 (https://upload.wikimedia.org/wikipedia/commons/6/6a/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2611_%28Jo%C5%A1ko_Gvardiol%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6a/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2611_%28Jo%C5%A1ko_Gvardiol%29.jpg — skipping.
+- CRO-7 (https://upload.wikimedia.org/wikipedia/commons/c/c7/Caleta_asse_ol_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c7/Caleta_asse_ol_2425.png — skipping.
+- CUW-1 (https://upload.wikimedia.org/wikipedia/commons/5/53/Room_Eloy_Columbus_Crew_SC_Meet_the_Team_2019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/53/Room_Eloy_Columbus_Crew_SC_Meet_the_Team_2019.jpg — skipping.
+- CUW-12 (https://upload.wikimedia.org/wikipedia/commons/5/57/Godfried_Roemeratoe.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/57/Godfried_Roemeratoe.JPG — skipping.
+- CUW-13 (https://upload.wikimedia.org/wikipedia/commons/8/8c/Juninho_bacuna-1531777726.jpeg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8c/Juninho_bacuna-1531777726.jpeg — skipping.
+- CUW-15 (https://upload.wikimedia.org/wikipedia/commons/8/85/Leandro_Bacuna.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/85/Leandro_Bacuna.jpg — skipping.
+- CUW-16 (https://upload.wikimedia.org/wikipedia/commons/d/d3/Tyrese_Noslin.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d3/Tyrese_Noslin.jpg — skipping.
+- CUW-17 (https://upload.wikimedia.org/wikipedia/commons/5/58/Ar%27jany_Martha_18042026_%283%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/58/Ar%27jany_Martha_18042026_%283%29.jpg — skipping.
+- CUW-18 (https://upload.wikimedia.org/wikipedia/commons/7/74/Kevin_felida-1571753982.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/74/Kevin_felida-1571753982.jpg — skipping.
+- CUW-21 (https://upload.wikimedia.org/wikipedia/commons/b/b2/Sontje_Hansen_16082025_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b2/Sontje_Hansen_16082025_%281%29.jpg — skipping.
+- CUW-22 (https://upload.wikimedia.org/wikipedia/commons/b/b1/Kenji_Gorr%C3%A9_%282015%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b1/Kenji_Gorr%C3%A9_%282015%29.jpg — skipping.
+- CUW-24 (https://upload.wikimedia.org/wikipedia/commons/5/54/Brandley_Kuwas.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/54/Brandley_Kuwas.png — skipping.
+- CUW-25 (https://upload.wikimedia.org/wikipedia/commons/2/2d/Gervane-kastaneer.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2d/Gervane-kastaneer.jpg — skipping.
+- CUW-26 (https://upload.wikimedia.org/wikipedia/commons/f/fa/Tahith_Chong_%2838487929362%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fa/Tahith_Chong_%2838487929362%29.jpg — skipping.
+- CUW-3 (https://upload.wikimedia.org/wikipedia/commons/1/1b/Austria_U-18_vs._Netherlands_U-18_2017-03-23_%28095%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1b/Austria_U-18_vs._Netherlands_U-18_2017-03-23_%28095%29_%28cropped%29.jpg — skipping.
+- CUW-5 (https://upload.wikimedia.org/wikipedia/commons/5/5c/Go_Ahead_Eagles_-_RKC_Waalwijk_-_52830811567_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5c/Go_Ahead_Eagles_-_RKC_Waalwijk_-_52830811567_%28cropped%29.jpg — skipping.
+- CUW-6 (https://upload.wikimedia.org/wikipedia/commons/8/8f/Roshon_van_Eijma_2025_profile_photo_%28cropped%29.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8f/Roshon_van_Eijma_2025_profile_photo_%28cropped%29.png — skipping.
+- CUW-8 (https://upload.wikimedia.org/wikipedia/commons/f/f1/Austria_U-18_vs._Netherlands_U-18_2017-03-23_%28060%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f1/Austria_U-18_vs._Netherlands_U-18_2017-03-23_%28060%29.jpg — skipping.
+- CUW-9 (https://upload.wikimedia.org/wikipedia/commons/8/8b/PSV_Eindhoven%2C_Teamcamp_Bad_Erlach%2C_July_2014_%28076%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8b/PSV_Eindhoven%2C_Teamcamp_Bad_Erlach%2C_July_2014_%28076%29.jpg — skipping.
+- CZE-11 (https://upload.wikimedia.org/wikipedia/commons/1/1d/Jaroslav_Zelen%C3%BD%2C_FCB-SLAVIA_30092018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1d/Jaroslav_Zelen%C3%BD%2C_FCB-SLAVIA_30092018.jpg — skipping.
+- CZE-12 (https://upload.wikimedia.org/wikipedia/commons/c/cc/David_Doud%C4%9Bra%2C_U21_CZE-GRE_2019-10-10.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/cc/David_Doud%C4%9Bra%2C_U21_CZE-GRE_2019-10-10.jpg — skipping.
+- CZE-22 (https://upload.wikimedia.org/wikipedia/commons/2/25/Adam_Hlo%C5%BEek%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%282%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/25/Adam_Hlo%C5%BEek%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%282%29_%28cropped%29.jpg — skipping.
+- CZE-23 (https://upload.wikimedia.org/wikipedia/commons/7/71/2020-03-10_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League_Achtelfinale%2C_RB_Leipzig_-_Tottenham_Hotspur_1DX_3672_by_Stepro.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/71/2020-03-10_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League_Achtelfinale%2C_RB_Leipzig_-_Tottenham_Hotspur_1DX_3672_by_Stepro.jpg — skipping.
+- CZE-4 (https://upload.wikimedia.org/wikipedia/commons/e/e6/David_Zima_CZE-KUW_2021-11-11_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e6/David_Zima_CZE-KUW_2021-11-11_%28cropped%29.jpg — skipping.
+- CZE-5 (https://upload.wikimedia.org/wikipedia/commons/5/59/Tom%C3%A1%C5%A1_Hole%C5%A1_Jablonec-Ostrava.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/59/Tom%C3%A1%C5%A1_Hole%C5%A1_Jablonec-Ostrava.jpg — skipping.
+- CZE-7 (https://upload.wikimedia.org/wikipedia/commons/e/e1/Vladim%C3%ADr_Coufal_with_West_Ham_United.jpeg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e1/Vladim%C3%ADr_Coufal_with_West_Ham_United.jpeg — skipping.
+- CZE-9 (https://upload.wikimedia.org/wikipedia/commons/4/43/Ladislav_Krej%C4%8D%C3%AD_01112025_%283%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/43/Ladislav_Krej%C4%8D%C3%AD_01112025_%283%29.jpg — skipping.
+- ECU-1 (https://upload.wikimedia.org/wikipedia/commons/a/ab/HERN%C3%81N_GAL%C3%8DNDEZ.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ab/HERN%C3%81N_GAL%C3%8DNDEZ.jpg — skipping.
+- ECU-10 (https://upload.wikimedia.org/wikipedia/commons/c/c4/Jackson_Porozo_2022.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c4/Jackson_Porozo_2022.jpg — skipping.
+- ECU-11 (https://upload.wikimedia.org/wikipedia/commons/2/2f/SESI%C3%93N_NO._603_DEL_PLENO_DE_LA_ASAMBLEA_NACIONAL._QUITO%2C_25_DE_JUNIO_2019._%2848129379208%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2f/SESI%C3%93N_NO._603_DEL_PLENO_DE_LA_ASAMBLEA_NACIONAL._QUITO%2C_25_DE_JUNIO_2019._%2848129379208%29_%28cropped%29.jpg — skipping.
+- ECU-13 (https://upload.wikimedia.org/wikipedia/commons/9/93/John_Yeboah_2020.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/93/John_Yeboah_2020.png — skipping.
+- ECU-16 (https://upload.wikimedia.org/wikipedia/commons/3/39/Inter_Miami_CF_3-1_UNAM_%286_August_2025%29_04_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/39/Inter_Miami_CF_3-1_UNAM_%286_August_2025%29_04_%28cropped%29.jpg — skipping.
+- ECU-18 (https://upload.wikimedia.org/wikipedia/commons/9/92/2022_FIFA_World_Cup_Qatar_0%E2%80%932_Ecuador_-_Plata.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/92/2022_FIFA_World_Cup_Qatar_0%E2%80%932_Ecuador_-_Plata.jpg — skipping.
+- ECU-20 (https://upload.wikimedia.org/wikipedia/commons/2/28/Moises_Caicedo_2022_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/28/Moises_Caicedo_2022_%28cropped%29.jpg — skipping.
+- ECU-23 (https://upload.wikimedia.org/wikipedia/commons/8/88/Enner_Valencia_CONTINUACI%C3%93N_DE_LA_SESI%C3%93N_N.%C2%BA_056_DEL_PLENO_DE_LA_ASAMBLEA_NACIONAL._ECUADOR%2C_09_DE_DICIEMBRE_DE_2025_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/88/Enner_Valencia_CONTINUACI%C3%93N_DE_LA_SESI%C3%93N_N.%C2%BA_056_DEL_PLENO_DE_LA_ASAMBLEA_NACIONAL._ECUADOR%2C_09_DE_DICIEMBRE_DE_2025_%28cropped%29.jpg — skipping.
+- ECU-24 (https://upload.wikimedia.org/wikipedia/commons/3/38/J._Kaisedo.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/38/J._Kaisedo.jpg — skipping.
+- ECU-25 (https://upload.wikimedia.org/wikipedia/commons/e/e1/Nilson_Angulo_RSC_Anderlecht_2025.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e1/Nilson_Angulo_RSC_Anderlecht_2025.jpg — skipping.
+- ECU-4 (https://upload.wikimedia.org/wikipedia/commons/3/35/2022_FIFA_World_Cup_Qatar_0%E2%80%932_Ecuador_-_%2813%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/35/2022_FIFA_World_Cup_Qatar_0%E2%80%932_Ecuador_-_%2813%29.jpg — skipping.
+- ECU-5 (https://upload.wikimedia.org/wikipedia/commons/2/27/Piero_Hincapi%C3%A9%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/27/Piero_Hincapi%C3%A9%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg — skipping.
+- EGY-11 (https://upload.wikimedia.org/wikipedia/commons/3/3a/Karim_Hafez_%28RC_Lens%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3a/Karim_Hafez_%28RC_Lens%29.jpg — skipping.
+- EGY-13 (https://upload.wikimedia.org/wikipedia/commons/9/96/Emam22.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/96/Emam22.jpg — skipping.
+- EGY-15 (https://upload.wikimedia.org/wikipedia/commons/4/4d/Hamdy_Fathy_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4d/Hamdy_Fathy_2.jpg — skipping.
+- EGY-18 (https://upload.wikimedia.org/wikipedia/commons/a/ac/Marwan_Attia.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ac/Marwan_Attia.jpg — skipping.
+- EGY-19 (https://upload.wikimedia.org/wikipedia/commons/9/96/Egypt_vs._Morocco_2024_Summer_Olympics_men%27s_association_football_02_%28cropped4%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/96/Egypt_vs._Morocco_2024_Summer_Olympics_men%27s_association_football_02_%28cropped4%29.jpg — skipping.
+- EGY-24 (https://upload.wikimedia.org/wikipedia/commons/1/1b/Ibrahim_Adel_2025.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1b/Ibrahim_Adel_2025.jpg — skipping.
+- EGY-25 (https://upload.wikimedia.org/wikipedia/commons/0/09/OmarMarmoush.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/09/OmarMarmoush.png — skipping.
+- EGY-4 (https://upload.wikimedia.org/wikipedia/commons/6/6f/Mohamed_Elneny_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6f/Mohamed_Elneny_2018.jpg — skipping.
+- EGY-5 (https://upload.wikimedia.org/wikipedia/commons/2/23/Yasser_Ibrahim_in_FIFA_Club_World_Cup.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/23/Yasser_Ibrahim_in_FIFA_Club_World_Cup.jpg — skipping.
+- EGY-6 (https://upload.wikimedia.org/wikipedia/commons/8/8b/Mohamed_Hany_in_2021_FIFA_Club_World_Cup.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8b/Mohamed_Hany_in_2021_FIFA_Club_World_Cup.jpg — skipping.
+- EGY-7 (https://upload.wikimedia.org/wikipedia/commons/6/63/Hossam_Abdel_Maguid.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/63/Hossam_Abdel_Maguid.jpg — skipping.
+- EGY-8 (https://upload.wikimedia.org/wikipedia/commons/b/b7/Ramy_Rabia_in_2021_FIFA_Club_World_Cup.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b7/Ramy_Rabia_in_2021_FIFA_Club_World_Cup.jpg — skipping.
+- EGY-9 (https://upload.wikimedia.org/wikipedia/commons/1/13/Abdelmonem_asse_ogcn_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/13/Abdelmonem_asse_ogcn_2425.png — skipping.
+- ENG-12 (https://upload.wikimedia.org/wikipedia/commons/1/15/Jarell_Quansah_06042025_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/15/Jarell_Quansah_06042025_%281%29.jpg — skipping.
+- ENG-15 (https://upload.wikimedia.org/wikipedia/commons/f/f9/25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Jude_Bellingham_-_240422_190551-2_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f9/25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Jude_Bellingham_-_240422_190551-2_%28cropped%29.jpg — skipping.
+- ENG-16 (https://upload.wikimedia.org/wikipedia/commons/7/79/Jordan_Henderson_29112025_%284%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/79/Jordan_Henderson_29112025_%284%29.jpg — skipping.
+- ENG-18 (https://upload.wikimedia.org/wikipedia/commons/1/1e/Morgan_Rogers_April_2026_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1e/Morgan_Rogers_April_2026_%28cropped%29.jpg — skipping.
+- ENG-19 (https://upload.wikimedia.org/wikipedia/commons/9/9f/Qpr2018eberechieeze001.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9f/Qpr2018eberechieeze001.jpg — skipping.
+- ENG-2 (https://upload.wikimedia.org/wikipedia/commons/b/b5/DeanHenderson2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b5/DeanHenderson2018.jpg — skipping.
+- ENG-22 (https://upload.wikimedia.org/wikipedia/commons/1/11/Marcus_Rashford_in_2023.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/Marcus_Rashford_in_2023.jpg — skipping.
+- ENG-25 (https://upload.wikimedia.org/wikipedia/commons/4/4f/Fulham_v_Chelsea_20042025_%287%29_%28Noni_Madueke%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4f/Fulham_v_Chelsea_20042025_%287%29_%28Noni_Madueke%29.jpg — skipping.
+- ENG-4 (https://upload.wikimedia.org/wikipedia/commons/5/53/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/53/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg — skipping.
+- ENG-6 (https://upload.wikimedia.org/wikipedia/commons/7/70/1_john_stones_2015_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/70/1_john_stones_2015_%28cropped%29.jpg — skipping.
+- ENG-7 (https://upload.wikimedia.org/wikipedia/commons/6/64/Marc_Guehi_December_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/64/Marc_Guehi_December_2018.jpg — skipping.
+- ESP-1 (https://upload.wikimedia.org/wikipedia/commons/d/da/David_Raya_in_2025_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/da/David_Raya_in_2025_%28cropped%29.jpg — skipping.
+- ESP-12 (https://upload.wikimedia.org/wikipedia/commons/7/7a/1_mikel_merino_arsenal_2025_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7a/1_mikel_merino_arsenal_2025_%28cropped%29.jpg — skipping.
+- ESP-16 (https://upload.wikimedia.org/wikipedia/commons/f/f8/Y%C3%A9remi_Pino_at_the_press_conference_before_the_Europa_League_final%2C_27_May_2026_%2809%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f8/Y%C3%A9remi_Pino_at_the_press_conference_before_the_Europa_League_final%2C_27_May_2026_%2809%29.jpg — skipping.
+- ESP-17 (https://upload.wikimedia.org/wikipedia/commons/1/16/%C3%81lex_Baena_2019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/16/%C3%81lex_Baena_2019.jpg — skipping.
+- ESP-18 (https://upload.wikimedia.org/wikipedia/commons/4/41/RODRI_-_SWE_vs_ESP_-_UEFA_EURO_2020_QUALIFIERS_-_2019.10.15_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/41/RODRI_-_SWE_vs_ESP_-_UEFA_EURO_2020_QUALIFIERS_-_2019.10.15_%28cropped%29.jpg — skipping.
+- ESP-19 (https://upload.wikimedia.org/wikipedia/commons/d/d0/Mart%C3%ADn_Zubimendi.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d0/Mart%C3%ADn_Zubimendi.jpg — skipping.
+- ESP-24 (https://upload.wikimedia.org/wikipedia/commons/f/f1/UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_108_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f1/UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_108_%28cropped%29.jpg — skipping.
+- ESP-6 (https://upload.wikimedia.org/wikipedia/commons/1/1c/Eric_Garcia_autographs_2022_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1c/Eric_Garcia_autographs_2022_%28cropped%29.jpg — skipping.
+- ESP-7 (https://upload.wikimedia.org/wikipedia/commons/9/9d/Robin_Le_Normand_2122.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9d/Robin_Le_Normand_2122.jpg — skipping.
+- FRA-10 (https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg — skipping.
+- FRA-11 (https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg — skipping.
+- FRA-12 (https://upload.wikimedia.org/wikipedia/commons/b/b1/Lens_-_Sochaux_%2823-11-2019%29_73.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b1/Lens_-_Sochaux_%2823-11-2019%29_73.jpg — skipping.
+- FRA-13 (https://upload.wikimedia.org/wikipedia/commons/1/11/Kouadio_Manu_Kon%C3%A9_%282019-08-31%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/Kouadio_Manu_Kon%C3%A9_%282019-08-31%29_%28cropped%29.jpg — skipping.
+- FRA-17 (https://upload.wikimedia.org/wikipedia/commons/e/e4/Zaire_asse_psg_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e4/Zaire_asse_psg_2425.png — skipping.
+- FRA-19 (https://upload.wikimedia.org/wikipedia/commons/0/00/Akliouche2_asse_asm_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/00/Akliouche2_asse_asm_2425.png — skipping.
+- FRA-2 (https://upload.wikimedia.org/wikipedia/commons/e/e1/Mike_Maignan_2022_Salzburg_vs_AC_Milan_2022-09-06.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e1/Mike_Maignan_2022_Salzburg_vs_AC_Milan_2022-09-06.jpg — skipping.
+- FRA-21 (https://upload.wikimedia.org/wikipedia/commons/6/69/Marcus_Thuram_in_2023.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/69/Marcus_Thuram_in_2023.jpg — skipping.
+- FRA-23 (https://upload.wikimedia.org/wikipedia/commons/e/e2/FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_%282026-01-06_Testspiel%29_10.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e2/FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_%282026-01-06_Testspiel%29_10.jpg — skipping.
+- FRA-24 (https://upload.wikimedia.org/wikipedia/commons/0/08/Barcola_asse_psg_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/08/Barcola_asse_psg_2425.png — skipping.
+- FRA-26 (https://upload.wikimedia.org/wikipedia/commons/a/a2/Fredrikstad_Fotballklubb_v_Crystal_Palace_FC%2C_28_August_2025_B11_%28JP_Mateta%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a2/Fredrikstad_Fotballklubb_v_Crystal_Palace_FC%2C_28_August_2025_B11_%28JP_Mateta%29.jpg — skipping.
+- FRA-4 (https://upload.wikimedia.org/wikipedia/commons/c/c3/Malo_Gusto_20042025_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c3/Malo_Gusto_20042025_%281%29.jpg — skipping.
+- FRA-5 (https://upload.wikimedia.org/wikipedia/commons/0/05/Ofrenda_de_la_Liga_y_la_Champions-13-L.Mill%C3%A1n_%2852109790215%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/05/Ofrenda_de_la_Liga_y_la_Champions-13-L.Mill%C3%A1n_%2852109790215%29_%28cropped%29.jpg — skipping.
+- FRA-6 (https://upload.wikimedia.org/wikipedia/commons/3/3b/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3244_by_Stepro_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3b/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3244_by_Stepro_%28cropped%29.jpg — skipping.
+- FRA-8 (https://upload.wikimedia.org/wikipedia/commons/c/c3/Ibrahima_Konat%C3%A9_in_2021.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c3/Ibrahima_Konat%C3%A9_in_2021.jpg — skipping.
+- GER-18 (https://upload.wikimedia.org/wikipedia/commons/5/5d/Florian_Wirtz%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5d/Florian_Wirtz%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29_%28cropped%29.jpg — skipping.
+- GER-19 (https://upload.wikimedia.org/wikipedia/commons/b/bf/FC_Red_Bull_Salzburg_gegen_Bayern_M%C3%BCnchen_%282025-01-06_Testspiel%29_22.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bf/FC_Red_Bull_Salzburg_gegen_Bayern_M%C3%BCnchen_%282025-01-06_Testspiel%29_22.jpg — skipping.
+- GER-2 (https://upload.wikimedia.org/wikipedia/commons/b/b8/OliverBaumann_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b8/OliverBaumann_%28cropped%29.jpg — skipping.
+- GER-20 (https://upload.wikimedia.org/wikipedia/commons/0/09/20161011_U21_AUT_GER_9328_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/09/20161011_U21_AUT_GER_9328_%28cropped%29.jpg — skipping.
+- GER-21 (https://upload.wikimedia.org/wikipedia/commons/f/fd/Felix_Nmecha_2021.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fd/Felix_Nmecha_2021.jpg — skipping.
+- GER-23 (https://upload.wikimedia.org/wikipedia/commons/7/74/1_kai_havertz_2026_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/74/1_kai_havertz_2026_%28cropped%29.jpg — skipping.
+- GER-24 (https://upload.wikimedia.org/wikipedia/commons/1/11/Nick_Woltemade_24052026_%285%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/Nick_Woltemade_24052026_%285%29.jpg — skipping.
+- GER-25 (https://upload.wikimedia.org/wikipedia/commons/8/89/Maximilian_Beier_training_with_Borussia_Dortmund_%282026%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/89/Maximilian_Beier_training_with_Borussia_Dortmund_%282026%29.jpg — skipping.
+- GER-26 (https://upload.wikimedia.org/wikipedia/commons/a/a5/Deniz_undav.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a5/Deniz_undav.jpg — skipping.
+- GER-5 (https://upload.wikimedia.org/wikipedia/commons/f/f6/Waldemar_Anton_%282025%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f6/Waldemar_Anton_%282025%29.jpg — skipping.
+- GER-7 (https://upload.wikimedia.org/wikipedia/commons/9/97/Marc-Andre_Ter_Stegen_ACCI_FCBARCELONA_Turisme_Catalunya_gira_pretemporada_CATPRESS.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/97/Marc-Andre_Ter_Stegen_ACCI_FCBARCELONA_Turisme_Catalunya_gira_pretemporada_CATPRESS.jpg — skipping.
+- GER-8 (https://upload.wikimedia.org/wikipedia/commons/c/c7/20180602_FIFA_Friendly_Match_Austria_vs._Germany_%C4%B0lkay_G%C3%BCndo%C4%9Fan_850_0728.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c7/20180602_FIFA_Friendly_Match_Austria_vs._Germany_%C4%B0lkay_G%C3%BCndo%C4%9Fan_850_0728.jpg — skipping.
+- GHA-1 (https://upload.wikimedia.org/wikipedia/commons/e/ef/Mohammed_Kudus_of_West_Ham_United.jpeg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/ef/Mohammed_Kudus_of_West_Ham_United.jpeg — skipping.
+- GHA-11 (https://upload.wikimedia.org/wikipedia/commons/e/eb/Derrick_luckassen-1447005764.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/eb/Derrick_luckassen-1447005764.JPG — skipping.
+- GHA-15 (https://upload.wikimedia.org/wikipedia/commons/8/8a/Abdul_Fatawu_24082024_%286%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8a/Abdul_Fatawu_24082024_%286%29.jpg — skipping.
+- GHA-18 (https://upload.wikimedia.org/wikipedia/commons/2/2f/Lens_-_Sochaux_%2815-09-2018%29_175_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2f/Lens_-_Sochaux_%2815-09-2018%29_175_%28cropped%29.jpg — skipping.
+- GHA-19 (https://upload.wikimedia.org/wikipedia/commons/0/05/Boakye_ASSE_MHSC_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/05/Boakye_ASSE_MHSC_2425.png — skipping.
+- GHA-2 (https://upload.wikimedia.org/wikipedia/commons/d/da/Hertha_BSC_vs._West_Ham_United_20190731_%28199%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/da/Hertha_BSC_vs._West_Ham_United_20190731_%28199%29.jpg — skipping.
+- GHA-20 (https://upload.wikimedia.org/wikipedia/commons/1/16/Kamaldeen_Sulemana_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/16/Kamaldeen_Sulemana_%28cropped%29.jpg — skipping.
+- GHA-21 (https://upload.wikimedia.org/wikipedia/commons/b/b6/Jordan_Ayew_24082024_%282%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b6/Jordan_Ayew_24082024_%282%29.jpg — skipping.
+- GHA-24 (https://upload.wikimedia.org/wikipedia/commons/0/05/I%C3%B1aki_Williams.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/05/I%C3%B1aki_Williams.png — skipping.
+- GHA-7 (https://upload.wikimedia.org/wikipedia/commons/1/17/FC_Liefering_gegen_SC_Wiener_Neustadt_%2823._September_2016%29_05.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/17/FC_Liefering_gegen_SC_Wiener_Neustadt_%2823._September_2016%29_05.jpg — skipping.
+- GHA-8 (https://upload.wikimedia.org/wikipedia/commons/5/57/Ghana_national_Baba_Rahman.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/57/Ghana_national_Baba_Rahman.jpg — skipping.
+- HAI-1 (https://upload.wikimedia.org/wikipedia/commons/5/55/Johny_Placide_in_Tsarsko_selo.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/55/Johny_Placide_in_Tsarsko_selo.jpg — skipping.
+- HAI-10 (https://upload.wikimedia.org/wikipedia/commons/e/e1/RC_Lens_-_FC_Nantes_%2828-10-2023%29_17.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e1/RC_Lens_-_FC_Nantes_%2828-10-2023%29_17.jpg — skipping.
+- HAI-13 (https://upload.wikimedia.org/wikipedia/commons/0/09/Lens_B_-_AC_Amiens_%2812-09-2015%29_64_%28cropped%29.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/09/Lens_B_-_AC_Amiens_%2812-09-2015%29_64_%28cropped%29.JPG — skipping.
+- HAI-15 (https://upload.wikimedia.org/wikipedia/commons/b/bf/Danley_Jean_Jacques_Philadelphia_Union_New_York_City_FC_Nov_23_2025-062_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bf/Danley_Jean_Jacques_Philadelphia_Union_New_York_City_FC_Nov_23_2025-062_%28cropped%29.jpg — skipping.
+- HAI-18 (https://upload.wikimedia.org/wikipedia/commons/0/00/Derrick_Etienne_%2828411015376%29_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/00/Derrick_Etienne_%2828411015376%29_%28cropped2%29.jpg — skipping.
+- HAI-19 (https://upload.wikimedia.org/wikipedia/commons/8/89/2025_Iran_Football_Premier_League_Esteghlal_and_Zob_Ahan_football_match_3_Mehr_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/89/2025_Iran_Football_Premier_League_Esteghlal_and_Zob_Ahan_football_match_3_Mehr_%28cropped%29.jpg — skipping.
+- HAI-23 (https://upload.wikimedia.org/wikipedia/commons/3/38/Wilson_Isidor_2022.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/38/Wilson_Isidor_2022.jpg — skipping.
+- HAI-4 (https://upload.wikimedia.org/wikipedia/commons/8/83/RC_Lens_-_AJ_Auxerre_%2809-03-2019%29_96.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/83/RC_Lens_-_AJ_Auxerre_%2809-03-2019%29_96.jpg — skipping.
+- HAI-7 (https://upload.wikimedia.org/wikipedia/commons/9/9c/FC_Red_Bull_Salzburg_gegen_RSC_Anderlecht_%28Testspiel_7._Juli_2017%29_50.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9c/FC_Red_Bull_Salzburg_gegen_RSC_Anderlecht_%28Testspiel_7._Juli_2017%29_50.jpg — skipping.
+- IRN-10 (https://upload.wikimedia.org/wikipedia/commons/d/db/Mes_Rafsanjan_F.C._vs_Persepolis_F.C.%2C_19_November_2021_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/db/Mes_Rafsanjan_F.C._vs_Persepolis_F.C.%2C_19_November_2021_2.jpg — skipping.
+- IRN-11 (https://upload.wikimedia.org/wikipedia/commons/f/fa/Esteghlal_0_-_0_Al_Nassr%2C_round_of_16_of_the_AFC_Elite_League%2C_Azadi_Stadium%2C_3_March_2025_15.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fa/Esteghlal_0_-_0_Al_Nassr%2C_round_of_16_of_the_AFC_Elite_League%2C_Azadi_Stadium%2C_3_March_2025_15.jpg — skipping.
+- IRN-17 (https://upload.wikimedia.org/wikipedia/commons/7/7f/Esteghlal_Celebrate_IPL_Title_Win_at_Azadi_Stadium_-_106.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7f/Esteghlal_Celebrate_IPL_Title_Win_at_Azadi_Stadium_-_106.jpg — skipping.
+- IRN-18 (https://upload.wikimedia.org/wikipedia/commons/6/67/Mahdi_Torabi_%28Cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/67/Mahdi_Torabi_%28Cropped%29.jpg — skipping.
+- IRN-22 (https://upload.wikimedia.org/wikipedia/commons/3/3d/Esteghlal_FC_vs_Tractor_FC%2C_18_May_2023_-_04.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3d/Esteghlal_FC_vs_Tractor_FC%2C_18_May_2023_-_04.jpg — skipping.
+- IRN-23 (https://upload.wikimedia.org/wikipedia/commons/d/db/Persepolis_F.C._v_Shahr_Khodro_F.C.%2C_27_February_2020_%2813%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/db/Persepolis_F.C._v_Shahr_Khodro_F.C.%2C_27_February_2020_%2813%29_%28cropped%29.jpg — skipping.
+- IRN-25 (https://upload.wikimedia.org/wikipedia/commons/6/66/Shahriyar_Moghanlou_14000129000016637543017694769152.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/66/Shahriyar_Moghanlou_14000129000016637543017694769152.jpg — skipping.
+- IRN-26 (https://upload.wikimedia.org/wikipedia/commons/4/4b/XXIII_Memorial_Quinocho_%28RC_Celta_vs_Mainz_05%29_-_55_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4b/XXIII_Memorial_Quinocho_%28RC_Celta_vs_Mainz_05%29_-_55_%28cropped%29.jpg — skipping.
+- IRN-3 (https://upload.wikimedia.org/wikipedia/commons/7/72/Esteghlal_FC_vs_Sepahan_FC%2C_14_December_2021_-_26.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/72/Esteghlal_FC_vs_Sepahan_FC%2C_14_December_2021_-_26.jpg — skipping.
+- IRN-5 (https://upload.wikimedia.org/wikipedia/commons/1/1f/%D9%86%D8%B4%D8%B3%D8%AA_%D8%AE%D8%A8%D8%B1%DB%8C_%D9%BE%DB%8C%D8%B4_%D8%A7%D8%B2_%D8%A8%D8%A7%D8%B2%DB%8C_%D8%A7%DB%8C%D8%B1%D8%A7%D9%86_%D9%88_%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3_%2826%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1f/%D9%86%D8%B4%D8%B3%D8%AA_%D8%AE%D8%A8%D8%B1%DB%8C_%D9%BE%DB%8C%D8%B4_%D8%A7%D8%B2_%D8%A8%D8%A7%D8%B2%DB%8C_%D8%A7%DB%8C%D8%B1%D8%A7%D9%86_%D9%88_%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3_%2826%29_%28cropped%29.jpg — skipping.
+- IRN-6 (https://upload.wikimedia.org/wikipedia/commons/e/e8/Shoja_Khalilzadeh_at_Fars_News_Agency.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e8/Shoja_Khalilzadeh_at_Fars_News_Agency.jpg — skipping.
+- IRN-9 (https://upload.wikimedia.org/wikipedia/commons/1/1f/YousefiCropped.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1f/YousefiCropped.jpg — skipping.
+- IRQ-1 (https://upload.wikimedia.org/wikipedia/commons/3/37/Fahad_Talib.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/37/Fahad_Talib.png — skipping.
+- IRQ-10 (https://upload.wikimedia.org/wikipedia/commons/3/3b/Merchas_doski.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3b/Merchas_doski.jpg — skipping.
+- IRQ-15 (https://upload.wikimedia.org/wikipedia/commons/3/36/Ahmed_Qasem_Revolution_Nashville_6.25.25-025_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/36/Ahmed_Qasem_Revolution_Nashville_6.25.25-025_%28cropped%29.jpg — skipping.
+- IRQ-17 (https://upload.wikimedia.org/wikipedia/commons/d/d4/Amir_Al-Ammari_%28Halmstad_vs_Degerfors%2C_7_October_2023%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d4/Amir_Al-Ammari_%28Halmstad_vs_Degerfors%2C_7_October_2023%29.jpg — skipping.
+- IRQ-20 (https://upload.wikimedia.org/wikipedia/commons/1/14/GAE_-_FC_Groningen_-_52878021366_%28cropped1%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/14/GAE_-_FC_Groningen_-_52878021366_%28cropped1%29.jpg — skipping.
+- IRQ-4 (https://upload.wikimedia.org/wikipedia/commons/7/71/240519_FC_%EC%84%9C%EC%9A%B8_%ED%8F%AC%ED%86%A0%ED%83%80%EC%9E%84_%28Rebin_Sulaka%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/71/240519_FC_%EC%84%9C%EC%9A%B8_%ED%8F%AC%ED%86%A0%ED%83%80%EC%9E%84_%28Rebin_Sulaka%29.jpg — skipping.
+- IRQ-5 (https://upload.wikimedia.org/wikipedia/commons/b/b8/GAE_-_SC_Heerenveen_-Hussein_Ali.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b8/GAE_-_SC_Heerenveen_-Hussein_Ali.jpg — skipping.
+- JOR-1 (https://commons.wikimedia.org/wiki/Special:FilePath/Al%20taamari%20asse%20mhsc%202425.png?width=420): robots.txt disallows asset https://commons.wikimedia.org/wiki/Special:FilePath/Al%20taamari%20asse%20mhsc%202425.png?width=420 — skipping.
+- JOR-10 (https://upload.wikimedia.org/wikipedia/commons/9/99/AFC_Champions_League_-_Sepahan_of_Iran_and_Al-Hussein_of_Jordan_17_%28Mehr%2C_2025%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/99/AFC_Champions_League_-_Sepahan_of_Iran_and_Al-Hussein_of_Jordan_17_%28Mehr%2C_2025%29_%28cropped%29.jpg — skipping.
+- JOR-11 (https://upload.wikimedia.org/wikipedia/commons/f/fb/Ihsan_Haddad.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fb/Ihsan_Haddad.jpg — skipping.
+- JOR-13 (https://upload.wikimedia.org/wikipedia/commons/f/f8/Mohammad_Abu_Hashish.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f8/Mohammad_Abu_Hashish.png — skipping.
+- JOR-15 (https://upload.wikimedia.org/wikipedia/commons/6/60/Noor_Al-Rawabdeh.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/60/Noor_Al-Rawabdeh.png — skipping.
+- JOR-16 (https://upload.wikimedia.org/wikipedia/commons/b/b2/Sepahan_and_Al-Hussein_Jordan_football_teams_meet_2_%282025%29_esfahanzibaonline.ir_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b2/Sepahan_and_Al-Hussein_Jordan_football_teams_meet_2_%282025%29_esfahanzibaonline.ir_%28cropped2%29.jpg — skipping.
+- JOR-2 (https://upload.wikimedia.org/wikipedia/commons/8/8e/Yazan_Al-Naimat_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8e/Yazan_Al-Naimat_2.jpg — skipping.
+- JOR-21 (https://upload.wikimedia.org/wikipedia/commons/3/39/Mohammad_Abu_Zrayq.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/39/Mohammad_Abu_Zrayq.jpg — skipping.
+- JOR-22 (https://upload.wikimedia.org/wikipedia/commons/5/59/Ali_Olwan.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/59/Ali_Olwan.png — skipping.
+- JOR-24 (https://upload.wikimedia.org/wikipedia/commons/9/9e/Sepahan_and_Al-Hussein_Jordan_football_teams_meet_10_%282025%29_esfahanzibaonline.ir_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9e/Sepahan_and_Al-Hussein_Jordan_football_teams_meet_10_%282025%29_esfahanzibaonline.ir_%28cropped%29.jpg — skipping.
+- JOR-3 (https://upload.wikimedia.org/wikipedia/commons/0/0e/Week_3_of_the_second_level_of_the_AFC_Champions_League%3B_Esteghlal_2_-_0_Al-Wehdat_Avash_27_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0e/Week_3_of_the_second_level_of_the_AFC_Champions_League%3B_Esteghlal_2_-_0_Al-Wehdat_Avash_27_%28cropped%29.jpg — skipping.
+- JOR-4 (https://upload.wikimedia.org/wikipedia/commons/e/ef/Abdallah_Nasib.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/ef/Abdallah_Nasib.png — skipping.
+- JOR-6 (https://upload.wikimedia.org/wikipedia/commons/3/30/250720_FC_%EC%84%9C%EC%9A%B8_vs_%EC%9A%B8%EC%82%B0_%28Yazan_Al-Arab%29_1.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/30/250720_FC_%EC%84%9C%EC%9A%B8_vs_%EC%9A%B8%EC%82%B0_%28Yazan_Al-Arab%29_1.jpg — skipping.
+- JOR-8 (https://upload.wikimedia.org/wikipedia/commons/f/f0/Sepahan_and_Al-Hussein_Jordan_football_teams_meet_21_%282025%29_esfahanzibaonline.ir_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f0/Sepahan_and_Al-Hussein_Jordan_football_teams_meet_21_%282025%29_esfahanzibaonline.ir_%28cropped2%29.jpg — skipping.
+- JPN-13 (https://upload.wikimedia.org/wikipedia/commons/f/f6/Ao_Tanaka_13092025_%281%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f6/Ao_Tanaka_13092025_%281%29_%28cropped%29.jpg — skipping.
+- JPN-14 (https://upload.wikimedia.org/wikipedia/commons/b/be/Takefusa_Kubo_2019.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/be/Takefusa_Kubo_2019.png — skipping.
+- JPN-15 (https://upload.wikimedia.org/wikipedia/commons/1/17/Ritsu_Doan%2C_2019_AFC_Asian_Cup_1.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/17/Ritsu_Doan%2C_2019_AFC_Asian_Cup_1.jpg — skipping.
+- JPN-18 (https://upload.wikimedia.org/wikipedia/commons/e/e4/2022128173756_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0725_-_AK8I7460_%28Daichi_Kamada_cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e4/2022128173756_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_0725_-_AK8I7460_%28Daichi_Kamada_cropped%29.jpg — skipping.
+- JPN-20 (https://upload.wikimedia.org/wikipedia/commons/2/2d/2025-04-15_Sh%C5%ABto_Machino.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2d/2025-04-15_Sh%C5%ABto_Machino.jpg — skipping.
+- JPN-22 (https://upload.wikimedia.org/wikipedia/commons/7/7b/Celtic-20240722-018_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7b/Celtic-20240722-018_%28cropped%29.jpg — skipping.
+- JPN-23 (https://upload.wikimedia.org/wikipedia/commons/c/c9/Suzuki_%282023%29.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c9/Suzuki_%282023%29.png — skipping.
+- JPN-24 (https://upload.wikimedia.org/wikipedia/commons/9/99/Go_Ahead_Eagles_-_Feyenoord_-_53679351240_%28Ayase_Ueda%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/99/Go_Ahead_Eagles_-_Feyenoord_-_53679351240_%28Ayase_Ueda%29.jpg — skipping.
+- JPN-25 (https://upload.wikimedia.org/wikipedia/commons/4/47/GAE_-_NEC_-_53493888105_%28Koki_Ogawa%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/47/GAE_-_NEC_-_53493888105_%28Koki_Ogawa%29.jpg — skipping.
+- JPN-5 (https://upload.wikimedia.org/wikipedia/commons/c/c1/Ko_Itakura_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c1/Ko_Itakura_%28cropped%29.jpg — skipping.
+- JPN-6 (https://upload.wikimedia.org/wikipedia/commons/c/c1/Ko_Itakura_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c1/Ko_Itakura_%28cropped%29.jpg — skipping.
+- JPN-7 (https://upload.wikimedia.org/wikipedia/commons/f/ff/Yuto_Nagatomo_in_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/ff/Yuto_Nagatomo_in_2018.jpg — skipping.
+- KOR-10 (https://upload.wikimedia.org/wikipedia/commons/d/da/191202_K%EB%A6%AC%EA%B7%B8_%EC%8B%9C%EC%83%81%EC%8B%9D%2C_%EA%B9%80%EB%AC%B8%ED%99%98_3.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/da/191202_K%EB%A6%AC%EA%B7%B8_%EC%8B%9C%EC%83%81%EC%8B%9D%2C_%EA%B9%80%EB%AC%B8%ED%99%98_3.jpg — skipping.
+- KOR-17 (https://upload.wikimedia.org/wikipedia/commons/b/be/240622_%ED%99%A9%ED%9D%AC%EC%B0%AC_%ED%92%8B%EB%B3%BC_%ED%8E%98%EC%8A%A4%ED%8B%B0%EB%B2%8C.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/be/240622_%ED%99%A9%ED%9D%AC%EC%B0%AC_%ED%92%8B%EB%B3%BC_%ED%8E%98%EC%8A%A4%ED%8B%B0%EB%B2%8C.jpg — skipping.
+- KOR-18 (https://upload.wikimedia.org/wikipedia/commons/9/9b/Bae_Jun-ho_20092025_%282%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9b/Bae_Jun-ho_20092025_%282%29.jpg — skipping.
+- KOR-2 (https://upload.wikimedia.org/wikipedia/commons/4/4a/240611_%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_vs_%EC%A4%91%EA%B5%AD_%28%EC%86%A1%EB%B2%94%EA%B7%BC%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4a/240611_%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_vs_%EC%A4%91%EA%B5%AD_%28%EC%86%A1%EB%B2%94%EA%B7%BC%29.jpg — skipping.
+- KOR-20 (https://upload.wikimedia.org/wikipedia/commons/a/a6/Celtic-20240722-062_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a6/Celtic-20240722-062_%28cropped%29.jpg — skipping.
+- KOR-21 (https://upload.wikimedia.org/wikipedia/commons/9/9c/250503_FC_%EC%84%9C%EC%9D%84_vs_%EC%A0%84%EB%B6%81_%28%EA%B9%80%EC%A7%84%EA%B7%9C%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9c/250503_FC_%EC%84%9C%EC%9D%84_vs_%EC%A0%84%EB%B6%81_%28%EA%B9%80%EC%A7%84%EA%B7%9C%29.jpg — skipping.
+- KOR-23 (https://upload.wikimedia.org/wikipedia/commons/1/1e/250303_FC_%EC%84%9C%EC%9A%B8_vs_%EA%B9%80%EC%B2%9C_%28%EC%9D%B4%EB%8F%99%EA%B2%BD%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1e/250303_FC_%EC%84%9C%EC%9A%B8_vs_%EA%B9%80%EC%B2%9C_%28%EC%9D%B4%EB%8F%99%EA%B2%BD%29.jpg — skipping.
+- KOR-6 (https://upload.wikimedia.org/wikipedia/commons/8/80/FC_Red_Bull_Salzburg_gegen_Bayern_M%C3%BCnchen_%282025-01-06_Testspiel%29_26.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/80/FC_Red_Bull_Salzburg_gegen_Bayern_M%C3%BCnchen_%282025-01-06_Testspiel%29_26.jpg — skipping.
+- KOR-8 (https://upload.wikimedia.org/wikipedia/commons/5/5e/%EB%B0%80%EC%9B%8C%ED%82%A4_%EC%9D%B4%EB%8B%AC%EC%9D%98_%EC%84%A0%EC%88%98_5%EC%9B%94_-_%EC%9D%B4%ED%83%9C%EC%84%9D_%EC%9D%B8%ED%84%B0%EB%B7%B0_%26_%EC%A0%9C%ED%92%88_%EC%96%B8%EB%B0%95%EC%8B%B1%EA%B9%8C%EC%A7%80%21_0s.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5e/%EB%B0%80%EC%9B%8C%ED%82%A4_%EC%9D%B4%EB%8B%AC%EC%9D%98_%EC%84%A0%EC%88%98_5%EC%9B%94_-_%EC%9D%B4%ED%83%9C%EC%84%9D_%EC%9D%B8%ED%84%B0%EB%B7%B0_%26_%EC%A0%9C%ED%92%88_%EC%96%B8%EB%B0%95%EC%8B%B1%EA%B9%8C%EC%A7%80%21_0s.jpg — skipping.
+- KOR-9 (https://upload.wikimedia.org/wikipedia/commons/4/42/260411_FC_%EC%84%9C%EC%9A%B8_vs_%EC%A0%84%EB%B6%81_%28%EC%A1%B0%EC%9C%84%EC%A0%9C%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/42/260411_FC_%EC%84%9C%EC%9A%B8_vs_%EC%A0%84%EB%B6%81_%28%EC%A1%B0%EC%9C%84%EC%A0%9C%29.jpg — skipping.
+- KSA-17 (https://upload.wikimedia.org/wikipedia/commons/6/6d/Salem_Al-Dawsari_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6d/Salem_Al-Dawsari_2018.jpg — skipping.
+- KSA-19 (https://upload.wikimedia.org/wikipedia/commons/e/ec/Ziyad_Al-Johani.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/ec/Ziyad_Al-Johani.jpg — skipping.
+- KSA-2 (https://upload.wikimedia.org/wikipedia/commons/b/bc/Mohammed_Al-Owais_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bc/Mohammed_Al-Owais_2018.jpg — skipping.
+- KSA-22 (https://upload.wikimedia.org/wikipedia/commons/0/0c/Group_photographs_of_Al_Hilal%2C_Al_Hilal_SFC_vs_Chelsea_F.C.%2C_9_February_2022_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0c/Group_photographs_of_Al_Hilal%2C_Al_Hilal_SFC_vs_Chelsea_F.C.%2C_9_February_2022_%28cropped%29.jpg — skipping.
+- KSA-3 (https://upload.wikimedia.org/wikipedia/commons/8/85/Saudi_Arabia_v_Oman_%2813%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/85/Saudi_Arabia_v_Oman_%2813%29_%28cropped%29.jpg — skipping.
+- KSA-4 (https://upload.wikimedia.org/wikipedia/commons/a/aa/Ali_Majrashi%2C_2025_CONCACAF_Gold_Cup_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/aa/Ali_Majrashi%2C_2025_CONCACAF_Gold_Cup_%28cropped%29.jpg — skipping.
+- KSA-5 (https://upload.wikimedia.org/wikipedia/commons/7/7f/AFC_Elite_League_Western%2C_Azadi_Stadium%2C_Persepolis_0-0_Al_Nassr%2C_17_February_2025%2C_Ali_Lajami.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7f/AFC_Elite_League_Western%2C_Azadi_Stadium%2C_Persepolis_0-0_Al_Nassr%2C_17_February_2025%2C_Ali_Lajami.jpg — skipping.
+- KSA-6 (https://upload.wikimedia.org/wikipedia/commons/0/09/Abdulelah_Al-Amri_2023_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/09/Abdulelah_Al-Amri_2023_%28cropped%29.jpg — skipping.
+- KSA-8 (https://upload.wikimedia.org/wikipedia/commons/1/16/Saudi_Arabia_v_Oman_%282%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/16/Saudi_Arabia_v_Oman_%282%29_%28cropped%29.jpg — skipping.
+- KSA-9 (https://upload.wikimedia.org/wikipedia/commons/1/19/Esteghlal_0_-_0_Al_Nassr%2C_round_of_16_of_the_AFC_Elite_League%2C_Azadi_Stadium%2C_3_March_2025%2C_Nawaf_Boushal.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/19/Esteghlal_0_-_0_Al_Nassr%2C_round_of_16_of_the_AFC_Elite_League%2C_Azadi_Stadium%2C_3_March_2025%2C_Nawaf_Boushal.jpg — skipping.
+- MAR-10 (https://upload.wikimedia.org/wikipedia/commons/a/ab/Youssef_Belammari_vs_Niger_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ab/Youssef_Belammari_vs_Niger_%28cropped%29.jpg — skipping.
+- MAR-11 (https://upload.wikimedia.org/wikipedia/commons/b/bf/Redouane_Halhal_vs_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bf/Redouane_Halhal_vs_Paraguay_%28cropped%29.jpg — skipping.
+- MAR-12 (https://upload.wikimedia.org/wikipedia/commons/a/a7/Anass_Salah-Eddine_against_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a7/Anass_Salah-Eddine_against_Paraguay_%28cropped%29.jpg — skipping.
+- MAR-13 (https://upload.wikimedia.org/wikipedia/commons/0/0f/Sofyan_Amrabat_vs_Niger_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0f/Sofyan_Amrabat_vs_Niger_%28cropped%29.jpg — skipping.
+- MAR-14 (https://upload.wikimedia.org/wikipedia/commons/c/ce/Bouaddi_asselosc_2425_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/ce/Bouaddi_asselosc_2425_%28cropped%29.jpg — skipping.
+- MAR-15 (https://upload.wikimedia.org/wikipedia/commons/d/d5/Chemsdine_Talbi_against_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d5/Chemsdine_Talbi_against_Paraguay_%28cropped%29.jpg — skipping.
+- MAR-16 (https://upload.wikimedia.org/wikipedia/commons/3/31/Ounahi_vs_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/31/Ounahi_vs_Paraguay_%28cropped%29.jpg — skipping.
+- MAR-17 (https://upload.wikimedia.org/wikipedia/commons/6/63/Ismael_Saibari_vs_Niger_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/63/Ismael_Saibari_vs_Niger_%28cropped%29.jpg — skipping.
+- MAR-18 (https://upload.wikimedia.org/wikipedia/commons/f/f9/Samir_El_Mourabet_vs_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f9/Samir_El_Mourabet_vs_Paraguay_%28cropped%29.jpg — skipping.
+- MAR-19 (https://upload.wikimedia.org/wikipedia/commons/7/75/Gessime_Yassine_against_Paraguay_2_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/75/Gessime_Yassine_against_Paraguay_2_%28cropped%29.jpg — skipping.
+- MAR-20 (https://upload.wikimedia.org/wikipedia/commons/4/4a/Bilal_El_Khannouss_vs_Niger_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4a/Bilal_El_Khannouss_vs_Niger_%28cropped%29.jpg — skipping.
+- MAR-21 (https://upload.wikimedia.org/wikipedia/commons/2/2f/Neil_El_Aynaoui_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2f/Neil_El_Aynaoui_%28cropped2%29.jpg — skipping.
+- MAR-22 (https://upload.wikimedia.org/wikipedia/commons/a/a1/Soufiane_Rahimi_against_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a1/Soufiane_Rahimi_against_Paraguay_%28cropped%29.jpg — skipping.
+- MAR-23 (https://upload.wikimedia.org/wikipedia/commons/d/dd/Brahim_Diaz_2_vs_Niger_%28cropped%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dd/Brahim_Diaz_2_vs_Niger_%28cropped%29_%28cropped%29.jpg — skipping.
+- MAR-25 (https://upload.wikimedia.org/wikipedia/commons/3/33/Ayoub_El_Kaabi_vs_Niger_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/33/Ayoub_El_Kaabi_vs_Niger_%28cropped%29.jpg — skipping.
+- MAR-3 (https://upload.wikimedia.org/wikipedia/commons/2/26/Ennesyri.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/26/Ennesyri.jpg — skipping.
+- MAR-4 (https://upload.wikimedia.org/wikipedia/commons/5/56/Achraf_Hakimi_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/56/Achraf_Hakimi_%28cropped2%29.jpg — skipping.
+- MAR-5 (https://upload.wikimedia.org/wikipedia/commons/7/77/Mazraoui.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/77/Mazraoui.jpg — skipping.
+- MAR-6 (https://upload.wikimedia.org/wikipedia/commons/5/50/FC_Red_Bull_Salzburg_gegen_%C3%87aykur_Rizespor_%28Testspiel%29_34.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/50/FC_Red_Bull_Salzburg_gegen_%C3%87aykur_Rizespor_%28Testspiel%29_34.jpg — skipping.
+- MAR-8 (https://upload.wikimedia.org/wikipedia/commons/3/3c/Issa_Diop_-_Morocco_v_Paraguay.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3c/Issa_Diop_-_Morocco_v_Paraguay.jpg — skipping.
+- MAR-9 (https://upload.wikimedia.org/wikipedia/commons/f/f0/Chadi_Riad_against_Paraguay_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f0/Chadi_Riad_against_Paraguay_%28cropped%29.jpg — skipping.
+- NED-10 (https://upload.wikimedia.org/wikipedia/commons/6/64/FC_Salzburg_gegen_Inter_Mailand_%28Testspiel_2023-08-09%29_67_-_Stefan_de_Vrij_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/64/FC_Salzburg_gegen_Inter_Mailand_%28Testspiel_2023-08-09%29_67_-_Stefan_de_Vrij_%28cropped%29.jpg — skipping.
+- NED-11 (https://upload.wikimedia.org/wikipedia/commons/3/3e/Jeremie_Frimpong_04012026_%283%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3e/Jeremie_Frimpong_04012026_%283%29_%28cropped%29.jpg — skipping.
+- NED-13 (https://upload.wikimedia.org/wikipedia/commons/4/4f/Justin_Kluivert_2023.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4f/Justin_Kluivert_2023.jpg — skipping.
+- NED-14 (https://upload.wikimedia.org/wikipedia/commons/3/3e/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3342_by_Stepro_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3e/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3342_by_Stepro_%28cropped%29.jpg — skipping.
+- NED-15 (https://upload.wikimedia.org/wikipedia/commons/5/5b/Reijnders_arriva_in_albergo_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5b/Reijnders_arriva_in_albergo_%28cropped%29.jpg — skipping.
+- NED-17 (https://upload.wikimedia.org/wikipedia/commons/6/61/Teun_Koopmeiners_Manchester_United_v_Atalanta_BC%2C_20_October_2021_%2812%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/61/Teun_Koopmeiners_Manchester_United_v_Atalanta_BC%2C_20_October_2021_%2812%29_%28cropped%29.jpg — skipping.
+- NED-19 (https://upload.wikimedia.org/wikipedia/commons/0/05/Quinten_Timber.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/05/Quinten_Timber.jpg — skipping.
+- NED-22 (https://upload.wikimedia.org/wikipedia/commons/4/4f/Cody_Gakpo_06042025_%282%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4f/Cody_Gakpo_06042025_%282%29_%28cropped%29.jpg — skipping.
+- NED-23 (https://upload.wikimedia.org/wikipedia/commons/7/76/Austria_U-18_vs._Netherlands_U-18_2017-03-23_%28094%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/76/Austria_U-18_vs._Netherlands_U-18_2017-03-23_%28094%29.jpg — skipping.
+- NED-25 (https://upload.wikimedia.org/wikipedia/commons/0/0b/GAE_-_Ajax_-_52788469380_%28Brobbey%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0b/GAE_-_Ajax_-_52788469380_%28Brobbey%29.jpg — skipping.
+- NED-26 (https://upload.wikimedia.org/wikipedia/commons/1/15/Crysencio_Summerville_of_West_Ham_United.jpeg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/15/Crysencio_Summerville_of_West_Ham_United.jpeg — skipping.
+- NED-3 (https://upload.wikimedia.org/wikipedia/commons/6/6d/Xavi_Simons%2C_Nick_Verhagen_in_duel_met_Xavi_Simons.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6d/Xavi_Simons%2C_Nick_Verhagen_in_duel_met_Xavi_Simons.jpg — skipping.
+- NED-4 (https://upload.wikimedia.org/wikipedia/commons/2/2d/Go_Ahead_Eagles_-_Feyenoord_-_53679251479_%28Lutsharel_Geertruida%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2d/Go_Ahead_Eagles_-_Feyenoord_-_53679251479_%28Lutsharel_Geertruida%29.jpg — skipping.
+- NED-6 (https://upload.wikimedia.org/wikipedia/commons/3/34/Yokohama_F._Marinos_-_Manchester_City_%283-5%29_-_53075276224_%28Nathan_Ake%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/34/Yokohama_F._Marinos_-_Manchester_City_%283-5%29_-_53075276224_%28Nathan_Ake%29.jpg — skipping.
+- NED-8 (https://upload.wikimedia.org/wikipedia/commons/f/fa/FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_%28Testspiel_2022-07-09%29_39_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fa/FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_%28Testspiel_2022-07-09%29_39_%28cropped%29.jpg — skipping.
+- NED-9 (https://upload.wikimedia.org/wikipedia/commons/3/3f/Micky_Van_De_Ven_pre-match_training_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3f/Micky_Van_De_Ven_pre-match_training_%28cropped%29.jpg — skipping.
+- NOR-1 (https://upload.wikimedia.org/wikipedia/commons/2/22/Norway_Italy_-_June_2025_A_10_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/22/Norway_Italy_-_June_2025_A_10_%28cropped%29.jpg — skipping.
+- NOR-10 (https://upload.wikimedia.org/wikipedia/commons/b/b3/Sondre_Lang%C3%A5s_25042026_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b3/Sondre_Lang%C3%A5s_25042026_%281%29.jpg — skipping.
+- NOR-12 (https://upload.wikimedia.org/wikipedia/commons/d/d9/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93102.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d9/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93102.jpg — skipping.
+- NOR-13 (https://upload.wikimedia.org/wikipedia/commons/1/11/Norway_Italy_-_June_2025_E_24_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/Norway_Italy_-_June_2025_E_24_%28cropped%29.jpg — skipping.
+- NOR-14 (https://upload.wikimedia.org/wikipedia/commons/c/c3/Norway_Italy_-_June_2025_A_14_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c3/Norway_Italy_-_June_2025_A_14_%28cropped%29.jpg — skipping.
+- NOR-15 (https://upload.wikimedia.org/wikipedia/commons/1/1c/Norway_Italy_-_June_2025_E_25_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1c/Norway_Italy_-_June_2025_E_25_%28cropped%29.jpg — skipping.
+- NOR-16 (https://upload.wikimedia.org/wikipedia/commons/a/aa/Norway_Italy_-_June_2025_E_04.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/aa/Norway_Italy_-_June_2025_E_04.jpg — skipping.
+- NOR-20 (https://upload.wikimedia.org/wikipedia/commons/3/34/Norway_Italy_-_June_2025_C_23.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/34/Norway_Italy_-_June_2025_C_23.jpg — skipping.
+- NOR-22 (https://upload.wikimedia.org/wikipedia/commons/5/54/ManCity20240722-050_%28Oscar_Bobb2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/54/ManCity20240722-050_%28Oscar_Bobb2%29.jpg — skipping.
+- NOR-23 (https://upload.wikimedia.org/wikipedia/commons/9/9b/2022128171253_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_2064_-_B70I8175_%28Jens_Petter_Hauge_cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9b/2022128171253_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_2064_-_B70I8175_%28Jens_Petter_Hauge_cropped%29.jpg — skipping.
+- NOR-24 (https://upload.wikimedia.org/wikipedia/commons/e/e2/Norway_Italy_-_June_2025_E_10.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e2/Norway_Italy_-_June_2025_E_10.jpg — skipping.
+- NOR-3 (https://upload.wikimedia.org/wikipedia/commons/d/df/Norway_Italy_-_June_2025_A_07_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/df/Norway_Italy_-_June_2025_A_07_%28cropped%29.jpg — skipping.
+- NOR-5 (https://upload.wikimedia.org/wikipedia/commons/0/01/Norway_Italy_-_June_2025_A_06_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/01/Norway_Italy_-_June_2025_A_06_%28cropped%29.jpg — skipping.
+- NOR-8 (https://upload.wikimedia.org/wikipedia/commons/1/1a/Marcus_Holmgren_Pedersen_2022_FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1a/Marcus_Holmgren_Pedersen_2022_FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_%28cropped%29.jpg — skipping.
+- NZL-1 (https://upload.wikimedia.org/wikipedia/commons/6/67/Chris_Wood_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/67/Chris_Wood_%28cropped%29.jpg — skipping.
+- NZL-10 (https://upload.wikimedia.org/wikipedia/commons/e/e5/Old_asse_psg_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e5/Old_asse_psg_2425.png — skipping.
+- NZL-11 (https://upload.wikimedia.org/wikipedia/commons/6/61/Kosta_Barbarousas_Training.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/61/Kosta_Barbarousas_Training.JPG — skipping.
+- NZL-2 (https://upload.wikimedia.org/wikipedia/commons/4/47/FC_Zenit_Saint_Petersburg_vs._Red_Star_Belgrade%2C_4_July_2023_%2850%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/47/FC_Zenit_Saint_Petersburg_vs._Red_Star_Belgrade%2C_4_July_2023_%2850%29.jpg — skipping.
+- NZL-3 (https://upload.wikimedia.org/wikipedia/commons/a/af/Alex_Paulsen.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/af/Alex_Paulsen.jpg — skipping.
+- NZL-4 (https://upload.wikimedia.org/wikipedia/commons/a/ad/Tyler_Bindon.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ad/Tyler_Bindon.jpg — skipping.
+- NZL-5 (https://upload.wikimedia.org/wikipedia/commons/f/f3/Finn_Surman.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f3/Finn_Surman.jpg — skipping.
+- NZL-7 (https://upload.wikimedia.org/wikipedia/commons/c/c2/Liberato_Cacace_30082025_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c2/Liberato_Cacace_30082025_%281%29.jpg — skipping.
+- NZL-8 (https://upload.wikimedia.org/wikipedia/commons/f/fa/Joe_Bell_2023.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fa/Joe_Bell_2023.jpg — skipping.
+- PAN-1 (https://upload.wikimedia.org/wikipedia/commons/5/51/Concacaf_Gold_Cup_%2848248588296%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/51/Concacaf_Gold_Cup_%2848248588296%29_%28cropped%29.jpg — skipping.
+- PAN-10 (https://upload.wikimedia.org/wikipedia/commons/8/88/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_51_%28Andr%C3%A9s_Andrade_Cede%C3%B1o%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/88/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_51_%28Andr%C3%A9s_Andrade_Cede%C3%B1o%29.jpg — skipping.
+- PAN-11 (https://upload.wikimedia.org/wikipedia/commons/c/cd/Michael_Amir_Murillo_vs_Cincinnati%2C_May_2019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/cd/Michael_Amir_Murillo_vs_Cincinnati%2C_May_2019.jpg — skipping.
+- PAN-12 (https://upload.wikimedia.org/wikipedia/commons/4/4a/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_59_%28Roderick_Miller%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4a/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_59_%28Roderick_Miller%29.jpg — skipping.
+- PAN-14 (https://upload.wikimedia.org/wikipedia/commons/d/df/Bibras_Natkho_helps_Cristian_Martinez_-_Crop.JPG): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/df/Bibras_Natkho_helps_Cristian_Martinez_-_Crop.JPG — skipping.
+- PAN-16 (https://upload.wikimedia.org/wikipedia/commons/d/dc/Inter_Miami_CF_3-1_UNAM_%286_August_2025%29_27_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dc/Inter_Miami_CF_3-1_UNAM_%286_August_2025%29_27_%28cropped%29.jpg — skipping.
+- PAN-20 (https://upload.wikimedia.org/wikipedia/commons/7/72/Alberto-Quintero.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/72/Alberto-Quintero.jpg — skipping.
+- PAN-22 (https://upload.wikimedia.org/wikipedia/commons/e/e0/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_16_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e0/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_16_%28cropped%29.jpg — skipping.
+- PAN-25 (https://upload.wikimedia.org/wikipedia/commons/8/8b/Cecilio_Waterman_Everton_v_Cobresal_20230828_03.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8b/Cecilio_Waterman_Everton_v_Cobresal_20230828_03.jpg — skipping.
+- PAN-3 (https://upload.wikimedia.org/wikipedia/commons/f/f7/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_160_%28Orlando_Mosquera%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f7/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_160_%28Orlando_Mosquera%29.jpg — skipping.
+- PAN-4 (https://upload.wikimedia.org/wikipedia/commons/f/f8/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_153.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f8/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_153.jpg — skipping.
+- PAN-5 (https://upload.wikimedia.org/wikipedia/commons/5/57/Jos%C3%A9_C%C3%B3rdoba.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/57/Jos%C3%A9_C%C3%B3rdoba.jpg — skipping.
+- PAN-7 (https://upload.wikimedia.org/wikipedia/commons/6/62/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_21_%28Edgardo_Fari%C3%B1a%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/62/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_21_%28Edgardo_Fari%C3%B1a%29.jpg — skipping.
+- PAN-9 (https://upload.wikimedia.org/wikipedia/commons/4/43/Erick_Davis_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/43/Erick_Davis_%28cropped%29.jpg — skipping.
+- PAR-10 (https://upload.wikimedia.org/wikipedia/commons/8/87/Gustavo-Gomez-Palmeiras-Athletico-jul-2022-2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/87/Gustavo-Gomez-Palmeiras-Athletico-jul-2022-2.jpg — skipping.
+- PAR-12 (https://upload.wikimedia.org/wikipedia/commons/8/86/Ramon-sosa-palmeiras-sport-ago-25-4_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/86/Ramon-sosa-palmeiras-sport-ago-25-4_%28cropped%29.jpg — skipping.
+- PAR-15 (https://upload.wikimedia.org/wikipedia/commons/0/01/Maur%C3%ADcio_dos_Santos_Nascimento_2016.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/01/Maur%C3%ADcio_dos_Santos_Nascimento_2016.jpg — skipping.
+- PAR-20 (https://upload.wikimedia.org/wikipedia/commons/f/f2/Mat%C3%ADas_Galarza_-_Brasileir%C3%A3o_S%C3%A9rie_A-_Bragantino_4_x_2_Coritiba_-_52150854647_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f2/Mat%C3%ADas_Galarza_-_Brasileir%C3%A3o_S%C3%A9rie_A-_Bragantino_4_x_2_Coritiba_-_52150854647_%28cropped%29.jpg — skipping.
+- PAR-6 (https://upload.wikimedia.org/wikipedia/commons/7/77/Juan_Jos%C3%A9_C%C3%A1ceres_2025.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/77/Juan_Jos%C3%A9_C%C3%A1ceres_2025.jpg — skipping.
+- POR-10 (https://upload.wikimedia.org/wikipedia/commons/2/28/Jo%C3%A3o_Cancelo_USMNT_v_Portugal_Mar_31_2026-30_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/28/Jo%C3%A3o_Cancelo_USMNT_v_Portugal_Mar_31_2026-30_%28cropped%29.jpg — skipping.
+- POR-11 (https://upload.wikimedia.org/wikipedia/commons/7/7f/FC_Salzburg_gegen_Paris_Saint-Germain_UEFA_Champions_League_85_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7f/FC_Salzburg_gegen_Paris_Saint-Germain_UEFA_Champions_League_85_%28cropped%29.jpg — skipping.
+- POR-12 (https://upload.wikimedia.org/wikipedia/commons/6/6e/Matheus_Nunes_USMNT_v_Portugal_Mar_31_2026-21_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6e/Matheus_Nunes_USMNT_v_Portugal_Mar_31_2026-21_%28cropped%29.jpg — skipping.
+- POR-16 (https://upload.wikimedia.org/wikipedia/commons/b/b8/Ruben_Neves_USMNT_v_Portugal_Mar_31_2026-25.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b8/Ruben_Neves_USMNT_v_Portugal_Mar_31_2026-25.jpg — skipping.
+- POR-17 (https://upload.wikimedia.org/wikipedia/commons/4/44/Vitinha_USMNT_v_Portugal_Mar_31_2026-50_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/44/Vitinha_USMNT_v_Portugal_Mar_31_2026-50_%28cropped%29.jpg — skipping.
+- POR-18 (https://upload.wikimedia.org/wikipedia/commons/4/4d/Sam%C3%BA_Costa_USMNT_v_Portugal_Mar_31_2026-54_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4d/Sam%C3%BA_Costa_USMNT_v_Portugal_Mar_31_2026-54_%28cropped%29.jpg — skipping.
+- POR-2 (https://upload.wikimedia.org/wikipedia/commons/3/38/Jos%C3%A9_S%C3%A1_USMNT_v_Portugal_Mar_31_2026-185_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/38/Jos%C3%A9_S%C3%A1_USMNT_v_Portugal_Mar_31_2026-185_%28cropped%29.jpg — skipping.
+- POR-20 (https://upload.wikimedia.org/wikipedia/commons/c/ce/Gon%C3%A7alo_Ramos_USMNT_v_Portugal_Mar_31_2026-32_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/ce/Gon%C3%A7alo_Ramos_USMNT_v_Portugal_Mar_31_2026-32_%28cropped%29.jpg — skipping.
+- POR-21 (https://upload.wikimedia.org/wikipedia/commons/5/55/Jo%C3%A3o_F%C3%A9lix_USMNT_v_Portugal_Mar_31_2026-22_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/55/Jo%C3%A3o_F%C3%A9lix_USMNT_v_Portugal_Mar_31_2026-22_%28cropped%29.jpg — skipping.
+- POR-24 (https://upload.wikimedia.org/wikipedia/commons/f/f1/Pedro_Neto_USMNT_v_Portugal_Mar_31_2026-48.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f1/Pedro_Neto_USMNT_v_Portugal_Mar_31_2026-48.jpg — skipping.
+- POR-25 (https://upload.wikimedia.org/wikipedia/commons/0/09/Gon%C3%A7alo_Guedes_USMNT_v_Portugal_Mar_31_2026-64_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/09/Gon%C3%A7alo_Guedes_USMNT_v_Portugal_Mar_31_2026-64_%28cropped%29.jpg — skipping.
+- POR-26 (https://upload.wikimedia.org/wikipedia/commons/3/3e/Francisco_Concei%C3%A7%C3%A3o_USMNT_v_Portugal_Mar_31_2026-62_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3e/Francisco_Concei%C3%A7%C3%A3o_USMNT_v_Portugal_Mar_31_2026-62_%28cropped%29.jpg — skipping.
+- POR-3 (https://upload.wikimedia.org/wikipedia/commons/b/be/Rui_Silva_USMNT_v_Portugal_Mar_31_2026-14.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/be/Rui_Silva_USMNT_v_Portugal_Mar_31_2026-14.jpg — skipping.
+- POR-4 (https://upload.wikimedia.org/wikipedia/commons/6/68/Mex-por-14_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/68/Mex-por-14_%28cropped%29.jpg — skipping.
+- POR-6 (https://upload.wikimedia.org/wikipedia/commons/f/f5/Tom%C3%A1s_Ara%C3%BAjo_USMNT_v_Portugal_Mar_31_2026-40_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f5/Tom%C3%A1s_Ara%C3%BAjo_USMNT_v_Portugal_Mar_31_2026-40_%28cropped%29.jpg — skipping.
+- POR-7 (https://upload.wikimedia.org/wikipedia/commons/1/1f/Diogo_Dalot_USMNT_v_Portugal_Mar_31_2026-12.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1f/Diogo_Dalot_USMNT_v_Portugal_Mar_31_2026-12.jpg — skipping.
+- POR-8 (https://upload.wikimedia.org/wikipedia/commons/3/3a/Renato_Veiga_USMNT_v_Portugal_Mar_31_2026-20.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3a/Renato_Veiga_USMNT_v_Portugal_Mar_31_2026-20.jpg — skipping.
+- POR-9 (https://upload.wikimedia.org/wikipedia/commons/0/0a/Gon%C3%A7alo_In%C3%A1cio_USMNT_v_Portugal_Mar_31_2026-42_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0a/Gon%C3%A7alo_In%C3%A1cio_USMNT_v_Portugal_Mar_31_2026-42_%28cropped%29.jpg — skipping.
+- QAT-12 (https://upload.wikimedia.org/wikipedia/commons/d/d7/Asian_Nations_Cup_Iran_-_Qatar_%285%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d7/Asian_Nations_Cup_Iran_-_Qatar_%285%29_%28cropped%29.jpg — skipping.
+- QAT-13 (https://upload.wikimedia.org/wikipedia/commons/2/20/Abdulaziz_Hatem.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/20/Abdulaziz_Hatem.jpg — skipping.
+- QAT-14 (https://upload.wikimedia.org/wikipedia/commons/5/5a/Karim_Boudiaf_2011_1.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5a/Karim_Boudiaf_2011_1.jpg — skipping.
+- QAT-15 (https://upload.wikimedia.org/wikipedia/commons/4/44/Ahmed_Fathy_in_FIFA_world_cup.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/44/Ahmed_Fathy_in_FIFA_world_cup.jpg — skipping.
+- QAT-16 (https://upload.wikimedia.org/wikipedia/commons/0/03/Qatar_-_Japan%2C_AFC_Asian_Cup_2019_58_-_Assim_Madibo.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/03/Qatar_-_Japan%2C_AFC_Asian_Cup_2019_58_-_Assim_Madibo.jpg — skipping.
+- QAT-18 (https://upload.wikimedia.org/wikipedia/commons/e/ee/Qatar_v_Japan_%E2%80%93_AFC_Asian_Cup_2019_final_04_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/ee/Qatar_v_Japan_%E2%80%93_AFC_Asian_Cup_2019_final_04_%28cropped%29.jpg — skipping.
+- QAT-23 (https://upload.wikimedia.org/wikipedia/commons/9/97/%D9%8A%D9%88%D8%B3%D9%81_%D9%82%D8%B7%D8%B1_%D8%A7%D9%84%D9%88%D9%83%D8%B1%D8%A9.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/97/%D9%8A%D9%88%D8%B3%D9%81_%D9%82%D8%B7%D8%B1_%D8%A7%D9%84%D9%88%D9%83%D8%B1%D8%A9.jpg — skipping.
+- QAT-8 (https://upload.wikimedia.org/wikipedia/commons/9/9a/Asian_Nations_Cup_Iran_-_Qatar_%288%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9a/Asian_Nations_Cup_Iran_-_Qatar_%288%29_%28cropped%29.jpg — skipping.
+- RSA-1 (https://upload.wikimedia.org/wikipedia/commons/8/89/Ronwen_Williams_AFCON2025Q_35.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/89/Ronwen_Williams_AFCON2025Q_35.jpg — skipping.
+- RSA-12 (https://upload.wikimedia.org/wikipedia/commons/1/11/Olwethu_Makhanya_Philadelphia_Union_New_York_City_FC_Nov_23_2025-027_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/Olwethu_Makhanya_Philadelphia_Union_New_York_City_FC_Nov_23_2025-027_%28cropped%29.jpg — skipping.
+- SCO-10 (https://upload.wikimedia.org/wikipedia/commons/b/be/Scott_McKenna_Scotland_v_Bolivia_6_June_2026-59.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/be/Scott_McKenna_Scotland_v_Bolivia_6_June_2026-59.jpg — skipping.
+- SCO-12 (https://upload.wikimedia.org/wikipedia/commons/d/d8/Celtic-20240722-034.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d8/Celtic-20240722-034.jpg — skipping.
+- SCO-14 (https://upload.wikimedia.org/wikipedia/commons/4/4d/Scott_McTominay_Scotland_v_Bolivia_6_June_2026-41.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4d/Scott_McTominay_Scotland_v_Bolivia_6_June_2026-41.jpg — skipping.
+- SCO-15 (https://upload.wikimedia.org/wikipedia/commons/6/63/John_McGinn_Scotland_v_Bolivia_6_June_2026-2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/63/John_McGinn_Scotland_v_Bolivia_6_June_2026-2.jpg — skipping.
+- SCO-16 (https://upload.wikimedia.org/wikipedia/commons/1/17/Tyler_Fletcher_Scotland_v_Bolivia_6_June_2026-4.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/17/Tyler_Fletcher_Scotland_v_Bolivia_6_June_2026-4.jpg — skipping.
+- SCO-18 (https://upload.wikimedia.org/wikipedia/commons/5/59/Ben_Doak_2025.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/59/Ben_Doak_2025.jpg — skipping.
+- SCO-19 (https://upload.wikimedia.org/wikipedia/commons/7/78/Lewis_Ferguson_Scotland_v_Bolivia_6_June_2026-52.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/78/Lewis_Ferguson_Scotland_v_Bolivia_6_June_2026-52.jpg — skipping.
+- SCO-2 (https://upload.wikimedia.org/wikipedia/commons/2/20/Liam_Kelly.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/20/Liam_Kelly.jpg — skipping.
+- SCO-20 (https://upload.wikimedia.org/wikipedia/commons/5/50/Kenny_McLean_Scotland_v_Bolivia_6_June_2026-177_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/50/Kenny_McLean_Scotland_v_Bolivia_6_June_2026-177_%28cropped%29.jpg — skipping.
+- SCO-21 (https://upload.wikimedia.org/wikipedia/commons/d/d6/Findlay_Curtis_Scotland_v_Bolivia_6_June_2026-56.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d6/Findlay_Curtis_Scotland_v_Bolivia_6_June_2026-56.jpg — skipping.
+- SCO-23 (https://upload.wikimedia.org/wikipedia/commons/c/cb/Che_Adams.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/cb/Che_Adams.jpg — skipping.
+- SCO-25 (https://upload.wikimedia.org/wikipedia/commons/5/51/George_Hirst_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/51/George_Hirst_2.jpg — skipping.
+- SCO-26 (https://upload.wikimedia.org/wikipedia/commons/f/f0/Lawrence_Shankland_2019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f0/Lawrence_Shankland_2019.jpg — skipping.
+- SCO-3 (https://commons.wikimedia.org/wiki/Special:FilePath/Andrew%20Robertson%2004012026%20(1).jpg?width=420): robots.txt disallows asset https://commons.wikimedia.org/wiki/Special:FilePath/Andrew%20Robertson%2004012026%20(1).jpg?width=420 — skipping.
+- SCO-4 (https://upload.wikimedia.org/wikipedia/commons/b/b1/Billy_Gilmour_2021-08-07_1_%28cropped%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b1/Billy_Gilmour_2021-08-07_1_%28cropped%29_%28cropped%29.jpg — skipping.
+- SCO-5 (https://upload.wikimedia.org/wikipedia/commons/9/9a/Andy_Robertson_Scotland_v_Bolivia_6_June_2026-43.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9a/Andy_Robertson_Scotland_v_Bolivia_6_June_2026-43.jpg — skipping.
+- SCO-6 (https://upload.wikimedia.org/wikipedia/commons/6/6c/First_Minister_meets_with_Scottish_National_Football_Team_11Jun_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6c/First_Minister_meets_with_Scottish_National_Football_Team_11Jun_%28cropped%29.jpg — skipping.
+- SCO-7 (https://upload.wikimedia.org/wikipedia/commons/f/f3/Kieran_Tierney_%28close-up_image%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f3/Kieran_Tierney_%28close-up_image%29.jpg — skipping.
+- SCO-8 (https://upload.wikimedia.org/wikipedia/commons/a/ac/FC_Salzburg_versus_Celtic_FC_%284._Oktober_2918_Gruppe_B%2C_Zweiter_Spieltag%29_20_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ac/FC_Salzburg_versus_Celtic_FC_%284._Oktober_2918_Gruppe_B%2C_Zweiter_Spieltag%29_20_%28cropped%29.jpg — skipping.
+- SCO-9 (https://upload.wikimedia.org/wikipedia/commons/0/02/John_Souttar_Scotland_v_Bolivia_6_June_2026-163.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/02/John_Souttar_Scotland_v_Bolivia_6_June_2026-163.jpg — skipping.
+- SEN-1 (https://upload.wikimedia.org/wikipedia/commons/e/e2/Diouf_asse_sr_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e2/Diouf_asse_sr_2425.png — skipping.
+- SEN-10 (https://upload.wikimedia.org/wikipedia/commons/4/48/Mendy_asse_ogcn_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/48/Mendy_asse_ogcn_2425.png — skipping.
+- SEN-15 (https://upload.wikimedia.org/wikipedia/commons/5/5a/Pape_Matar_Sarr.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5a/Pape_Matar_Sarr.png — skipping.
+- SEN-18 (https://upload.wikimedia.org/wikipedia/commons/a/a1/Pape_Gueye_Le_Havre_AC_2019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a1/Pape_Gueye_Le_Havre_AC_2019.jpg — skipping.
+- SEN-21 (https://upload.wikimedia.org/wikipedia/commons/1/1a/Sadio_Mane_Al-Nassr.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1a/Sadio_Mane_Al-Nassr.jpg — skipping.
+- SEN-3 (https://upload.wikimedia.org/wikipedia/commons/6/67/Mory_Diaw_2015_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/67/Mory_Diaw_2015_%28cropped%29.jpg — skipping.
+- SEN-7 (https://upload.wikimedia.org/wikipedia/commons/d/db/Ismail_Jakobs.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/db/Ismail_Jakobs.jpg — skipping.
+- SUI-12 (https://upload.wikimedia.org/wikipedia/commons/0/0d/Zakaria_asse_asm_2425_%28cropped%29.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0d/Zakaria_asse_asm_2425_%28cropped%29.png — skipping.
+- SUI-15 (https://upload.wikimedia.org/wikipedia/commons/0/01/Granit_Xhaka_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/01/Granit_Xhaka_%28cropped%29.jpg — skipping.
+- SUI-16 (https://upload.wikimedia.org/wikipedia/commons/e/e4/Ali_Maamar_RSCA_2025.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e4/Ali_Maamar_RSCA_2025.jpg — skipping.
+- SUI-17 (https://upload.wikimedia.org/wikipedia/commons/a/a2/DjibrilSow_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a2/DjibrilSow_%28cropped%29.jpg — skipping.
+- SUI-2 (https://upload.wikimedia.org/wikipedia/commons/3/34/Yvon_Mvogo.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/34/Yvon_Mvogo.jpg — skipping.
+- SUI-21 (https://upload.wikimedia.org/wikipedia/commons/2/2d/2022128160447_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_1422_-_B70I7533_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2d/2022128160447_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_1422_-_B70I7533_%28cropped%29.jpg — skipping.
+- SUI-22 (https://upload.wikimedia.org/wikipedia/commons/9/9c/Lens_-_Nice_%2823-01-2021%29_52.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/9c/Lens_-_Nice_%2823-01-2021%29_52.jpg — skipping.
+- SUI-24 (https://upload.wikimedia.org/wikipedia/commons/2/22/FC_RB_Salzburg_gegen_FK_Austria_Wien_%282022-04-24%29_68.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/22/FC_RB_Salzburg_gegen_FK_Austria_Wien_%282022-04-24%29_68.jpg — skipping.
+- SUI-5 (https://upload.wikimedia.org/wikipedia/commons/5/5a/FC_Salzburg_gegen_Inter_Mailand_%28Testspiel_2023-08-09%29_69.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5a/FC_Salzburg_gegen_Inter_Mailand_%28Testspiel_2023-08-09%29_69.jpg — skipping.
+- SUI-7 (https://upload.wikimedia.org/wikipedia/commons/b/b3/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2792_%28Manuel_Akanji%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b3/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2792_%28Manuel_Akanji%29.jpg — skipping.
+- SUI-9 (https://upload.wikimedia.org/wikipedia/commons/4/4f/Eray_C%C3%B6mert_2019_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/4f/Eray_C%C3%B6mert_2019_%28cropped%29.jpg — skipping.
+- SWE-11 (https://upload.wikimedia.org/wikipedia/commons/8/8f/Anthony_Elanga_%28Sweden_vs_Moldova%2C_12_October_2023%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8f/Anthony_Elanga_%28Sweden_vs_Moldova%2C_12_October_2023%29.jpg — skipping.
+- SWE-3 (https://upload.wikimedia.org/wikipedia/commons/2/2f/Sweden-Slovenia_Nations_League_2022-09-27_17_Kulusevski_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2f/Sweden-Slovenia_Nations_League_2022-09-27_17_Kulusevski_%28cropped%29.jpg — skipping.
+- SWE-4 (https://upload.wikimedia.org/wikipedia/commons/c/c8/Emil_Forsberg_Red_Bulls_Revolution-27_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c8/Emil_Forsberg_Red_Bulls_Revolution-27_%28cropped%29.jpg — skipping.
+- SWE-5 (https://upload.wikimedia.org/wikipedia/commons/9/94/SWE-SWI_%288%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/94/SWE-SWI_%288%29_%28cropped%29.jpg — skipping.
+- SWE-6 (https://upload.wikimedia.org/wikipedia/commons/1/1e/Sweden-Slovenia_Nations_League_2022-09-27_6_%28Victor_Lindelof%2C_cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1e/Sweden-Slovenia_Nations_League_2022-09-27_6_%28Victor_Lindelof%2C_cropped%29.jpg — skipping.
+- SWE-7 (https://upload.wikimedia.org/wikipedia/commons/a/a6/Sweden-Slovenia_Nations_League_2022-09-27_32_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a6/Sweden-Slovenia_Nations_League_2022-09-27_32_%28cropped%29.jpg — skipping.
+- SWE-8 (https://upload.wikimedia.org/wikipedia/commons/1/1d/Gabriel_Gudmundsson_%28Sweden_vs_Moldova%2C_12_October_2023%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1d/Gabriel_Gudmundsson_%28Sweden_vs_Moldova%2C_12_October_2023%29_%28cropped%29.jpg — skipping.
+- SWE-9 (https://upload.wikimedia.org/wikipedia/commons/c/cc/Emil_Krafth_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/cc/Emil_Krafth_%28cropped%29.jpg — skipping.
+- TUN-14 (https://upload.wikimedia.org/wikipedia/commons/2/2f/Hannibal_Mejbri_26042025_%281%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2f/Hannibal_Mejbri_26042025_%281%29.jpg — skipping.
+- TUN-15 (https://upload.wikimedia.org/wikipedia/commons/a/a7/Isma%C3%ABl_Gharbi_at_the_PSG-VAFC_game_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a7/Isma%C3%ABl_Gharbi_at_the_PSG-VAFC_game_%28cropped%29.jpg — skipping.
+- TUN-16 (https://upload.wikimedia.org/wikipedia/commons/3/3b/Testspiel_Rasenballsport_Leipzig_gegen_FC_Liefering_%289.August_2016%29_36.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3b/Testspiel_Rasenballsport_Leipzig_gegen_FC_Liefering_%289.August_2016%29_36.jpg — skipping.
+- TUN-18 (https://upload.wikimedia.org/wikipedia/commons/b/bf/2021-08-08_FC_Carl_Zeiss_Jena_gegen_1._FC_K%C3%B6ln_%28DFB-Pokal%29_by_Sandro_Halank%E2%80%93182_%28cropped2%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bf/2021-08-08_FC_Carl_Zeiss_Jena_gegen_1._FC_K%C3%B6ln_%28DFB-Pokal%29_by_Sandro_Halank%E2%80%93182_%28cropped2%29.jpg — skipping.
+- TUN-19 (https://upload.wikimedia.org/wikipedia/commons/a/a3/FC_Salzburg_gegen_Br%C3%B8ndby_IF_%28Championsleague_Play_off_Hinspiel_17._August_2021%29_12.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a3/FC_Salzburg_gegen_Br%C3%B8ndby_IF_%28Championsleague_Play_off_Hinspiel_17._August_2021%29_12.jpg — skipping.
+- TUN-2 (https://upload.wikimedia.org/wikipedia/commons/0/04/Attaque_de_football_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/04/Attaque_de_football_%28cropped%29.jpg — skipping.
+- TUN-3 (https://upload.wikimedia.org/wikipedia/commons/8/8e/Youssef_Msakni_2015b.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/8e/Youssef_Msakni_2015b.jpg — skipping.
+- TUN-4 (https://upload.wikimedia.org/wikipedia/commons/e/e2/Abdi_asse_ogcn_2425.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e2/Abdi_asse_ogcn_2425.png — skipping.
+- TUN-5 (https://upload.wikimedia.org/wikipedia/commons/7/7d/Montassar_Talbi_2021.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/7/7d/Montassar_Talbi_2021.jpg — skipping.
+- TUN-8 (https://upload.wikimedia.org/wikipedia/commons/d/d9/Dylan_Bronn_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d9/Dylan_Bronn_2.jpg — skipping.
+- TUN-9 (https://upload.wikimedia.org/wikipedia/commons/e/e4/Mortadha_Ben_Ouanes.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e4/Mortadha_Ben_Ouanes.jpg — skipping.
+- TUR-1 (https://upload.wikimedia.org/wikipedia/commons/b/b6/Mert_G%C3%BCnok_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b6/Mert_G%C3%BCnok_%28cropped%29.jpg — skipping.
+- TUR-11 (https://upload.wikimedia.org/wikipedia/commons/8/89/Ferdi_Kad%C4%B1o%C4%9Flu_2024.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/89/Ferdi_Kad%C4%B1o%C4%9Flu_2024.jpg — skipping.
+- TUR-13 (https://upload.wikimedia.org/wikipedia/commons/d/db/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93032.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/db/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93032.jpg — skipping.
+- TUR-14 (https://upload.wikimedia.org/wikipedia/commons/9/98/Orkun_K%C3%B6k%C3%A7%C3%BC_20260121_%282%29_-_cropped_version.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/98/Orkun_K%C3%B6k%C3%A7%C3%BC_20260121_%282%29_-_cropped_version.jpg — skipping.
+- TUR-15 (https://upload.wikimedia.org/wikipedia/commons/d/d7/AUT_vs._TUR_2016-03-29_%28342%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d7/AUT_vs._TUR_2016-03-29_%28342%29.jpg — skipping.
+- TUR-16 (https://upload.wikimedia.org/wikipedia/commons/f/fe/977561_sPICT_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fe/977561_sPICT_%28cropped%29.jpg — skipping.
+- TUR-17 (https://upload.wikimedia.org/wikipedia/commons/6/62/Kaan-Ayhan-08-2019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/62/Kaan-Ayhan-08-2019.jpg — skipping.
+- TUR-18 (https://upload.wikimedia.org/wikipedia/commons/4/41/Muhammed_Kerem_Akt%C3%BCrko%C4%9Flu.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/4/41/Muhammed_Kerem_Akt%C3%BCrko%C4%9Flu.png — skipping.
+- TUR-2 (https://upload.wikimedia.org/wikipedia/commons/d/dd/Altay_Bayindir_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/dd/Altay_Bayindir_%28cropped%29.jpg — skipping.
+- TUR-22 (https://upload.wikimedia.org/wikipedia/commons/c/c6/Rus-Turkey_%285%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c6/Rus-Turkey_%285%29.jpg — skipping.
+- TUR-3 (https://upload.wikimedia.org/wikipedia/commons/0/0b/U%C4%9Furcan_%C3%87ak%C4%B1r_-_beIN-Sports-Reklam_%282021%29_%28cropped%29.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0b/U%C4%9Furcan_%C3%87ak%C4%B1r_-_beIN-Sports-Reklam_%282021%29_%28cropped%29.png — skipping.
+- TUR-4 (https://upload.wikimedia.org/wikipedia/commons/5/5f/Zeki_%C3%A7elik_2020.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5f/Zeki_%C3%A7elik_2020.jpg — skipping.
+- TUR-5 (https://upload.wikimedia.org/wikipedia/commons/8/88/Merih_Demiral_2026.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/88/Merih_Demiral_2026.jpg — skipping.
+- TUR-6 (https://upload.wikimedia.org/wikipedia/commons/b/bb/AUT_vs._TUR_2016-03-29_%28381%29_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/bb/AUT_vs._TUR_2016-03-29_%28381%29_%28cropped%29.jpg — skipping.
+- TUR-7 (https://upload.wikimedia.org/wikipedia/commons/d/df/Eren_Elmal%C4%B1_20251019.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/df/Eren_Elmal%C4%B1_20251019.jpg — skipping.
+- TUR-8 (https://upload.wikimedia.org/wikipedia/commons/1/1a/Abd%C3%BClkerim_Bardak%C3%A7%C4%B1_-_beIN-Sports-Reklam_%282021%29_%28cropped%29.png): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1a/Abd%C3%BClkerim_Bardak%C3%A7%C4%B1_-_beIN-Sports-Reklam_%282021%29_%28cropped%29.png — skipping.
+- TUR-9 (https://upload.wikimedia.org/wikipedia/commons/6/6a/Ozan_kabak.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6a/Ozan_kabak.jpg — skipping.
+- URU-10 (https://upload.wikimedia.org/wikipedia/commons/e/e8/Joaquin-Piquerez-Palmeiras-Liverpool-abr24.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e8/Joaquin-Piquerez-Palmeiras-Liverpool-abr24.jpg — skipping.
+- URU-12 (https://upload.wikimedia.org/wikipedia/commons/2/2e/M.UGARTE.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/2e/M.UGARTE.jpg — skipping.
+- URU-13 (https://upload.wikimedia.org/wikipedia/commons/c/c8/20171114_AUT_URU_4518_-_Rodrigo_Bentancur_%28cropped%29_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c8/20171114_AUT_URU_4518_-_Rodrigo_Bentancur_%28cropped%29_2.jpg — skipping.
+- URU-18 (https://upload.wikimedia.org/wikipedia/commons/0/0c/Agust%C3%ADn_Canobbio_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/0c/Agust%C3%ADn_Canobbio_2018.jpg — skipping.
+- URU-24 (https://upload.wikimedia.org/wikipedia/commons/1/11/Darwin_N%C3%BA%C3%B1ez_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/Darwin_N%C3%BA%C3%B1ez_%28cropped%29.jpg — skipping.
+- URU-4 (https://upload.wikimedia.org/wikipedia/commons/5/5d/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/5d/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez.jpg — skipping.
+- URU-6 (https://upload.wikimedia.org/wikipedia/commons/3/3f/FC_Red_Bull_Salzburg_gegen_CF_Barcelona_%28Testspiel_4._August_2021%29_45_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3f/FC_Red_Bull_Salzburg_gegen_CF_Barcelona_%28Testspiel_4._August_2021%29_45_%28cropped%29.jpg — skipping.
+- URU-7 (https://upload.wikimedia.org/wikipedia/commons/3/3e/Guillermo_Varela_2022.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/3/3e/Guillermo_Varela_2022.jpg — skipping.
+- URU-8 (https://upload.wikimedia.org/wikipedia/commons/f/f5/Math%C3%ADas_Olivera_WC2022.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f5/Math%C3%ADas_Olivera_WC2022.jpg — skipping.
+- URU-9 (https://upload.wikimedia.org/wikipedia/commons/b/b5/Mat%C3%ADas_Vi%C3%B1a.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b5/Mat%C3%ADas_Vi%C3%B1a.jpg — skipping.
+- USA-11 (https://upload.wikimedia.org/wikipedia/commons/0/03/Ricardo_Pepi_USMNT_v_Belgium_Mar_28_2026-47.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/03/Ricardo_Pepi_USMNT_v_Belgium_Mar_28_2026-47.jpg — skipping.
+- USA-2 (https://upload.wikimedia.org/wikipedia/commons/a/ab/Folarin_Balogun_USMNT_v_Belgium_Mar_28_2026-69_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ab/Folarin_Balogun_USMNT_v_Belgium_Mar_28_2026-69_%28cropped%29.jpg — skipping.
+- USA-3 (https://upload.wikimedia.org/wikipedia/commons/d/d5/Weston_McKennie_USMNT_v_Belgium_Mar_28_2026-68_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d5/Weston_McKennie_USMNT_v_Belgium_Mar_28_2026-68_%28cropped%29.jpg — skipping.
+- USA-5 (https://upload.wikimedia.org/wikipedia/commons/a/a4/Tyler_Adams_09052026_%284%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/a4/Tyler_Adams_09052026_%284%29.jpg — skipping.
+- USA-7 (https://commons.wikimedia.org/wiki/Special:FilePath/Matt%20Turner%20USMNT%20v%20Belgium%20Mar%2028%202026-176.jpg?width=420): robots.txt disallows asset https://commons.wikimedia.org/wiki/Special:FilePath/Matt%20Turner%20USMNT%20v%20Belgium%20Mar%2028%202026-176.jpg?width=420 — skipping.
+- USA-8 (https://upload.wikimedia.org/wikipedia/commons/6/6e/Sergino_Dest.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/6e/Sergino_Dest.jpg — skipping.
+- UZB-11 (https://upload.wikimedia.org/wikipedia/commons/6/64/Behruz_Karimov.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/64/Behruz_Karimov.jpg — skipping.
+- UZB-12 (https://upload.wikimedia.org/wikipedia/commons/2/23/Avazbek_O%CA%BBlmasaliyev.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/2/23/Avazbek_O%CA%BBlmasaliyev.jpg — skipping.
+- UZB-13 (https://upload.wikimedia.org/wikipedia/commons/b/b9/Jahongir_O%CA%BBrozov.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/b/b9/Jahongir_O%CA%BBrozov.jpg — skipping.
+- UZB-15 (https://upload.wikimedia.org/wikipedia/commons/c/c8/Otabek_Shukurov.webp): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c8/Otabek_Shukurov.webp — skipping.
+- UZB-16 (https://upload.wikimedia.org/wikipedia/commons/a/ab/Jamshid_Iskanderov_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/a/ab/Jamshid_Iskanderov_%28cropped%29.jpg — skipping.
+- UZB-17 (https://upload.wikimedia.org/wikipedia/commons/1/1e/Odiljon_Hamrobekov_2020.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/1e/Odiljon_Hamrobekov_2020.jpg — skipping.
+- UZB-18 (https://upload.wikimedia.org/wikipedia/commons/5/54/Esteghlal_FC_vs_Al-Gharafa_FC%2C_16_September_2024_-_06.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/5/54/Esteghlal_FC_vs_Al-Gharafa_FC%2C_16_September_2024_-_06.jpg — skipping.
+- UZB-19 (https://upload.wikimedia.org/wikipedia/commons/9/99/Oston_Urunov.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/9/99/Oston_Urunov.jpg — skipping.
+- UZB-2 (https://upload.wikimedia.org/wikipedia/commons/f/f6/Abduvohid_Nematov_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/f6/Abduvohid_Nematov_%28cropped%29.jpg — skipping.
+- UZB-20 (https://upload.wikimedia.org/wikipedia/commons/d/d6/Dostonbek_Khamdamov_2018.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/d/d6/Dostonbek_Khamdamov_2018.jpg — skipping.
+- UZB-21 (https://upload.wikimedia.org/wikipedia/commons/c/c9/Aziz_G%CA%BBaniyev.webp): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/c/c9/Aziz_G%CA%BBaniyev.webp — skipping.
+- UZB-23 (https://upload.wikimedia.org/wikipedia/commons/0/00/Sherzod_Esanov.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/00/Sherzod_Esanov.jpg — skipping.
+- UZB-25 (https://upload.wikimedia.org/wikipedia/commons/e/e2/Esteghlal_Celebrate_IPL_Title_Win_at_Azadi_Stadium_-_145.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/e/e2/Esteghlal_Celebrate_IPL_Title_Win_at_Azadi_Stadium_-_145.jpg — skipping.
+- UZB-26 (https://upload.wikimedia.org/wikipedia/commons/0/00/Igor_Sergeev_Persepolis_v_Sepahan_23_January_2026.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/00/Igor_Sergeev_Persepolis_v_Sepahan_23_January_2026.jpg — skipping.
+- UZB-3 (https://upload.wikimedia.org/wikipedia/commons/f/fa/Botirali_Ergashev_03.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/f/fa/Botirali_Ergashev_03.jpg — skipping.
+- UZB-5 (https://upload.wikimedia.org/wikipedia/commons/1/11/FC_Pakhtakor_in_March_2019_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/1/11/FC_Pakhtakor_in_March_2019_%28cropped%29.jpg — skipping.
+- UZB-6 (https://upload.wikimedia.org/wikipedia/commons/0/03/Iran_v_Uzbekistan_2-2%2C_25_March_2025%2C_Azadi_Stadium%2C_World_Cup_2026_qualifier_32_%28cropped%29.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/0/03/Iran_v_Uzbekistan_2-2%2C_25_March_2025%2C_Azadi_Stadium%2C_World_Cup_2026_qualifier_32_%28cropped%29.jpg — skipping.
+- UZB-7 (https://upload.wikimedia.org/wikipedia/commons/8/88/%D8%B1%D8%B3%D8%AA%D9%85_%D8%A2%D8%B4%D9%88%D8%B1%D9%85%D8%A7%D8%AA%D9%81_%D8%B3%D8%A7%D9%84_2025_%D8%A7%D8%B3%D8%AA%D9%82%D9%84%D8%A7%D9%84.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/8/88/%D8%B1%D8%B3%D8%AA%D9%85_%D8%A2%D8%B4%D9%88%D8%B1%D9%85%D8%A7%D8%AA%D9%81_%D8%B3%D8%A7%D9%84_2025_%D8%A7%D8%B3%D8%AA%D9%82%D9%84%D8%A7%D9%84.jpg — skipping.
+- UZB-9 (https://upload.wikimedia.org/wikipedia/commons/6/60/Umar_Eshmurodov_2.jpg): asset HTTP 429 at https://upload.wikimedia.org/wikipedia/commons/6/60/Umar_Eshmurodov_2.jpg — skipping.

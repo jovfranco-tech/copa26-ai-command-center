@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Crest, Flag, Avatar, FavButton, Jersey } from '@worldcup/ui';
 import type { Player } from '@worldcup/shared';
 import { downloadedPlayerPhotoExts, playerPhotoFallbacks } from '@/generated/playerPhotos';
-import blobPlayerPhotos from '../../../../packages/shared/src/data/blobPlayerPhotos.json';
 import { downloadedTeamCrestExts, teamCrestFallbacks } from '@/generated/teamCrests';
 import {
   downloadedTeamKitExts,

@@ -76,6 +76,8 @@ function bridgeRealMatch(
     weather: 'clear',
     status,
     score: { home: real.homeGoals ?? 0, away: real.awayGoals ?? 0 },
+    formations: real.formations,
+    mvp: real.mvp,
     liveTime: real.minute != null ? `${real.minute}'` : undefined,
     spectators: venueName(real.venue) !== venueTbd ? venueName(real.venue) : t('estadio3d.localCapacity'),
     pitchZoneInsights: entry?.pitchZoneInsights ?? PLACEHOLDER_INSIGHTS,

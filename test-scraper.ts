@@ -1,6 +1,4 @@
 import { scrapeCardsForMatch } from './api/_shared/gemini-news-scraper';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 async function main() {
   console.log('Testing scraper for MEX vs KOR...');

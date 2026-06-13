@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { Icon, StatusBadge, Empty, cn } from '@worldcup/ui';
 import { fmtFull, type Match, type MatchEvent, type Player, type Team } from '@worldcup/shared';
 import { DataSourceBadge } from '@/components/DataSourceBadge';
-import { TeamCrest, TeamFlag, TeamKit, FavStar } from '@/components/identity';
+import { TeamCrest, TeamFlag, TeamKit, FavStar, PlayerAvatar } from '@/components/identity';
 import { useMatch, usePlayers, useTeamsMap } from '@/hooks';
 import { useT, type Translate } from '@/i18n';
 import { h2hSummary, matchSourceInfo, venuePhotoSrc, venueTimeLabel, weatherSummary } from '@/lib/matchMeta';
@@ -26,7 +26,7 @@ export function MatchDetail({ id }: { id: string }) {
 
   const homeName = teams[m.home]?.name ?? m.home;
   const awayName = teams[m.away]?.name ?? m.away;
-  const pH = m.possH ?? 50;
+
   const events = data?.events ?? [];
   const weather = weatherSummary(m.id, t);
   const h2h = h2hSummary(m.home, m.away, t);
@@ -145,9 +145,9 @@ export function MatchDetail({ id }: { id: string }) {
         ))}
       </div>
 
-      {tab === 'events' && <EventsTimeline events={events} homeCode={m.home} />}
-      {tab === 'lineups' && <Lineups homeCode={m.home} awayCode={m.away} />}
-      {tab === 'stats' && <MatchStats m={m} pH={pH} />}
+      {tab === 'events' && <EventsTimeline match={m} events={events} homeCode={m.home} />}
+      {tab === 'lineups' && <Lineups homeCode={m.home} awayCode={m.away} injuries={m.injuries} />}
+      {tab === 'stats' && <MatchStats m={m} />}
       {tab === 'intel' && <MatchIntel source={source} weather={weather} h2h={h2h} />}
     </div>
   );
@@ -184,6 +184,9 @@ function MatchPreviewBrief({ match, homeTeam, awayTeam, teamsArray }: { match: M
 
 function PostMatchDebrief({ match, homeTeam, awayTeam, userPick }: { match: Match; homeTeam: Team | undefined; awayTeam: Team | undefined; userPick: PoolPick | undefined }) {
   const t = useT();
+  const { data: playersData } = usePlayers();
+  const mvpPlayer = useMemo(() => playersData?.items.find((p) => p.id === match.mvp), [playersData, match.mvp]);
+
   const realHome = match.homeGoals ?? 0;
   const realAway = match.awayGoals ?? 0;
   const realOutcome = realHome > realAway ? 'home' : realHome < realAway ? 'away' : 'draw';
@@ -208,6 +211,22 @@ function PostMatchDebrief({ match, homeTeam, awayTeam, userPick }: { match: Matc
 
   return (
     <div style={{ fontSize: 13, color: 'var(--tx-2)', lineHeight: 1.6 }}>
+      {match.chronicle && (
+        <div style={{ padding: '12px', background: 'var(--bg-card)', borderRadius: 8, marginBottom: 12, borderLeft: '3px solid var(--gold)' }}>
+          <p style={{ margin: 0, fontStyle: 'italic', fontSize: 12 }}>"{match.chronicle}"</p>
+        </div>
+      )}
+      {mvpPlayer && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, padding: '8px', background: 'var(--bg-hover)', borderRadius: 8 }}>
+          <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--gold)' }}>
+             <PlayerAvatar player={mvpPlayer} size={40} />
+          </div>
+          <div>
+            <span style={{ fontSize: 10, color: 'var(--gold)', fontWeight: 700, textTransform: 'uppercase', display: 'block', lineHeight: 1 }}>{t('matchDetail.mvp') || 'JUGADOR DEL PARTIDO'}</span>
+            <div style={{ fontWeight: 600, fontSize: 14 }}>{mvpPlayer.name}</div>
+          </div>
+        </div>
+      )}
       <p style={{ margin: '0 0 6px' }}>
         {t('matchDetail.finalResult')}: <strong>{homeTeam?.name ?? match.home} {realHome} - {realAway} {awayTeam?.name ?? match.away}</strong>
       </p>
@@ -256,9 +275,56 @@ function IntelCard({ title, data }: { title: string; data: { label: string; sour
   );
 }
 
-function EventsTimeline({ events, homeCode }: { events: MatchEvent[]; homeCode: string }) {
+function EventsTimeline({ match, events, homeCode }: { match: Match; events: MatchEvent[]; homeCode: string }) {
   const t = useT();
-  if (!events.length) return <Empty icon="whistle" title={t('matchDetail.noEventsTitle')} text={t('matchDetail.noEventsText')} />;
+  const { data: playersData } = usePlayers();
+  const aiTimeline = match.timeline ?? [];
+  if (!events.length && !aiTimeline.length) return <Empty icon="whistle" title={t('matchDetail.noEventsTitle')} text={t('matchDetail.noEventsText')} />;
+  
+  if (aiTimeline.length) {
+    const iconMap: Record<string, string> = { goal: 'ball', yellow_card: 'cards', red_card: 'cards', substitution: 'activity', injury: 'activity', other: 'info' };
+    const colorMap: Record<string, string> = { goal: 'var(--gold)', yellow_card: '#FFC107', red_card: '#F44336', substitution: 'var(--tx-2)', injury: '#F44336', other: 'var(--tx-3)' };
+    
+    return (
+      <div className="card card-pad">
+        <div className="tl">
+          <div className="axis" />
+          {[...aiTimeline].sort((a, b) => a.minute - b.minute).map((e, idx) => {
+            const isHome = e.team === 'home';
+            const player = playersData?.items.find(p => p.id === e.player);
+            const playerName = player ? shortPlayerName(player.name) : e.player;
+            return (
+              <div key={idx} className="tl-ev">
+                <div>
+                  {isHome && (
+                    <span className="tl-card right">
+                      <Icon name={iconMap[e.type] as any} size={13} style={{ color: colorMap[e.type] }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                        <strong style={{ fontSize: 13 }}>{playerName}</strong>
+                        <span style={{ fontSize: 11, color: 'var(--tx-3)' }}>{e.detail}</span>
+                      </div>
+                    </span>
+                  )}
+                </div>
+                <span className="tl-min num">{e.minute}&apos;</span>
+                <div>
+                  {!isHome && (
+                    <span className="tl-card">
+                      <Icon name={iconMap[e.type] as any} size={13} style={{ color: colorMap[e.type] }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <strong style={{ fontSize: 13 }}>{playerName}</strong>
+                        <span style={{ fontSize: 11, color: 'var(--tx-3)' }}>{e.detail}</span>
+                      </div>
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="card card-pad">
       <div className="tl">
@@ -294,7 +360,7 @@ function EventsTimeline({ events, homeCode }: { events: MatchEvent[]; homeCode: 
   );
 }
 
-function Lineups({ homeCode, awayCode }: { homeCode: string; awayCode: string }) {
+function Lineups({ homeCode, awayCode, injuries }: { homeCode: string; awayCode: string; injuries?: string[] }) {
   const { data: home } = usePlayers({ team: homeCode });
   const { data: away } = usePlayers({ team: awayCode });
   const homePlayers = home?.items ?? [];
@@ -304,8 +370,8 @@ function Lineups({ homeCode, awayCode }: { homeCode: string; awayCode: string })
     <div className="match-lineups-layout">
       <LineupPitch homeCode={homeCode} awayCode={awayCode} homePlayers={homePlayers} awayPlayers={awayPlayers} />
       <div className="grid squad-list-grid">
-        <SquadList code={homeCode} players={homePlayers} />
-        <SquadList code={awayCode} players={awayPlayers} />
+        <SquadList code={homeCode} players={homePlayers} injuries={injuries} />
+        <SquadList code={awayCode} players={awayPlayers} injuries={injuries} />
       </div>
     </div>
   );
@@ -451,7 +517,7 @@ function shortPlayerName(name: string): string {
   return parts.length > 1 ? parts[parts.length - 1]! : name;
 }
 
-function SquadList({ code, players }: { code: string; players: Player[] }) {
+function SquadList({ code, players, injuries }: { code: string; players: Player[]; injuries?: string[] }) {
   const teams = useTeamsMap();
   const t = useT();
   return (
@@ -467,7 +533,9 @@ function SquadList({ code, players }: { code: string; players: Player[] }) {
               <span className="num muted" style={{ width: 24 }}>
                 {p.number ?? '—'}
               </span>
-              <span style={{ flex: 1, fontWeight: 600, fontSize: 13 }}>{p.name}</span>
+              <span style={{ flex: 1, fontWeight: 600, fontSize: 13 }}>
+                {p.name} {injuries?.includes(p.id) && <span title="Lesionado">🚑</span>}
+              </span>
               <span className={`pos-tag pos-${p.pos}`}>{p.pos}</span>
             </div>
           ))
@@ -481,12 +549,19 @@ function SquadList({ code, players }: { code: string; players: Player[] }) {
   );
 }
 
-function MatchStats({ m, pH }: { m: { shotsH: number | null; shotsA: number | null; shotsTH: number | null; shotsTA: number | null }; pH: number }) {
+function MatchStats({ m }: { m: Match }) {
   const t = useT();
-  if (m.shotsH == null)
+  
+  if (!m.teamStats && m.shotsH == null)
     return <Empty icon="stats" title={t('stats.emptyTitle')} text={t('matchDetail.noStatsText')} />;
-  const rows: Array<[string, number, number]> = [
-    [t('stats.possession'), pH, 100 - pH],
+    
+  const rows: Array<[string, number, number]> = m.teamStats ? [
+    [t('stats.possession'), m.teamStats.home.possession, m.teamStats.away.possession],
+    [t('cards.shots'), m.teamStats.home.shots, m.teamStats.away.shots],
+    ['Tiros de Esquina', m.teamStats.home.corners, m.teamStats.away.corners],
+    ['Faltas', m.teamStats.home.fouls, m.teamStats.away.fouls]
+  ] : [
+    [t('stats.possession'), m.possH ?? 50, 100 - (m.possH ?? 50)],
     [t('cards.shots'), m.shotsH ?? 0, m.shotsA ?? 0],
     [t('matchDetail.shotsOnTarget'), m.shotsTH ?? 0, m.shotsTA ?? 0],
   ];

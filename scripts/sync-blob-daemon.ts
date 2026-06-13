@@ -5,6 +5,7 @@ const API_URL = 'https://copa26-command-center.vercel.app/api/admin-blob-upload'
 const SECRET = 'Bearer temp-admin-upload-secret';
 const ASSETS_DIR = join(process.cwd(), 'private-assets', 'players');
 const OUTPUT_JSON = join(process.cwd(), 'packages', 'shared', 'src', 'data', 'blobPlayerPhotos.json');
+const failedRetries: Record<string, number> = {};
 
 async function sync() {
   if (!existsSync(ASSETS_DIR)) return;
@@ -22,7 +23,12 @@ async function sync() {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const playerId = file.replace(/\.[^/.]+$/, "");
-    if (currentUrls[playerId]) continue; // already uploaded
+    if (currentUrls[playerId] && currentUrls[playerId] !== 'failed') continue; // already uploaded
+    if (failedRetries[playerId] > 3) {
+      currentUrls[playerId] = 'failed';
+      updated = true;
+      continue;
+    }
 
     const path = join(ASSETS_DIR, file);
     const buffer = readFileSync(path);
@@ -46,6 +52,7 @@ async function sync() {
       console.log(` -> ${data.url}`);
     } catch (err) {
       console.error(`Failed to upload ${file}:`, err);
+      failedRetries[playerId] = (failedRetries[playerId] || 0) + 1;
     }
     
     await new Promise(r => setTimeout(r, 200));
