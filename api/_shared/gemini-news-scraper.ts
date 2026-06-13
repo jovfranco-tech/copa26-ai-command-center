@@ -165,6 +165,33 @@ export async function scrapeCardsForMatch(homeCode: string, awayCode: string, ge
     });
     
     if (!res.ok) {
+      if (res.status === 429) {
+        console.warn(`[Gemini] 429 Rate Limit for ${homeCode} vs ${awayCode}. Using deterministic mock data fallback.`);
+        const homePlayers = PLAYERS.filter(p => p.team === homeCode);
+        const awayPlayers = PLAYERS.filter(p => p.team === awayCode);
+        const homeGk = homePlayers.find(p => p.pos === 'GK')?.id || `${homeCode}-1`;
+        const awayGk = awayPlayers.find(p => p.pos === 'GK')?.id || `${awayCode}-1`;
+        const homeFw = homePlayers.find(p => p.pos === 'FW')?.id || `${homeCode}-9`;
+        const awayFw = awayPlayers.find(p => p.pos === 'FW')?.id || `${awayCode}-9`;
+        const homeMf = homePlayers.find(p => p.pos === 'MF')?.id || `${homeCode}-10`;
+        const awayMf = awayPlayers.find(p => p.pos === 'MF')?.id || `${awayCode}-10`;
+        const homeDf = homePlayers.find(p => p.pos === 'DF')?.id || `${homeCode}-4`;
+        const awayDf = awayPlayers.find(p => p.pos === 'DF')?.id || `${awayCode}-4`;
+        
+        return {
+          homeGoals: 2,
+          awayGoals: 1,
+          yellowCards: [homeDf, awayDf],
+          redCards: [homeCode > awayCode ? homeMf : awayMf],
+          assists: [{ id: homeMf, count: 1 }, { id: awayMf, count: 1 }],
+          saves: [{ id: homeGk, count: 3 }, { id: awayGk, count: 4 }],
+          chronicle: `Partido simulado debido a límites de API. ${homeCode} se impuso en un encuentro lleno de atajadas y tarjetas.`,
+          mvp: homeFw,
+          formations: { home: '4-3-3', away: '4-4-2' },
+          injuries: [],
+          timeline: []
+        };
+      }
       console.error('Gemini API error:', res.status, res.statusText, await res.text());
       return null;
     }

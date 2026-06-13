@@ -88,8 +88,8 @@ async function runDaemon() {
           console.error(`[autonomous-journalist] Error procesando ${match.id}:`, err.message);
         }
         
-        // Wait 40 seconds to avoid Gemini input token rate limits on free tier
-        await new Promise(r => setTimeout(r, 40000));
+        // Wait 5 seconds between matches
+        await new Promise(r => setTimeout(r, 5000));
       }
     }
   }
@@ -97,13 +97,14 @@ async function runDaemon() {
   if (updated) {
     console.log('[autonomous-journalist] Guardando reportes en producción...');
     try {
-      const res = await fetch('https://fifa-private-world-cup-dashboard.vercel.app/api/admin-ops', {
+      const res = await fetch('https://fifa-private-world-cup-dashboard.vercel.app/api/admin-upload-blob', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-admin-password': process.env.ADMIN_PASSWORD || ''
+          'x-admin-password': process.env.ADMIN_PASSWORD || '',
+          'x-filename': 'live-data.json'
         },
-        body: JSON.stringify({ action: 'updateOverlay', overlay })
+        body: JSON.stringify(overlay)
       });
       if (res.ok) {
         console.log('[autonomous-journalist] Overlay actualizado con éxito.');
