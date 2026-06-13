@@ -7,7 +7,1145 @@ export interface PlayerPhotoFallback {
   page?: string;
 }
 
-export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {};
+export const downloadedPlayerPhotoExts: Record<string, PlayerPhotoExt> = {
+  "ALG-1": "jpg",
+  "ALG-10": "jpg",
+  "ALG-11": "jpg",
+  "ALG-12": "jpg",
+  "ALG-14": "jpg",
+  "ALG-15": "jpg",
+  "ALG-16": "jpg",
+  "ALG-17": "jpg",
+  "ALG-18": "jpg",
+  "ALG-19": "jpg",
+  "ALG-2": "jpg",
+  "ALG-20": "jpg",
+  "ALG-21": "jpg",
+  "ALG-22": "jpg",
+  "ALG-23": "jpg",
+  "ALG-24": "jpg",
+  "ALG-25": "jpg",
+  "ALG-26": "jpg",
+  "ALG-3": "jpg",
+  "ALG-5": "jpg",
+  "ALG-6": "jpg",
+  "ALG-7": "jpg",
+  "ALG-8": "jpg",
+  "ALG-9": "jpg",
+  "ARG-1": "jpg",
+  "ARG-10": "jpg",
+  "ARG-11": "jpg",
+  "ARG-12": "jpg",
+  "ARG-13": "jpg",
+  "ARG-14": "jpg",
+  "ARG-15": "jpg",
+  "ARG-16": "jpg",
+  "ARG-17": "png",
+  "ARG-18": "jpg",
+  "ARG-19": "jpg",
+  "ARG-2": "png",
+  "ARG-20": "jpg",
+  "ARG-21": "jpg",
+  "ARG-22": "jpg",
+  "ARG-23": "jpg",
+  "ARG-24": "jpg",
+  "ARG-25": "jpg",
+  "ARG-26": "jpg",
+  "ARG-3": "jpg",
+  "ARG-4": "jpg",
+  "ARG-5": "jpg",
+  "ARG-6": "jpg",
+  "ARG-7": "jpg",
+  "ARG-8": "jpg",
+  "ARG-9": "jpg",
+  "AUS-1": "jpg",
+  "AUS-10": "jpg",
+  "AUS-11": "png",
+  "AUS-2": "jpg",
+  "AUS-3": "jpg",
+  "AUS-4": "jpg",
+  "AUS-5": "jpg",
+  "AUS-6": "jpg",
+  "AUS-7": "jpg",
+  "AUS-8": "jpg",
+  "AUS-9": "jpg",
+  "AUT-1": "jpg",
+  "AUT-10": "jpg",
+  "AUT-11": "jpg",
+  "AUT-12": "jpg",
+  "AUT-13": "jpg",
+  "AUT-14": "jpg",
+  "AUT-15": "jpg",
+  "AUT-16": "jpg",
+  "AUT-17": "jpg",
+  "AUT-18": "jpg",
+  "AUT-19": "jpg",
+  "AUT-20": "jpg",
+  "AUT-21": "jpg",
+  "AUT-23": "jpg",
+  "AUT-24": "jpg",
+  "AUT-25": "jpg",
+  "AUT-26": "jpg",
+  "AUT-3": "png",
+  "AUT-4": "jpg",
+  "AUT-5": "jpg",
+  "AUT-6": "jpg",
+  "AUT-7": "jpg",
+  "AUT-9": "jpg",
+  "BEL-1": "jpg",
+  "BEL-10": "jpg",
+  "BEL-11": "jpg",
+  "BEL-12": "jpg",
+  "BEL-13": "jpg",
+  "BEL-14": "jpg",
+  "BEL-15": "jpg",
+  "BEL-16": "jpg",
+  "BEL-17": "jpg",
+  "BEL-18": "jpg",
+  "BEL-19": "jpg",
+  "BEL-2": "jpg",
+  "BEL-20": "jpg",
+  "BEL-21": "jpg",
+  "BEL-22": "jpg",
+  "BEL-23": "jpg",
+  "BEL-24": "jpg",
+  "BEL-25": "jpg",
+  "BEL-26": "jpg",
+  "BEL-3": "jpg",
+  "BEL-4": "jpg",
+  "BEL-5": "jpg",
+  "BEL-6": "jpg",
+  "BEL-7": "jpg",
+  "BEL-8": "jpg",
+  "BEL-9": "jpg",
+  "BIH-1": "jpg",
+  "BIH-10": "jpg",
+  "BIH-12": "jpg",
+  "BIH-13": "jpg",
+  "BIH-14": "jpg",
+  "BIH-15": "jpg",
+  "BIH-16": "jpg",
+  "BIH-17": "jpg",
+  "BIH-19": "jpg",
+  "BIH-2": "jpg",
+  "BIH-20": "jpg",
+  "BIH-21": "jpg",
+  "BIH-22": "jpg",
+  "BIH-23": "jpg",
+  "BIH-24": "jpg",
+  "BIH-25": "jpg",
+  "BIH-26": "jpg",
+  "BIH-4": "jpg",
+  "BIH-5": "jpg",
+  "BIH-6": "jpg",
+  "BIH-7": "jpg",
+  "BIH-8": "jpg",
+  "BIH-9": "jpg",
+  "BRA-1": "jpg",
+  "BRA-10": "jpg",
+  "BRA-11": "jpg",
+  "BRA-12": "jpg",
+  "BRA-13": "jpg",
+  "BRA-14": "jpg",
+  "BRA-15": "jpg",
+  "BRA-16": "jpg",
+  "BRA-17": "jpeg",
+  "BRA-18": "jpg",
+  "BRA-19": "jpg",
+  "BRA-2": "jpg",
+  "BRA-20": "jpg",
+  "BRA-21": "jpg",
+  "BRA-22": "jpg",
+  "BRA-23": "jpg",
+  "BRA-24": "jpg",
+  "BRA-25": "jpg",
+  "BRA-26": "png",
+  "BRA-3": "jpg",
+  "BRA-4": "png",
+  "BRA-5": "jpg",
+  "BRA-6": "jpg",
+  "BRA-7": "jpg",
+  "BRA-8": "jpg",
+  "BRA-9": "jpg",
+  "CAN-1": "jpg",
+  "CAN-10": "jpg",
+  "CAN-11": "png",
+  "CAN-2": "jpg",
+  "CAN-3": "jpg",
+  "CAN-4": "jpg",
+  "CAN-5": "jpg",
+  "CAN-6": "png",
+  "CAN-7": "png",
+  "CAN-8": "jpg",
+  "CAN-9": "png",
+  "CIV-1": "jpg",
+  "CIV-10": "jpg",
+  "CIV-11": "jpg",
+  "CIV-12": "jpg",
+  "CIV-13": "jpg",
+  "CIV-14": "jpg",
+  "CIV-16": "jpg",
+  "CIV-17": "jpg",
+  "CIV-18": "jpg",
+  "CIV-19": "jpg",
+  "CIV-2": "jpg",
+  "CIV-20": "jpg",
+  "CIV-21": "jpg",
+  "CIV-22": "jpg",
+  "CIV-23": "jpg",
+  "CIV-24": "jpg",
+  "CIV-25": "png",
+  "CIV-26": "jpg",
+  "CIV-3": "jpg",
+  "CIV-4": "jpg",
+  "CIV-5": "jpg",
+  "CIV-6": "jpg",
+  "CIV-7": "jpg",
+  "CIV-8": "jpg",
+  "CIV-9": "jpg",
+  "COD-1": "jpg",
+  "COD-10": "jpg",
+  "COD-11": "jpg",
+  "COD-12": "jpg",
+  "COD-13": "jpg",
+  "COD-14": "jpg",
+  "COD-15": "jpg",
+  "COD-16": "jpg",
+  "COD-17": "jpg",
+  "COD-18": "jpg",
+  "COD-19": "jpg",
+  "COD-2": "jpg",
+  "COD-20": "jpg",
+  "COD-21": "jpg",
+  "COD-22": "jpg",
+  "COD-23": "jpg",
+  "COD-24": "jpg",
+  "COD-25": "jpg",
+  "COD-26": "jpg",
+  "COD-3": "jpg",
+  "COD-4": "jpg",
+  "COD-5": "jpg",
+  "COD-6": "jpg",
+  "COD-7": "jpg",
+  "COD-8": "jpg",
+  "COD-9": "jpg",
+  "COL-1": "jpg",
+  "COL-10": "jpg",
+  "COL-11": "jpg",
+  "COL-12": "jpg",
+  "COL-13": "jpg",
+  "COL-14": "jpg",
+  "COL-15": "jpg",
+  "COL-16": "jpg",
+  "COL-17": "jpg",
+  "COL-19": "png",
+  "COL-2": "jpeg",
+  "COL-20": "jpg",
+  "COL-21": "jpg",
+  "COL-22": "jpg",
+  "COL-23": "jpg",
+  "COL-24": "jpg",
+  "COL-25": "jpg",
+  "COL-26": "jpg",
+  "COL-3": "jpg",
+  "COL-4": "jpg",
+  "COL-5": "jpg",
+  "COL-6": "jpg",
+  "COL-7": "jpg",
+  "COL-9": "jpg",
+  "CPV-1": "jpg",
+  "CPV-11": "jpg",
+  "CPV-12": "jpg",
+  "CPV-13": "jpg",
+  "CPV-14": "jpg",
+  "CPV-15": "jpg",
+  "CPV-16": "jpg",
+  "CPV-17": "jpg",
+  "CPV-18": "jpg",
+  "CPV-19": "jpg",
+  "CPV-2": "jpg",
+  "CPV-20": "jpg",
+  "CPV-21": "jpg",
+  "CPV-22": "jpg",
+  "CPV-23": "jpg",
+  "CPV-24": "jpg",
+  "CPV-25": "jpg",
+  "CPV-26": "jpg",
+  "CPV-3": "jpg",
+  "CPV-4": "jpg",
+  "CPV-5": "jpg",
+  "CPV-6": "jpg",
+  "CPV-7": "jpg",
+  "CPV-8": "jpg",
+  "CPV-9": "jpg",
+  "CRO-1": "jpg",
+  "CRO-10": "png",
+  "CRO-11": "jpg",
+  "CRO-12": "jpg",
+  "CRO-13": "jpg",
+  "CRO-14": "jpg",
+  "CRO-15": "jpg",
+  "CRO-16": "jpg",
+  "CRO-17": "png",
+  "CRO-18": "png",
+  "CRO-19": "jpg",
+  "CRO-2": "jpg",
+  "CRO-20": "jpg",
+  "CRO-21": "jpg",
+  "CRO-22": "jpg",
+  "CRO-23": "jpg",
+  "CRO-24": "jpg",
+  "CRO-25": "jpg",
+  "CRO-26": "jpg",
+  "CRO-3": "jpg",
+  "CRO-4": "png",
+  "CRO-5": "jpg",
+  "CRO-6": "jpg",
+  "CRO-7": "jpg",
+  "CRO-8": "jpg",
+  "CRO-9": "jpg",
+  "CUW-1": "jpg",
+  "CUW-10": "jpg",
+  "CUW-11": "jpg",
+  "CUW-12": "jpg",
+  "CUW-13": "jpg",
+  "CUW-14": "jpg",
+  "CUW-15": "jpg",
+  "CUW-16": "jpg",
+  "CUW-17": "jpg",
+  "CUW-18": "jpg",
+  "CUW-19": "jpg",
+  "CUW-2": "jpg",
+  "CUW-21": "jpg",
+  "CUW-22": "jpg",
+  "CUW-23": "jpg",
+  "CUW-24": "jpg",
+  "CUW-26": "jpg",
+  "CUW-3": "jpg",
+  "CUW-4": "jpg",
+  "CUW-5": "jpg",
+  "CUW-6": "jpg",
+  "CUW-7": "jpg",
+  "CUW-8": "jpg",
+  "CUW-9": "jpg",
+  "CZE-1": "jpg",
+  "CZE-10": "jpg",
+  "CZE-11": "jpg",
+  "CZE-12": "jpg",
+  "CZE-13": "jpg",
+  "CZE-14": "jpg",
+  "CZE-15": "jpg",
+  "CZE-16": "jpg",
+  "CZE-17": "jpg",
+  "CZE-18": "jpeg",
+  "CZE-19": "jpg",
+  "CZE-2": "jpg",
+  "CZE-20": "jpg",
+  "CZE-21": "jpg",
+  "CZE-22": "jpg",
+  "CZE-23": "jpg",
+  "CZE-24": "jpg",
+  "CZE-25": "jpg",
+  "CZE-26": "jpg",
+  "CZE-3": "jpg",
+  "CZE-4": "jpg",
+  "CZE-5": "jpg",
+  "CZE-6": "jpg",
+  "CZE-7": "jpg",
+  "CZE-8": "jpg",
+  "CZE-9": "jpg",
+  "ECU-1": "jpg",
+  "ECU-10": "jpg",
+  "ECU-11": "jpg",
+  "ECU-12": "jpg",
+  "ECU-13": "jpg",
+  "ECU-14": "jpg",
+  "ECU-15": "jpg",
+  "ECU-16": "jpg",
+  "ECU-17": "jpg",
+  "ECU-18": "jpg",
+  "ECU-19": "jpg",
+  "ECU-2": "jpg",
+  "ECU-20": "jpg",
+  "ECU-21": "jpg",
+  "ECU-22": "jpg",
+  "ECU-23": "jpg",
+  "ECU-24": "jpg",
+  "ECU-25": "jpg",
+  "ECU-26": "jpg",
+  "ECU-3": "jpg",
+  "ECU-4": "jpg",
+  "ECU-5": "jpg",
+  "ECU-6": "jpg",
+  "ECU-7": "png",
+  "ECU-8": "png",
+  "ECU-9": "jpg",
+  "EGY-1": "jpg",
+  "EGY-10": "jpg",
+  "EGY-11": "jpg",
+  "EGY-12": "jpg",
+  "EGY-13": "jpg",
+  "EGY-14": "jpg",
+  "EGY-15": "jpg",
+  "EGY-16": "jpg",
+  "EGY-17": "jpg",
+  "EGY-18": "jpg",
+  "EGY-19": "jpg",
+  "EGY-2": "jpg",
+  "EGY-20": "jpg",
+  "EGY-21": "jpg",
+  "EGY-22": "jpg",
+  "EGY-23": "jpg",
+  "EGY-24": "jpg",
+  "EGY-25": "jpg",
+  "EGY-26": "jpg",
+  "EGY-3": "jpg",
+  "EGY-4": "jpg",
+  "EGY-5": "jpg",
+  "EGY-6": "jpg",
+  "EGY-7": "jpg",
+  "EGY-8": "jpg",
+  "EGY-9": "jpg",
+  "ENG-1": "jpg",
+  "ENG-10": "jpg",
+  "ENG-11": "jpg",
+  "ENG-12": "jpg",
+  "ENG-13": "jpg",
+  "ENG-14": "jpg",
+  "ENG-15": "jpg",
+  "ENG-16": "jpg",
+  "ENG-17": "jpg",
+  "ENG-18": "jpg",
+  "ENG-19": "jpg",
+  "ENG-20": "jpg",
+  "ENG-21": "jpg",
+  "ENG-22": "jpg",
+  "ENG-23": "jpg",
+  "ENG-24": "jpg",
+  "ENG-25": "jpg",
+  "ENG-26": "jpg",
+  "ENG-3": "jpg",
+  "ENG-4": "jpg",
+  "ENG-5": "jpg",
+  "ENG-6": "jpg",
+  "ENG-7": "jpg",
+  "ENG-8": "jpg",
+  "ENG-9": "jpg",
+  "ESP-1": "jpg",
+  "ESP-10": "jpg",
+  "ESP-11": "jpg",
+  "ESP-12": "jpg",
+  "ESP-13": "png",
+  "ESP-14": "jpg",
+  "ESP-15": "jpg",
+  "ESP-16": "jpg",
+  "ESP-17": "jpg",
+  "ESP-18": "jpg",
+  "ESP-19": "jpg",
+  "ESP-2": "jpg",
+  "ESP-20": "jpg",
+  "ESP-21": "png",
+  "ESP-22": "jpg",
+  "ESP-23": "jpg",
+  "ESP-24": "jpg",
+  "ESP-25": "jpg",
+  "ESP-26": "jpg",
+  "ESP-3": "jpg",
+  "ESP-4": "jpg",
+  "ESP-5": "png",
+  "ESP-6": "jpg",
+  "ESP-8": "png",
+  "ESP-9": "jpg",
+  "FRA-1": "jpg",
+  "FRA-10": "jpg",
+  "FRA-11": "jpg",
+  "FRA-12": "jpg",
+  "FRA-13": "jpg",
+  "FRA-14": "jpg",
+  "FRA-15": "jpg",
+  "FRA-16": "png",
+  "FRA-17": "jpg",
+  "FRA-18": "png",
+  "FRA-19": "jpg",
+  "FRA-2": "jpg",
+  "FRA-20": "jpg",
+  "FRA-21": "jpg",
+  "FRA-22": "jpg",
+  "FRA-23": "jpg",
+  "FRA-24": "jpg",
+  "FRA-25": "png",
+  "FRA-26": "jpg",
+  "FRA-3": "jpg",
+  "FRA-4": "jpg",
+  "FRA-5": "jpg",
+  "FRA-7": "jpg",
+  "FRA-8": "jpg",
+  "FRA-9": "jpg",
+  "GER-1": "jpg",
+  "GER-10": "jpg",
+  "GER-11": "jpg",
+  "GER-12": "jpg",
+  "GER-13": "jpg",
+  "GER-14": "jpg",
+  "GER-15": "jpg",
+  "GER-16": "jpg",
+  "GER-17": "jpg",
+  "GER-18": "jpg",
+  "GER-19": "jpg",
+  "GER-2": "jpg",
+  "GER-20": "jpg",
+  "GER-21": "jpg",
+  "GER-22": "jpg",
+  "GER-23": "jpg",
+  "GER-24": "jpg",
+  "GER-25": "jpg",
+  "GER-26": "jpg",
+  "GER-3": "jpg",
+  "GER-4": "jpg",
+  "GER-5": "jpg",
+  "GER-6": "jpg",
+  "GER-7": "jpg",
+  "GER-8": "jpg",
+  "GER-9": "jpg",
+  "GHA-1": "jpg",
+  "GHA-10": "jpg",
+  "GHA-11": "jpg",
+  "GHA-12": "jpg",
+  "GHA-13": "jpg",
+  "GHA-14": "jpg",
+  "GHA-15": "jpg",
+  "GHA-16": "jpg",
+  "GHA-17": "png",
+  "GHA-18": "jpg",
+  "GHA-19": "jpg",
+  "GHA-2": "jpg",
+  "GHA-20": "jpg",
+  "GHA-21": "jpg",
+  "GHA-22": "jpg",
+  "GHA-23": "jpg",
+  "GHA-24": "jpg",
+  "GHA-25": "png",
+  "GHA-26": "jpg",
+  "GHA-3": "jpg",
+  "GHA-4": "jpg",
+  "GHA-5": "jpg",
+  "GHA-7": "jpg",
+  "GHA-8": "jpg",
+  "GHA-9": "jpg",
+  "HAI-1": "jpg",
+  "HAI-10": "jpg",
+  "HAI-11": "jpg",
+  "HAI-12": "jpg",
+  "HAI-13": "jpg",
+  "HAI-14": "jpg",
+  "HAI-15": "jpg",
+  "HAI-16": "jpg",
+  "HAI-17": "jpg",
+  "HAI-18": "jpg",
+  "HAI-19": "jpg",
+  "HAI-2": "jpg",
+  "HAI-20": "jpg",
+  "HAI-21": "jpg",
+  "HAI-23": "jpg",
+  "HAI-24": "jpg",
+  "HAI-25": "jpg",
+  "HAI-26": "jpg",
+  "HAI-3": "jpg",
+  "HAI-4": "jpg",
+  "HAI-5": "jpg",
+  "HAI-6": "jpg",
+  "HAI-7": "jpg",
+  "HAI-8": "jpg",
+  "HAI-9": "jpg",
+  "IRN-1": "jpg",
+  "IRN-10": "jpg",
+  "IRN-11": "jpg",
+  "IRN-12": "jpg",
+  "IRN-13": "jpg",
+  "IRN-14": "jpg",
+  "IRN-15": "jpg",
+  "IRN-16": "jpg",
+  "IRN-17": "jpg",
+  "IRN-18": "jpg",
+  "IRN-19": "jpg",
+  "IRN-2": "jpg",
+  "IRN-20": "jpg",
+  "IRN-21": "jpg",
+  "IRN-22": "jpg",
+  "IRN-23": "jpg",
+  "IRN-24": "jpg",
+  "IRN-25": "jpg",
+  "IRN-26": "jpg",
+  "IRN-3": "jpg",
+  "IRN-4": "jpg",
+  "IRN-5": "jpg",
+  "IRN-6": "jpg",
+  "IRN-7": "jpg",
+  "IRN-8": "jpg",
+  "IRQ-1": "jpg",
+  "IRQ-10": "jpg",
+  "IRQ-11": "jpg",
+  "IRQ-12": "jpg",
+  "IRQ-13": "jpg",
+  "IRQ-14": "jpg",
+  "IRQ-15": "jpg",
+  "IRQ-16": "jpg",
+  "IRQ-17": "jpg",
+  "IRQ-18": "jpg",
+  "IRQ-19": "jpg",
+  "IRQ-2": "jpg",
+  "IRQ-20": "jpg",
+  "IRQ-21": "jpg",
+  "IRQ-22": "jpg",
+  "IRQ-23": "jpg",
+  "IRQ-24": "jpg",
+  "IRQ-25": "jpg",
+  "IRQ-26": "jpg",
+  "IRQ-3": "jpg",
+  "IRQ-4": "jpg",
+  "IRQ-5": "jpg",
+  "IRQ-6": "jpg",
+  "IRQ-7": "jpg",
+  "IRQ-8": "jpg",
+  "IRQ-9": "jpg",
+  "JOR-1": "jpg",
+  "JOR-10": "jpg",
+  "JOR-11": "jpg",
+  "JOR-12": "jpg",
+  "JOR-13": "jpg",
+  "JOR-14": "jpg",
+  "JOR-15": "jpg",
+  "JOR-16": "jpg",
+  "JOR-17": "jpg",
+  "JOR-18": "jpg",
+  "JOR-19": "jpg",
+  "JOR-2": "jpg",
+  "JOR-20": "jpg",
+  "JOR-21": "jpg",
+  "JOR-22": "jpg",
+  "JOR-23": "png",
+  "JOR-24": "jpg",
+  "JOR-25": "jpg",
+  "JOR-26": "jpg",
+  "JOR-3": "jpg",
+  "JOR-4": "jpg",
+  "JOR-5": "jpg",
+  "JOR-6": "jpg",
+  "JOR-8": "jpg",
+  "JOR-9": "jpg",
+  "JPN-1": "jpg",
+  "JPN-10": "jpg",
+  "JPN-11": "jpg",
+  "JPN-12": "jpg",
+  "JPN-13": "jpg",
+  "JPN-14": "jpg",
+  "JPN-15": "jpg",
+  "JPN-16": "png",
+  "JPN-17": "png",
+  "JPN-18": "jpg",
+  "JPN-19": "jpg",
+  "JPN-2": "jpg",
+  "JPN-20": "jpg",
+  "JPN-21": "jpg",
+  "JPN-22": "jpg",
+  "JPN-23": "jpg",
+  "JPN-24": "jpg",
+  "JPN-25": "jpg",
+  "JPN-26": "jpg",
+  "JPN-3": "jpg",
+  "JPN-4": "jpg",
+  "JPN-5": "jpg",
+  "JPN-6": "jpg",
+  "JPN-7": "jpg",
+  "JPN-8": "jpg",
+  "JPN-9": "jpg",
+  "KOR-1": "jpg",
+  "KOR-10": "jpg",
+  "KOR-12": "jpg",
+  "KOR-13": "jpg",
+  "KOR-14": "jpg",
+  "KOR-15": "jpg",
+  "KOR-16": "jpg",
+  "KOR-17": "jpg",
+  "KOR-18": "jpg",
+  "KOR-19": "jpg",
+  "KOR-2": "jpg",
+  "KOR-20": "jpg",
+  "KOR-21": "jpg",
+  "KOR-22": "jpg",
+  "KOR-23": "jpg",
+  "KOR-24": "jpg",
+  "KOR-25": "jpg",
+  "KOR-26": "jpeg",
+  "KOR-3": "jpg",
+  "KOR-4": "jpg",
+  "KOR-5": "jpg",
+  "KOR-6": "jpg",
+  "KOR-7": "jpg",
+  "KOR-9": "jpg",
+  "KSA-1": "jpg",
+  "KSA-10": "jpg",
+  "KSA-11": "jpg",
+  "KSA-12": "jpg",
+  "KSA-13": "jpg",
+  "KSA-14": "jpg",
+  "KSA-15": "jpg",
+  "KSA-16": "jpg",
+  "KSA-17": "jpg",
+  "KSA-18": "jpg",
+  "KSA-19": "jpg",
+  "KSA-2": "jpg",
+  "KSA-20": "jpg",
+  "KSA-21": "jpg",
+  "KSA-23": "jpg",
+  "KSA-24": "jpg",
+  "KSA-25": "jpg",
+  "KSA-26": "jpg",
+  "KSA-4": "jpg",
+  "KSA-5": "jpg",
+  "KSA-6": "jpg",
+  "KSA-7": "jpg",
+  "KSA-8": "jpg",
+  "KSA-9": "jpg",
+  "MAR-1": "jpg",
+  "MAR-10": "jpg",
+  "MAR-11": "jpg",
+  "MAR-12": "jpg",
+  "MAR-13": "jpg",
+  "MAR-14": "jpg",
+  "MAR-15": "jpg",
+  "MAR-16": "jpg",
+  "MAR-17": "jpg",
+  "MAR-18": "jpg",
+  "MAR-19": "jpg",
+  "MAR-2": "jpg",
+  "MAR-20": "jpg",
+  "MAR-21": "jpg",
+  "MAR-22": "jpg",
+  "MAR-23": "jpg",
+  "MAR-24": "jpg",
+  "MAR-25": "jpg",
+  "MAR-26": "jpg",
+  "MAR-3": "jpg",
+  "MAR-4": "jpg",
+  "MAR-5": "jpg",
+  "MAR-6": "jpg",
+  "MAR-7": "jpg",
+  "MAR-8": "jpg",
+  "MAR-9": "jpg",
+  "MEX-1": "jpg",
+  "MEX-10": "jpg",
+  "MEX-11": "jpg",
+  "MEX-13": "jpg",
+  "MEX-14": "jpg",
+  "MEX-15": "jpg",
+  "MEX-16": "jpg",
+  "MEX-17": "jpg",
+  "MEX-18": "jpg",
+  "MEX-19": "jpg",
+  "MEX-2": "jpg",
+  "MEX-20": "jpg",
+  "MEX-21": "jpg",
+  "MEX-22": "jpg",
+  "MEX-23": "jpg",
+  "MEX-24": "jpg",
+  "MEX-25": "jpg",
+  "MEX-26": "jpg",
+  "MEX-3": "jpg",
+  "MEX-4": "jpg",
+  "MEX-5": "jpg",
+  "MEX-6": "jpg",
+  "MEX-7": "jpg",
+  "MEX-8": "jpg",
+  "MEX-9": "jpg",
+  "NED-1": "png",
+  "NED-10": "jpg",
+  "NED-11": "jpg",
+  "NED-12": "jpg",
+  "NED-13": "jpg",
+  "NED-14": "jpg",
+  "NED-15": "jpg",
+  "NED-16": "jpg",
+  "NED-17": "jpg",
+  "NED-18": "jpg",
+  "NED-19": "jpg",
+  "NED-2": "jpg",
+  "NED-20": "jpg",
+  "NED-21": "jpg",
+  "NED-22": "jpg",
+  "NED-23": "jpg",
+  "NED-24": "jpg",
+  "NED-25": "jpg",
+  "NED-26": "jpg",
+  "NED-3": "jpg",
+  "NED-4": "jpg",
+  "NED-5": "jpg",
+  "NED-6": "jpg",
+  "NED-7": "jpg",
+  "NED-8": "jpg",
+  "NED-9": "jpg",
+  "NOR-1": "jpg",
+  "NOR-10": "jpg",
+  "NOR-11": "jpg",
+  "NOR-12": "jpg",
+  "NOR-13": "jpg",
+  "NOR-14": "jpg",
+  "NOR-15": "jpg",
+  "NOR-16": "jpg",
+  "NOR-17": "jpg",
+  "NOR-18": "jpg",
+  "NOR-19": "jpg",
+  "NOR-2": "jpg",
+  "NOR-20": "jpg",
+  "NOR-21": "jpg",
+  "NOR-22": "jpg",
+  "NOR-23": "jpg",
+  "NOR-24": "jpg",
+  "NOR-25": "jpg",
+  "NOR-26": "jpg",
+  "NOR-3": "jpg",
+  "NOR-4": "jpg",
+  "NOR-5": "jpg",
+  "NOR-6": "jpg",
+  "NOR-7": "jpg",
+  "NOR-9": "jpg",
+  "NZL-1": "jpg",
+  "NZL-10": "jpg",
+  "NZL-11": "jpg",
+  "NZL-2": "jpg",
+  "NZL-3": "jpg",
+  "NZL-4": "jpg",
+  "NZL-5": "jpg",
+  "NZL-6": "jpg",
+  "NZL-7": "jpg",
+  "NZL-8": "jpg",
+  "NZL-9": "jpg",
+  "PAN-1": "jpg",
+  "PAN-10": "jpg",
+  "PAN-11": "jpg",
+  "PAN-12": "jpg",
+  "PAN-13": "jpg",
+  "PAN-14": "jpg",
+  "PAN-15": "jpg",
+  "PAN-16": "jpg",
+  "PAN-17": "jpg",
+  "PAN-18": "jpg",
+  "PAN-19": "jpg",
+  "PAN-2": "jpg",
+  "PAN-20": "jpg",
+  "PAN-21": "jpg",
+  "PAN-22": "jpg",
+  "PAN-23": "jpg",
+  "PAN-24": "jpg",
+  "PAN-25": "jpg",
+  "PAN-26": "jpg",
+  "PAN-3": "jpg",
+  "PAN-4": "jpg",
+  "PAN-5": "jpg",
+  "PAN-6": "jpg",
+  "PAN-7": "jpg",
+  "PAN-8": "jpg",
+  "PAN-9": "jpg",
+  "PAR-1": "png",
+  "PAR-10": "jpg",
+  "PAR-11": "jpg",
+  "PAR-12": "jpg",
+  "PAR-13": "jpg",
+  "PAR-14": "jpg",
+  "PAR-15": "jpg",
+  "PAR-16": "jpg",
+  "PAR-17": "jpg",
+  "PAR-18": "jpg",
+  "PAR-19": "jpg",
+  "PAR-2": "jpg",
+  "PAR-20": "jpg",
+  "PAR-21": "jpg",
+  "PAR-22": "jpg",
+  "PAR-23": "jpg",
+  "PAR-24": "jpg",
+  "PAR-25": "jpg",
+  "PAR-26": "jpg",
+  "PAR-3": "jpg",
+  "PAR-4": "jpg",
+  "PAR-5": "jpg",
+  "PAR-6": "jpg",
+  "PAR-7": "jpg",
+  "PAR-8": "jpg",
+  "PAR-9": "jpg",
+  "POR-1": "jpg",
+  "POR-10": "jpg",
+  "POR-11": "jpg",
+  "POR-12": "jpg",
+  "POR-13": "jpg",
+  "POR-14": "png",
+  "POR-15": "jpg",
+  "POR-16": "jpg",
+  "POR-17": "jpg",
+  "POR-18": "jpg",
+  "POR-19": "jpg",
+  "POR-2": "jpg",
+  "POR-20": "jpg",
+  "POR-21": "jpg",
+  "POR-22": "jpg",
+  "POR-23": "jpg",
+  "POR-24": "jpg",
+  "POR-25": "jpg",
+  "POR-26": "jpg",
+  "POR-3": "jpg",
+  "POR-5": "jpg",
+  "POR-6": "jpg",
+  "POR-7": "jpg",
+  "POR-8": "jpg",
+  "POR-9": "jpg",
+  "QAT-1": "jpg",
+  "QAT-10": "jpg",
+  "QAT-11": "jpg",
+  "QAT-12": "jpg",
+  "QAT-13": "jpg",
+  "QAT-14": "jpg",
+  "QAT-15": "jpg",
+  "QAT-16": "jpg",
+  "QAT-17": "jpg",
+  "QAT-18": "jpg",
+  "QAT-19": "jpg",
+  "QAT-2": "jpg",
+  "QAT-20": "jpg",
+  "QAT-21": "jpg",
+  "QAT-22": "jpg",
+  "QAT-23": "jpg",
+  "QAT-24": "jpg",
+  "QAT-25": "jpg",
+  "QAT-26": "jpg",
+  "QAT-3": "jpg",
+  "QAT-4": "jpg",
+  "QAT-5": "jpg",
+  "QAT-6": "jpg",
+  "QAT-7": "jpg",
+  "QAT-8": "jpg",
+  "QAT-9": "png",
+  "RSA-1": "jpg",
+  "RSA-10": "jpg",
+  "RSA-12": "jpg",
+  "RSA-13": "jpg",
+  "RSA-14": "jpg",
+  "RSA-15": "jpg",
+  "RSA-16": "jpg",
+  "RSA-17": "jpg",
+  "RSA-18": "jpg",
+  "RSA-19": "jpg",
+  "RSA-2": "jpg",
+  "RSA-20": "jpg",
+  "RSA-21": "jpg",
+  "RSA-22": "jpg",
+  "RSA-23": "jpg",
+  "RSA-24": "jpg",
+  "RSA-25": "jpg",
+  "RSA-26": "jpg",
+  "RSA-3": "jpg",
+  "RSA-4": "jpg",
+  "RSA-5": "jpg",
+  "RSA-6": "jpg",
+  "RSA-7": "jpg",
+  "RSA-8": "jpg",
+  "RSA-9": "jpg",
+  "SCO-1": "jpg",
+  "SCO-10": "jpg",
+  "SCO-11": "jpg",
+  "SCO-12": "jpg",
+  "SCO-13": "jpg",
+  "SCO-14": "jpg",
+  "SCO-15": "jpg",
+  "SCO-16": "jpg",
+  "SCO-17": "png",
+  "SCO-18": "jpg",
+  "SCO-19": "jpg",
+  "SCO-2": "jpg",
+  "SCO-20": "jpg",
+  "SCO-21": "jpg",
+  "SCO-22": "jpg",
+  "SCO-23": "jpg",
+  "SCO-24": "jpg",
+  "SCO-25": "jpg",
+  "SCO-26": "jpg",
+  "SCO-3": "jpg",
+  "SCO-4": "jpg",
+  "SCO-5": "jpg",
+  "SCO-6": "jpg",
+  "SCO-7": "jpg",
+  "SCO-8": "jpg",
+  "SCO-9": "jpg",
+  "SEN-1": "jpg",
+  "SEN-10": "jpg",
+  "SEN-11": "jpg",
+  "SEN-12": "jpg",
+  "SEN-13": "jpg",
+  "SEN-14": "jpg",
+  "SEN-15": "jpg",
+  "SEN-16": "jpg",
+  "SEN-18": "jpg",
+  "SEN-19": "jpg",
+  "SEN-2": "jpg",
+  "SEN-20": "png",
+  "SEN-21": "jpg",
+  "SEN-22": "jpg",
+  "SEN-23": "jpg",
+  "SEN-24": "png",
+  "SEN-25": "jpg",
+  "SEN-26": "jpg",
+  "SEN-3": "jpg",
+  "SEN-4": "jpg",
+  "SEN-5": "jpg",
+  "SEN-6": "jpg",
+  "SEN-7": "jpg",
+  "SEN-8": "png",
+  "SEN-9": "png",
+  "SUI-1": "jpg",
+  "SUI-10": "jpg",
+  "SUI-11": "jpg",
+  "SUI-12": "jpg",
+  "SUI-13": "jpg",
+  "SUI-14": "jpg",
+  "SUI-15": "jpg",
+  "SUI-16": "jpg",
+  "SUI-17": "jpg",
+  "SUI-18": "jpg",
+  "SUI-19": "jpg",
+  "SUI-2": "jpg",
+  "SUI-20": "jpg",
+  "SUI-21": "jpg",
+  "SUI-23": "jpg",
+  "SUI-24": "jpg",
+  "SUI-25": "jpg",
+  "SUI-26": "jpg",
+  "SUI-3": "jpg",
+  "SUI-4": "jpg",
+  "SUI-5": "jpg",
+  "SUI-6": "jpg",
+  "SUI-7": "jpg",
+  "SUI-8": "jpg",
+  "SUI-9": "jpg",
+  "SWE-1": "jpg",
+  "SWE-10": "jpg",
+  "SWE-11": "jpg",
+  "SWE-2": "jpg",
+  "SWE-3": "jpg",
+  "SWE-4": "jpg",
+  "SWE-5": "jpg",
+  "SWE-6": "jpg",
+  "SWE-7": "jpg",
+  "SWE-8": "jpg",
+  "SWE-9": "jpg",
+  "TUN-1": "jpg",
+  "TUN-10": "jpg",
+  "TUN-11": "jpg",
+  "TUN-13": "jpg",
+  "TUN-14": "jpg",
+  "TUN-15": "jpg",
+  "TUN-16": "jpg",
+  "TUN-17": "jpg",
+  "TUN-18": "jpg",
+  "TUN-19": "jpg",
+  "TUN-2": "jpg",
+  "TUN-20": "jpg",
+  "TUN-21": "jpg",
+  "TUN-22": "jpg",
+  "TUN-23": "jpg",
+  "TUN-24": "jpg",
+  "TUN-25": "jpg",
+  "TUN-26": "jpg",
+  "TUN-3": "jpg",
+  "TUN-4": "jpg",
+  "TUN-5": "jpg",
+  "TUN-6": "jpg",
+  "TUN-7": "jpg",
+  "TUN-8": "jpg",
+  "TUN-9": "jpg",
+  "TUR-1": "jpg",
+  "TUR-10": "jpg",
+  "TUR-11": "jpg",
+  "TUR-12": "jpg",
+  "TUR-13": "jpg",
+  "TUR-14": "jpg",
+  "TUR-15": "jpg",
+  "TUR-16": "jpg",
+  "TUR-17": "jpg",
+  "TUR-18": "jpg",
+  "TUR-19": "jpg",
+  "TUR-2": "jpg",
+  "TUR-20": "jpg",
+  "TUR-21": "jpg",
+  "TUR-22": "jpg",
+  "TUR-23": "jpg",
+  "TUR-24": "jpg",
+  "TUR-26": "jpg",
+  "TUR-3": "jpg",
+  "TUR-4": "jpg",
+  "TUR-5": "jpg",
+  "TUR-6": "jpg",
+  "TUR-7": "jpg",
+  "TUR-8": "jpg",
+  "TUR-9": "jpg",
+  "URU-1": "jpg",
+  "URU-10": "jpg",
+  "URU-11": "png",
+  "URU-12": "jpg",
+  "URU-13": "jpg",
+  "URU-14": "jpg",
+  "URU-15": "jpg",
+  "URU-16": "jpg",
+  "URU-17": "jpg",
+  "URU-18": "jpg",
+  "URU-19": "jpg",
+  "URU-2": "png",
+  "URU-20": "png",
+  "URU-21": "jpg",
+  "URU-22": "jpg",
+  "URU-23": "jpg",
+  "URU-24": "jpg",
+  "URU-25": "jpg",
+  "URU-26": "jpg",
+  "URU-3": "jpg",
+  "URU-4": "jpg",
+  "URU-5": "jpg",
+  "URU-6": "jpg",
+  "URU-7": "jpg",
+  "URU-8": "jpg",
+  "URU-9": "jpg",
+  "USA-1": "jpg",
+  "USA-10": "jpg",
+  "USA-11": "jpg",
+  "USA-3": "jpg",
+  "USA-4": "jpg",
+  "USA-5": "jpg",
+  "USA-6": "jpg",
+  "USA-7": "jpg",
+  "USA-9": "jpg",
+  "UZB-1": "jpg",
+  "UZB-10": "jpg",
+  "UZB-11": "jpg",
+  "UZB-12": "jpg",
+  "UZB-13": "jpg",
+  "UZB-14": "jpg",
+  "UZB-15": "jpg",
+  "UZB-16": "jpg",
+  "UZB-17": "jpg",
+  "UZB-18": "jpg",
+  "UZB-19": "jpg",
+  "UZB-2": "jpg",
+  "UZB-21": "jpg",
+  "UZB-22": "jpg",
+  "UZB-23": "jpg",
+  "UZB-24": "jpg",
+  "UZB-25": "jpg",
+  "UZB-26": "jpg",
+  "UZB-3": "jpg",
+  "UZB-4": "jpg",
+  "UZB-5": "jpg",
+  "UZB-6": "jpg",
+  "UZB-7": "jpg",
+  "UZB-8": "jpg",
+  "UZB-9": "jpg"
+};
 
 export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
   "ALG-10": {
@@ -154,6 +1292,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Alexis_Mac_Allister"
   },
+  "ARG-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/19/Rulli_asse_om_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Ger%C3%B3nimo_Rulli"
+  },
   "ARG-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Enzo_Fern%C3%A1ndez_2025_FIFA_Club_World_Cup_Final.jpg",
     "ext": "jpg",
@@ -194,9 +1337,29 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Juli%C3%A1n_%C3%81lvarez_(footballer)_2023.jpg"
   },
+  "ARG-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Marcos_Senesi_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marcos_Senesi"
+  },
   "ARG-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Nicolas_Tagliafico.jpg",
     "ext": "jpg"
+  },
+  "ARG-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Entrenamiento_Argentina_Sub20_previo_al_mundial_-_BugWarp_%2813%29_%28cropped%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Valent%C3%ADn_Barco"
+  },
+  "ARG-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/Argentina_national_football_team_-_2_-_2022_%28Gonzalo_Montiel%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Gonzalo_Montiel"
+  },
+  "ARG-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/61/Lisandro_Martinez_2022.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lisandro_Mart%C3%ADnez"
   },
   "ARG-9": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Cristian_Romero_WC2022.jpg",
@@ -257,6 +1420,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/57/4822273_AE7I7255_-_Martin_Boyle.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Martin_Boyle"
+  },
+  "AUT-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/55/FC_Salzburg_vs._Atletico_Madrid_%282025-01-29_UEFA_Championsleague%29_47.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alexander_Schlager"
   },
   "AUT-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/1a/FC_Liefering_versus_WSG_Wattens_%2824._Mai_2019%29_06.jpg",
@@ -343,6 +1511,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "png",
     "page": "https://commons.wikimedia.org/wiki/File:Pentz_(2024).png"
   },
+  "AUT-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9c/FC_Liefering_versus_Young_Violets_Austria_Wien_%2830._August_2019%29_28.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:FC_Liefering_versus_Young_Violets_Austria_Wien_(30._August_2019)_28.jpg"
+  },
+  "AUT-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Kevin_Danso_ASSE_RCL_2425.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kevin_Danso"
+  },
   "AUT-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Austria_national_under-21_football_team_-_Teamcamp_June_2017_%28110%29.jpg",
     "ext": "jpg",
@@ -362,6 +1540,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Phillipp-mwene.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Phillipp_Mwene"
+  },
+  "BEL-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Beau_Lowette_%26_Thibaut_Courtois_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Thibaut_Courtois"
   },
   "BEL-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Joaquin_Seys_USMNT_v_Belgium_Mar_28_2026-206.jpg",
@@ -408,6 +1591,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Amadou_Onana"
   },
+  "BEL-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/Senne_Lammens_USMNT_v_Belgium_Mar_28_2026-98_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Senne_Lammens"
+  },
   "BEL-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Romelu_Lukaku_2021.jpg",
     "ext": "jpg",
@@ -443,6 +1631,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Matias_Fernandez-Pardo"
   },
+  "BEL-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Zeno_Debast_USMNT_v_Belgium_Mar_28_2026-80_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Zeno_Debast"
+  },
+  "BEL-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Arthur_Theate_USMNT_v_Belgium_Mar_28_2026-22_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Arthur_Theate"
+  },
   "BEL-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Wout_Faes_Leicester_Championship_%28cropped%29.jpg",
     "ext": "jpg",
@@ -462,6 +1660,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/36/Koni_De_Winter_USMNT_v_Belgium_Mar_28_2026-36_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Koni_De_Winter"
+  },
+  "BIH-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7a/2025-04-23_-_FC_St_Pauli_-_Nikola_Vasilj.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Nikola_Vasilj"
   },
   "BIH-11": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/94/%C4%8Celik_rcl_asse_2425.png",
@@ -553,6 +1756,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:20180610_FIFA_Friendly_Match_Austria_vs._Brazil_850_1625.jpg"
   },
+  "BRA-10": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/29/Brasil_estreia_contra_a_%C3%81frica_do_Sul_no_Man%C3%A9_Garrincha_%E2%80%94_%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F_%287%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Brasil_estreia_contra_a_%C3%81frica_do_Sul_no_Man%C3%A9_Garrincha_%E2%80%94_%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F_(7).jpg"
+  },
+  "BRA-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/08/Roger_Iba%C3%B1ez_2026.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Roger_Iba%C3%B1ez"
+  },
   "BRA-12": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG",
     "ext": "jpg",
@@ -628,6 +1841,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "png",
     "page": "https://commons.wikimedia.org/wiki/File:Rayan_2026.png"
   },
+  "BRA-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Ederson1.JPG",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Ederson1.JPG"
+  },
   "BRA-4": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0d/GabrielLille2019.png",
     "ext": "png",
@@ -638,10 +1856,20 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:FC_Salzburg_gegen_Paris_Saint-Germain_UEFA_Champions_League_49_(cropped).jpg"
   },
+  "BRA-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0d/FC_Zenit_Saint_Petersburg_vs._Juventus%2C_20_October_2021_28_-_Alex_Sandro_%28cropped2%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alex_Sandro"
+  },
   "BRA-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f8/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Danilo_Luiz_850_1591_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Danilo_Luiz_850_1591_(cropped).jpg"
+  },
+  "BRA-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b0/L%C3%A9o_Pereira_Atl%C3%A9tico_GO_2022.png",
+    "ext": "png",
+    "page": "https://commons.wikimedia.org/wiki/File:L%C3%A9o_Pereira_Atl%C3%A9tico_GO_2022.png"
   },
   "CAN-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/48/2022-07-30_Fu%C3%9Fball%2C_M%C3%A4nner%2C_DFL-Supercup%2C_RB_Leipzig_-_FC_Bayern_M%C3%BCnchen_1DX_3286_by_Stepro.jpg",
@@ -743,6 +1971,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Simon_Adingra"
   },
+  "CIV-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/36/KapfenbergJudenburg15.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:KapfenbergJudenburg15.jpg"
+  },
   "CIV-21": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Elye_Wahi_2022.jpg",
     "ext": "jpg",
@@ -768,6 +2001,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/Evann_Guessand"
   },
+  "CIV-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Alban_Lafont_%282018-04-21%29_1.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alban_Lafont"
+  },
+  "CIV-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/08/%C3%89quipe_football_ivoirien_03_%28Ousmane_Diomande%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ousmane_Diomande"
+  },
   "CIV-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/92/Joueur_ivoirien_02.jpg",
     "ext": "jpg",
@@ -792,6 +2035,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/28/Doue_asse_rcsa_2425.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Gu%C3%A9la_Dou%C3%A9"
+  },
+  "COD-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Lionel_Mpasi_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lionel_Mpasi"
   },
   "COD-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/74/G%C3%A9d%C3%A9on_Kalulu_%28cropped%29.jpg",
@@ -878,6 +2126,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Chancel_Mbemba"
   },
+  "COL-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fd/David_Ospina%2C_2015-05-31.JPG",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/David_Ospina"
+  },
   "COL-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Lens_-_Reims_%2812-05-2023%29_33.jpg",
     "ext": "jpg",
@@ -962,6 +2215,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/74/Jhon_Dur%C3%A1n%2C_Esteghlal_FC_vs_Al-Nassr_FC_%28ACLElite%29%3B_3_Mar_2025.png",
     "ext": "png",
     "page": "https://commons.wikimedia.org/wiki/File:Jhon_Dur%C3%A1n,_Esteghlal_FC_vs_Al-Nassr_FC_(ACLElite);_3_Mar_2025.png"
+  },
+  "COL-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Jhon_Lucum%C3%AD_September_2019.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jhon_Lucum%C3%AD"
+  },
+  "COL-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3d/ATL-Madrid-Lokomotiv001-Arias.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Santiago_Arias"
   },
   "COL-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/bf/FWC_2018_-_Round_of_16_-_COL_v_ENG_-_Photo_103_%28cropped%29.jpg",
@@ -1123,6 +2386,21 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Petar_Musa"
   },
+  "CRO-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/S%C3%B8nderjyskE_-_FC_K%C3%B8benhavn%2C_27._September_2025_-_j_%28Dominik_Kotarski%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dominik_Kotarski"
+  },
+  "CRO-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/64/Josip_Stani%C5%A1i%C4%87_during_an_Interview_in_2023.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Josip_Stani%C5%A1i%C4%87"
+  },
+  "CRO-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Marin_Pongracic_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marin_Pongra%C4%8Di%C4%87"
+  },
   "CRO-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/6a/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2611_%28Jo%C5%A1ko_Gvardiol%29.jpg",
     "ext": "jpg",
@@ -1137,6 +2415,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/79/Qaraba%C4%9F_vs_Ajax_%2824.10.2024%29_%284%29_%28Josip_%C5%A0utalo%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Josip_%C5%A0utalo"
+  },
+  "CUW-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/53/Room_Eloy_Columbus_Crew_SC_Meet_the_Team_2019.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Eloy_Room"
   },
   "CUW-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Go_Ahead_Eagles_-_AZ_-_53170906955_%28Riechedly_Bazoer%29.jpg",
@@ -1233,6 +2516,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Joshua_Brenet"
   },
+  "CZE-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Matj_kova-1772635856_%28cropped%29.JPG/3840px-Matj_kova-1772635856_%28cropped%29.JPG",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mat%C4%9Bj_Kov%C3%A1%C5%99"
+  },
   "CZE-11": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Jaroslav_Zelen%C3%BD%2C_FCB-SLAVIA_30092018.jpg",
     "ext": "jpg",
@@ -1287,6 +2575,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/03/Tom%C3%A1%C5%A1_Chor%C3%BD_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Tom%C3%A1%C5%A1_Chor%C3%BD"
+  },
+  "CZE-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e6/David_Zima_CZE-KUW_2021-11-11_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/David_Zima"
   },
   "CZE-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/59/Tom%C3%A1%C5%A1_Hole%C5%A1_Jablonec-Ostrava.jpg",
@@ -1358,10 +2651,20 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Nilson_Angulo"
   },
+  "ECU-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/35/2022_FIFA_World_Cup_Qatar_0%E2%80%932_Ecuador_-_%2813%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:2022_FIFA_World_Cup_Qatar_0%E2%80%932_Ecuador_-_(13).jpg"
+  },
   "ECU-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/27/Piero_Hincapi%C3%A9%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29.jpg",
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Piero_Hincapi%C3%A9,_2022-07-31,_Saisoner%C3%B6ffnung_Bayer_04,_Leverkusen_(1).jpg"
+  },
+  "ECU-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/19/JoelOrd%C3%B3%C3%B1ez.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Joel_Ord%C3%B3%C3%B1ez"
   },
   "ECU-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Pacho_asse_psg_2425.png",
@@ -1443,6 +2746,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Mohamed_Elneny"
   },
+  "EGY-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/23/Yasser_Ibrahim_in_FIFA_Club_World_Cup.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Yasser_Ibrahim"
+  },
   "EGY-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/8b/Mohamed_Hany_in_2021_FIFA_Club_World_Cup.jpg",
     "ext": "jpg",
@@ -1508,6 +2816,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Eberechi_Eze"
   },
+  "ENG-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b5/DeanHenderson2018.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dean_Henderson"
+  },
   "ENG-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/cd/1_bukayo_saka_arsenal_2025_%28cropped%29.jpg",
     "ext": "jpg",
@@ -1543,6 +2856,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Ivan_Toney"
   },
+  "ENG-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Queen_Park_Rangers_v_Burnley_26042025_%2825%29_%28James_Trafford%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/James_Trafford"
+  },
   "ENG-4": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/53/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg",
     "ext": "jpg",
@@ -1562,6 +2880,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/64/Marc_Guehi_December_2018.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Marc_Gu%C3%A9hi"
+  },
+  "ENG-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/75/Premier_League_Newcastle-Arsenal_2023-05-07_29_%28cropped_Dan_Burn%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Dan_Burn"
+  },
+  "ESP-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/da/David_Raya_in_2025_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/David_Raya"
   },
   "ESP-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/b6/UEFA_EURO_qualifiers_Sweden_vs_Spain_20191015_Dani_Carvajal_10_%28cropped%29.jpg",
@@ -1613,6 +2941,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi"
   },
+  "ESP-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4b/CE_Manresa_Alev%C3%AD_A%2C_amb_el_porter_Joan_Garcia%2C_abril_de_2012_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Joan_Garcia"
+  },
   "ESP-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/13/Pedri.jpg",
     "ext": "jpg",
@@ -1648,15 +2981,40 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Unai_Sim%C3%B3n"
   },
+  "ESP-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/Uzbekistan_vs._Spain%2C_2024_Summer_Olympic_men%27s_association_football%2C_2024-07-24_%28250%29_-_Marc_Pubill.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marc_Pubill"
+  },
+  "ESP-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Alex_Grimaldo_2020.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/%C3%81lex_Grimaldo"
+  },
+  "ESP-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Eric_Garcia_autographs_2022_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Eric_Garcia_autographs_2022_(cropped).jpg"
+  },
   "ESP-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Robin_Le_Normand_2122.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Robin_Le_Normand"
   },
+  "ESP-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/85/Pedro_Porro_2021.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Pedro_Porro"
+  },
   "ESP-9": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Aymeric_Laporte_2023_%28cropped%29_2.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Aymeric_Laporte"
+  },
+  "FRA-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Brice_Samba_asse_rcl_23_24.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Brice_Samba"
   },
   "FRA-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivier_Giroud_in_2017.jpg",
@@ -1665,6 +3023,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
   "FRA-11": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/de/Theo_Milan-Torino_2021-22.jpg",
     "ext": "jpg"
+  },
+  "FRA-12": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Lens_-_Sochaux_%2823-11-2019%29_73.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Maxence_Lacroix"
   },
   "FRA-13": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/11/Kouadio_Manu_Kon%C3%A9_%282019-08-31%29_%28cropped%29.jpg",
@@ -1746,6 +3109,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Antoine_Griezmann"
   },
+  "FRA-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Malo_Gusto_20042025_%281%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Malo_Gusto"
+  },
   "FRA-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/05/Ofrenda_de_la_Liga_y_la_Champions-13-L.Mill%C3%A1n_%2852109790215%29_%28cropped%29.jpg",
     "ext": "jpg",
@@ -1761,15 +3129,30 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Jules_Kound%C3%A9"
   },
+  "FRA-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Ibrahima_Konat%C3%A9_in_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ibrahima_Konat%C3%A9"
+  },
   "FRA-9": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/8a/1_william_saliba_arsenal_2025_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/William_Saliba"
   },
+  "GER-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/10/20180602_FIFA_Friendly_Match_Austria_vs._Germany_Manuel_Neuer_850_0723.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Manuel_Neuer"
+  },
   "GER-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/a/a8/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2658_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/David_Raum"
+  },
+  "GER-11": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/87/Malick_Thiaw_24052026_%284%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Malick_Thiaw"
   },
   "GER-12": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/90/FC_RB_Salzburg_gegen_FC_Bayern_M%C3%BCnchen_%282026-01-06_Testspiel%29_34.jpg",
@@ -1811,6 +3194,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Leroy_San%C3%A9"
   },
+  "GER-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/OliverBaumann_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Oliver_Baumann"
+  },
   "GER-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/09/20161011_U21_AUT_GER_9328_%28cropped%29.jpg",
     "ext": "jpg",
@@ -1841,10 +3229,20 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Deniz_Undav"
   },
+  "GER-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Alexander_nuebel.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Alexander_N%C3%BCbel"
+  },
   "GER-4": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/08/2025_04_26_Final_de_la_Copa_del_Rey_-_54482387776_%28Elenco_do_Real_Madrid%29_%28Antonio_R%C3%BCdiger%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Antonio_R%C3%BCdiger"
+  },
+  "GER-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Waldemar_Anton_%282025%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Waldemar_Anton"
   },
   "GER-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Jonathan_Tah_2019.jpg",
@@ -1896,6 +3294,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/Augustine_Boakye"
   },
+  "GHA-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/da/Hertha_BSC_vs._West_Ham_United_20190731_%28199%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Joseph_Anang"
+  },
   "GHA-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/16/Kamaldeen_Sulemana_%28cropped%29.jpg",
     "ext": "jpg",
@@ -1930,6 +3333,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Jerome_Opoku_3_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_UECL_20250813_%281%29.jpg/3840px-Jerome_Opoku_3_%C4%B0stanbul_Ba%C5%9Fak%C5%9Fehir_FK_UECL_20250813_%281%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Jerome_Opoku"
+  },
+  "HAI-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/55/Johny_Placide_in_Tsarsko_selo.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Johny_Placide"
   },
   "HAI-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/e/e1/RC_Lens_-_FC_Nantes_%2828-10-2023%29_17.jpg",
@@ -2056,6 +3464,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Dennis_Eckert"
   },
+  "IRN-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/72/Esteghlal_FC_vs_Sepahan_FC%2C_14_December_2021_-_26.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Esteghlal_FC_vs_Sepahan_FC,_14_December_2021_-_26.jpg"
+  },
+  "IRN-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/20/Esteghlal_Celebrate_IPL_Title_Win_at_Azadi_Stadium_-_020.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Saleh_Hardani"
+  },
   "IRN-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/1f/%D9%86%D8%B4%D8%B3%D8%AA_%D8%AE%D8%A8%D8%B1%DB%8C_%D9%BE%DB%8C%D8%B4_%D8%A7%D8%B2_%D8%A8%D8%A7%D8%B2%DB%8C_%D8%A7%DB%8C%D8%B1%D8%A7%D9%86_%D9%88_%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3_%2826%29_%28cropped%29.jpg",
     "ext": "jpg",
@@ -2080,6 +3498,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/1f/YousefiCropped.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Aria_Yousefi"
+  },
+  "IRQ-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/37/Fahad_Talib.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Fahad_Talib"
   },
   "IRQ-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Merchas_doski.jpg",
@@ -2110,6 +3533,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Kevin_Enkido_Yakob2.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Kevin_Yakob"
+  },
+  "IRQ-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/70/Jalal_Hassan.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jalal_Hassan"
   },
   "IRQ-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/14/GAE_-_FC_Groningen_-_52878021366_%28cropped1%29.jpg",
@@ -2321,10 +3749,20 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/K%C5%8D_Itakura"
   },
+  "JPN-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Ko_Itakura_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/K%C5%8D_Itakura"
+  },
   "JPN-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Yuto_Nagatomo_in_2018.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Y%C5%ABto_Nagatomo"
+  },
+  "KOR-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/Rus-SK2017_%2822%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Kim_Seung-gyu"
   },
   "KOR-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/da/191202_K%EB%A6%AC%EA%B7%B8_%EC%8B%9C%EC%83%81%EC%8B%9D%2C_%EA%B9%80%EB%AC%B8%ED%99%98_3.jpg",
@@ -2366,6 +3804,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Lee_Kang-in"
   },
+  "KOR-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4a/240611_%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_vs_%EC%A4%91%EA%B5%AD_%28%EC%86%A1%EB%B2%94%EA%B7%BC%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Song_Bum-keun"
+  },
   "KOR-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Celtic-20240722-062_%28cropped%29.jpg",
     "ext": "jpg",
@@ -2405,6 +3848,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/26/Jo_Hyeon-woo.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Jo_Hyeon-woo"
+  },
+  "KOR-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c3/230422_FC_%EC%84%9C%EC%9A%B8_vs_%EC%88%98%EC%9B%90_%EC%82%BC%EC%84%B1_%EB%B8%94%EB%A3%A8%EC%9C%99%EC%A6%88_%28%EC%9D%B4%ED%95%9C%EB%B2%94%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lee_Han-beom"
+  },
+  "KOR-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/67/250617_FC_%EC%84%9C%EC%9A%B8_vs_%EA%B0%95%EC%9B%90_%28%EC%9D%B4%EA%B8%B0%ED%98%81%29_1.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lee_Gi-hyuk"
   },
   "KOR-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/80/FC_Red_Bull_Salzburg_gegen_Bayern_M%C3%BCnchen_%282025-01-06_Testspiel%29_26.jpg",
@@ -2451,6 +3904,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Ziyad_Al-Johani"
   },
+  "KSA-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Mohammed_Al-Owais_2018.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mohammed_Al-Owais"
+  },
   "KSA-22": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Group_photographs_of_Al_Hilal%2C_Al_Hilal_SFC_vs_Chelsea_F.C.%2C_9_February_2022_%28cropped%29.jpg",
     "ext": "jpg",
@@ -2465,6 +3923,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/85/Saudi_Arabia_v_Oman_%2813%29_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Ali_Al-Bulaihi"
+  },
+  "KSA-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Ali_Majrashi%2C_2025_CONCACAF_Gold_Cup_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Ali_Majrashi"
   },
   "KSA-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/7f/AFC_Elite_League_Western%2C_Azadi_Stadium%2C_Persepolis_0-0_Al_Nassr%2C_17_February_2025%2C_Ali_Lajami.jpg",
@@ -2541,6 +4004,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Gessime_Yassine"
   },
+  "MAR-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/38/Munir_Mohand_Mohamedi_%28cropped2%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Munir_Mohamedi"
+  },
   "MAR-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Bilal_El_Khannouss_vs_Niger_%28cropped%29.jpg",
     "ext": "jpg",
@@ -2580,6 +4048,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/77/Mazraoui.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Noussair_Mazraoui"
+  },
+  "MAR-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/50/FC_Red_Bull_Salzburg_gegen_%C3%87aykur_Rizespor_%28Testspiel%29_34.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Marwane_Sa%C3%A2dane"
+  },
+  "MAR-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Zakaria_El_Ouahdi_at_the_Olympic_Games_2024_%28cropped%29.jpg/1920px-Zakaria_El_Ouahdi_at_the_Olympic_Games_2024_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Zakaria_El_Ouahdi"
   },
   "MAR-8": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Issa_Diop_-_Morocco_v_Paraguay.jpg",
@@ -2796,6 +4274,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Xavi_Simons"
   },
+  "NED-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Go_Ahead_Eagles_-_Feyenoord_-_53679251479_%28Lutsharel_Geertruida%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Lutsharel_Geertruida"
+  },
   "NED-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/5d/20160604_AUT_NED_8876_%28cropped%29.jpg",
     "ext": "jpg",
@@ -2805,6 +4288,21 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/34/Yokohama_F._Marinos_-_Manchester_City_%283-5%29_-_53075276224_%28Nathan_Ake%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Nathan_Ak%C3%A9"
+  },
+  "NED-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Jan_Paul_van_Hecke_24012026_%282%29_%28cropped%29.jpg/3840px-Jan_Paul_van_Hecke_24012026_%282%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jan_Paul_van_Hecke"
+  },
+  "NED-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fa/FC_RB_Salzburg_gegen_Feyenoord_Rotterdam_%28Testspiel_2022-07-09%29_39_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mats_Wieffer"
+  },
+  "NED-9": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Micky_Van_De_Ven_pre-match_training_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Micky_van_de_Ven"
   },
   "NOR-1": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/22/Norway_Italy_-_June_2025_A_10_%28cropped%29.jpg",
@@ -2881,6 +4379,16 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/J%C3%B8rgen_Strand_Larsen"
   },
+  "NOR-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/Norway_Italy_-_June_2025_A_07_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Egil_Selvik"
+  },
+  "NOR-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/01/Norway_Italy_-_June_2025_A_06_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Leo_%C3%98stig%C3%A5rd"
+  },
   "NOR-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/7e/David_M%C3%B8ller_Wolfe.jpg",
     "ext": "jpg",
@@ -2950,6 +4458,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Joe_Bell_2023.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Joe_Bell_(footballer)"
+  },
+  "PAN-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/51/Concacaf_Gold_Cup_%2848248588296%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Luis_Mej%C3%ADa"
   },
   "PAN-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/88/Partido_Galicia_-_Panam%C3%A1_en_Bala%C3%ADdos_51_%28Andr%C3%A9s_Andrade_Cede%C3%B1o%29.jpg",
@@ -3031,6 +4544,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Erick_Davis_(cropped).jpg"
   },
+  "PAR-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/48/Gatito_Fern%C3%A1ndez_%28Cerro_Porte%C3%B1o%29.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Gatito_Fern%C3%A1ndez"
+  },
   "PAR-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/87/Gustavo-Gomez-Palmeiras-Athletico-jul-2022-2.jpg",
     "ext": "jpg",
@@ -3075,11 +4593,6 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/23/Antonio_Sanabria%2C_2025_%28cropped%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Antonio_Sanabria"
-  },
-  "PAR-24": {
-    "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Enciso%202022.jpg?width=420",
-    "ext": "jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Enciso_2022.jpg"
   },
   "PAR-26": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/47/Isidro-Pitta-Juventude-Corinthians-jun-2022.jpg",
@@ -3161,6 +4674,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Cristiano_Ronaldo"
   },
+  "POR-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/38/Jos%C3%A9_S%C3%A1_USMNT_v_Portugal_Mar_31_2026-185_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jos%C3%A9_S%C3%A1"
+  },
   "POR-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Gon%C3%A7alo_Ramos_USMNT_v_Portugal_Mar_31_2026-32_%28cropped%29.jpg",
     "ext": "jpg",
@@ -3196,10 +4714,35 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Francisco_Concei%C3%A7%C3%A3o"
   },
+  "POR-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/be/Rui_Silva_USMNT_v_Portugal_Mar_31_2026-14.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Rui_Silva_USMNT_v_Portugal_Mar_31_2026-14.jpg"
+  },
+  "POR-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/68/Mex-por-14_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/N%C3%A9lson_Semedo"
+  },
   "POR-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Portugal_national_football_team_0866_%28R%C3%BAben_Dias%29.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/R%C3%BAben_Dias"
+  },
+  "POR-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Tom%C3%A1s_Ara%C3%BAjo_USMNT_v_Portugal_Mar_31_2026-40_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Tom%C3%A1s_Ara%C3%BAjo"
+  },
+  "POR-7": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Diogo_Dalot_USMNT_v_Portugal_Mar_31_2026-12.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Diogo_Dalot"
+  },
+  "POR-8": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Renato_Veiga_USMNT_v_Portugal_Mar_31_2026-20.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Renato_Veiga"
   },
   "POR-9": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Gon%C3%A7alo_In%C3%A1cio_USMNT_v_Portugal_Mar_31_2026-42_%28cropped%29.jpg",
@@ -3381,6 +4924,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Lewis_Ferguson"
   },
+  "SCO-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/2/20/Liam_Kelly.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Liam_Kelly.jpg"
+  },
   "SCO-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/50/Kenny_McLean_Scotland_v_Bolivia_6_June_2026-177_%28cropped%29.jpg",
     "ext": "jpg",
@@ -3421,6 +4969,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Billy_Gilmour"
   },
+  "SCO-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Andy_Robertson_Scotland_v_Bolivia_6_June_2026-43.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Andy_Robertson"
+  },
   "SCO-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/6c/First_Minister_meets_with_Scottish_National_Football_Team_11Jun_%28cropped%29.jpg",
     "ext": "jpg",
@@ -3440,6 +4993,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/02/John_Souttar_Scotland_v_Bolivia_6_June_2026-163.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/John_Souttar"
+  },
+  "SEN-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Diouf_asse_sr_2425.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Yehvann_Diouf"
   },
   "SEN-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/4/48/Mendy_asse_ogcn_2425.png",
@@ -3511,10 +5069,25 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Ibrahim_Mbaye"
   },
+  "SEN-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/67/Mory_Diaw_2015_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mory_Diaw"
+  },
+  "SEN-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Sarr_asse_rcsa_2425.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mamadou_Sarr"
+  },
   "SEN-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/31/Joueur_de_foot.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Kalidou_Koulibaly"
+  },
+  "SEN-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/1/11/Abdoulaye_Seck.jpg",
+    "ext": "jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Abdoulaye_Seck.jpg"
   },
   "SEN-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/db/Ismail_Jakobs.jpg",
@@ -3530,6 +5103,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Niakhat%C3%A9_asse_ol_2425.png",
     "ext": "png",
     "page": "https://en.wikipedia.org/wiki/Moussa_Niakhat%C3%A9"
+  },
+  "SUI-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/30/2023-08-12_TSV_Schott_Mainz_gegen_Borussia_Dortmund_%28DFB-Pokal_2023-24%29_by_Sandro_Halank%E2%80%93090.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Gregor_Kobel"
   },
   "SUI-12": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Zakaria_asse_asm_2425_%28cropped%29.png",
@@ -3561,6 +5139,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Christian_Fassnacht"
   },
+  "SUI-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/34/Yvon_Mvogo.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Yvon_Mvogo"
+  },
   "SUI-21": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/2d/2022128160447_2022-05-08_Fussball_Eintracht_Frankfurt_vs_Borussia_M%C3%B6nchengladbach_-_Sven_-_1D_X_MK_II_-_1422_-_B70I7533_%28cropped%29.jpg",
     "ext": "jpg",
@@ -3575,6 +5158,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/22/FC_RB_Salzburg_gegen_FK_Austria_Wien_%282022-04-24%29_68.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Noah_Okafor"
+  },
+  "SUI-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/2025-05-16_Hamburger_SV_Miro_Muheim.jpg/3840px-2025-05-16_Hamburger_SV_Miro_Muheim.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Miro_Muheim"
   },
   "SUI-5": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/5a/FC_Salzburg_gegen_Inter_Mailand_%28Testspiel_2023-08-09%29_69.jpg",
@@ -3741,6 +5329,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Mortadha_Ben_Ouanes"
   },
+  "TUR-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Mert_G%C3%BCnok_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Mert_G%C3%BCnok"
+  },
   "TUR-10": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/50/Rapid-Spartak_%2815%29_%28cropped%29.jpg",
     "ext": "jpg",
@@ -3816,6 +5409,26 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Bar%C4%B1%C5%9F_Alper_Y%C4%B1lmaz"
   },
+  "TUR-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0b/U%C4%9Furcan_%C3%87ak%C4%B1r_-_beIN-Sports-Reklam_%282021%29_%28cropped%29.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/U%C4%9Furcan_%C3%87ak%C4%B1r"
+  },
+  "TUR-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Zeki_%C3%A7elik_2020.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Zeki_%C3%87elik"
+  },
+  "TUR-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/88/Merih_Demiral_2026.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Merih_Demiral"
+  },
+  "TUR-6": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/bb/AUT_vs._TUR_2016-03-29_%28381%29_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/%C3%87a%C4%9Flar_S%C3%B6y%C3%BCnc%C3%BC"
+  },
   "TUR-7": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/df/Eren_Elmal%C4%B1_20251019.jpg",
     "ext": "jpg",
@@ -3886,6 +5499,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Emiliano_Mart%C3%ADnez"
   },
+  "URU-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Santiago_Mele.png",
+    "ext": "png",
+    "page": "https://en.wikipedia.org/wiki/Santiago_Mele"
+  },
   "URU-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/26/Brian_Rodriguez.png",
     "ext": "png",
@@ -3900,6 +5518,21 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Federico_Vi%C3%B1as.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Federico_Vi%C3%B1as"
+  },
+  "URU-3": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/3/38/Fernando_Muslera_in_2021.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Fernando_Muslera"
+  },
+  "URU-4": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez"
+  },
+  "URU-5": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/53/Sebasti%C3%A1n_C%C3%A1ceres.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Sebasti%C3%A1n_C%C3%A1ceres"
   },
   "URU-6": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3f/FC_Red_Bull_Salzburg_gegen_CF_Barcelona_%28Testspiel_4._August_2021%29_45_%28cropped%29.jpg",
@@ -3976,6 +5609,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "ext": "jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Chris_Richards_USMNT_v_Portugal_Mar_31_2026-45_(cropped).jpg"
   },
+  "UZB-1": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6c/O%CA%BBtkir_Yusupov_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Utkir_Yusupov"
+  },
   "UZB-11": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/64/Behruz_Karimov.jpg",
     "ext": "jpg",
@@ -4020,6 +5658,11 @@ export const playerPhotoFallbacks: Record<string, PlayerPhotoFallback> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/99/Oston_Urunov.jpg",
     "ext": "jpg",
     "page": "https://en.wikipedia.org/wiki/Oston_Urunov"
+  },
+  "UZB-2": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Abduvohid_Nematov_%28cropped%29.jpg",
+    "ext": "jpg",
+    "page": "https://en.wikipedia.org/wiki/Abduvohid_Nematov"
   },
   "UZB-20": {
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Dostonbek_Khamdamov_2018.jpg",
