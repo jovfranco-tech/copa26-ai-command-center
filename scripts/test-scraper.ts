@@ -10,12 +10,12 @@ async function run() {
     return;
   }
 
-  const matchId = 'm001';
-  const matchDef = MATCHES.find(m => m.id === matchId);
+  const matchDef = MATCHES[0];
   if (!matchDef) {
-    console.error('Partido no encontrado');
+    console.error('No matches found in dataset');
     return;
   }
+  const matchId = matchDef.id;
 
   console.log(`[test-scraper] Iniciando Periodista Autónomo para ${matchDef.home} vs ${matchDef.away} (Simulación)...`);
   

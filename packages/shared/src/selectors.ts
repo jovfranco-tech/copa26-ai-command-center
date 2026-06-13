@@ -70,12 +70,20 @@ export function buildStats(
     .map(([team, shots]) => ({ team, shots }))
     .sort((a, b) => b.shots - a.shots);
 
+  const cleanSheetsByTeam: Record<string, number> = {};
+  for (const m of matches) {
+    if (m.status === 'FT') {
+      if (m.awayGoals === 0) cleanSheetsByTeam[m.home] = (cleanSheetsByTeam[m.home] || 0) + 1;
+      if (m.homeGoals === 0) cleanSheetsByTeam[m.away] = (cleanSheetsByTeam[m.away] || 0) + 1;
+    }
+  }
+
   return {
     source,
     topScorers: topScorers(players, 12),
     topAssists: topAssists(players, 12),
     topCards: topCards(players, 12),
-    goalkeepers: players.filter(p => p.pos === 'GK' || p.saves > 0).sort((a, b) => b.saves - a.saves).slice(0, 12).map(p => ({ id: p.id, name: p.name, team: p.team, saves: p.saves, cleanSheets: 0, pos: 'GK' as const })),
+    goalkeepers: players.filter(p => p.pos === 'GK' || p.saves > 0).sort((a, b) => b.saves - a.saves).slice(0, 12).map(p => ({ id: p.id, name: p.name, team: p.team, saves: p.saves, cleanSheets: cleanSheetsByTeam[p.team] || 0, pos: 'GK' as const })),
     teamGoals,
     teamPossession,
     teamShots,

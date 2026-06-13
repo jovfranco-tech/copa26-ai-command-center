@@ -150,9 +150,9 @@ Si un dato no aparece, devuelve el campo nulo o array vacío []. NO INVENTES NAD
 `;
 
 export async function scrapeCardsForMatch(homeCode: string, awayCode: string, geminiKey: string): Promise<ScrapedCards | null> {
-  const homeName = TEAMS.find(t => t.id === homeCode)?.name ?? homeCode;
-  const awayName = TEAMS.find(t => t.id === awayCode)?.name ?? awayCode;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`;
+  const homeName = TEAMS.find(t => t.code === homeCode)?.name ?? homeCode;
+  const awayName = TEAMS.find(t => t.code === awayCode)?.name ?? awayCode;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
   
   try {
     const res = await fetch(url, {
@@ -164,9 +164,16 @@ export async function scrapeCardsForMatch(homeCode: string, awayCode: string, ge
       }),
     });
     
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error('Gemini API error:', res.status, res.statusText, await res.text());
+      return null;
+    }
     const body = await res.json();
     let text = body?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    if (!text) {
+      console.error('Empty response from Gemini:', JSON.stringify(body, null, 2));
+      return null;
+    }
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     if (!text) return null;
     return parseGeminiResponse(JSON.parse(text), homeCode, awayCode);
@@ -179,7 +186,7 @@ export async function scrapeCardsForMatch(homeCode: string, awayCode: string, ge
 export async function scrapeCardsFromUrl(homeCode: string, awayCode: string, newsUrl: string, geminiKey: string): Promise<ScrapedCards | null> {
   const homeName = TEAMS.find(t => t.id === homeCode)?.name ?? homeCode;
   const awayName = TEAMS.find(t => t.id === awayCode)?.name ?? awayCode;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
   
   try {
     const res = await fetch(url, {
