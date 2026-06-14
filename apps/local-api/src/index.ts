@@ -381,7 +381,7 @@ app.get('/api/assets/:assetId', async (c) => {
 // Root info (not under /api) — handy when opening the API in a browser.
 app.get('/', (c) =>
   c.text(
-    'FIFA Private World Cup Dashboard — local API. Endpoints live under /api. Local-only; not for public distribution.',
+    'Copa26 Command Center — local API. Endpoints live under /api.',
   ),
 );
 

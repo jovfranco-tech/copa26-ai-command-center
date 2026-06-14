@@ -16,12 +16,15 @@ export async function GET(request: Request) {
     return new Response(JSON.stringify({ error: 'Missing GEMINI_API_KEY' }), { status: 500 });
   }
 
+  if (process.env.ENABLE_JOURNALIST_CRON !== 'true') {
+    return new Response(JSON.stringify({ status: 'skipped', reason: 'ENABLE_JOURNALIST_CRON is not true' }), { status: 200 });
+  }
+
   const overlay = await getOverlay();
   overlay.playerStats = overlay.playerStats || {};
   overlay.results = overlay.results || {};
   overlay.scrapedMatches = overlay.scrapedMatches || [];
 
-  const now = Date.now();
   let updated = false;
 
   // We only scrape ONE match per cron execution to avoid hitting Vercel's 60s timeout

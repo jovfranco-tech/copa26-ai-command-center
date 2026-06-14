@@ -1,0 +1,395 @@
+{
+  "results": {
+    "M001": {
+      "homeGoals": 2,
+      "awayGoals": 0,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "Mexico defeated South Africa 2-0. Julián Quiñones scored the opening goal. Raúl Jiménez doubled the lead. The match was notable for its aggressive play, resulting in three red cards.",
+      "mvp": "MEX-24",
+      "formations": {
+        "home": "4-3-3",
+        "away": "4-3-3"
+      }
+    },
+    "M002": {
+      "homeGoals": 2,
+      "awayGoals": 1,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "South Korea defeated the Czech Republic 2-1. The Czech Republic took the lead through Ladislav Krejčí. South Korea responded with goals from Hwang In-beom and Oh Hyeon-gyu.",
+      "mvp": "KOR-14",
+      "formations": {
+        "home": "4-2-3-1",
+        "away": "3-5-2"
+      }
+    },
+    "M007": {
+      "homeGoals": 1,
+      "awayGoals": 1,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "Canada and Bosnia and Herzegovina played to a 1-1 draw. Jovo Lukić scored for Bosnia. Cyle Larin leveled the score for Canada.",
+      "mvp": "CAN-11",
+      "formations": {
+        "home": "4-4-2",
+        "away": "3-5-2"
+      }
+    },
+    "M019": {
+      "homeGoals": 4,
+      "awayGoals": 1,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "The USMNT kicked off with a 4-1 victory over Paraguay. Folarin Balogun scored a brace. Mauricio scored for Paraguay. Gio Reyna sealed the win.",
+      "mvp": "USA-2",
+      "formations": {
+        "home": "4-3-3",
+        "away": "4-4-2"
+      }
+    },
+    "M008": {
+      "homeGoals": 0,
+      "awayGoals": 2,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "Switzerland opened their campaign with a solid 2-0 victory over Qatar. Breel Embolo opened the scoring, and captain Granit Xhaka sealed the win with a powerful strike from distance.",
+      "mvp": "SUI-15",
+      "formations": {
+        "home": "3-5-2",
+        "away": "4-2-3-1"
+      }
+    },
+    "M013": {
+      "homeGoals": 3,
+      "awayGoals": 0,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "Brazil showcased their attacking prowess with a dominant 3-0 win against Morocco. Vinícius Júnior and Rodrygo dazzled on the wings, while young phenom Endrick added a late goal.",
+      "mvp": "BRA-18",
+      "formations": {
+        "home": "4-3-3",
+        "away": "4-1-4-1"
+      }
+    },
+    "M014": {
+      "homeGoals": 2,
+      "awayGoals": 1,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "Scotland secured a hard-fought 2-1 victory over Haiti. John McGinn and Scott McTominay provided the goals for the Scots, while Frantzdy Pierrot scored a consolation goal for Haiti.",
+      "mvp": "SCO-15",
+      "formations": {
+        "home": "4-2-3-1",
+        "away": "3-5-2"
+      }
+    },
+    "M020": {
+      "homeGoals": 0,
+      "awayGoals": 0,
+      "status": "FT",
+      "source": "manual",
+      "chronicle": "Australia and Türkiye played to a tense 0-0 draw. Both teams created chances, but outstanding goalkeeping from Mat Ryan and Uğurcan Çakır kept the match scoreless.",
+      "mvp": "TUR-3",
+      "formations": {
+        "home": "4-4-2",
+        "away": "4-2-3-1"
+      }
+    }
+  },
+  "lineups": {},
+  "metrics": {},
+  "playerStats": {
+    "MEX-24": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "MEX-20": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "RSA-17": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 1,
+      "saves": 0
+    },
+    "RSA-23": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 1,
+      "saves": 0
+    },
+    "MEX-5": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 1,
+      "saves": 0
+    },
+    "CZE-9": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "CZE-7": {
+      "goals": 0,
+      "assists": 1,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "KOR-14": {
+      "goals": 1,
+      "assists": 1,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "KOR-19": {
+      "goals": 0,
+      "assists": 1,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "KOR-26": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "CZE-2": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 3
+    },
+    "KOR-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 4
+    },
+    "BIH-26": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "BIH-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 6
+    },
+    "CAN-11": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "CAN-5": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 5
+    },
+    "PAR-17": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "USA-2": {
+      "goals": 2,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "USA-1": {
+      "goals": 0,
+      "assists": 1,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "PAR-5": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "USA-3": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "USA-7": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 2
+    },
+    "PAR-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 5
+    },
+    "SUI-21": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "SUI-15": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "SUI-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 3
+    },
+    "QAT-3": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 6
+    },
+    "BRA-18": {
+      "goals": 1,
+      "assists": 1,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "BRA-21": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "BRA-22": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "MAR-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 5
+    },
+    "BRA-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 2
+    },
+    "SCO-15": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "SCO-14": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "HAI-25": {
+      "goals": 1,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "SCO-1": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 4
+    },
+    "AUS-4": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 4
+    },
+    "TUR-3": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 4
+    },
+    "CZE-18": {
+      "goals": 0,
+      "assists": 1,
+      "yellow": 0,
+      "red": 0,
+      "saves": 0
+    },
+    "KOR-3": {
+      "goals": 0,
+      "assists": 0,
+      "yellow": 0,
+      "red": 0,
+      "saves": 4
+    }
+  },
+  "scrapedMatches": [
+    "M001",
+    "M002",
+    "M007",
+    "M019",
+    "M008",
+    "M013",
+    "M014",
+    "M020"
+  ],
+  "updatedAt": null
+}

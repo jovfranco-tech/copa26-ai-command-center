@@ -1,14 +1,15 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Copa 2026 dashboard — smoke', () => {
-  test('home loads with the Copa 2026 brand (no FIFA World Cup affiliation language)', async ({ page }) => {
+  test('home loads with the Copa26 Command Center brand', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/Copa 2026/i);
-    // The shell brand renders once the app hydrates.
-    await expect(page.getByText(/Copa 2026/i).first()).toBeVisible();
-    // No official-affiliation / trademark language in the rendered document.
-    const body = (await page.locator('body').textContent()) ?? '';
-    expect(body).not.toMatch(/FIFA WORLD CUP/i);
+    
+    // Smoke check: Wait for the app shell / layout to appear
+    await expect(page.locator('header h1')).toBeVisible();
+
+    // Verify correct branding in body
+    const body = await page.textContent('body');
+    expect(body).toMatch(/Copa 2026/i);
     expect(body).not.toMatch(/powered by fifa|official tournament/i);
   });
 

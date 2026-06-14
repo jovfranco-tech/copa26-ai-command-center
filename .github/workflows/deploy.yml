@@ -1,10 +1,11 @@
 name: Deploy to Vercel (production)
 
-# Auto-deploy that works with a PRIVATE repo: the workflow runs inside this repo
-# (so it has source access) and deploys to Vercel via the CLI using a token.
-# This sidesteps Vercel's GitHub App needing private-repo access.
+# This GitHub Actions workflow is the PRIMARY production gate.
+# It runs install, typecheck, tests, and deploys via Vercel CLI.
+# IMPORTANT: Disable the native Vercel Git integration in the Vercel dashboard
+# to prevent duplicate, untested deployments.
 #
-# One-time setup (see README): add a repo secret VERCEL_TOKEN with a Vercel token.
+# One-time setup: add a repo secret VERCEL_TOKEN with a Vercel token.
 
 on:
   push:
@@ -69,20 +70,8 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
-      # Keep the canonical production domain following the latest deploy. The
-      # project's auto-domain carries a team-scope suffix, so the clean
-      # copa26-command-center.vercel.app is re-aliased here on every deploy.
+      # Keep the canonical production domain following the latest deploy.
       - name: Point copa26-command-center.vercel.app at the new production deploy
         run: vercel alias set "${{ steps.deploy.outputs.url }}" copa26-command-center.vercel.app --token="$VERCEL_TOKEN"
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
-      # The legacy "fifa-private-world-cup-dashboard" project name still has its
-      # old auto-domain, which `--prod` re-attaches on every deploy. Retire it
-      # (copyright) by removing the alias each run. Tolerant: it's fine if it's
-      # already gone. For a permanent removal, also delete it in the Vercel
-      # dashboard (Project → Settings → Domains).
-      - name: Retire the legacy fifa-named domain
-        run: vercel alias rm fifa-private-world-cup-dashboard.vercel.app --yes --token="$VERCEL_TOKEN" || true
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

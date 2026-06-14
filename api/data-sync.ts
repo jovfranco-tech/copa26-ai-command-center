@@ -16,6 +16,11 @@ export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'GET') {
     return Response.json({ ok: false, reason: 'method' }, { status: 405 });
   }
+
+  if (process.env.ENABLE_DATA_SYNC_CRON !== 'true') {
+    return Response.json({ ok: true, status: 'skipped', reason: 'ENABLE_DATA_SYNC_CRON is not true' }, { status: 200 });
+  }
+
   await recordUsage('data.sync');
 
   const secret = process.env.CRON_SECRET;

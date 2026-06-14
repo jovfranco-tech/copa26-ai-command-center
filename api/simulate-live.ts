@@ -15,6 +15,10 @@ export async function GET(): Promise<Response> {
     return Response.json({ ok: false, error: 'blob-not-configured' }, { status: 503 });
   }
 
+  if (process.env.ENABLE_SIMULATE_LIVE_CRON !== 'true') {
+    return Response.json({ ok: true, status: 'skipped', reason: 'ENABLE_SIMULATE_LIVE_CRON is not true' }, { status: 200 });
+  }
+
   const overlay = await getOverlay();
   const nextResults: Record<string, ResultEntry> = { ...overlay.results };
   let written = 0;

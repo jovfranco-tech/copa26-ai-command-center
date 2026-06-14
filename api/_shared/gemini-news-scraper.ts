@@ -42,7 +42,7 @@ function fuzzyMatchPlayer(queryName: string, teamCode: string): string | null {
   return null;
 }
 
-function parseGeminiResponse(raw: any, homeCode: string, awayCode: string): ScrapedCards {
+function parseGeminiResponse(raw: any): ScrapedCards {
   const result: ScrapedCards = { 
     homeGoals: typeof raw.homeGoals === 'number' ? raw.homeGoals : null,
     awayGoals: typeof raw.awayGoals === 'number' ? raw.awayGoals : null,
@@ -183,7 +183,7 @@ export async function scrapeCardsForMatch(homeCode: string, awayCode: string, ge
     }
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     if (!text) return null;
-    return parseGeminiResponse(JSON.parse(text), homeCode, awayCode);
+    return parseGeminiResponse(JSON.parse(text));
   } catch (e) {
     console.error('Gemini scraper error:', e);
     return null;
@@ -209,7 +209,7 @@ export async function scrapeCardsFromUrl(homeCode: string, awayCode: string, new
     let text = body?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     if (!text) return null;
-    return parseGeminiResponse(JSON.parse(text), homeCode, awayCode);
+    return parseGeminiResponse(JSON.parse(text));
   } catch (e) {
     console.error('Gemini URL scraper error:', e);
     return null;

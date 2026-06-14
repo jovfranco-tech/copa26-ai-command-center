@@ -1,7 +1,16 @@
-# Changelog — Copa 2026 Dashboard
+# Changelog — Copa26 Command Center
 
 All notable changes to this project are documented in this file.
-This is a private personal/family project. Not intended for commercial distribution.
+
+---
+
+## [1.0.1] — 2026-06-13
+
+### 🚀 Public Portfolio Release
+- **Naming & Legal Cleanup:** Renamed globally to Copa26 Command Center. Added explicit disclaimers regarding lack of official affiliation with FIFA or the tournament. Removed outdated internal and "local-only" references.
+- **Deployment & Stability:** Established GitHub Actions as the sole production gate. Disabled Vercel Git auto-deployments. 
+- **Cron Safety:** Wrapped all serverless cron jobs (Data Sync, Results Sync, Simulate Live, Journalist) behind explicit `ENABLE_*_CRON` environment variables to prevent runaway execution.
+- **Public-Readiness:** Polished `README.md` to highlight AI architecture, 3D visualizations, and offline-first capabilities for portfolio review. Bumped packages to `1.0.1`.
 
 ---
 

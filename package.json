@@ -1,9 +1,9 @@
 {
-  "name": "fifa-private-world-cup-dashboard",
-  "version": "0.1.0",
+  "name": "copa26-ai-command-center",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
-  "description": "Private, local-only World Cup intelligence dashboard. Not for public distribution.",
+  "description": "AI-native football tournament command center with real-time dashboards, 3D stadium visualization, prediction pool, and responsible AI workflows.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=22 <25"
